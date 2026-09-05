@@ -12,7 +12,11 @@ export default defineConfig({
 			},
 			adapter: adapter({
 				// Emulates D1 and secrets from wrangler.toml / .dev.vars during `vite dev`.
-				platformProxy: { configPath: 'wrangler.toml', persist: { path: '.wrangler/state/v3' } }
+				platformProxy: {
+					configPath: 'wrangler.toml',
+					// LC_D1_STATE lets scripts/smoke.sh use a throwaway database directory.
+					persist: { path: process.env.LC_D1_STATE ?? '.wrangler/state/v3' }
+				}
 			})
 		})
 	],

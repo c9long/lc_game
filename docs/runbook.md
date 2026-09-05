@@ -7,8 +7,7 @@ How to run, deploy and operate Commit City. Everything here is a single-user set
 ```bash
 pnpm install
 cp .dev.vars.example .dev.vars           # then fill in: openssl rand -hex 32 for AUTH_SECRET and SETTINGS_KEY, any string for SETUP_TOKEN
-pnpm db:migrate:local                    # applies drizzle/ migrations to the local D1 in .wrangler/state
-pnpm dev                                 # http://localhost:5173 (copies Monaco into static/ first)
+pnpm dev                                 # http://localhost:5173; first copies Monaco into static/ and applies drizzle/ migrations to the local D1
 ```
 
 First run: open `http://localhost:5173/auth/register?token=<SETUP_TOKEN>` and create a passkey. Passkeys work on `localhost` without HTTPS. Then remove `SETUP_TOKEN` from `.dev.vars`.
@@ -18,9 +17,19 @@ Useful:
 ```bash
 pnpm test                                # vitest: SRS, budget/morale, tree, awards, city rules
 pnpm check                               # svelte-check
-bash scripts/smoke.sh                    # seeds a temporary session and curls every route
+bash scripts/smoke.sh                    # isolated: own port (5199) and throwaway D1; curls every route and answers a drill
 pnpm exec wrangler d1 execute lc-game --local --command "select * from problem_state"
 ```
+
+**Local database file:** wrangler keys the local D1 file under `.wrangler/state/v3/d1/` by the `database_id` in `wrangler.toml`. Changing that id (for example after `wrangler d1 create`) switches to a fresh, empty file; `pnpm dev` migrates it automatically, but your local passkey and progress stay in the old file. To carry them over:
+
+```bash
+OLD=.wrangler/state/v3/d1/miniflare-D1DatabaseObject/<old-hash>.sqlite   # the one with tables and rows
+NEW=.wrangler/state/v3/d1/miniflare-D1DatabaseObject/<new-hash>.sqlite   # the freshly migrated one
+sqlite3 "$NEW" "ATTACH '$OLD' AS old; $(sqlite3 "$OLD" "select group_concat('INSERT OR IGNORE INTO ' || name || ' SELECT * FROM old.' || name || ';', ' ') from sqlite_master where type='table' and name not in ('d1_migrations','_cf_METADATA','sqlite_sequence')")"
+```
+
+Or simply register a passkey again with `SETUP_TOKEN` set in `.dev.vars`.
 
 ## First deploy
 

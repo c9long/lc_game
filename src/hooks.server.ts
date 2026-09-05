@@ -5,13 +5,37 @@ import { SESSION_COOKIE, validateSession } from '$lib/server/auth/session';
 // Paths reachable without a session. Everything else requires the single registered user.
 const PUBLIC_PREFIXES = ['/auth/', '/_app/', '/solutions/', '/monaco/', '/favicon', '/robots.txt', '/manifest'];
 
+/** D1 reports an unmigrated database as "no such table"; Drizzle wraps it in "Failed query". */
+function isMissingSchema(e: unknown): boolean {
+	const seen = new Set<unknown>();
+	let cur: unknown = e;
+	while (cur && typeof cur === 'object' && !seen.has(cur)) {
+		seen.add(cur);
+		const msg = (cur as { message?: unknown }).message;
+		if (typeof msg === 'string' && /no such table/i.test(msg)) return true;
+		cur = (cur as { cause?: unknown }).cause;
+	}
+	return false;
+}
+
 export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.user = null;
 	event.locals.sessionId = null;
 
 	const token = event.cookies.get(SESSION_COOKIE);
 	if (token && event.platform?.env?.DB) {
-		const found = await validateSession(getDb(event.platform), token);
+		let found;
+		try {
+			found = await validateSession(getDb(event.platform), token);
+		} catch (e) {
+			if (isMissingSchema(e)) {
+				error(
+					503,
+					'The database has no tables yet. Run `pnpm db:migrate:local` for local dev (also runs automatically before `pnpm dev`) or `pnpm db:migrate:remote` for production, then reload. Note: changing database_id in wrangler.toml switches the local database file.'
+				);
+			}
+			throw e;
+		}
 		if (found) {
 			event.locals.user = found.user;
 			event.locals.sessionId = found.sessionId;

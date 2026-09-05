@@ -17,7 +17,7 @@
 		"deploy": "pnpm build && wrangler deploy",
 		"import:neetcode": "node scripts/import-neetcode.ts",
 		"monaco": "node scripts/copy-monaco.mjs",
-		"predev": "node scripts/copy-monaco.mjs",
+		"predev": "node scripts/copy-monaco.mjs && wrangler d1 migrations apply lc-game --local",
 		"prebuild": "node scripts/copy-monaco.mjs"
 	},
 	"devDependencies": {

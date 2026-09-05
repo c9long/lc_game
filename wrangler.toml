@@ -14,7 +14,7 @@ directory = ".svelte-kit/cloudflare"
 binding = "DB"
 database_name = "lc-game"
 # Replace with the id printed by `pnpm exec wrangler d1 create lc-game`. Any value works for local dev.
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "e4fc3744-1451-44e1-b206-9dea0cf78221"
 migrations_dir = "drizzle"
 
 [observability]
