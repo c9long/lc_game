@@ -1,0 +1,23 @@
+{
+  "_comment": "NeetCode 150 patterns as a tech tree. Edges approximate the public NeetCode roadmap; edit freely. row/col are layout hints for the atlas.",
+  "nodes": [
+    { "id": "arrays-hashing",   "pattern": "Arrays & Hashing",          "requires": [],                                     "row": 0, "col": 2 },
+    { "id": "two-pointers",     "pattern": "Two Pointers",              "requires": ["arrays-hashing"],                     "row": 1, "col": 1 },
+    { "id": "stack",            "pattern": "Stack",                     "requires": ["arrays-hashing"],                     "row": 1, "col": 3 },
+    { "id": "binary-search",    "pattern": "Binary Search",             "requires": ["two-pointers"],                       "row": 2, "col": 0 },
+    { "id": "sliding-window",   "pattern": "Sliding Window",            "requires": ["two-pointers"],                       "row": 2, "col": 1 },
+    { "id": "linked-list",      "pattern": "Linked List",               "requires": ["two-pointers"],                       "row": 2, "col": 2 },
+    { "id": "trees",            "pattern": "Trees",                     "requires": ["binary-search", "linked-list"],       "row": 3, "col": 1 },
+    { "id": "tries",            "pattern": "Tries",                     "requires": ["trees"],                              "row": 4, "col": 0 },
+    { "id": "heap",             "pattern": "Heap / Priority Queue",     "requires": ["trees"],                              "row": 4, "col": 1 },
+    { "id": "backtracking",     "pattern": "Backtracking",              "requires": ["trees"],                              "row": 4, "col": 3 },
+    { "id": "intervals",        "pattern": "Intervals",                 "requires": ["heap"],                               "row": 5, "col": 0 },
+    { "id": "greedy",           "pattern": "Greedy",                    "requires": ["heap"],                               "row": 5, "col": 1 },
+    { "id": "graphs",           "pattern": "Graphs",                    "requires": ["backtracking"],                       "row": 5, "col": 3 },
+    { "id": "dp-1d",            "pattern": "1-D Dynamic Programming",   "requires": ["backtracking"],                       "row": 5, "col": 4 },
+    { "id": "advanced-graphs",  "pattern": "Advanced Graphs",           "requires": ["graphs", "heap"],                     "row": 6, "col": 2 },
+    { "id": "dp-2d",            "pattern": "2-D Dynamic Programming",   "requires": ["graphs", "dp-1d"],                    "row": 6, "col": 3 },
+    { "id": "bit-manipulation", "pattern": "Bit Manipulation",          "requires": ["dp-1d"],                              "row": 6, "col": 4 },
+    { "id": "math-geometry",    "pattern": "Math & Geometry",           "requires": ["dp-2d", "bit-manipulation"],          "row": 7, "col": 3 }
+  ]
+}

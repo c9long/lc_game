@@ -1,0 +1,4 @@
+name = "lc-egress-spike"
+main = "src/index.js"
+compatibility_date = "2026-08-01"
+# Secrets (set with `wrangler secret put`, never here): LEETCODE_SESSION, CSRF, SPIKE_KEY

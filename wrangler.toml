@@ -1,0 +1,21 @@
+name = "lc-game"
+main = ".svelte-kit/cloudflare/_worker.js"
+compatibility_date = "2026-08-01"
+compatibility_flags = ["nodejs_compat", "nodejs_als"]
+
+[assets]
+binding = "ASSETS"
+directory = ".svelte-kit/cloudflare"
+
+# Secrets are NOT set here. Use `wrangler secret put AUTH_SECRET|SETTINGS_KEY|SETUP_TOKEN` (prod)
+# or .dev.vars (local). See .dev.vars.example.
+
+[[d1_databases]]
+binding = "DB"
+database_name = "lc-game"
+# Replace with the id printed by `pnpm exec wrangler d1 create lc-game`. Any value works for local dev.
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "drizzle"
+
+[observability]
+enabled = true

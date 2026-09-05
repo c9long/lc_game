@@ -1,0 +1,2552 @@
+[
+  {
+    "order": 0,
+    "code": "0217-contains-duplicate",
+    "slug": "contains-duplicate",
+    "title": "Contains Duplicate",
+    "pattern": "Arrays & Hashing",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 1,
+    "code": "0242-valid-anagram",
+    "slug": "valid-anagram",
+    "title": "Valid Anagram",
+    "pattern": "Arrays & Hashing",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 2,
+    "code": "0001-two-sum",
+    "slug": "two-sum",
+    "title": "Two Sum",
+    "pattern": "Arrays & Hashing",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 3,
+    "code": "0049-group-anagrams",
+    "slug": "group-anagrams",
+    "title": "Group Anagrams",
+    "pattern": "Arrays & Hashing",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 4,
+    "code": "0347-top-k-frequent-elements",
+    "slug": "top-k-frequent-elements",
+    "title": "Top K Frequent Elements",
+    "pattern": "Arrays & Hashing",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 5,
+    "code": "0238-product-of-array-except-self",
+    "slug": "product-of-array-except-self",
+    "title": "Product of Array Except Self",
+    "pattern": "Arrays & Hashing",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 6,
+    "code": "0036-valid-sudoku",
+    "slug": "valid-sudoku",
+    "title": "Valid Sudoku",
+    "pattern": "Arrays & Hashing",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 7,
+    "code": "0271-encode-and-decode-strings",
+    "slug": "encode-and-decode-strings",
+    "title": "Encode and Decode Strings",
+    "pattern": "Arrays & Hashing",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": true,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 8,
+    "code": "0128-longest-consecutive-sequence",
+    "slug": "longest-consecutive-sequence",
+    "title": "Longest Consecutive Sequence",
+    "pattern": "Arrays & Hashing",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 9,
+    "code": "0125-valid-palindrome",
+    "slug": "valid-palindrome",
+    "title": "Valid Palindrome",
+    "pattern": "Two Pointers",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 10,
+    "code": "0167-two-sum-ii-input-array-is-sorted",
+    "slug": "two-sum-ii-input-array-is-sorted",
+    "title": "Two Sum II Input Array Is Sorted",
+    "pattern": "Two Pointers",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 11,
+    "code": "0015-3sum",
+    "slug": "3sum",
+    "title": "3Sum",
+    "pattern": "Two Pointers",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 12,
+    "code": "0011-container-with-most-water",
+    "slug": "container-with-most-water",
+    "title": "Container With Most Water",
+    "pattern": "Two Pointers",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 13,
+    "code": "0042-trapping-rain-water",
+    "slug": "trapping-rain-water",
+    "title": "Trapping Rain Water",
+    "pattern": "Two Pointers",
+    "difficulty": "Hard",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 14,
+    "code": "0121-best-time-to-buy-and-sell-stock",
+    "slug": "best-time-to-buy-and-sell-stock",
+    "title": "Best Time to Buy And Sell Stock",
+    "pattern": "Sliding Window",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 15,
+    "code": "0003-longest-substring-without-repeating-characters",
+    "slug": "longest-substring-without-repeating-characters",
+    "title": "Longest Substring Without Repeating Characters",
+    "pattern": "Sliding Window",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 16,
+    "code": "0424-longest-repeating-character-replacement",
+    "slug": "longest-repeating-character-replacement",
+    "title": "Longest Repeating Character Replacement",
+    "pattern": "Sliding Window",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 17,
+    "code": "0567-permutation-in-string",
+    "slug": "permutation-in-string",
+    "title": "Permutation In String",
+    "pattern": "Sliding Window",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 18,
+    "code": "0076-minimum-window-substring",
+    "slug": "minimum-window-substring",
+    "title": "Minimum Window Substring",
+    "pattern": "Sliding Window",
+    "difficulty": "Hard",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 19,
+    "code": "0239-sliding-window-maximum",
+    "slug": "sliding-window-maximum",
+    "title": "Sliding Window Maximum",
+    "pattern": "Sliding Window",
+    "difficulty": "Hard",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 20,
+    "code": "0020-valid-parentheses",
+    "slug": "valid-parentheses",
+    "title": "Valid Parentheses",
+    "pattern": "Stack",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 21,
+    "code": "0155-min-stack",
+    "slug": "min-stack",
+    "title": "Min Stack",
+    "pattern": "Stack",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 22,
+    "code": "0150-evaluate-reverse-polish-notation",
+    "slug": "evaluate-reverse-polish-notation",
+    "title": "Evaluate Reverse Polish Notation",
+    "pattern": "Stack",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 23,
+    "code": "0022-generate-parentheses",
+    "slug": "generate-parentheses",
+    "title": "Generate Parentheses",
+    "pattern": "Stack",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 24,
+    "code": "0739-daily-temperatures",
+    "slug": "daily-temperatures",
+    "title": "Daily Temperatures",
+    "pattern": "Stack",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 25,
+    "code": "0853-car-fleet",
+    "slug": "car-fleet",
+    "title": "Car Fleet",
+    "pattern": "Stack",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 26,
+    "code": "0084-largest-rectangle-in-histogram",
+    "slug": "largest-rectangle-in-histogram",
+    "title": "Largest Rectangle In Histogram",
+    "pattern": "Stack",
+    "difficulty": "Hard",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 27,
+    "code": "0704-binary-search",
+    "slug": "binary-search",
+    "title": "Binary Search",
+    "pattern": "Binary Search",
+    "difficulty": "Easy",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 28,
+    "code": "0074-search-a-2d-matrix",
+    "slug": "search-a-2d-matrix",
+    "title": "Search a 2D Matrix",
+    "pattern": "Binary Search",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 29,
+    "code": "0875-koko-eating-bananas",
+    "slug": "koko-eating-bananas",
+    "title": "Koko Eating Bananas",
+    "pattern": "Binary Search",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 30,
+    "code": "0153-find-minimum-in-rotated-sorted-array",
+    "slug": "find-minimum-in-rotated-sorted-array",
+    "title": "Find Minimum In Rotated Sorted Array",
+    "pattern": "Binary Search",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 31,
+    "code": "0033-search-in-rotated-sorted-array",
+    "slug": "search-in-rotated-sorted-array",
+    "title": "Search In Rotated Sorted Array",
+    "pattern": "Binary Search",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 32,
+    "code": "0981-time-based-key-value-store",
+    "slug": "time-based-key-value-store",
+    "title": "Time Based Key Value Store",
+    "pattern": "Binary Search",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 33,
+    "code": "0004-median-of-two-sorted-arrays",
+    "slug": "median-of-two-sorted-arrays",
+    "title": "Median of Two Sorted Arrays",
+    "pattern": "Binary Search",
+    "difficulty": "Hard",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 34,
+    "code": "0206-reverse-linked-list",
+    "slug": "reverse-linked-list",
+    "title": "Reverse Linked List",
+    "pattern": "Linked List",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 35,
+    "code": "0021-merge-two-sorted-lists",
+    "slug": "merge-two-sorted-lists",
+    "title": "Merge Two Sorted Lists",
+    "pattern": "Linked List",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 36,
+    "code": "0143-reorder-list",
+    "slug": "reorder-list",
+    "title": "Reorder List",
+    "pattern": "Linked List",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 37,
+    "code": "0019-remove-nth-node-from-end-of-list",
+    "slug": "remove-nth-node-from-end-of-list",
+    "title": "Remove Nth Node From End of List",
+    "pattern": "Linked List",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 38,
+    "code": "0138-copy-list-with-random-pointer",
+    "slug": "copy-list-with-random-pointer",
+    "title": "Copy List With Random Pointer",
+    "pattern": "Linked List",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 39,
+    "code": "0002-add-two-numbers",
+    "slug": "add-two-numbers",
+    "title": "Add Two Numbers",
+    "pattern": "Linked List",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 40,
+    "code": "0141-linked-list-cycle",
+    "slug": "linked-list-cycle",
+    "title": "Linked List Cycle",
+    "pattern": "Linked List",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 41,
+    "code": "0287-find-the-duplicate-number",
+    "slug": "find-the-duplicate-number",
+    "title": "Find The Duplicate Number",
+    "pattern": "Linked List",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 42,
+    "code": "0146-lru-cache",
+    "slug": "lru-cache",
+    "title": "LRU Cache",
+    "pattern": "Linked List",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 43,
+    "code": "0023-merge-k-sorted-lists",
+    "slug": "merge-k-sorted-lists",
+    "title": "Merge K Sorted Lists",
+    "pattern": "Linked List",
+    "difficulty": "Hard",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 44,
+    "code": "0025-reverse-nodes-in-k-group",
+    "slug": "reverse-nodes-in-k-group",
+    "title": "Reverse Nodes In K Group",
+    "pattern": "Linked List",
+    "difficulty": "Hard",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 45,
+    "code": "0226-invert-binary-tree",
+    "slug": "invert-binary-tree",
+    "title": "Invert Binary Tree",
+    "pattern": "Trees",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 46,
+    "code": "0104-maximum-depth-of-binary-tree",
+    "slug": "maximum-depth-of-binary-tree",
+    "title": "Maximum Depth of Binary Tree",
+    "pattern": "Trees",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 47,
+    "code": "0543-diameter-of-binary-tree",
+    "slug": "diameter-of-binary-tree",
+    "title": "Diameter of Binary Tree",
+    "pattern": "Trees",
+    "difficulty": "Easy",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 48,
+    "code": "0110-balanced-binary-tree",
+    "slug": "balanced-binary-tree",
+    "title": "Balanced Binary Tree",
+    "pattern": "Trees",
+    "difficulty": "Easy",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 49,
+    "code": "0100-same-tree",
+    "slug": "same-tree",
+    "title": "Same Tree",
+    "pattern": "Trees",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 50,
+    "code": "0572-subtree-of-another-tree",
+    "slug": "subtree-of-another-tree",
+    "title": "Subtree of Another Tree",
+    "pattern": "Trees",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 51,
+    "code": "0235-lowest-common-ancestor-of-a-binary-search-tree",
+    "slug": "lowest-common-ancestor-of-a-binary-search-tree",
+    "title": "Lowest Common Ancestor of a Binary Search Tree",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 52,
+    "code": "0102-binary-tree-level-order-traversal",
+    "slug": "binary-tree-level-order-traversal",
+    "title": "Binary Tree Level Order Traversal",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 53,
+    "code": "0199-binary-tree-right-side-view",
+    "slug": "binary-tree-right-side-view",
+    "title": "Binary Tree Right Side View",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 54,
+    "code": "1448-count-good-nodes-in-binary-tree",
+    "slug": "count-good-nodes-in-binary-tree",
+    "title": "Count Good Nodes In Binary Tree",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 55,
+    "code": "0098-validate-binary-search-tree",
+    "slug": "validate-binary-search-tree",
+    "title": "Validate Binary Search Tree",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 56,
+    "code": "0230-kth-smallest-element-in-a-bst",
+    "slug": "kth-smallest-element-in-a-bst",
+    "title": "Kth Smallest Element In a Bst",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 57,
+    "code": "0105-construct-binary-tree-from-preorder-and-inorder-traversal",
+    "slug": "construct-binary-tree-from-preorder-and-inorder-traversal",
+    "title": "Construct Binary Tree From Preorder And Inorder Traversal",
+    "pattern": "Trees",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 58,
+    "code": "0124-binary-tree-maximum-path-sum",
+    "slug": "binary-tree-maximum-path-sum",
+    "title": "Binary Tree Maximum Path Sum",
+    "pattern": "Trees",
+    "difficulty": "Hard",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 59,
+    "code": "0297-serialize-and-deserialize-binary-tree",
+    "slug": "serialize-and-deserialize-binary-tree",
+    "title": "Serialize And Deserialize Binary Tree",
+    "pattern": "Trees",
+    "difficulty": "Hard",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 60,
+    "code": "0208-implement-trie-prefix-tree",
+    "slug": "implement-trie-prefix-tree",
+    "title": "Implement Trie Prefix Tree",
+    "pattern": "Tries",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 61,
+    "code": "0211-design-add-and-search-words-data-structure",
+    "slug": "design-add-and-search-words-data-structure",
+    "title": "Design Add And Search Words Data Structure",
+    "pattern": "Tries",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 62,
+    "code": "0212-word-search-ii",
+    "slug": "word-search-ii",
+    "title": "Word Search II",
+    "pattern": "Tries",
+    "difficulty": "Hard",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 63,
+    "code": "0703-kth-largest-element-in-a-stream",
+    "slug": "kth-largest-element-in-a-stream",
+    "title": "Kth Largest Element In a Stream",
+    "pattern": "Heap / Priority Queue",
+    "difficulty": "Easy",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 64,
+    "code": "1046-last-stone-weight",
+    "slug": "last-stone-weight",
+    "title": "Last Stone Weight",
+    "pattern": "Heap / Priority Queue",
+    "difficulty": "Easy",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 65,
+    "code": "0973-k-closest-points-to-origin",
+    "slug": "k-closest-points-to-origin",
+    "title": "K Closest Points to Origin",
+    "pattern": "Heap / Priority Queue",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 66,
+    "code": "0215-kth-largest-element-in-an-array",
+    "slug": "kth-largest-element-in-an-array",
+    "title": "Kth Largest Element In An Array",
+    "pattern": "Heap / Priority Queue",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 67,
+    "code": "0621-task-scheduler",
+    "slug": "task-scheduler",
+    "title": "Task Scheduler",
+    "pattern": "Heap / Priority Queue",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": false,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 68,
+    "code": "0355-design-twitter",
+    "slug": "design-twitter",
+    "title": "Design Twitter",
+    "pattern": "Heap / Priority Queue",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 69,
+    "code": "0295-find-median-from-data-stream",
+    "slug": "find-median-from-data-stream",
+    "title": "Find Median From Data Stream",
+    "pattern": "Heap / Priority Queue",
+    "difficulty": "Hard",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 70,
+    "code": "0078-subsets",
+    "slug": "subsets",
+    "title": "Subsets",
+    "pattern": "Backtracking",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 71,
+    "code": "0039-combination-sum",
+    "slug": "combination-sum",
+    "title": "Combination Sum",
+    "pattern": "Backtracking",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 72,
+    "code": "0046-permutations",
+    "slug": "permutations",
+    "title": "Permutations",
+    "pattern": "Backtracking",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 73,
+    "code": "0090-subsets-ii",
+    "slug": "subsets-ii",
+    "title": "Subsets II",
+    "pattern": "Backtracking",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 74,
+    "code": "0040-combination-sum-ii",
+    "slug": "combination-sum-ii",
+    "title": "Combination Sum II",
+    "pattern": "Backtracking",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 75,
+    "code": "0079-word-search",
+    "slug": "word-search",
+    "title": "Word Search",
+    "pattern": "Backtracking",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 76,
+    "code": "0131-palindrome-partitioning",
+    "slug": "palindrome-partitioning",
+    "title": "Palindrome Partitioning",
+    "pattern": "Backtracking",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 77,
+    "code": "0017-letter-combinations-of-a-phone-number",
+    "slug": "letter-combinations-of-a-phone-number",
+    "title": "Letter Combinations of a Phone Number",
+    "pattern": "Backtracking",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 78,
+    "code": "0051-n-queens",
+    "slug": "n-queens",
+    "title": "N Queens",
+    "pattern": "Backtracking",
+    "difficulty": "Hard",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 79,
+    "code": "0200-number-of-islands",
+    "slug": "number-of-islands",
+    "title": "Number of Islands",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 80,
+    "code": "0133-clone-graph",
+    "slug": "clone-graph",
+    "title": "Clone Graph",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 81,
+    "code": "0695-max-area-of-island",
+    "slug": "max-area-of-island",
+    "title": "Max Area of Island",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 82,
+    "code": "0417-pacific-atlantic-water-flow",
+    "slug": "pacific-atlantic-water-flow",
+    "title": "Pacific Atlantic Water Flow",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 83,
+    "code": "0130-surrounded-regions",
+    "slug": "surrounded-regions",
+    "title": "Surrounded Regions",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 84,
+    "code": "0994-rotting-oranges",
+    "slug": "rotting-oranges",
+    "title": "Rotting Oranges",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 85,
+    "code": "0286-walls-and-gates",
+    "slug": "walls-and-gates",
+    "title": "Walls And Gates",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": true,
+    "solutions": {
+      "python": true,
+      "go": false,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 86,
+    "code": "0207-course-schedule",
+    "slug": "course-schedule",
+    "title": "Course Schedule",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 87,
+    "code": "0210-course-schedule-ii",
+    "slug": "course-schedule-ii",
+    "title": "Course Schedule II",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 88,
+    "code": "0684-redundant-connection",
+    "slug": "redundant-connection",
+    "title": "Redundant Connection",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 89,
+    "code": "0323-number-of-connected-components-in-an-undirected-graph",
+    "slug": "number-of-connected-components-in-an-undirected-graph",
+    "title": "Number of Connected Components In An Undirected Graph",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": true,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 90,
+    "code": "0261-graph-valid-tree",
+    "slug": "graph-valid-tree",
+    "title": "Graph Valid Tree",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": true,
+    "solutions": {
+      "python": true,
+      "go": false,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 91,
+    "code": "0127-word-ladder",
+    "slug": "word-ladder",
+    "title": "Word Ladder",
+    "pattern": "Graphs",
+    "difficulty": "Hard",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 92,
+    "code": "0332-reconstruct-itinerary",
+    "slug": "reconstruct-itinerary",
+    "title": "Reconstruct Itinerary",
+    "pattern": "Advanced Graphs",
+    "difficulty": "Hard",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 93,
+    "code": "1584-min-cost-to-connect-all-points",
+    "slug": "min-cost-to-connect-all-points",
+    "title": "Min Cost to Connect All Points",
+    "pattern": "Advanced Graphs",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 94,
+    "code": "0743-network-delay-time",
+    "slug": "network-delay-time",
+    "title": "Network Delay Time",
+    "pattern": "Advanced Graphs",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 95,
+    "code": "0778-swim-in-rising-water",
+    "slug": "swim-in-rising-water",
+    "title": "Swim In Rising Water",
+    "pattern": "Advanced Graphs",
+    "difficulty": "Hard",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 96,
+    "code": "0269-alien-dictionary",
+    "slug": "alien-dictionary",
+    "title": "Alien Dictionary",
+    "pattern": "Advanced Graphs",
+    "difficulty": "Hard",
+    "blind75": true,
+    "premium": true,
+    "solutions": {
+      "python": true,
+      "go": false,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 97,
+    "code": "0787-cheapest-flights-within-k-stops",
+    "slug": "cheapest-flights-within-k-stops",
+    "title": "Cheapest Flights Within K Stops",
+    "pattern": "Advanced Graphs",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 98,
+    "code": "0070-climbing-stairs",
+    "slug": "climbing-stairs",
+    "title": "Climbing Stairs",
+    "pattern": "1-D Dynamic Programming",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 99,
+    "code": "0746-min-cost-climbing-stairs",
+    "slug": "min-cost-climbing-stairs",
+    "title": "Min Cost Climbing Stairs",
+    "pattern": "1-D Dynamic Programming",
+    "difficulty": "Easy",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 100,
+    "code": "0198-house-robber",
+    "slug": "house-robber",
+    "title": "House Robber",
+    "pattern": "1-D Dynamic Programming",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 101,
+    "code": "0213-house-robber-ii",
+    "slug": "house-robber-ii",
+    "title": "House Robber II",
+    "pattern": "1-D Dynamic Programming",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 102,
+    "code": "0005-longest-palindromic-substring",
+    "slug": "longest-palindromic-substring",
+    "title": "Longest Palindromic Substring",
+    "pattern": "1-D Dynamic Programming",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 103,
+    "code": "0647-palindromic-substrings",
+    "slug": "palindromic-substrings",
+    "title": "Palindromic Substrings",
+    "pattern": "1-D Dynamic Programming",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 104,
+    "code": "0091-decode-ways",
+    "slug": "decode-ways",
+    "title": "Decode Ways",
+    "pattern": "1-D Dynamic Programming",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 105,
+    "code": "0322-coin-change",
+    "slug": "coin-change",
+    "title": "Coin Change",
+    "pattern": "1-D Dynamic Programming",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 106,
+    "code": "0152-maximum-product-subarray",
+    "slug": "maximum-product-subarray",
+    "title": "Maximum Product Subarray",
+    "pattern": "1-D Dynamic Programming",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 107,
+    "code": "0139-word-break",
+    "slug": "word-break",
+    "title": "Word Break",
+    "pattern": "1-D Dynamic Programming",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 108,
+    "code": "0300-longest-increasing-subsequence",
+    "slug": "longest-increasing-subsequence",
+    "title": "Longest Increasing Subsequence",
+    "pattern": "1-D Dynamic Programming",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 109,
+    "code": "0416-partition-equal-subset-sum",
+    "slug": "partition-equal-subset-sum",
+    "title": "Partition Equal Subset Sum",
+    "pattern": "1-D Dynamic Programming",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 110,
+    "code": "0062-unique-paths",
+    "slug": "unique-paths",
+    "title": "Unique Paths",
+    "pattern": "2-D Dynamic Programming",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 111,
+    "code": "1143-longest-common-subsequence",
+    "slug": "longest-common-subsequence",
+    "title": "Longest Common Subsequence",
+    "pattern": "2-D Dynamic Programming",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 112,
+    "code": "0309-best-time-to-buy-and-sell-stock-with-cooldown",
+    "slug": "best-time-to-buy-and-sell-stock-with-cooldown",
+    "title": "Best Time to Buy And Sell Stock With Cooldown",
+    "pattern": "2-D Dynamic Programming",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 113,
+    "code": "0518-coin-change-ii",
+    "slug": "coin-change-ii",
+    "title": "Coin Change II",
+    "pattern": "2-D Dynamic Programming",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 114,
+    "code": "0494-target-sum",
+    "slug": "target-sum",
+    "title": "Target Sum",
+    "pattern": "2-D Dynamic Programming",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 115,
+    "code": "0097-interleaving-string",
+    "slug": "interleaving-string",
+    "title": "Interleaving String",
+    "pattern": "2-D Dynamic Programming",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 116,
+    "code": "0329-longest-increasing-path-in-a-matrix",
+    "slug": "longest-increasing-path-in-a-matrix",
+    "title": "Longest Increasing Path In a Matrix",
+    "pattern": "2-D Dynamic Programming",
+    "difficulty": "Hard",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": false,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 117,
+    "code": "0115-distinct-subsequences",
+    "slug": "distinct-subsequences",
+    "title": "Distinct Subsequences",
+    "pattern": "2-D Dynamic Programming",
+    "difficulty": "Hard",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": false,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 118,
+    "code": "0072-edit-distance",
+    "slug": "edit-distance",
+    "title": "Edit Distance",
+    "pattern": "2-D Dynamic Programming",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": false,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 119,
+    "code": "0312-burst-balloons",
+    "slug": "burst-balloons",
+    "title": "Burst Balloons",
+    "pattern": "2-D Dynamic Programming",
+    "difficulty": "Hard",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": false,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 120,
+    "code": "0010-regular-expression-matching",
+    "slug": "regular-expression-matching",
+    "title": "Regular Expression Matching",
+    "pattern": "2-D Dynamic Programming",
+    "difficulty": "Hard",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 121,
+    "code": "0053-maximum-subarray",
+    "slug": "maximum-subarray",
+    "title": "Maximum Subarray",
+    "pattern": "Greedy",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 122,
+    "code": "0055-jump-game",
+    "slug": "jump-game",
+    "title": "Jump Game",
+    "pattern": "Greedy",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 123,
+    "code": "0045-jump-game-ii",
+    "slug": "jump-game-ii",
+    "title": "Jump Game II",
+    "pattern": "Greedy",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 124,
+    "code": "0134-gas-station",
+    "slug": "gas-station",
+    "title": "Gas Station",
+    "pattern": "Greedy",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 125,
+    "code": "0846-hand-of-straights",
+    "slug": "hand-of-straights",
+    "title": "Hand of Straights",
+    "pattern": "Greedy",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 126,
+    "code": "1899-merge-triplets-to-form-target-triplet",
+    "slug": "merge-triplets-to-form-target-triplet",
+    "title": "Merge Triplets to Form Target Triplet",
+    "pattern": "Greedy",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": false,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 127,
+    "code": "0763-partition-labels",
+    "slug": "partition-labels",
+    "title": "Partition Labels",
+    "pattern": "Greedy",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 128,
+    "code": "0678-valid-parenthesis-string",
+    "slug": "valid-parenthesis-string",
+    "title": "Valid Parenthesis String",
+    "pattern": "Greedy",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 129,
+    "code": "0057-insert-interval",
+    "slug": "insert-interval",
+    "title": "Insert Interval",
+    "pattern": "Intervals",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 130,
+    "code": "0056-merge-intervals",
+    "slug": "merge-intervals",
+    "title": "Merge Intervals",
+    "pattern": "Intervals",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 131,
+    "code": "0435-non-overlapping-intervals",
+    "slug": "non-overlapping-intervals",
+    "title": "Non Overlapping Intervals",
+    "pattern": "Intervals",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 132,
+    "code": "0252-meeting-rooms",
+    "slug": "meeting-rooms",
+    "title": "Meeting Rooms",
+    "pattern": "Intervals",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": true,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 133,
+    "code": "0253-meeting-rooms-ii",
+    "slug": "meeting-rooms-ii",
+    "title": "Meeting Rooms II",
+    "pattern": "Intervals",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": true,
+    "solutions": {
+      "python": true,
+      "go": false,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 134,
+    "code": "1851-minimum-interval-to-include-each-query",
+    "slug": "minimum-interval-to-include-each-query",
+    "title": "Minimum Interval to Include Each Query",
+    "pattern": "Intervals",
+    "difficulty": "Hard",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": false,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 135,
+    "code": "0048-rotate-image",
+    "slug": "rotate-image",
+    "title": "Rotate Image",
+    "pattern": "Math & Geometry",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 136,
+    "code": "0054-spiral-matrix",
+    "slug": "spiral-matrix",
+    "title": "Spiral Matrix",
+    "pattern": "Math & Geometry",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 137,
+    "code": "0073-set-matrix-zeroes",
+    "slug": "set-matrix-zeroes",
+    "title": "Set Matrix Zeroes",
+    "pattern": "Math & Geometry",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 138,
+    "code": "0202-happy-number",
+    "slug": "happy-number",
+    "title": "Happy Number",
+    "pattern": "Math & Geometry",
+    "difficulty": "Easy",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 139,
+    "code": "0066-plus-one",
+    "slug": "plus-one",
+    "title": "Plus One",
+    "pattern": "Math & Geometry",
+    "difficulty": "Easy",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 140,
+    "code": "0050-powx-n",
+    "slug": "powx-n",
+    "title": "Pow(x, n)",
+    "pattern": "Math & Geometry",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": false,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 141,
+    "code": "0043-multiply-strings",
+    "slug": "multiply-strings",
+    "title": "Multiply Strings",
+    "pattern": "Math & Geometry",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": false,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 142,
+    "code": "2013-detect-squares",
+    "slug": "detect-squares",
+    "title": "Detect Squares",
+    "pattern": "Math & Geometry",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": false,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 143,
+    "code": "0136-single-number",
+    "slug": "single-number",
+    "title": "Single Number",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Easy",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 144,
+    "code": "0191-number-of-1-bits",
+    "slug": "number-of-1-bits",
+    "title": "Number of 1 Bits",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 145,
+    "code": "0338-counting-bits",
+    "slug": "counting-bits",
+    "title": "Counting Bits",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 146,
+    "code": "0190-reverse-bits",
+    "slug": "reverse-bits",
+    "title": "Reverse Bits",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 147,
+    "code": "0268-missing-number",
+    "slug": "missing-number",
+    "title": "Missing Number",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 148,
+    "code": "0371-sum-of-two-integers",
+    "slug": "sum-of-two-integers",
+    "title": "Sum of Two Integers",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 149,
+    "code": "0007-reverse-integer",
+    "slug": "reverse-integer",
+    "title": "Reverse Integer",
+    "pattern": "Bit Manipulation",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  }
+]

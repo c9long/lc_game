@@ -1,0 +1,12 @@
+# Project rules on top of gitleaks defaults. LeetCode session cookies are long opaque tokens.
+[extend]
+useDefault = true
+
+[[rules]]
+id = "leetcode-session-cookie"
+description = "LeetCode session cookie"
+regex = '''LEETCODE_SESSION\s*[=:]\s*['"]?[A-Za-z0-9._-]{40,}'''
+keywords = ["LEETCODE_SESSION"]
+
+[allowlist]
+paths = ['''^data/solutions/''']

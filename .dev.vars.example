@@ -1,0 +1,8 @@
+# Copy to .dev.vars for local development (git-ignored). Production values go in `wrangler secret put`.
+# Generate keys with: openssl rand -hex 32
+AUTH_SECRET=
+SETTINGS_KEY=
+# One-time token that unlocks /auth/register. Remove from .dev.vars after registering a passkey.
+SETUP_TOKEN=
+# Origin the browser uses to reach the app; WebAuthn binds credentials to it.
+ORIGIN=http://localhost:5173

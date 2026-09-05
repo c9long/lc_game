@@ -1,0 +1,9 @@
+#!/bin/sh
+# Blocks commits that contain secrets (LeetCode cookies, keys). Enabled via `git config core.hooksPath scripts/hooks`.
+GL=$(command -v gitleaks 2>/dev/null || true)
+[ -z "$GL" ] && [ -x "$HOME/.local/bin/gitleaks" ] && GL="$HOME/.local/bin/gitleaks"
+if [ -z "$GL" ]; then
+	echo "pre-commit: gitleaks not found; install from https://github.com/gitleaks/gitleaks (or bypass once with --no-verify)" >&2
+	exit 1
+fi
+exec "$GL" git --pre-commit --staged --redact --no-banner
