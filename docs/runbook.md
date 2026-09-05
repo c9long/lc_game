@@ -60,6 +60,7 @@ Nothing secret lives in `wrangler.toml`, the repo, or the browser. The pre-commi
 - **Cookie expired**: Today shows a banner; Admin → paste new values → Validate and save.
 - **Solves made outside the app** (LeetCode mobile, etc.): Today syncs the last 20 accepted submissions from your public profile every 5 minutes; Admin has a "Sync now" button.
 - **Backups**: `pnpm exec wrangler d1 export lc-game --remote --output backup-$(date +%F).sql`. Restore with `wrangler d1 execute lc-game --remote --file backup.sql` on a fresh database.
+- **Drill bank updates**: `python3 scripts/mine-python-docs.py` downloads the CPython 3.12 docs into `.cache/` (git-ignored), executes every example, and rewrites `data/drills/python.json`; `python3 scripts/verify-drills.py` executes the hand-written drills in `data/drills/curation.json`. Add ids to `exclude` there to drop bad mined drills. Redeploy afterwards; drill ids are content hashes, so progress survives regeneration.
 - **Curriculum updates**: `git clone --depth 1 https://github.com/neetcode-gh/leetcode.git /tmp/neetcode && pnpm import:neetcode /tmp/neetcode` regenerates `data/neetcode150.json` and `static/solutions/`. Edit `data/roadmap.json` by hand for the tree's edges.
 - **Sign out everywhere**: Admin → Sign out everywhere (truncates sessions).
 - **Logs**: `pnpm exec wrangler tail`. The LeetCode cookie is never logged.

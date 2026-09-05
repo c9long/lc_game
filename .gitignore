@@ -32,3 +32,6 @@ vite.config.ts.timestamp-*
 
 # Monaco is copied from node_modules at build/dev time (scripts/copy-monaco.mjs)
 static/monaco/
+
+# downloaded doc sources for drill mining
+.cache/

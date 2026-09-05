@@ -170,7 +170,7 @@ export const planItems = sqliteTable(
 			.references(() => plans.date),
 		slot: integer('slot').notNull(),
 		slug: text('slug').notNull(),
-		kind: text('kind', { enum: ['new', 'refresh', 'daily'] }).notNull(),
+		kind: text('kind', { enum: ['new', 'refresh', 'daily', 'drills'] }).notNull(),
 		done: bool('done').notNull().default(false)
 	},
 	(t) => [primaryKey({ columns: [t.planDate, t.slot] })]
@@ -194,3 +194,29 @@ export type ProblemStateRow = typeof problemState.$inferSelect;
 export type AttemptRow = typeof attempts.$inferSelect;
 export type AwardRow = typeof awards.$inferSelect;
 export type BuildingRow = typeof buildings.$inferSelect;
+
+/** Spaced-repetition state per syntax drill. */
+export const drillState = sqliteTable('drill_state', {
+	drillId: text('drill_id').primaryKey(),
+	lang: text('lang').notNull(),
+	srsStep: integer('srs_step').notNull().default(-1),
+	dueAt: ts('due_at'),
+	correct: integer('correct').notNull().default(0),
+	wrong: integer('wrong').notNull().default(0),
+	lastSeenAt: ts('last_seen_at')
+});
+
+export const drillAttempts = sqliteTable(
+	'drill_attempts',
+	{
+		id: text('id').primaryKey(),
+		drillId: text('drill_id').notNull(),
+		date: text('date').notNull(),
+		correct: bool('correct').notNull(),
+		answer: text('answer').notNull(),
+		createdAt: ts('created_at').notNull()
+	},
+	(t) => [index('drill_attempts_date_idx').on(t.date)]
+);
+
+export type DrillStateRow = typeof drillState.$inferSelect;

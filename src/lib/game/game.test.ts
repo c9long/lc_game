@@ -6,6 +6,7 @@ import { computeTree, dueRefreshes, nextNewProblems, type ProblemProgress } from
 import { computeAward } from './awards';
 import { WEEKLY_BUDGET, advanceMorale, weeklyCount } from './budget';
 import { BUILDINGS, baseProduction, canAfford, costAtLevel, dailyCoins, gateSatisfied } from './city';
+import { DRILL_INTERVALS, afterDrill, buildDrillSet, checkAnswer, ingotsFor, normalizeOutput, type Drill } from './drills';
 
 const DAY = 86_400_000;
 const t0 = new Date('2026-09-04T12:00:00Z');
@@ -137,8 +138,9 @@ describe('city', () => {
 		expect(gateSatisfied({ node: 'arrays-hashing', status: 'unlocked' }, ctx)).toBe(false);
 		expect(gateSatisfied({ hard: 3 }, { ...ctx, hardSolves: 3 })).toBe(true);
 		const hut = BUILDINGS.find((b) => b.id === 'hut')!;
-		expect(costAtLevel(hut, 2)).toEqual({ timber: 8 });
-		expect(canAfford({ timber: 7 }, costAtLevel(hut, 2))).toBe(false);
+		expect(costAtLevel(hut, 2)).toEqual({ timber: 8, ingots: 3 });
+		expect(canAfford({ timber: 8 }, costAtLevel(hut, 2))).toBe(false);
+		expect(canAfford({ timber: 8, ingots: 3 }, costAtLevel(hut, 2))).toBe(true);
 		const placed = [
 			{ id: 'a', kind: 'hut', x: 0, y: 0, level: 2 },
 			{ id: 'r', kind: 'graph-roads', x: 1, y: 0, level: 1 },
@@ -146,5 +148,34 @@ describe('city', () => {
 		];
 		expect(baseProduction(placed, tree)).toBeCloseTo(2 * 1.25 + 2);
 		expect(dailyCoins(placed, tree, 50)).toBe(2);
+	});
+});
+
+describe('drills', () => {
+	const mk = (id: string, kind: Drill['kind'], answer: string): Drill => ({ id, lang: 'python', module: 'm', kind, context: '', code: '', answer, url: '' });
+	it('checks answers leniently but correctly', () => {
+		expect(checkAnswer(mk('a', 'output', "['fig', 'apple']"), '["fig","apple"]')).toBe(true);
+		expect(checkAnswer(mk('a', 'output', '{1: 2, 3: 4}'), '{1:2, 3:4}')).toBe(true);
+		expect(checkAnswer(mk('a', 'output', 'True'), 'true')).toBe(false);
+		expect(checkAnswer(mk('b', 'cloze', 'heappush'), ' heappush( ')).toBe(true);
+		expect(checkAnswer(mk('b', 'cloze', 'heappush'), 'heappop')).toBe(false);
+		expect(normalizeOutput('a = 1\n\n')).toBe('a=1');
+	});
+	it('schedules and rewards', () => {
+		const s1 = afterDrill(null, true, t0);
+		expect(s1.srsStep).toBe(1);
+		expect(afterDrill(s1, false, t0).srsStep).toBe(0);
+		expect(afterDrill({ srsStep: 9, dueAt: t0 }, true, t0).srsStep).toBe(DRILL_INTERVALS.length - 1);
+		expect(ingotsFor([true, true, true, true, true])).toBe(7);
+		expect(ingotsFor([true, false, true, true, true])).toBe(4);
+	});
+	it('builds a set from due then unseen drills, alternating kinds', () => {
+		const bank = [mk('1', 'cloze', 'x'), mk('2', 'cloze', 'x'), mk('3', 'output', 'x'), mk('4', 'output', 'x'), mk('5', 'cloze', 'x'), mk('6', 'output', 'x')];
+		const progress = new Map([
+			['5', { srsStep: 1, dueAt: new Date(t0.getTime() - DAY), correct: 1, wrong: 0 }],
+			['6', { srsStep: 1, dueAt: new Date(t0.getTime() + DAY), correct: 1, wrong: 0 }]
+		]);
+		const set = buildDrillSet(bank, progress, t0, 4);
+		expect(set.map((d) => d.id)).toEqual(['5', '3', '1', '4']);
 	});
 });

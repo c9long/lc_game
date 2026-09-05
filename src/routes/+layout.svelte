@@ -5,6 +5,7 @@
 	const links = [
 		['/', 'Today'],
 		['/tree', 'Tech tree'],
+		['/drills', 'Drills'],
 		['/city', 'City'],
 		['/admin', 'Admin']
 	];

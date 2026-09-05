@@ -14,6 +14,7 @@ This is the option being built. It merges [01-commit-city.md](01-commit-city.md)
 | Languages | Python, Go, C# front-line; C++ and Rust selectable | The judge supports all of them; non-Python solves earn x1.5 |
 | Hosting | Cloudflare Workers + D1 | $0, SQLite locally and in prod, secrets in one place. No cron: morale and coins tick lazily on the next request |
 | Fallback hosting | Vercel + Turso, then Cloudflare Tunnel from the WSL box | Only if LeetCode blocks run/submit from Workers egress |
+| Syntax drills | Recall drills (cloze and output prediction) mined from CPython's documentation, verified by execution at generation time; no runtime execution | Added 2026-09-04. Ingots from drills are the only way to upgrade buildings |
 | AI | None | Chris's call |
 
 ## Phase 0 result: LeetCode egress from Workers
@@ -53,6 +54,16 @@ Phases 1 to 8 are implemented in one pass: repo hygiene, passkey auth, admin/coo
 - Buildings are gated by tree nodes (Hash Market needs Arrays & Hashing unlocked, DP Academy needs 1-D DP unlocked, and so on), and by solve counts for Walls and the Monument. Production is scaled by the node's freshness and by morale, and only accrues on days with at least one solve. Coins buy upgrades and Granary freeze days; grid expansion and cosmetics are future work.
 - 8x8 grid with adjacency bonuses only. Emoji or SVG tiles.
 
+### Syntax drills (the Forge)
+
+- A drill is a recall exercise, never executed at runtime. Two kinds: **cloze** (an API name in a documentation example is blanked; the produced output is shown as a hint) and **output** (what does this example print). Answers are checked with whitespace-, quote- and spacing-insensitive matching plus an optional alternatives list.
+- Content comes from `scripts/mine-python-docs.py`, which reads CPython 3.12 `Doc/library/*.rst` for an allowlist of LeetCode-relevant modules (heapq, bisect, collections, itertools, functools, math, operator, string, builtin types and functions), executes every doctest example locally, and keeps only the ones whose output reproduces. Setup blocks are executed so examples work, but examples that depend on doc-only helper functions, bytes literals, or non-allowlisted APIs are dropped. Output: `data/drills/python.json`. Licence: PSF and Zero-Clause BSD for documentation examples.
+- `data/drills/curation.json` holds hand-written drills (`extra`, verified by `scripts/verify-drills.py`), ids to exclude, and a per-module cap. Hand-written drills are served first.
+- Each day gets a set of 5 (`buildDrillSet`): due drills first on a 1, 3, 7, 21, 60 day ladder, then unseen drills alternating kinds. A wrong answer resets the drill to 1 day.
+- Rewards: 1 **Ingot** per correct answer, +2 for a perfect set. Upgrading any building past level 1 costs 3 Ingots per level on top of the scaled resource cost, so drills are the only route to a prosperous city.
+- The daily plan has a third slot pointing at `/drills`; it does not count toward the weekly budget, which remains about problems.
+- Go and C# banks are future work: Go's `example_test.go` files with `// Output:` comments and the dotnet API docs snippets are the analogous sources.
+
 ### Solutions
 
 Three tabs on the solve page: the NeetCode reference solution vendored from the MIT-licensed repo (served from `static/solutions/`), LeetCode community solutions filtered to the current language, and the editorial (in-app when free, a link when Premium). Opening the drawer before the problem is accepted costs 2 essence drawn from the problem's topic tags and marks that day's solve as assisted. After acceptance it is free. A "Last accepted" button loads your previous accepted code into the editor for comparison.
@@ -77,10 +88,12 @@ Worker
   /api/solve/<slug>/solutions  community / article / editorial proxy; records solution views
   /api/city/build, /api/city/freeze   server-validated placement, upgrade, freeze days
   /api/sync                    recentAcSubmissionList fallback (also runs on Today, throttled to 5 min)
+  /drills, /api/drills/answer  daily drill set (stored in game_state), server-side answer checking, ingots
   No cron: loadSnapshot() advances morale and accrues coins for elapsed days on each request; the daily plan is created on first load of the day.
 
 D1: users, passkeys, sessions, challenges, settings (encrypted rows), problems (cache), problem_state,
-    attempts, awards, ledger, resources, buildings, game_state, plans, plan_items, solution_views
+    attempts, awards, ledger, resources, buildings, game_state, plans, plan_items, solution_views,
+    drill_state, drill_attempts
     (node status and research are derived from problem_state and awards; no node table)
 ```
 

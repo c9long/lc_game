@@ -13,4 +13,4 @@ pnpm db:migrate:local
 pnpm dev
 ```
 
-Reference solutions under `static/solutions/` are from [neetcode-gh/leetcode](https://github.com/neetcode-gh/leetcode) (MIT).
+Syntax drills in `data/drills/` are mined from the CPython documentation (PSF / Zero-Clause BSD) by `scripts/mine-python-docs.py`. Reference solutions under `static/solutions/` are from [neetcode-gh/leetcode](https://github.com/neetcode-gh/leetcode) (MIT).

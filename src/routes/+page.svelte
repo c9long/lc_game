@@ -1,7 +1,7 @@
 <script lang="ts">
 	let { data } = $props();
 	const pct = $derived(Math.min(100, Math.round((data.weekly / data.budget) * 100)));
-	const kindLabel: Record<string, string> = { new: 'New', refresh: 'Refresh', daily: 'Daily ×2' };
+	const kindLabel: Record<string, string> = { new: 'New', refresh: 'Refresh', daily: 'Daily ×2', drills: 'Forge' };
 </script>
 
 <h1>Today <span class="muted">{data.today}</span></h1>
@@ -27,9 +27,9 @@
 		{#each data.plan as item (item.slot)}
 			<div class="row plan-item" class:done={item.done}>
 				<span class="slot">{item.slot}</span>
-				<span class="pill {item.difficulty}">{item.difficulty}</span>
+				{#if item.difficulty}<span class="pill {item.difficulty}">{item.difficulty}</span>{/if}
 				<span class="pill">{kindLabel[item.kind]}</span>
-				<a href="/solve/{item.slug}"><strong>{item.title}</strong></a>
+				<a href={item.kind === 'drills' ? '/drills' : `/solve/${item.slug}`}><strong>{item.title}</strong></a>
 				{#if item.pattern}<span class="muted">{item.pattern}</span>{/if}
 				{#if item.done}<span class="done-mark">✓ done</span>{/if}
 			</div>

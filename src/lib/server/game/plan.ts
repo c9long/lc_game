@@ -5,11 +5,13 @@ import { fetchDaily, type Daily } from '../leetcode/client';
 import { getState, setState, type Snapshot } from './state';
 import { PROBLEM_BY_SLUG } from '$lib/game/curriculum';
 import { dueRefreshes, nextNewProblems } from '$lib/game/tree';
+import { DRILL_LANGS } from '$lib/game/drillbank';
+import { langForDate } from './drills';
 
 export interface PlanItem {
 	slot: number;
 	slug: string;
-	kind: 'new' | 'refresh' | 'daily';
+	kind: 'new' | 'refresh' | 'daily' | 'drills';
 	done: boolean;
 	title: string;
 	difficulty: string;
@@ -36,6 +38,9 @@ function decorate(items: { slot: number; slug: string; kind: PlanItem['kind']; d
 	return items
 		.sort((a, b) => a.slot - b.slot)
 		.map((i) => {
+			if (i.kind === 'drills') {
+				return { ...i, title: `Syntax drills (${i.slug})`, difficulty: '', nodeId: null, pattern: 'Forge' };
+			}
 			const p = PROBLEM_BY_SLUG.get(i.slug);
 			return {
 				...i,
@@ -89,6 +94,10 @@ export async function getOrCreatePlan(db: Db, snap: Snapshot): Promise<PlanItem[
 		exclude.add(daily!.slug);
 	} else if (!takeNew(2)) {
 		takeRefresh(2);
+	}
+
+	if (DRILL_LANGS.length > 0) {
+		chosen.push({ slot: 3, slug: langForDate(snap.today), kind: 'drills', done: false });
 	}
 
 	if (chosen.length > 0) {

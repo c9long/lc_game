@@ -29,7 +29,7 @@
 
 <h1>City</h1>
 <div class="row summary">
-	{#each ['coins', 'timber', 'stone', 'iron'] as k (k)}<span class="pill">{k} <strong>{data.resources[k] ?? 0}</strong></span>{/each}
+	{#each ['coins', 'timber', 'stone', 'iron', 'ingots'] as k (k)}<span class="pill">{k} <strong>{data.resources[k] ?? 0}</strong></span>{/each}
 	<span class="muted">· {data.production} coins per active day · morale {Math.round(data.morale.morale)} · freeze days {data.morale.freezeDays}/3</span>
 	{#if data.hasGranary}
 		<button disabled={busy || (data.resources.coins ?? 0) < data.freezeCost || data.morale.freezeDays >= 3} onclick={() => post('/api/city/freeze', {})}>Buy freeze day ({data.freezeCost} coins)</button>
