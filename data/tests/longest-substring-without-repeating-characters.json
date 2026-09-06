@@ -17,6 +17,246 @@
         "pwwkew"
       ],
       "expected": 3
+    },
+    {
+      "args": [
+        "dabcfadfbeaeafebbfaf"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "bcfedddbd"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "fefeadaec"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "ccabcabab"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "cbcaac"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "baaabaaaa"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "cbccbbcbb"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "ca"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "aaaaabaabaab"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "abbbaabbabba"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "acbebacffebecccacfd"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "bbcbbcca"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "ababaaaababbbbabb"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "dceebcedd"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "aabbabbbabbaaa"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "aaaabbbaaabaabbbbab"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "bbbbaaababaaab"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "ba"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "cbcccacacc"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "babbbabaabba"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "bab"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "abaabbabbba"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "bbaba"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "bb"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "accbbcabbcc"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "aaabcaabbccbbcacac"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "c"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "bcaaabacaaba"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "babaaaabbbbbbabbaba"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "baaabbaaabaabb"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "dbfcccebaa"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "cbcac"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "ebcfdccbdecdbddfbce"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "ccaabbcbcbcbc"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "ababbaabbabbbb"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "adffcdbde"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "aaabb"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "abdbec"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "bbaabbbaaabbbbaab"
+      ],
+      "expected": 2
     }
   ],
   "compare": "exact",
@@ -33,5 +273,5 @@
     "type": "integer"
   },
   "slug": "longest-substring-without-repeating-characters",
-  "source": "examples"
+  "source": "examples+generated"
 }

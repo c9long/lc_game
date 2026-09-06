@@ -39,6 +39,81 @@
         0,
         -2
       ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "push",
+          "push",
+          "getMin",
+          "pop",
+          "getMin",
+          "pop",
+          "getMin"
+        ],
+        [
+          [],
+          [
+            2
+          ],
+          [
+            0
+          ],
+          [
+            3
+          ],
+          [],
+          [],
+          [],
+          [],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        0,
+        null,
+        0,
+        null,
+        2
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "push",
+          "pop",
+          "top",
+          "getMin"
+        ],
+        [
+          [],
+          [
+            -1
+          ],
+          [
+            -1
+          ],
+          [],
+          [],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        -1,
+        -1
+      ]
     }
   ],
   "classname": "MinStack",
@@ -92,5 +167,5 @@
     }
   ],
   "slug": "min-stack",
-  "source": "examples"
+  "source": "examples+generated"
 }

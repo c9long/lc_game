@@ -29,6 +29,246 @@
         "([)]"
       ],
       "expected": false
+    },
+    {
+      "args": [
+        "]"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "[[[(][({}("
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "[][{]"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        ")}["
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "]){}){"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "]{)]{}{"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "}{"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "[][]["
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "{))([["
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        ")[)"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "}(}}"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "[(["
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        ")["
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "}[(({}({{"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "(){"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "()[[}"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "{"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        ")}}("
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "({{[{)"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "}][)){)"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "}[}))){{(("
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "][{]"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "}]]]{{("
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "}]]{{]"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "[["
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "()][]("
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        ")([[)[)]"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "{[)[)]"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "{{)"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "[][[)]"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "{)}{"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "(}]](][)"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "["
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        ")}}(}}"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "{}{]("
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "}[]{[}(("
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "(}[}})]"
+      ],
+      "expected": false
     }
   ],
   "compare": "exact",
@@ -45,5 +285,5 @@
     "type": "boolean"
   },
   "slug": "valid-parentheses",
-  "source": "examples"
+  "source": "examples+generated"
 }

@@ -37,6 +37,9 @@ sys.path.insert(0, str(ROOT / "src" / "lib" / "pyodide"))
 
 import driver  # noqa: E402  (needs the path above)
 
+sys.path.insert(0, str(ROOT / "scripts"))
+import generators  # noqa: E402
+
 GRAPHQL = "https://leetcode.com/graphql"
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
 META_CACHE = ROOT / "data" / "problems-meta.json"
@@ -184,6 +187,16 @@ def generate(slug: str, code: str, meta: dict, curation: dict) -> tuple[str, str
     if not inputs:
         return "no-cases", "no example testcases published"
 
+    # Example cases stay first and define exampleCount, so Run remains the quick check while
+    # Submit gets everything. Hand-written cases come next (they target a specific weakness), then
+    # generated ones.
+    example_count = len(inputs)
+    extra = curation.get("extra", {}).get(slug, [])
+    inputs = inputs + [list(args) for args in extra]
+    generated = generators.build(slug)
+    if generated:
+        inputs = inputs + generated
+
     source = usable_source(solution_file.read_text())
     signal.signal(signal.SIGALRM, _alarm)
     signal.alarm(TIMEOUT_S)
@@ -197,10 +210,9 @@ def generate(slug: str, code: str, meta: dict, curation: dict) -> tuple[str, str
     # An expectation must survive a round trip through JSON or the browser cannot store it.
     payload = dict(spec)
     payload["cases"] = [{"args": a, "expected": o} for a, o in zip(inputs, outputs)]
-    payload["source"] = "examples"
-    # Example-derived cases come first and are the only ones Run shows. Generated cases (phase D)
-    # append after them and are used by Submit only.
-    payload["exampleCount"] = len(inputs)
+    payload["source"] = "examples" if len(inputs) == example_count else "examples+generated"
+    # Example-derived cases come first and are the only ones Run shows; the rest are Submit-only.
+    payload["exampleCount"] = example_count
     text = json.dumps(payload, indent=2, sort_keys=True) + "\n"
     json.loads(text)
 

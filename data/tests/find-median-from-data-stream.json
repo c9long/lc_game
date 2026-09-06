@@ -33,6 +33,51 @@
         null,
         2
       ]
+    },
+    {
+      "args": [
+        [
+          "MedianFinder",
+          "addNum",
+          "findMedian",
+          "addNum",
+          "findMedian",
+          "addNum",
+          "findMedian",
+          "addNum",
+          "findMedian"
+        ],
+        [
+          [],
+          [
+            5
+          ],
+          [],
+          [
+            1
+          ],
+          [],
+          [
+            3
+          ],
+          [],
+          [
+            -2
+          ],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        5,
+        null,
+        3.0,
+        null,
+        3,
+        null,
+        2.0
+      ]
     }
   ],
   "classname": "MedianFinder",
@@ -72,5 +117,5 @@
     }
   ],
   "slug": "find-median-from-data-stream",
-  "source": "examples"
+  "source": "examples+generated"
 }

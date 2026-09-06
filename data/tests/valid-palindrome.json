@@ -17,6 +17,246 @@
         " "
       ],
       "expected": true
+    },
+    {
+      "args": [
+        "::,"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "cc"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "::a  "
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "a"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "c"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        ",,"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        ",bb,cc,bb,"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "b: bb :b"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        ",,b"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        ":"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "a,,"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "a:cc:a"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "b c"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "cc "
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        ":a  ::  a:"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "a:,:,"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "acaccaca"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "ab ,a"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        " bca  acb "
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        ",c cc c,"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "a::aa,"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        ",acca,"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "  a  "
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "a:c"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "cb,"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "b b"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        " a,aa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "ca"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "cc"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        " bcca,"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        " :ca:,,:ac: "
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        ":  a  a  :"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "a,a c "
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "::"
+      ],
+      "expected": true
     }
   ],
   "compare": "exact",
@@ -33,5 +273,5 @@
     "type": "boolean"
   },
   "slug": "valid-palindrome",
-  "source": "examples"
+  "source": "examples+generated"
 }

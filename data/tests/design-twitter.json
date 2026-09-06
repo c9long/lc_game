@@ -58,6 +58,64 @@
           5
         ]
       ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "postTweet",
+          "postTweet",
+          "getNewsFeed",
+          "follow",
+          "getNewsFeed",
+          "unfollow",
+          "getNewsFeed"
+        ],
+        [
+          [],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        [
+          2,
+          1
+        ],
+        null,
+        [
+          2,
+          1
+        ],
+        null,
+        []
+      ]
     }
   ],
   "classname": "Twitter",
@@ -138,5 +196,5 @@
     }
   ],
   "slug": "design-twitter",
-  "source": "examples"
+  "source": "examples+generated"
 }

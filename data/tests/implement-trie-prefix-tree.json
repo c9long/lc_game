@@ -42,6 +42,44 @@
         null,
         true
       ]
+    },
+    {
+      "args": [
+        [
+          "Trie",
+          "insert",
+          "search",
+          "search",
+          "startsWith",
+          "startsWith"
+        ],
+        [
+          [],
+          [
+            "app"
+          ],
+          [
+            "ap"
+          ],
+          [
+            "app"
+          ],
+          [
+            "ap"
+          ],
+          [
+            "apple"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        false,
+        true,
+        true,
+        false
+      ]
     }
   ],
   "classname": "Trie",
@@ -98,5 +136,5 @@
     }
   ],
   "slug": "implement-trie-prefix-tree",
-  "source": "examples"
+  "source": "examples+generated"
 }

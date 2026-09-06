@@ -50,6 +50,57 @@
         "bar2",
         "bar2"
       ]
+    },
+    {
+      "args": [
+        [
+          "TimeMap",
+          "get",
+          "set",
+          "get",
+          "get",
+          "set",
+          "get"
+        ],
+        [
+          [],
+          [
+            "k",
+            1
+          ],
+          [
+            "k",
+            "v1",
+            5
+          ],
+          [
+            "k",
+            3
+          ],
+          [
+            "k",
+            7
+          ],
+          [
+            "k",
+            "v2",
+            5
+          ],
+          [
+            "k",
+            5
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        "",
+        null,
+        "",
+        "v1",
+        null,
+        "v2"
+      ]
     }
   ],
   "classname": "TimeMap",
@@ -106,5 +157,5 @@
     }
   ],
   "slug": "time-based-key-value-store",
-  "source": "examples"
+  "source": "examples+generated"
 }

@@ -47,6 +47,44 @@
         true,
         true
       ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "addWord",
+          "search",
+          "search",
+          "search",
+          "search"
+        ],
+        [
+          [],
+          [
+            "ab"
+          ],
+          [
+            "a"
+          ],
+          [
+            ".."
+          ],
+          [
+            "a."
+          ],
+          [
+            "..."
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        false,
+        true,
+        true,
+        false
+      ]
     }
   ],
   "classname": "WordDictionary",
@@ -91,5 +129,5 @@
     }
   ],
   "slug": "design-add-and-search-words-data-structure",
-  "source": "examples"
+  "source": "examples+generated"
 }

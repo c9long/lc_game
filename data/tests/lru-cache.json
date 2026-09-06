@@ -63,6 +63,102 @@
         3,
         4
       ]
+    },
+    {
+      "args": [
+        [
+          "LRUCache",
+          "put",
+          "put",
+          "put",
+          "get",
+          "get",
+          "get"
+        ],
+        [
+          [
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        -1,
+        2,
+        3
+      ]
+    },
+    {
+      "args": [
+        [
+          "LRUCache",
+          "put",
+          "get",
+          "put",
+          "put",
+          "get",
+          "get"
+        ],
+        [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2
+          ],
+          [
+            1
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        1,
+        null,
+        null,
+        -1,
+        3
+      ]
     }
   ],
   "classname": "LRUCache",
@@ -116,5 +212,5 @@
     }
   ],
   "slug": "lru-cache",
-  "source": "examples"
+  "source": "examples+generated"
 }

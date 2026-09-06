@@ -88,6 +88,42 @@
         7,
         8
       ]
+    },
+    {
+      "args": [
+        [
+          "KthLargest",
+          "add",
+          "add",
+          "add",
+          "add"
+        ],
+        [
+          [
+            1,
+            []
+          ],
+          [
+            -1
+          ],
+          [
+            -5
+          ],
+          [
+            7
+          ],
+          [
+            0
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        -1,
+        -1,
+        7,
+        7
+      ]
     }
   ],
   "classname": "KthLargest",
@@ -135,5 +171,5 @@
     }
   ],
   "slug": "kth-largest-element-in-a-stream",
-  "source": "examples"
+  "source": "examples+generated"
 }

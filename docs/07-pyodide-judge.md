@@ -103,10 +103,10 @@ Awards, SRS scheduling and the ledger key off an accepted verdict exactly as bef
 |---|---|---|---|
 | **A** | Pyodide worker, type codec, plain driver, tests for the plain problems | Arrays & Hashing onward — most of the tree | **done: 115 suites** |
 | **B** | `TreeNode` / `ListNode` codecs, plus named adapters | +23 problems | **done: 138 suites, all verified** |
-| **C** | Design-mode driver | +9 problems, and the 3 round-trip skips | not started |
-| **D** | Generator specs for stronger suites | Ongoing, ordered to follow the tree | not started |
+| **C** | Design-mode driver and round-trip adapters | +12 problems — all 150 covered | **done: 150 suites** |
+| **D** | Generators and hand-written cases for stronger suites | Ongoing, ordered to follow the tree | **started: 37 of 150** |
 
-Coverage: **138 of 150** generated and verified, 9 design problems deferred to C, 3 skipped.
+Coverage: **150 of 150** generated and verified. Suite *strength* is the remaining work — see phase D below.
 
 ### Phase A as built
 
@@ -136,6 +136,30 @@ The `TreeNode` / `ListNode` codecs were already in the driver, so 19 of the 24 s
 Confirmed under Pyodide that the suites *discriminate*, not merely accept: identity on `reverse-linked-list`, a no-op on `invert-binary-tree`, a constant `False` on `linked-list-cycle`, always-return-root on the LCA, and `return head` on the deep copy are all rejected, while correct solutions pass.
 
 Still skipped, all needing a round-trip harness that belongs with phase C's design driver: `clone-graph`, `encode-and-decode-strings`, `serialize-and-deserialize-binary-tree`.
+
+### Phase C as built
+
+The design driver needed no changes: all 9 operation-sequence problems generated correctly first time, each matching LeetCode's documented output exactly. Three adapters finished the set — `clone-graph`, `encode-and-decode-strings`, `serialize-and-deserialize-binary-tree`. All three are **identity round trips**, so comparing serialisations alone would accept a solution that does nothing; the adapters check node identity for the graph clone and require `encode`/`serialize` to actually return a string.
+
+`Node` was removed from the shared preamble. LeetCode reuses the name for two incompatible shapes — `Node(val, neighbors)` for clone-graph, `Node(val, next, random)` for copy-list — so one global definition hands one of them the wrong positional arguments. The adapter that needs a `Node` installs it, and never overrides one the solution defines.
+
+### Phase D as started
+
+| | Before | After |
+|---|---|---|
+| Total cases across all suites | 341 | **1489** |
+| Cases per problem (median / mean) | 2 / 2.5 | 3 / **9.9** |
+| Suites where Submit tests more than Run | **0 / 150** | 37 / 150 |
+| Suites flagged weak by `verify-tests.py` | 12 | **0** |
+
+Two mechanisms, both supplying only *inputs* — expected outputs still come from the oracle, so no answer is ever written by hand:
+
+- `scripts/generators.py`: a small Python generator per problem, seeded per slug so regeneration is byte-identical and a diff means a real change. A generator returns `None` to reject a draw, because most problems carry preconditions the schema cannot express ("sorted", "exactly one solution", "unique values"). `two-sum` redraws when a second valid pair exists; `top-k-frequent-elements` keeps frequencies distinct so the answer is not ambiguous.
+- `extra` in `tests-curation.json`: hand-written inputs aimed at a specific weakness. Mostly design problems, whose single published example exercises almost nothing — LeetCode's `LRUCache` example never forces an eviction that is later read back, and its `Trie` example never searches a strict prefix.
+
+**How the generators are validated, and why `verify-tests.py` is not enough.** That script re-runs the same reference solution that produced the expectations, so a generator that violates a precondition enshrines garbage and still "verifies". The failure mode that matters is *rejecting correct code*. So generators are checked against **independent implementations** — brute force, deliberately written differently from NeetCode's — which must pass 100%: an unsorted array fed to a binary search, or a two-sum with two answers, fails immediately. 19 such solutions pass every generated case, and the cheats the thin suites used to accept now fail: the naive comma-join encoder (26/42), a never-evicting `LRUCache` (0/3), `search == startsWith` (0/2), constant answers for `jump-game-ii` (17/42) and `last-stone-weight` (14/42), and a `TimeMap` that ignores timestamps (1/2).
+
+**113 of 150 problems still have example cases only** — roughly two apiece, weak enough to accept a wrong solution. Generators are added in tree order, so the nodes being worked on are the best covered.
 
 ## Risks
 

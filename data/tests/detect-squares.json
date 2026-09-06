@@ -68,6 +68,67 @@
         null,
         2
       ]
+    },
+    {
+      "args": [
+        [
+          "DetectSquares",
+          "add",
+          "add",
+          "add",
+          "count",
+          "add",
+          "count"
+        ],
+        [
+          [],
+          [
+            [
+              0,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              2,
+              2
+            ]
+          ],
+          [
+            [
+              2,
+              2
+            ]
+          ],
+          [
+            [
+              2,
+              2
+            ]
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        1,
+        null,
+        1
+      ]
     }
   ],
   "classname": "DetectSquares",
@@ -112,5 +173,5 @@
     }
   ],
   "slug": "detect-squares",
-  "source": "examples"
+  "source": "examples+generated"
 }
