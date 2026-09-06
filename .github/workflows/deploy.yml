@@ -1,0 +1,72 @@
+name: Deploy
+
+# Pushes to main go straight to the live Worker. Everything the app needs is either committed
+# (data/tests/, drizzle migrations, static/solutions/) or regenerated during the build
+# (static/monaco and static/pyodide, via the prebuild hook), so a clean checkout is enough.
+#
+# Secrets are NOT deployed from here. AUTH_SECRET, SETTINGS_KEY and SETUP_TOKEN live in Cloudflare
+# and survive redeploys; `wrangler secret put` remains a manual, deliberate act.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Never let two deploys overlap, and never cancel one midway: a half-applied migration is worse
+# than a queued job.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pnpm install --frozen-lockfile
+
+      # --- gates -------------------------------------------------------------
+      # The browser judge cannot be exercised headlessly, so what is checkable is checked:
+      # types, the pure game rules, and the integrity of the generated test data.
+      - name: Typecheck
+        run: pnpm run check
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Verify generated test suites
+        run: python3 scripts/verify-tests.py
+
+      # --- deploy ------------------------------------------------------------
+      - name: Build
+        run: pnpm run build
+
+      # Additive and idempotent: only migrations not yet recorded in D1 are applied. Drop this step
+      # if you would rather migrate production by hand.
+      - name: Apply D1 migrations
+        run: pnpm exec wrangler d1 migrations apply lc-game --remote
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      # Called directly rather than through the package script: `pnpm deploy` is a built-in pnpm
+      # subcommand and shadows it.
+      - name: Deploy to Cloudflare Workers
+        run: pnpm exec wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
