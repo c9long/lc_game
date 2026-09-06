@@ -91,6 +91,22 @@ describe('tree', () => {
 		const next = nextNewProblems(tree, progress, false, 2);
 		expect(next.map((p) => p.slug)).toEqual(root.slice(4, 6));
 	});
+
+	it('never schedules a refresh for a problem outside the curriculum', () => {
+		// Profile sync records solves made on leetcode.com so they count towards the weekly budget,
+		// which puts non-curriculum slugs into progress. They previously surfaced as refresh tasks
+		// linking to a solve page with no test suite, because expected outputs only exist for the
+		// vendored NeetCode 150.
+		const t0 = new Date('2026-09-06T12:00:00Z');
+		const overdue = new Date(t0.getTime() - 5 * DAY);
+		const inCurriculum = problemsForNode('arrays-hashing', true)[0].slug;
+		const progress = new Map<string, ProblemProgress>([
+			[inCurriculum, { solveCount: 1, srsStep: 0, dueAt: overdue }],
+			['maximum-number-of-vowels-in-a-substring-of-given-length', { solveCount: 1, srsStep: 0, dueAt: overdue }],
+			['most-common-word', { solveCount: 2, srsStep: 1, dueAt: overdue }]
+		]);
+		expect(dueRefreshes(progress, false, t0).map((r) => r.slug)).toEqual([inCurriculum]);
+	});
 });
 
 describe('awards', () => {

@@ -1,4 +1,11 @@
-import { NODES, NODE_BY_ID, NODE_ORDER, problemsForNode, type CurriculumProblem } from './curriculum';
+import {
+	NODES,
+	NODE_BY_ID,
+	NODE_ORDER,
+	PROBLEM_BY_SLUG,
+	problemsForNode,
+	type CurriculumProblem
+} from './curriculum';
 import { isDue } from './srs';
 
 export const UNLOCK_FRACTION = 0.5;
@@ -114,6 +121,11 @@ export function dueRefreshes(
 	);
 	const out: { slug: string; overdueMs: number }[] = [];
 	for (const [slug, s] of progress) {
+		// Profile sync records every accepted submission so solves made on leetcode.com still count
+		// towards the weekly budget, which means progress holds problems outside the curriculum.
+		// Those must never become refresh tasks: the tree does not track them and, since expected
+		// outputs come from the vendored reference solutions, there is no suite to judge them with.
+		if (!PROBLEM_BY_SLUG.has(slug)) continue;
 		if (s.solveCount === 0 || !isDue(s, now)) continue;
 		if (!hasPremium && premiumSlugs.has(slug)) continue;
 		out.push({ slug, overdueMs: now.getTime() - s.dueAt!.getTime() });
