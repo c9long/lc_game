@@ -43,7 +43,7 @@ _judge
 }
 
 self.onmessage = async (event) => {
-	const { id, type, source, spec, cases } = event.data ?? {};
+	const { id, type, source, specJson, casesJson } = event.data ?? {};
 	try {
 		if (type === 'boot') {
 			await boot();
@@ -55,7 +55,9 @@ self.onmessage = async (event) => {
 			await boot();
 			stdout = [];
 			const started = performance.now();
-			const raw = judgeFn(source, JSON.stringify(spec), JSON.stringify(cases));
+			// Already JSON: the client serialises before posting, because a Svelte $state proxy
+			// cannot be structured-cloned across the worker boundary.
+			const raw = judgeFn(source, specJson, casesJson);
 			self.postMessage({
 				id,
 				ok: true,

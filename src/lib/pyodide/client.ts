@@ -110,7 +110,17 @@ export async function judge(
 ): Promise<JudgeOutcome> {
 	let response: { results: CaseResult[]; stdout: string; elapsedMs: number };
 	try {
-		response = await call({ type: 'judge', source, spec: suite, cases }, timeoutMs);
+		// Serialise here rather than posting the objects. `suite` is usually a Svelte $state proxy,
+		// which structured clone refuses ("could not be cloned"), and the worker needs JSON anyway.
+		response = await call(
+			{
+				type: 'judge',
+				source,
+				specJson: JSON.stringify(suite),
+				casesJson: JSON.stringify(cases)
+			},
+			timeoutMs
+		);
 	} catch (e) {
 		if ((e as Error).message === 'timeout') {
 			return {
