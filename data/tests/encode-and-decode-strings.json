@@ -1,0 +1,42 @@
+{
+  "adapt": "codec-strings",
+  "cases": [
+    {
+      "args": [
+        [
+          "Hello",
+          "World"
+        ]
+      ],
+      "expected": [
+        "Hello",
+        "World"
+      ]
+    },
+    {
+      "args": [
+        [
+          ""
+        ]
+      ],
+      "expected": [
+        ""
+      ]
+    }
+  ],
+  "compare": "exact",
+  "entry": "encode",
+  "exampleCount": 2,
+  "mode": "plain",
+  "params": [
+    {
+      "name": "dummy_input",
+      "type": "list<string>"
+    }
+  ],
+  "returns": {
+    "type": "list<string>"
+  },
+  "slug": "encode-and-decode-strings",
+  "source": "examples"
+}

@@ -1,0 +1,120 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          "LRUCache",
+          "put",
+          "put",
+          "get",
+          "put",
+          "get",
+          "put",
+          "get",
+          "get",
+          "get"
+        ],
+        [
+          [
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            1
+          ],
+          [
+            3
+          ],
+          [
+            4
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        1,
+        null,
+        -1,
+        null,
+        -1,
+        3,
+        4
+      ]
+    }
+  ],
+  "classname": "LRUCache",
+  "compare": "exact",
+  "constructor": [
+    {
+      "name": "capacity",
+      "type": "integer"
+    }
+  ],
+  "exampleCount": 1,
+  "methods": [
+    {
+      "name": "get",
+      "params": [
+        {
+          "name": "key",
+          "type": "integer"
+        }
+      ],
+      "return": {
+        "type": "integer"
+      }
+    },
+    {
+      "name": "put",
+      "params": [
+        {
+          "name": "key",
+          "type": "integer"
+        },
+        {
+          "name": "value",
+          "type": "integer"
+        }
+      ],
+      "return": {
+        "type": "void"
+      }
+    }
+  ],
+  "mode": "design",
+  "params": [
+    {
+      "name": "ops",
+      "type": "string[]"
+    },
+    {
+      "name": "args",
+      "type": "integer[][]"
+    }
+  ],
+  "slug": "lru-cache",
+  "source": "examples"
+}

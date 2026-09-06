@@ -1,0 +1,96 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "push",
+          "push",
+          "getMin",
+          "pop",
+          "top",
+          "getMin"
+        ],
+        [
+          [],
+          [
+            -2
+          ],
+          [
+            0
+          ],
+          [
+            -3
+          ],
+          [],
+          [],
+          [],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        -3,
+        null,
+        0,
+        -2
+      ]
+    }
+  ],
+  "classname": "MinStack",
+  "compare": "exact",
+  "constructor": [],
+  "exampleCount": 1,
+  "methods": [
+    {
+      "name": "push",
+      "params": [
+        {
+          "name": "value",
+          "type": "integer"
+        }
+      ],
+      "return": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "pop",
+      "params": [],
+      "return": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "top",
+      "params": [],
+      "return": {
+        "type": "integer"
+      }
+    },
+    {
+      "name": "getMin",
+      "params": [],
+      "return": {
+        "type": "integer"
+      }
+    }
+  ],
+  "mode": "design",
+  "params": [
+    {
+      "name": "ops",
+      "type": "string[]"
+    },
+    {
+      "name": "args",
+      "type": "integer[][]"
+    }
+  ],
+  "slug": "min-stack",
+  "source": "examples"
+}

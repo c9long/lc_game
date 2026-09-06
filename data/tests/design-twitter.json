@@ -1,0 +1,142 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          "Twitter",
+          "postTweet",
+          "getNewsFeed",
+          "follow",
+          "postTweet",
+          "getNewsFeed",
+          "unfollow",
+          "getNewsFeed"
+        ],
+        [
+          [],
+          [
+            1,
+            5
+          ],
+          [
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        [
+          5
+        ],
+        null,
+        null,
+        [
+          6,
+          5
+        ],
+        null,
+        [
+          5
+        ]
+      ]
+    }
+  ],
+  "classname": "Twitter",
+  "compare": "exact",
+  "constructor": [],
+  "exampleCount": 1,
+  "methods": [
+    {
+      "name": "postTweet",
+      "params": [
+        {
+          "name": "userId",
+          "type": "integer"
+        },
+        {
+          "name": "tweetId",
+          "type": "integer"
+        }
+      ],
+      "return": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "getNewsFeed",
+      "params": [
+        {
+          "name": "userId",
+          "type": "integer"
+        }
+      ],
+      "return": {
+        "type": "list<integer>"
+      }
+    },
+    {
+      "name": "follow",
+      "params": [
+        {
+          "name": "followerId",
+          "type": "integer"
+        },
+        {
+          "name": "followeeId",
+          "type": "integer"
+        }
+      ],
+      "return": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "unfollow",
+      "params": [
+        {
+          "name": "followerId",
+          "type": "integer"
+        },
+        {
+          "name": "followeeId",
+          "type": "integer"
+        }
+      ],
+      "return": {
+        "type": "void"
+      }
+    }
+  ],
+  "mode": "design",
+  "params": [
+    {
+      "name": "ops",
+      "type": "string[]"
+    },
+    {
+      "name": "args",
+      "type": "integer[][]"
+    }
+  ],
+  "slug": "design-twitter",
+  "source": "examples"
+}

@@ -41,12 +41,25 @@ class TreeNode:
         self.left = left
         self.right = right
 
-class Node:
+"""
+
+# `Node` is deliberately NOT in the preamble. LeetCode uses the name for two incompatible shapes —
+# Node(val, neighbors) for clone-graph and Node(val, next, random) for copy-list-with-random-pointer
+# — so a single global definition would give one of them the wrong positional arguments. The
+# adapter that needs one installs it, and never overrides a Node the solution defines itself.
+
+
+class _GraphNode:
+    def __init__(self, val=0, neighbors=None):
+        self.val = val
+        self.neighbors = neighbors if neighbors is not None else []
+
+
+class _RandomNode:
     def __init__(self, val=0, next=None, random=None):
         self.val = val
         self.next = next
         self.random = random
-"""
 
 SCALARS = {"integer", "double", "float", "string", "boolean", "character", "long", "void"}
 
@@ -271,8 +284,8 @@ def adapt_copy_random_list(ns, spec, raw_args):
     """copyRandomList(head): input and output are [[value, randomIndex|null], ...], so the random
     pointers are resolved by index on the way in and re-indexed on the way out."""
     pairs = raw_args[0]
-    node_cls = ns["Node"]
-    nodes = [node_cls(pair[0]) for pair in pairs]
+    ns.setdefault("Node", _RandomNode)
+    nodes = [_RandomNode(pair[0]) for pair in pairs]
     for i, node in enumerate(nodes):
         node.next = nodes[i + 1] if i + 1 < len(nodes) else None
         idx = pairs[i][1]
@@ -297,10 +310,72 @@ def adapt_copy_random_list(ns, spec, raw_args):
     return [[n.val, None if n.random is None else index.get(id(n.random))] for n in order]
 
 
+def adapt_clone_graph(ns, spec, raw_args):
+    """cloneGraph(node): the input is an adjacency list where entry i belongs to node i+1. Neighbour
+    values are sorted on the way out, since the problem does not fix their order."""
+    adjacency = raw_args[0]
+    ns.setdefault("Node", _GraphNode)
+    nodes = [_GraphNode(i + 1) for i in range(len(adjacency))]
+    for i, neighbours in enumerate(adjacency):
+        nodes[i].neighbors = [nodes[j - 1] for j in neighbours]
+
+    original_ids = {id(n) for n in nodes}
+    solution = solution_object(ns, spec)
+    out = bound_entry(solution, spec["entry"])(nodes[0] if nodes else None)
+    if out is None:
+        return []
+
+    seen, order, stack = set(), [], [out]
+    while stack:
+        node = stack.pop()
+        if id(node) in seen:
+            continue
+        seen.add(id(node))
+        order.append(node)
+        stack.extend(node.neighbors)
+
+    # As with the random-pointer list, a correct clone serialises identically to its input, so
+    # `return node` has to be rejected on identity rather than on the serialisation.
+    if any(id(n) in original_ids for n in order):
+        raise ValueError("returned graph shares nodes with the original; it is not a deep copy")
+
+    order.sort(key=lambda n: n.val)
+    return [sorted(nb.val for nb in n.neighbors) for n in order]
+
+
+def adapt_codec_strings(ns, spec, raw_args):
+    """encode-and-decode-strings: metaData exposes a dummy entry point. The real test is that
+    decode(encode(strs)) == strs, with encode forced to produce a single string so that returning
+    the list untouched cannot pass."""
+    strs = raw_args[0]
+    solution = solution_object(ns, spec)
+    encoded = bound_entry(solution, "encode")(list(strs))
+    if not isinstance(encoded, str):
+        raise ValueError("encode must return a single string")
+    return bound_entry(solution, "decode")(encoded)
+
+
+def adapt_codec_tree(ns, spec, raw_args):
+    """serialize-and-deserialize-binary-tree: a Codec round trip. serialize must produce a string,
+    otherwise handing the tree straight back would pass."""
+    root = to_tree(raw_args[0], ns)
+    cls = ns.get("Codec") or ns.get("Solution")
+    if cls is None:
+        raise Unsupported("no Codec or Solution class")
+    codec = cls()
+    data = codec.serialize(root)
+    if not isinstance(data, str):
+        raise ValueError("serialize must return a string")
+    return from_tree(codec.deserialize(data))
+
+
 ADAPTERS = {
     'linked-list-cycle': adapt_linked_list_cycle,
     'lca-bst': adapt_lca_bst,
     'copy-random-list': adapt_copy_random_list,
+    'clone-graph': adapt_clone_graph,
+    'codec-strings': adapt_codec_strings,
+    'codec-tree': adapt_codec_tree,
 }
 
 

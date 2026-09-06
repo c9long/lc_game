@@ -1,0 +1,76 @@
+{
+  "adapt": "clone-graph",
+  "cases": [
+    {
+      "args": [
+        [
+          [
+            2,
+            4
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            1,
+            3
+          ]
+        ]
+      ],
+      "expected": [
+        [
+          2,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          1,
+          3
+        ]
+      ]
+    },
+    {
+      "args": [
+        [
+          []
+        ]
+      ],
+      "expected": [
+        []
+      ]
+    },
+    {
+      "args": [
+        []
+      ],
+      "expected": []
+    }
+  ],
+  "compare": "exact",
+  "entry": "cloneGraph",
+  "exampleCount": 3,
+  "mode": "plain",
+  "params": [
+    {
+      "name": "edges",
+      "type": "integer[][]"
+    }
+  ],
+  "returns": {
+    "type": "boolean"
+  },
+  "slug": "clone-graph",
+  "source": "examples"
+}

@@ -1,0 +1,102 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          "Trie",
+          "insert",
+          "search",
+          "search",
+          "startsWith",
+          "insert",
+          "search"
+        ],
+        [
+          [],
+          [
+            "apple"
+          ],
+          [
+            "apple"
+          ],
+          [
+            "app"
+          ],
+          [
+            "app"
+          ],
+          [
+            "app"
+          ],
+          [
+            "app"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        true,
+        false,
+        true,
+        null,
+        true
+      ]
+    }
+  ],
+  "classname": "Trie",
+  "compare": "exact",
+  "constructor": [],
+  "exampleCount": 1,
+  "methods": [
+    {
+      "name": "insert",
+      "params": [
+        {
+          "name": "word",
+          "type": "string"
+        }
+      ],
+      "return": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "search",
+      "params": [
+        {
+          "name": "word",
+          "type": "string"
+        }
+      ],
+      "return": {
+        "type": "boolean"
+      }
+    },
+    {
+      "name": "startsWith",
+      "params": [
+        {
+          "name": "prefix",
+          "type": "string"
+        }
+      ],
+      "return": {
+        "type": "boolean"
+      }
+    }
+  ],
+  "mode": "design",
+  "params": [
+    {
+      "name": "ops",
+      "type": "string[]"
+    },
+    {
+      "name": "args",
+      "type": "integer[][]"
+    }
+  ],
+  "slug": "implement-trie-prefix-tree",
+  "source": "examples"
+}

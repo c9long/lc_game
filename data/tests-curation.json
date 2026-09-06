@@ -41,11 +41,10 @@
   "adapt": {
     "linked-list-cycle": "linked-list-cycle",
     "lowest-common-ancestor-of-a-binary-search-tree": "lca-bst",
-    "copy-list-with-random-pointer": "copy-random-list"
+    "copy-list-with-random-pointer": "copy-random-list",
+    "clone-graph": "clone-graph",
+    "encode-and-decode-strings": "codec-strings",
+    "serialize-and-deserialize-binary-tree": "codec-tree"
   },
-  "skip": {
-    "clone-graph": "metaData is manual and misdescribes the signature; needs a Node graph codec",
-    "encode-and-decode-strings": "entry point is a dummy; needs an encode/decode round-trip harness",
-    "serialize-and-deserialize-binary-tree": "a Codec class with a serialize/deserialize round trip; phase C"
-  }
+  "skip": {}
 }

@@ -1,0 +1,95 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "addWord",
+          "addWord",
+          "addWord",
+          "search",
+          "search",
+          "search",
+          "search"
+        ],
+        [
+          [],
+          [
+            "bad"
+          ],
+          [
+            "dad"
+          ],
+          [
+            "mad"
+          ],
+          [
+            "pad"
+          ],
+          [
+            "bad"
+          ],
+          [
+            ".ad"
+          ],
+          [
+            "b.."
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        false,
+        true,
+        true,
+        true
+      ]
+    }
+  ],
+  "classname": "WordDictionary",
+  "compare": "exact",
+  "constructor": [],
+  "exampleCount": 1,
+  "methods": [
+    {
+      "name": "addWord",
+      "params": [
+        {
+          "name": "word",
+          "type": "string"
+        }
+      ],
+      "return": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "search",
+      "params": [
+        {
+          "name": "word",
+          "type": "string"
+        }
+      ],
+      "return": {
+        "type": "boolean"
+      }
+    }
+  ],
+  "mode": "design",
+  "params": [
+    {
+      "name": "ops",
+      "type": "string[]"
+    },
+    {
+      "name": "args",
+      "type": "integer[][]"
+    }
+  ],
+  "slug": "design-add-and-search-words-data-structure",
+  "source": "examples"
+}

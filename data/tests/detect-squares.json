@@ -1,0 +1,116 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          "DetectSquares",
+          "add",
+          "add",
+          "add",
+          "count",
+          "count",
+          "add",
+          "count"
+        ],
+        [
+          [],
+          [
+            [
+              3,
+              10
+            ]
+          ],
+          [
+            [
+              11,
+              2
+            ]
+          ],
+          [
+            [
+              3,
+              2
+            ]
+          ],
+          [
+            [
+              11,
+              10
+            ]
+          ],
+          [
+            [
+              14,
+              8
+            ]
+          ],
+          [
+            [
+              11,
+              2
+            ]
+          ],
+          [
+            [
+              11,
+              10
+            ]
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        1,
+        0,
+        null,
+        2
+      ]
+    }
+  ],
+  "classname": "DetectSquares",
+  "compare": "exact",
+  "constructor": [],
+  "exampleCount": 1,
+  "methods": [
+    {
+      "name": "add",
+      "params": [
+        {
+          "name": "point",
+          "type": "integer[]"
+        }
+      ],
+      "return": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "count",
+      "params": [
+        {
+          "name": "point",
+          "type": "integer[]"
+        }
+      ],
+      "return": {
+        "type": "integer"
+      }
+    }
+  ],
+  "mode": "design",
+  "params": [
+    {
+      "name": "ops",
+      "type": "string[]"
+    },
+    {
+      "name": "args",
+      "type": "integer[][]"
+    }
+  ],
+  "slug": "detect-squares",
+  "source": "examples"
+}

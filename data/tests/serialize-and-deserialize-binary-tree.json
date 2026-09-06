@@ -1,0 +1,48 @@
+{
+  "adapt": "codec-tree",
+  "cases": [
+    {
+      "args": [
+        [
+          1,
+          2,
+          3,
+          null,
+          null,
+          4,
+          5
+        ]
+      ],
+      "expected": [
+        1,
+        2,
+        3,
+        null,
+        null,
+        4,
+        5
+      ]
+    },
+    {
+      "args": [
+        []
+      ],
+      "expected": []
+    }
+  ],
+  "compare": "exact",
+  "entry": "Codec",
+  "exampleCount": 2,
+  "mode": "structure",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    }
+  ],
+  "returns": {
+    "type": "string"
+  },
+  "slug": "serialize-and-deserialize-binary-tree",
+  "source": "examples"
+}

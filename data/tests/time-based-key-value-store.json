@@ -1,0 +1,110 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          "TimeMap",
+          "set",
+          "get",
+          "get",
+          "set",
+          "get",
+          "get"
+        ],
+        [
+          [],
+          [
+            "foo",
+            "bar",
+            1
+          ],
+          [
+            "foo",
+            1
+          ],
+          [
+            "foo",
+            3
+          ],
+          [
+            "foo",
+            "bar2",
+            4
+          ],
+          [
+            "foo",
+            4
+          ],
+          [
+            "foo",
+            5
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        "bar",
+        "bar",
+        null,
+        "bar2",
+        "bar2"
+      ]
+    }
+  ],
+  "classname": "TimeMap",
+  "compare": "exact",
+  "constructor": [],
+  "exampleCount": 1,
+  "methods": [
+    {
+      "name": "set",
+      "params": [
+        {
+          "name": "key",
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "timestamp",
+          "type": "integer"
+        }
+      ],
+      "return": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "get",
+      "params": [
+        {
+          "name": "key",
+          "type": "string"
+        },
+        {
+          "name": "timestamp",
+          "type": "integer"
+        }
+      ],
+      "return": {
+        "type": "string"
+      }
+    }
+  ],
+  "mode": "design",
+  "params": [
+    {
+      "name": "ops",
+      "type": "string[]"
+    },
+    {
+      "name": "args",
+      "type": "integer[][]"
+    }
+  ],
+  "slug": "time-based-key-value-store",
+  "source": "examples"
+}
