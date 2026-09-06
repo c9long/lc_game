@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { addDays, daysBetween, localDate } from './dates';
 import { INTERVALS, afterSolve, badlyOverdue, isDue, type SrsState } from './srs';
-import { NODES, NODE_ORDER, PROBLEMS, problemsForNode } from './curriculum';
-import { computeTree, dueRefreshes, nextNewProblems, type ProblemProgress } from './tree';
+import { NODES, NODE_ORDER, PROBLEM_BY_SLUG, PROBLEMS, problemsForNode } from './curriculum';
+import { computeTree, dueRefreshes, isServable, nextNewProblems, type ProblemProgress } from './tree';
 import { computeAward } from './awards';
 import { WEEKLY_BUDGET, advanceMorale, weeklyCount } from './budget';
 import { BUILDINGS, baseProduction, canAfford, costAtLevel, dailyCoins, gateSatisfied } from './city';
@@ -106,6 +106,40 @@ describe('tree', () => {
 			['most-common-word', { solveCount: 2, srsStep: 1, dueAt: overdue }]
 		]);
 		expect(dueRefreshes(progress, false, t0).map((r) => r.slug)).toEqual([inCurriculum]);
+	});
+
+	it('never serves problems from a node whose prerequisites are still locked', () => {
+		const t0 = new Date('2026-09-06T12:00:00Z');
+		const tree = computeTree({ progress: new Map(), research: new Map(), hasPremium: false, now: t0 });
+		const dp2d = tree.get('dp-2d')!;
+		expect(dp2d.requires).toContain('dp-1d');
+		expect(dp2d.prereqsMet).toBe(false);
+		expect(isServable(dp2d)).toBe(false);
+
+		// Nothing offered may come from a node that is not reachable yet.
+		const offered = nextNewProblems(tree, new Map(), false, 20);
+		for (const p of offered) expect(isServable(tree.get(p.nodeId)!)).toBe(true);
+		expect(offered.some((p) => p.nodeId === 'dp-2d')).toBe(false);
+
+		// The reported case: LeetCode's daily was distinct-subsequences, and the daily slot took it
+		// on curriculum membership alone. This is the condition that slot now applies.
+		const reported = PROBLEM_BY_SLUG.get('distinct-subsequences')!;
+		expect(reported.nodeId).toBe('dp-2d');
+		expect(isServable(tree.get(reported.nodeId)!)).toBe(false);
+	});
+
+	it('treats a node unlocked by solve count alone as unservable while its path is locked', () => {
+		// Profile sync can record enough solves on a deep node to mark it `unlocked` long before the
+		// path to it opens, which would otherwise let the expedition serve from it.
+		const t0 = new Date('2026-09-06T12:00:00Z');
+		const dp2d = problemsForNode('dp-2d', true);
+		const progress = new Map<string, ProblemProgress>();
+		for (const p of dp2d) progress.set(p.slug, { solveCount: 1, srsStep: 3, dueAt: new Date(t0.getTime() + 30 * DAY) });
+		const tree = computeTree({ progress, research: new Map(), hasPremium: false, now: t0 });
+		const view = tree.get('dp-2d')!;
+		expect(view.status).toBe('complete');
+		expect(view.prereqsMet).toBe(false);
+		expect(isServable(view)).toBe(false);
 	});
 });
 

@@ -4,7 +4,7 @@ import { ledger, planItems, plans } from '../db/schema';
 import { fetchDaily, type Daily } from '../leetcode/client';
 import { getState, setState, type Snapshot } from './state';
 import { PROBLEM_BY_SLUG } from '$lib/game/curriculum';
-import { dueRefreshes, nextNewProblems } from '$lib/game/tree';
+import { dueRefreshes, isServable, nextNewProblems } from '$lib/game/tree';
 import { DRILL_LANGS } from '$lib/game/drillbank';
 import { langForDate } from './drills';
 
@@ -84,9 +84,16 @@ export async function getOrCreatePlan(db: Db, snap: Snapshot): Promise<PlanItem[
 
 	if (!takeRefresh(1)) takeNew(1);
 
+	// The daily challenge is only taken when it sits in a node the tree has actually opened.
+	// Otherwise LeetCode's pick decides the difficulty: today's was distinct-subsequences, a 2-D DP
+	// problem, offered while 1-D DP was still locked.
+	const dailyNode = daily ? PROBLEM_BY_SLUG.get(daily.slug)?.nodeId : undefined;
+	const dailyNodeView = dailyNode ? snap.tree.get(dailyNode) : undefined;
 	const dailyIsCandidate =
 		daily &&
-		PROBLEM_BY_SLUG.has(daily.slug) &&
+		dailyNodeView &&
+		isServable(dailyNodeView) &&
+		dailyNodeView.status !== 'complete' &&
 		!exclude.has(daily.slug) &&
 		!(snap.progress.get(daily.slug)?.solveCount ?? 0);
 	if (dailyIsCandidate) {

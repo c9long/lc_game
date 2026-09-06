@@ -31,6 +31,10 @@ export interface NodeView {
 	/** 1 when nothing is overdue (or nothing solved yet). */
 	freshness: number;
 	status: NodeStatus;
+	/** Whether every prerequisite node is unlocked or complete. Kept separate from `status`
+	 *  because a node reaches `unlocked` on solve count alone: profile sync can record solves for a
+	 *  deep node long before the path to it is open. */
+	prereqsMet: boolean;
 	rusting: boolean;
 	research: number;
 }
@@ -76,6 +80,7 @@ export function computeTree(input: TreeInput): Map<string, NodeView> {
 			due,
 			freshness,
 			status,
+			prereqsMet,
 			rusting: solved > 0 && freshness < RUSTING_BELOW,
 			research: input.research.get(id) ?? 0
 		});
@@ -85,6 +90,16 @@ export function computeTree(input: TreeInput): Map<string, NodeView> {
 
 export function isOpen(status: NodeStatus): boolean {
 	return status !== 'locked';
+}
+
+/** Whether the expedition may hand out problems from this node.
+ *
+ *  Being open is not enough. A node reaches `unlocked` on solve count alone, so profile sync of
+ *  solves made on leetcode.com can open a node deep in the tree while the path to it is still
+ *  locked. Serving from there means offering 2-D DP before 1-D DP is unlocked.
+ */
+export function isServable(view: NodeView): boolean {
+	return isOpen(view.status) && view.prereqsMet;
 }
 
 /** Unsolved problems in roadmap order from open, incomplete nodes. */
@@ -98,7 +113,7 @@ export function nextNewProblems(
 	const out: CurriculumProblem[] = [];
 	for (const id of NODE_ORDER) {
 		const view = tree.get(id)!;
-		if (!isOpen(view.status) || view.status === 'complete') continue;
+		if (!isServable(view) || view.status === 'complete') continue;
 		for (const p of problemsForNode(id, hasPremium)) {
 			if (exclude.has(p.slug)) continue;
 			const s = progress.get(p.slug);
