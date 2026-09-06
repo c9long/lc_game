@@ -11,6 +11,246 @@
         "aaa"
       ],
       "expected": 6
+    },
+    {
+      "args": [
+        "abaaabbabb"
+      ],
+      "expected": 20
+    },
+    {
+      "args": [
+        "cbbaaba"
+      ],
+      "expected": 11
+    },
+    {
+      "args": [
+        "baaabab"
+      ],
+      "expected": 13
+    },
+    {
+      "args": [
+        "abbaabbabac"
+      ],
+      "expected": 21
+    },
+    {
+      "args": [
+        "bbbbbaabb"
+      ],
+      "expected": 23
+    },
+    {
+      "args": [
+        "bbabbababaabbb"
+      ],
+      "expected": 31
+    },
+    {
+      "args": [
+        "cabcbac"
+      ],
+      "expected": 10
+    },
+    {
+      "args": [
+        "baaabbabbaaaa"
+      ],
+      "expected": 32
+    },
+    {
+      "args": [
+        "aab"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "bcabcaccbb"
+      ],
+      "expected": 13
+    },
+    {
+      "args": [
+        "abacccca"
+      ],
+      "expected": 16
+    },
+    {
+      "args": [
+        "babbbbabbabbbba"
+      ],
+      "expected": 42
+    },
+    {
+      "args": [
+        "aaabaabbbaabab"
+      ],
+      "expected": 32
+    },
+    {
+      "args": [
+        "abbbbbabb"
+      ],
+      "expected": 23
+    },
+    {
+      "args": [
+        "aaaabbbabaaaa"
+      ],
+      "expected": 31
+    },
+    {
+      "args": [
+        "aaabbb"
+      ],
+      "expected": 12
+    },
+    {
+      "args": [
+        "bbaabbababaaaba"
+      ],
+      "expected": 33
+    },
+    {
+      "args": [
+        "cacc"
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        "aacbaabcbbbcc"
+      ],
+      "expected": 23
+    },
+    {
+      "args": [
+        "bccc"
+      ],
+      "expected": 7
+    },
+    {
+      "args": [
+        "bbabbbabaaaa"
+      ],
+      "expected": 28
+    },
+    {
+      "args": [
+        "abbbbaabbbab"
+      ],
+      "expected": 28
+    },
+    {
+      "args": [
+        "aabba"
+      ],
+      "expected": 8
+    },
+    {
+      "args": [
+        "bbbcabbabaaab"
+      ],
+      "expected": 24
+    },
+    {
+      "args": [
+        "abaabaabb"
+      ],
+      "expected": 19
+    },
+    {
+      "args": [
+        "aaaacabcbcbcaacb"
+      ],
+      "expected": 32
+    },
+    {
+      "args": [
+        "abbbabababaabbbb"
+      ],
+      "expected": 40
+    },
+    {
+      "args": [
+        "bba"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "bacba"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "abbbacbacccccb"
+      ],
+      "expected": 28
+    },
+    {
+      "args": [
+        "b"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "caaaaa"
+      ],
+      "expected": 16
+    },
+    {
+      "args": [
+        "ababaabbaaaaaab"
+      ],
+      "expected": 40
+    },
+    {
+      "args": [
+        "bababbabbaa"
+      ],
+      "expected": 24
+    },
+    {
+      "args": [
+        "aacbccccbccaab"
+      ],
+      "expected": 28
+    },
+    {
+      "args": [
+        "bbaabababbaabba"
+      ],
+      "expected": 32
+    },
+    {
+      "args": [
+        "baccbabbaa"
+      ],
+      "expected": 15
+    },
+    {
+      "args": [
+        "bcaabbc"
+      ],
+      "expected": 9
+    },
+    {
+      "args": [
+        "aaabbbbbaaa"
+      ],
+      "expected": 30
+    },
+    {
+      "args": [
+        "abaaaa"
+      ],
+      "expected": 13
     }
   ],
   "compare": "exact",
@@ -27,5 +267,5 @@
     "type": "integer"
   },
   "slug": "palindromic-substrings",
-  "source": "examples"
+  "source": "examples+generated"
 }

@@ -25,6 +25,721 @@
         "b",
         "c"
       ]
+    },
+    {
+      "args": [
+        "5"
+      ],
+      "expected": [
+        "j",
+        "k",
+        "l"
+      ]
+    },
+    {
+      "args": [
+        "9"
+      ],
+      "expected": [
+        "w",
+        "x",
+        "y",
+        "z"
+      ]
+    },
+    {
+      "args": [
+        "62"
+      ],
+      "expected": [
+        "ma",
+        "mb",
+        "mc",
+        "na",
+        "nb",
+        "nc",
+        "oa",
+        "ob",
+        "oc"
+      ]
+    },
+    {
+      "args": [
+        "34"
+      ],
+      "expected": [
+        "dg",
+        "dh",
+        "di",
+        "eg",
+        "eh",
+        "ei",
+        "fg",
+        "fh",
+        "fi"
+      ]
+    },
+    {
+      "args": [
+        "574"
+      ],
+      "expected": [
+        "jqg",
+        "jqh",
+        "jqi",
+        "jpg",
+        "jph",
+        "jpi",
+        "jrg",
+        "jrh",
+        "jri",
+        "jsg",
+        "jsh",
+        "jsi",
+        "kqg",
+        "kqh",
+        "kqi",
+        "kpg",
+        "kph",
+        "kpi",
+        "krg",
+        "krh",
+        "kri",
+        "ksg",
+        "ksh",
+        "ksi",
+        "lqg",
+        "lqh",
+        "lqi",
+        "lpg",
+        "lph",
+        "lpi",
+        "lrg",
+        "lrh",
+        "lri",
+        "lsg",
+        "lsh",
+        "lsi"
+      ]
+    },
+    {
+      "args": [
+        "73"
+      ],
+      "expected": [
+        "qd",
+        "qe",
+        "qf",
+        "pd",
+        "pe",
+        "pf",
+        "rd",
+        "re",
+        "rf",
+        "sd",
+        "se",
+        "sf"
+      ]
+    },
+    {
+      "args": [
+        "667"
+      ],
+      "expected": [
+        "mmq",
+        "mmp",
+        "mmr",
+        "mms",
+        "mnq",
+        "mnp",
+        "mnr",
+        "mns",
+        "moq",
+        "mop",
+        "mor",
+        "mos",
+        "nmq",
+        "nmp",
+        "nmr",
+        "nms",
+        "nnq",
+        "nnp",
+        "nnr",
+        "nns",
+        "noq",
+        "nop",
+        "nor",
+        "nos",
+        "omq",
+        "omp",
+        "omr",
+        "oms",
+        "onq",
+        "onp",
+        "onr",
+        "ons",
+        "ooq",
+        "oop",
+        "oor",
+        "oos"
+      ]
+    },
+    {
+      "args": [
+        "33"
+      ],
+      "expected": [
+        "dd",
+        "de",
+        "df",
+        "ed",
+        "ee",
+        "ef",
+        "fd",
+        "fe",
+        "ff"
+      ]
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": []
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": []
+    },
+    {
+      "args": [
+        "64"
+      ],
+      "expected": [
+        "mg",
+        "mh",
+        "mi",
+        "ng",
+        "nh",
+        "ni",
+        "og",
+        "oh",
+        "oi"
+      ]
+    },
+    {
+      "args": [
+        "978"
+      ],
+      "expected": [
+        "wqt",
+        "wqu",
+        "wqv",
+        "wpt",
+        "wpu",
+        "wpv",
+        "wrt",
+        "wru",
+        "wrv",
+        "wst",
+        "wsu",
+        "wsv",
+        "xqt",
+        "xqu",
+        "xqv",
+        "xpt",
+        "xpu",
+        "xpv",
+        "xrt",
+        "xru",
+        "xrv",
+        "xst",
+        "xsu",
+        "xsv",
+        "yqt",
+        "yqu",
+        "yqv",
+        "ypt",
+        "ypu",
+        "ypv",
+        "yrt",
+        "yru",
+        "yrv",
+        "yst",
+        "ysu",
+        "ysv",
+        "zqt",
+        "zqu",
+        "zqv",
+        "zpt",
+        "zpu",
+        "zpv",
+        "zrt",
+        "zru",
+        "zrv",
+        "zst",
+        "zsu",
+        "zsv"
+      ]
+    },
+    {
+      "args": [
+        "756"
+      ],
+      "expected": [
+        "qjm",
+        "qjn",
+        "qjo",
+        "qkm",
+        "qkn",
+        "qko",
+        "qlm",
+        "qln",
+        "qlo",
+        "pjm",
+        "pjn",
+        "pjo",
+        "pkm",
+        "pkn",
+        "pko",
+        "plm",
+        "pln",
+        "plo",
+        "rjm",
+        "rjn",
+        "rjo",
+        "rkm",
+        "rkn",
+        "rko",
+        "rlm",
+        "rln",
+        "rlo",
+        "sjm",
+        "sjn",
+        "sjo",
+        "skm",
+        "skn",
+        "sko",
+        "slm",
+        "sln",
+        "slo"
+      ]
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": []
+    },
+    {
+      "args": [
+        "35"
+      ],
+      "expected": [
+        "dj",
+        "dk",
+        "dl",
+        "ej",
+        "ek",
+        "el",
+        "fj",
+        "fk",
+        "fl"
+      ]
+    },
+    {
+      "args": [
+        "7"
+      ],
+      "expected": [
+        "q",
+        "p",
+        "r",
+        "s"
+      ]
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": []
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": []
+    },
+    {
+      "args": [
+        "87"
+      ],
+      "expected": [
+        "tq",
+        "tp",
+        "tr",
+        "ts",
+        "uq",
+        "up",
+        "ur",
+        "us",
+        "vq",
+        "vp",
+        "vr",
+        "vs"
+      ]
+    },
+    {
+      "args": [
+        "78"
+      ],
+      "expected": [
+        "qt",
+        "qu",
+        "qv",
+        "pt",
+        "pu",
+        "pv",
+        "rt",
+        "ru",
+        "rv",
+        "st",
+        "su",
+        "sv"
+      ]
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": []
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": []
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": []
+    },
+    {
+      "args": [
+        "7"
+      ],
+      "expected": [
+        "q",
+        "p",
+        "r",
+        "s"
+      ]
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": []
+    },
+    {
+      "args": [
+        "25"
+      ],
+      "expected": [
+        "aj",
+        "ak",
+        "al",
+        "bj",
+        "bk",
+        "bl",
+        "cj",
+        "ck",
+        "cl"
+      ]
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": []
+    },
+    {
+      "args": [
+        "54"
+      ],
+      "expected": [
+        "jg",
+        "jh",
+        "ji",
+        "kg",
+        "kh",
+        "ki",
+        "lg",
+        "lh",
+        "li"
+      ]
+    },
+    {
+      "args": [
+        "39"
+      ],
+      "expected": [
+        "dw",
+        "dx",
+        "dy",
+        "dz",
+        "ew",
+        "ex",
+        "ey",
+        "ez",
+        "fw",
+        "fx",
+        "fy",
+        "fz"
+      ]
+    },
+    {
+      "args": [
+        "29"
+      ],
+      "expected": [
+        "aw",
+        "ax",
+        "ay",
+        "az",
+        "bw",
+        "bx",
+        "by",
+        "bz",
+        "cw",
+        "cx",
+        "cy",
+        "cz"
+      ]
+    },
+    {
+      "args": [
+        "6"
+      ],
+      "expected": [
+        "m",
+        "n",
+        "o"
+      ]
+    },
+    {
+      "args": [
+        "892"
+      ],
+      "expected": [
+        "twa",
+        "twb",
+        "twc",
+        "txa",
+        "txb",
+        "txc",
+        "tya",
+        "tyb",
+        "tyc",
+        "tza",
+        "tzb",
+        "tzc",
+        "uwa",
+        "uwb",
+        "uwc",
+        "uxa",
+        "uxb",
+        "uxc",
+        "uya",
+        "uyb",
+        "uyc",
+        "uza",
+        "uzb",
+        "uzc",
+        "vwa",
+        "vwb",
+        "vwc",
+        "vxa",
+        "vxb",
+        "vxc",
+        "vya",
+        "vyb",
+        "vyc",
+        "vza",
+        "vzb",
+        "vzc"
+      ]
+    },
+    {
+      "args": [
+        "29"
+      ],
+      "expected": [
+        "aw",
+        "ax",
+        "ay",
+        "az",
+        "bw",
+        "bx",
+        "by",
+        "bz",
+        "cw",
+        "cx",
+        "cy",
+        "cz"
+      ]
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": []
+    },
+    {
+      "args": [
+        "327"
+      ],
+      "expected": [
+        "daq",
+        "dap",
+        "dar",
+        "das",
+        "dbq",
+        "dbp",
+        "dbr",
+        "dbs",
+        "dcq",
+        "dcp",
+        "dcr",
+        "dcs",
+        "eaq",
+        "eap",
+        "ear",
+        "eas",
+        "ebq",
+        "ebp",
+        "ebr",
+        "ebs",
+        "ecq",
+        "ecp",
+        "ecr",
+        "ecs",
+        "faq",
+        "fap",
+        "far",
+        "fas",
+        "fbq",
+        "fbp",
+        "fbr",
+        "fbs",
+        "fcq",
+        "fcp",
+        "fcr",
+        "fcs"
+      ]
+    },
+    {
+      "args": [
+        "48"
+      ],
+      "expected": [
+        "gt",
+        "gu",
+        "gv",
+        "ht",
+        "hu",
+        "hv",
+        "it",
+        "iu",
+        "iv"
+      ]
+    },
+    {
+      "args": [
+        "98"
+      ],
+      "expected": [
+        "wt",
+        "wu",
+        "wv",
+        "xt",
+        "xu",
+        "xv",
+        "yt",
+        "yu",
+        "yv",
+        "zt",
+        "zu",
+        "zv"
+      ]
+    },
+    {
+      "args": [
+        "32"
+      ],
+      "expected": [
+        "da",
+        "db",
+        "dc",
+        "ea",
+        "eb",
+        "ec",
+        "fa",
+        "fb",
+        "fc"
+      ]
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": []
+    },
+    {
+      "args": [
+        "575"
+      ],
+      "expected": [
+        "jqj",
+        "jqk",
+        "jql",
+        "jpj",
+        "jpk",
+        "jpl",
+        "jrj",
+        "jrk",
+        "jrl",
+        "jsj",
+        "jsk",
+        "jsl",
+        "kqj",
+        "kqk",
+        "kql",
+        "kpj",
+        "kpk",
+        "kpl",
+        "krj",
+        "krk",
+        "krl",
+        "ksj",
+        "ksk",
+        "ksl",
+        "lqj",
+        "lqk",
+        "lql",
+        "lpj",
+        "lpk",
+        "lpl",
+        "lrj",
+        "lrk",
+        "lrl",
+        "lsj",
+        "lsk",
+        "lsl"
+      ]
     }
   ],
   "compare": "unordered",
@@ -41,5 +756,5 @@
     "type": "list<string>"
   },
   "slug": "letter-combinations-of-a-phone-number",
-  "source": "examples"
+  "source": "examples+generated"
 }

@@ -77,6 +77,789 @@
         "ABCB"
       ],
       "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "b",
+            "b",
+            "b",
+            "c"
+          ]
+        ],
+        "ac"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "a",
+            "b"
+          ],
+          [
+            "c",
+            "a"
+          ],
+          [
+            "c",
+            "c"
+          ],
+          [
+            "a",
+            "a"
+          ]
+        ],
+        "bbcb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "b"
+          ]
+        ],
+        "accb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "a",
+            "b",
+            "c"
+          ]
+        ],
+        "ab"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          [
+            "a"
+          ],
+          [
+            "a"
+          ],
+          [
+            "b"
+          ]
+        ],
+        "acb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "c",
+            "c",
+            "a",
+            "b"
+          ]
+        ],
+        "aaaa"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "a",
+            "a",
+            "c",
+            "c"
+          ],
+          [
+            "c",
+            "b",
+            "c",
+            "b"
+          ],
+          [
+            "a",
+            "b",
+            "b",
+            "b"
+          ]
+        ],
+        "babbb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "c"
+          ]
+        ],
+        "ca"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "b"
+          ],
+          [
+            "a"
+          ],
+          [
+            "c"
+          ]
+        ],
+        "abc"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "a",
+            "c",
+            "c",
+            "a"
+          ]
+        ],
+        "aaa"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "a"
+          ],
+          [
+            "b"
+          ],
+          [
+            "c"
+          ]
+        ],
+        "a"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          [
+            "a",
+            "c"
+          ],
+          [
+            "a",
+            "c"
+          ],
+          [
+            "a",
+            "a"
+          ]
+        ],
+        "bab"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "c"
+          ],
+          [
+            "b"
+          ],
+          [
+            "a"
+          ],
+          [
+            "a"
+          ]
+        ],
+        "bc"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          [
+            "a",
+            "a"
+          ],
+          [
+            "c",
+            "c"
+          ]
+        ],
+        "cccca"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "b",
+            "a",
+            "b",
+            "b"
+          ]
+        ],
+        "aaa"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "b",
+            "c",
+            "c",
+            "a"
+          ],
+          [
+            "b",
+            "b",
+            "b",
+            "c"
+          ],
+          [
+            "c",
+            "c",
+            "b",
+            "c"
+          ],
+          [
+            "b",
+            "c",
+            "c",
+            "b"
+          ]
+        ],
+        "bccb"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          [
+            "c"
+          ]
+        ],
+        "c"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          [
+            "a",
+            "a",
+            "b"
+          ]
+        ],
+        "aaba"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "c",
+            "c",
+            "a"
+          ]
+        ],
+        "bb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "b",
+            "a",
+            "b",
+            "c"
+          ],
+          [
+            "c",
+            "a",
+            "c",
+            "c"
+          ],
+          [
+            "a",
+            "b",
+            "a",
+            "a"
+          ]
+        ],
+        "baacb"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          [
+            "a"
+          ],
+          [
+            "a"
+          ],
+          [
+            "b"
+          ]
+        ],
+        "cacc"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "a",
+            "a",
+            "c"
+          ],
+          [
+            "b",
+            "c",
+            "c"
+          ],
+          [
+            "b",
+            "c",
+            "a"
+          ],
+          [
+            "a",
+            "a",
+            "c"
+          ]
+        ],
+        "cbc"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "b",
+            "a"
+          ],
+          [
+            "a",
+            "b"
+          ],
+          [
+            "c",
+            "c"
+          ]
+        ],
+        "b"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          [
+            "b",
+            "c",
+            "c",
+            "c"
+          ],
+          [
+            "c",
+            "c",
+            "b",
+            "a"
+          ],
+          [
+            "c",
+            "a",
+            "b",
+            "c"
+          ],
+          [
+            "a",
+            "a",
+            "a",
+            "b"
+          ]
+        ],
+        "cbcaa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          [
+            "a",
+            "c",
+            "a",
+            "b"
+          ]
+        ],
+        "cab"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          [
+            "b"
+          ]
+        ],
+        "cabab"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "c",
+            "a",
+            "c",
+            "b"
+          ]
+        ],
+        "ca"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          [
+            "c",
+            "c",
+            "c"
+          ],
+          [
+            "a",
+            "a",
+            "c"
+          ],
+          [
+            "c",
+            "c",
+            "b"
+          ],
+          [
+            "a",
+            "a",
+            "b"
+          ]
+        ],
+        "baabc"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "b",
+            "a"
+          ],
+          [
+            "a",
+            "b"
+          ],
+          [
+            "a",
+            "b"
+          ]
+        ],
+        "ba"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          [
+            "a",
+            "c"
+          ],
+          [
+            "b",
+            "b"
+          ],
+          [
+            "c",
+            "a"
+          ]
+        ],
+        "cab"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          [
+            "a",
+            "a",
+            "c"
+          ],
+          [
+            "a",
+            "a",
+            "a"
+          ],
+          [
+            "c",
+            "b",
+            "a"
+          ]
+        ],
+        "bccaa"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "c",
+            "a",
+            "c",
+            "b"
+          ],
+          [
+            "a",
+            "c",
+            "a",
+            "c"
+          ],
+          [
+            "a",
+            "b",
+            "a",
+            "c"
+          ],
+          [
+            "c",
+            "b",
+            "a",
+            "b"
+          ]
+        ],
+        "cc"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          [
+            "a",
+            "c",
+            "b",
+            "c"
+          ],
+          [
+            "b",
+            "c",
+            "b",
+            "b"
+          ],
+          [
+            "c",
+            "a",
+            "b",
+            "b"
+          ],
+          [
+            "a",
+            "c",
+            "c",
+            "c"
+          ]
+        ],
+        "aaaca"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "c",
+            "a",
+            "b",
+            "b"
+          ],
+          [
+            "a",
+            "b",
+            "a",
+            "c"
+          ]
+        ],
+        "bcb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "c",
+            "a",
+            "a"
+          ],
+          [
+            "a",
+            "c",
+            "c"
+          ],
+          [
+            "b",
+            "c",
+            "c"
+          ],
+          [
+            "a",
+            "c",
+            "b"
+          ]
+        ],
+        "ccacb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "b",
+            "a",
+            "c"
+          ],
+          [
+            "c",
+            "c",
+            "b"
+          ],
+          [
+            "a",
+            "c",
+            "c"
+          ]
+        ],
+        "cc"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          [
+            "b",
+            "c",
+            "b",
+            "b"
+          ]
+        ],
+        "ab"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "c",
+            "c",
+            "b",
+            "b"
+          ],
+          [
+            "c",
+            "a",
+            "b",
+            "a"
+          ],
+          [
+            "b",
+            "b",
+            "c",
+            "c"
+          ]
+        ],
+        "b"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          [
+            "c",
+            "b",
+            "a",
+            "b"
+          ]
+        ],
+        "ac"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            "b",
+            "a"
+          ],
+          [
+            "a",
+            "b"
+          ],
+          [
+            "b",
+            "c"
+          ],
+          [
+            "b",
+            "a"
+          ]
+        ],
+        "aabbb"
+      ],
+      "expected": false
     }
   ],
   "compare": "exact",
@@ -97,5 +880,5 @@
     "type": "boolean"
   },
   "slug": "word-search",
-  "source": "examples"
+  "source": "examples+generated"
 }

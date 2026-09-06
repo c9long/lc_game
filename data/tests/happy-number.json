@@ -11,6 +11,246 @@
         2
       ],
       "expected": false
+    },
+    {
+      "args": [
+        59
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        76
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        230
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        421
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        367
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        365
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        448
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        349
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        80
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        95
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        160
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        236
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        300
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        95
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        202
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        481
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        296
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        402
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        152
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        431
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        361
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        484
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        37
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        121
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        277
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        286
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        16
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        41
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        295
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        445
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        26
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        102
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        49
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        293
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        372
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        166
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        152
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        79
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        97
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        317
+      ],
+      "expected": false
     }
   ],
   "compare": "exact",
@@ -27,5 +267,5 @@
     "type": "boolean"
   },
   "slug": "happy-number",
-  "source": "examples"
+  "source": "examples+generated"
 }

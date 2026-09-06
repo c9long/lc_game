@@ -13,6 +13,286 @@
         "execution"
       ],
       "expected": 5
+    },
+    {
+      "args": [
+        "abaccac",
+        "caac"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "bbbaba",
+        "bcaabcccca"
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        "baaaabaa",
+        "bcbbccac"
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        "cccca",
+        "baaccbabc"
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        "bcb",
+        "a"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "abaac",
+        "b"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "accc",
+        "aaab"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "a",
+        "baacab"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "cbacbab",
+        "bbbcbb"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "bbbbbbbbb",
+        "cabbcb"
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        "bbbba",
+        "b"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "bcabcaccbc",
+        "c"
+      ],
+      "expected": 9
+    },
+    {
+      "args": [
+        "",
+        "cab"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "a",
+        "ca"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "b",
+        "baaacbba"
+      ],
+      "expected": 7
+    },
+    {
+      "args": [
+        "cba",
+        "ab"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "cacbccbaa",
+        "bcccaacba"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "ccba",
+        "ccccbacb"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "",
+        "cca"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "cbcbacc",
+        "acabcbcbca"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "cbaaa",
+        "cccaccb"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "aa",
+        "cacabcbc"
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        "c",
+        "bcba"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "cabac",
+        "aabcb"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "bcabcbbbb",
+        "aacbabbab"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "cbabcbaa",
+        "cbaabab"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "bccb",
+        "abca"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "bccab",
+        "acccabaa"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "ccbacb",
+        "cccbb"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "abcac",
+        "cbba"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "bbabcba",
+        ""
+      ],
+      "expected": 7
+    },
+    {
+      "args": [
+        "cc",
+        "aab"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "",
+        "bb"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "a",
+        ""
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "bbaba",
+        "ccbcacbab"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "baacbaaac",
+        ""
+      ],
+      "expected": 9
+    },
+    {
+      "args": [
+        "acabccbac",
+        "ccccbccb"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "acaacc",
+        "ccacabab"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "cacb",
+        "babac"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "aac",
+        "cbaacab"
+      ],
+      "expected": 4
     }
   ],
   "compare": "exact",
@@ -33,5 +313,5 @@
     "type": "integer"
   },
   "slug": "edit-distance",
-  "source": "examples"
+  "source": "examples+generated"
 }

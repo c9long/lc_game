@@ -23,6 +23,326 @@
         ""
       ],
       "expected": true
+    },
+    {
+      "args": [
+        "bba",
+        "ab",
+        "baaab"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "babba",
+        "a",
+        "aabbaa"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "aab",
+        "",
+        "aab"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "",
+        "",
+        ""
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "",
+        "bb",
+        "ab"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "aaab",
+        "a",
+        "aaaab"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bba",
+        "b",
+        "baaa"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "babbaa",
+        "ababaa",
+        "abbbbaabbabb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "babb",
+        "bbbbaa",
+        "bbbabbbbaa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bba",
+        "ababa",
+        "abbbabaa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "babb",
+        "babb",
+        "ababbabb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "baab",
+        "aabbb",
+        "abaababbb"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "ba",
+        "ba",
+        "bbaa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "baaab",
+        "baa",
+        "bbaaaaab"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bbbbab",
+        "abaaa",
+        "bbbabbaaaaa"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "baa",
+        "bbbabb",
+        "aabaaabbb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "baaaba",
+        "ab",
+        "bbbababb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "abaa",
+        "ababab",
+        "bbaaaabbba"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "abab",
+        "baba",
+        "bbabbaab"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bb",
+        "b",
+        "baa"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "aa",
+        "aaabaa",
+        "aaaabaaa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "abb",
+        "a",
+        "bbbb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "abab",
+        "baa",
+        "abbaaab"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "abbaa",
+        "aa",
+        "bbababa"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "",
+        "b",
+        "b"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bbab",
+        "aaa",
+        "aaabbab"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "ba",
+        "abbb",
+        "babbba"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bbb",
+        "abab",
+        "abbabbb"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "abb",
+        "bbabbb",
+        "abbaabbbb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bb",
+        "a",
+        "abb"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aab",
+        "",
+        "bab"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bb",
+        "aa",
+        "bbba"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "b",
+        "ab",
+        "abb"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "",
+        "bbba",
+        "bbba"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bbaba",
+        "",
+        "bbaab"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bb",
+        "babbaa",
+        "babbbbaa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bbaabb",
+        "b",
+        "bbbaabb"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "abbb",
+        "",
+        "baba"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "aba",
+        "aab",
+        "aaaaab"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "abaaa",
+        "b",
+        "babaaa"
+      ],
+      "expected": true
     }
   ],
   "compare": "exact",
@@ -47,5 +367,5 @@
     "type": "boolean"
   },
   "slug": "interleaving-string",
-  "source": "examples"
+  "source": "examples+generated"
 }

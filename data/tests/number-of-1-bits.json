@@ -17,6 +17,246 @@
         2147483645
       ],
       "expected": 30
+    },
+    {
+      "args": [
+        1
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        2147483647
+      ],
+      "expected": 31
+    },
+    {
+      "args": [
+        65536
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        2147483647
+      ],
+      "expected": 31
+    },
+    {
+      "args": [
+        2147483647
+      ],
+      "expected": 31
+    },
+    {
+      "args": [
+        65536
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        1478099238
+      ],
+      "expected": 10
+    },
+    {
+      "args": [
+        1345662434
+      ],
+      "expected": 14
+    },
+    {
+      "args": [
+        0
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        1
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        2147483647
+      ],
+      "expected": 31
+    },
+    {
+      "args": [
+        918979797
+      ],
+      "expected": 15
+    },
+    {
+      "args": [
+        2147483647
+      ],
+      "expected": 31
+    },
+    {
+      "args": [
+        205892680
+      ],
+      "expected": 11
+    },
+    {
+      "args": [
+        2147483647
+      ],
+      "expected": 31
+    },
+    {
+      "args": [
+        2147483647
+      ],
+      "expected": 31
+    },
+    {
+      "args": [
+        65536
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        2147483647
+      ],
+      "expected": 31
+    },
+    {
+      "args": [
+        65536
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        0
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        1
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        1908396308
+      ],
+      "expected": 17
+    },
+    {
+      "args": [
+        319928315
+      ],
+      "expected": 18
+    },
+    {
+      "args": [
+        1
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        2147483647
+      ],
+      "expected": 31
+    },
+    {
+      "args": [
+        1716950487
+      ],
+      "expected": 18
+    },
+    {
+      "args": [
+        2147483647
+      ],
+      "expected": 31
+    },
+    {
+      "args": [
+        65536
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        0
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        65536
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        65536
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        774601509
+      ],
+      "expected": 17
+    },
+    {
+      "args": [
+        65536
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        0
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        0
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        1
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        65536
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        1
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        0
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        1
+      ],
+      "expected": 1
     }
   ],
   "compare": "exact",
@@ -33,5 +273,5 @@
     "type": "integer"
   },
   "slug": "number-of-1-bits",
-  "source": "examples"
+  "source": "examples+generated"
 }

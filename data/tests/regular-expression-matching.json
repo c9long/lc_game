@@ -20,6 +20,286 @@
         ".*"
       ],
       "expected": true
+    },
+    {
+      "args": [
+        "aabbaa",
+        "a*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bbaa",
+        ".*b.*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "",
+        "b*a*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aababa",
+        "a..*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "abbaab",
+        "b.*a*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "baaa",
+        "ab"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "ba",
+        "..a*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "",
+        "..*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "",
+        "b"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "",
+        "b"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "a",
+        "aa.*a"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "b",
+        "a."
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "aaba",
+        "b.*b*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bba",
+        "b.a*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aaaaba",
+        ".*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "",
+        ".*.b"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "aaaa",
+        "a.b*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "babaa",
+        "a..*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "",
+        "ab*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "ba",
+        ".a*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bbaa",
+        ".*."
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bbaaba",
+        "a*a.*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "abbba",
+        "bb*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "babb",
+        "b"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "",
+        "a"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bbaa",
+        "bba"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "ba",
+        ".*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bbbb",
+        ".a*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "baabb",
+        "a*ab"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "baabb",
+        "b..b*."
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "abaa",
+        "ab"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bbb",
+        ".ab"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bbbab",
+        "a."
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "abb",
+        ".*aa"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "aabab",
+        "aa*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "aaabbb",
+        "bb*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bbaba",
+        ".."
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "abab",
+        ".a.."
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "abaab",
+        "b.b*.b"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bbb",
+        "..b*"
+      ],
+      "expected": true
     }
   ],
   "compare": "exact",
@@ -40,5 +320,5 @@
     "type": "boolean"
   },
   "slug": "regular-expression-matching",
-  "source": "examples"
+  "source": "examples+generated"
 }

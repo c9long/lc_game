@@ -17,6 +17,246 @@
         "06"
       ],
       "expected": 0
+    },
+    {
+      "args": [
+        "67"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "0018305"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "6126"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "57661658"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "371"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "241"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "7"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "55"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "7144"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "239"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "0353"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "245818975"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "23632739"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "6323"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "8491"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "333119129"
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        "7909602"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "134627"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "420737"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "056"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "9712"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "015282737"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "1265"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "16982"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "073"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "0329"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "11743816"
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        "1823171"
+      ],
+      "expected": 8
+    },
+    {
+      "args": [
+        "8236727"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "712930"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "6"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "99955770"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "56114"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "77"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "31003866"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "321053759"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "64777149"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "2715229134"
+      ],
+      "expected": 8
+    },
+    {
+      "args": [
+        "2987"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "13354197"
+      ],
+      "expected": 4
     }
   ],
   "compare": "exact",
@@ -33,5 +273,5 @@
     "type": "integer"
   },
   "slug": "decode-ways",
-  "source": "examples"
+  "source": "examples+generated"
 }

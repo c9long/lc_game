@@ -13,6 +13,286 @@
         "bag"
       ],
       "expected": 5
+    },
+    {
+      "args": [
+        "baabbbabab",
+        "a"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "bbbabbaab",
+        "ab"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "aabaaabaaba",
+        "aa"
+      ],
+      "expected": 28
+    },
+    {
+      "args": [
+        "bab",
+        "b"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "abba",
+        "bbb"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "aabaabbaaaba",
+        "abba"
+      ],
+      "expected": 42
+    },
+    {
+      "args": [
+        "ababbaa",
+        "ab"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "bbbb",
+        "baa"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "aaabaaa",
+        "abab"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "baabba",
+        "ba"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "bbbaaaa",
+        "bbaa"
+      ],
+      "expected": 18
+    },
+    {
+      "args": [
+        "aaaaabb",
+        "b"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "a",
+        "aab"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "abbabaaa",
+        "aba"
+      ],
+      "expected": 14
+    },
+    {
+      "args": [
+        "ababb",
+        "ba"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "a",
+        "aa"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "babab",
+        "bb"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "bbabbbbab",
+        "bbab"
+      ],
+      "expected": 20
+    },
+    {
+      "args": [
+        "",
+        ""
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "babbaabaaba",
+        "b"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "bbaaab",
+        "b"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "baaaa",
+        "bbaa"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "bbabbbb",
+        "aaba"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "bbbabbabab",
+        "aaab"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "bbbaaabbaa",
+        "baaa"
+      ],
+      "expected": 30
+    },
+    {
+      "args": [
+        "bbbbabbbbb",
+        "b"
+      ],
+      "expected": 9
+    },
+    {
+      "args": [
+        "abb",
+        "baa"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "aabaababaaba",
+        "aaa"
+      ],
+      "expected": 56
+    },
+    {
+      "args": [
+        "aababaabbbba",
+        ""
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "abbaab",
+        ""
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "bbababbaabbb",
+        "ba"
+      ],
+      "expected": 15
+    },
+    {
+      "args": [
+        "aabaabbbaaa",
+        "abbb"
+      ],
+      "expected": 10
+    },
+    {
+      "args": [
+        "",
+        ""
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "baabaaab",
+        ""
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "baabaaabbbba",
+        "aa"
+      ],
+      "expected": 15
+    },
+    {
+      "args": [
+        "",
+        "aab"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "",
+        "b"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "abaabaaaaa",
+        "ba"
+      ],
+      "expected": 12
+    },
+    {
+      "args": [
+        "baa",
+        "aa"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "bbbaabbbbabb",
+        "bbb"
+      ],
+      "expected": 84
     }
   ],
   "compare": "exact",
@@ -33,5 +313,5 @@
     "type": "integer"
   },
   "slug": "distinct-subsequences",
-  "source": "examples"
+  "source": "examples+generated"
 }

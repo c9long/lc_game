@@ -28,6 +28,567 @@
         ]
       ],
       "expected": 0
+    },
+    {
+      "args": [
+        "bcb",
+        "bac",
+        [
+          "aba",
+          "bac",
+          "cab",
+          "cba"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "bb",
+        "bc",
+        [
+          "ab",
+          "bc",
+          "ca",
+          "cc"
+        ]
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "bb",
+        "ba",
+        [
+          "ba",
+          "bc",
+          "ca"
+        ]
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "abca",
+        "bcba",
+        [
+          "aaab",
+          "abbb",
+          "abcc",
+          "bbaa",
+          "bcba",
+          "cbcc"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "cab",
+        "cba",
+        [
+          "abb",
+          "aca",
+          "bba",
+          "cba",
+          "cbb"
+        ]
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "aaa",
+        "aba",
+        [
+          "aba",
+          "bbb"
+        ]
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "bccc",
+        "acac",
+        [
+          "acac",
+          "acca",
+          "babc",
+          "bbba",
+          "ccbb"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "aa",
+        "ab",
+        [
+          "ab",
+          "ac",
+          "cb",
+          "cc"
+        ]
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "abba",
+        "cabc",
+        [
+          "acbc",
+          "baab",
+          "bbac",
+          "bbbc",
+          "cabc",
+          "cbbb",
+          "ccbc"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "ab",
+        "ca",
+        [
+          "ac",
+          "ba",
+          "bc",
+          "ca"
+        ]
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "ac",
+        "bb",
+        [
+          "ba",
+          "bb",
+          "cc"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "bca",
+        "cbc",
+        [
+          "aab",
+          "abb",
+          "bab",
+          "bac",
+          "bba",
+          "bcc",
+          "cab",
+          "cbb",
+          "cbc"
+        ]
+      ],
+      "expected": 7
+    },
+    {
+      "args": [
+        "bacc",
+        "cccb",
+        [
+          "babb",
+          "bbab",
+          "bbba",
+          "cbba",
+          "ccbb",
+          "cccb"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "ba",
+        "cc",
+        [
+          "aa",
+          "ab",
+          "ac",
+          "bb",
+          "ca",
+          "cc"
+        ]
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "bcbc",
+        "caaa",
+        [
+          "caaa",
+          "cacb",
+          "ccaa"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "ba",
+        "cc",
+        [
+          "ab",
+          "ac",
+          "bb",
+          "ca",
+          "cc"
+        ]
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "aba",
+        "ccc",
+        [
+          "aaa",
+          "aac",
+          "abc",
+          "bca",
+          "bcb",
+          "caa",
+          "cab",
+          "ccc"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "abc",
+        "cac",
+        [
+          "abb",
+          "aca",
+          "bac",
+          "cac"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "caa",
+        "caa",
+        [
+          "aab",
+          "acb",
+          "bab"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "cbb",
+        "aba",
+        [
+          "aba",
+          "abc"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "cab",
+        "abc",
+        [
+          "aaa",
+          "aab",
+          "aba",
+          "abc",
+          "cac",
+          "cbc"
+        ]
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "cab",
+        "aba",
+        [
+          "aab",
+          "aac",
+          "aba",
+          "bbb",
+          "bcc",
+          "cac",
+          "cba",
+          "cca"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "ab",
+        "cb",
+        [
+          "aa",
+          "ac",
+          "ca",
+          "cb",
+          "cc"
+        ]
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "bcc",
+        "bba",
+        [
+          "aaa",
+          "aac",
+          "aba",
+          "acb",
+          "bba",
+          "caa",
+          "cab",
+          "cbb"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "bcab",
+        "aaab",
+        [
+          "aaab",
+          "aaac",
+          "abac",
+          "acbb",
+          "caab",
+          "cbcc",
+          "ccba"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "bccc",
+        "aabb",
+        [
+          "aabb",
+          "aaca",
+          "abbb",
+          "caaa",
+          "caac",
+          "cbac",
+          "ccbc"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "cccb",
+        "cbca",
+        [
+          "aaca",
+          "bacb",
+          "bcbc",
+          "cbca"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "bb",
+        "aa",
+        [
+          "aa",
+          "ac"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "ccac",
+        "bbcc",
+        [
+          "aabb",
+          "abab",
+          "accc",
+          "bacc",
+          "bbcc",
+          "cabb",
+          "cacc",
+          "cbab"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "ca",
+        "ba",
+        [
+          "ac",
+          "ba",
+          "cb"
+        ]
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "bbcc",
+        "aabc",
+        [
+          "aabc",
+          "acbc"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "cbaa",
+        "babb",
+        [
+          "aabb",
+          "abac",
+          "babb",
+          "bbac"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "ab",
+        "bb",
+        [
+          "aa",
+          "ac",
+          "bb",
+          "bc",
+          "cb",
+          "cc"
+        ]
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "ab",
+        "ba",
+        [
+          "ac",
+          "ba",
+          "bb",
+          "bc",
+          "ca",
+          "cb",
+          "cc"
+        ]
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "accc",
+        "baac",
+        [
+          "acbb",
+          "baac",
+          "bacc",
+          "bbaa",
+          "bbac"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "ccb",
+        "acc",
+        [
+          "aab",
+          "abc",
+          "acb",
+          "acc",
+          "bab",
+          "bcc",
+          "caa",
+          "cbb",
+          "cbc"
+        ]
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "ca",
+        "bb",
+        [
+          "ba",
+          "bb"
+        ]
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "aac",
+        "bbb",
+        [
+          "aaa",
+          "aab",
+          "bbb",
+          "cbc",
+          "ccb"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "bb",
+        "cc",
+        [
+          "ab",
+          "ba",
+          "cc"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "acbc",
+        "aabc",
+        [
+          "aabc",
+          "acbb",
+          "baaa",
+          "babc",
+          "bbac",
+          "bbcb",
+          "cccc"
+        ]
+      ],
+      "expected": 2
     }
   ],
   "compare": "exact",
@@ -52,5 +613,5 @@
     "type": "integer"
   },
   "slug": "word-ladder",
-  "source": "examples"
+  "source": "examples+generated"
 }

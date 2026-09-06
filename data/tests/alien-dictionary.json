@@ -30,6 +30,431 @@
         ]
       ],
       "expected": ""
+    },
+    {
+      "args": [
+        [
+          "c",
+          "e"
+        ]
+      ],
+      "expected": "ce"
+    },
+    {
+      "args": [
+        [
+          "c",
+          "b",
+          "f",
+          "g",
+          "c"
+        ]
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        [
+          "h",
+          "c",
+          "e",
+          "f",
+          "b"
+        ]
+      ],
+      "expected": "hcefb"
+    },
+    {
+      "args": [
+        [
+          "d"
+        ]
+      ],
+      "expected": "d"
+    },
+    {
+      "args": [
+        [
+          "f",
+          "e"
+        ]
+      ],
+      "expected": "fe"
+    },
+    {
+      "args": [
+        [
+          "d"
+        ]
+      ],
+      "expected": "d"
+    },
+    {
+      "args": [
+        [
+          "g"
+        ]
+      ],
+      "expected": "g"
+    },
+    {
+      "args": [
+        [
+          "b",
+          "g",
+          "h",
+          "a",
+          "e"
+        ]
+      ],
+      "expected": "bghae"
+    },
+    {
+      "args": [
+        [
+          "c",
+          "e"
+        ]
+      ],
+      "expected": "ce"
+    },
+    {
+      "args": [
+        [
+          "b",
+          "f",
+          "a",
+          "e",
+          "g"
+        ]
+      ],
+      "expected": "bfaeg"
+    },
+    {
+      "args": [
+        [
+          "h",
+          "a",
+          "c",
+          "b",
+          "f",
+          "d"
+        ]
+      ],
+      "expected": "hacbfd"
+    },
+    {
+      "args": [
+        [
+          "e",
+          "f",
+          "d",
+          "b"
+        ]
+      ],
+      "expected": "efdb"
+    },
+    {
+      "args": [
+        [
+          "c",
+          "b",
+          "d",
+          "a",
+          "g"
+        ]
+      ],
+      "expected": "cbdag"
+    },
+    {
+      "args": [
+        [
+          "f",
+          "b",
+          "c",
+          "d",
+          "h"
+        ]
+      ],
+      "expected": "fbcdh"
+    },
+    {
+      "args": [
+        [
+          "d",
+          "b",
+          "g",
+          "f",
+          "e"
+        ]
+      ],
+      "expected": "dbgfe"
+    },
+    {
+      "args": [
+        [
+          "h",
+          "d",
+          "f",
+          "c"
+        ]
+      ],
+      "expected": "hdfc"
+    },
+    {
+      "args": [
+        [
+          "h",
+          "b",
+          "g",
+          "d",
+          "a",
+          "f",
+          "h"
+        ]
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        [
+          "b",
+          "f",
+          "c",
+          "d",
+          "h"
+        ]
+      ],
+      "expected": "bfcdh"
+    },
+    {
+      "args": [
+        [
+          "h",
+          "c",
+          "a",
+          "b",
+          "e"
+        ]
+      ],
+      "expected": "hcabe"
+    },
+    {
+      "args": [
+        [
+          "h",
+          "a"
+        ]
+      ],
+      "expected": "ha"
+    },
+    {
+      "args": [
+        [
+          "h",
+          "f",
+          "g",
+          "b",
+          "d",
+          "e"
+        ]
+      ],
+      "expected": "hfgbde"
+    },
+    {
+      "args": [
+        [
+          "h",
+          "f",
+          "h"
+        ]
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        [
+          "g",
+          "d",
+          "a",
+          "h",
+          "c"
+        ]
+      ],
+      "expected": "gdahc"
+    },
+    {
+      "args": [
+        [
+          "a",
+          "f",
+          "a"
+        ]
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        [
+          "c",
+          "e"
+        ]
+      ],
+      "expected": "ce"
+    },
+    {
+      "args": [
+        [
+          "a",
+          "e",
+          "c",
+          "a"
+        ]
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        [
+          "e",
+          "f",
+          "b"
+        ]
+      ],
+      "expected": "efb"
+    },
+    {
+      "args": [
+        [
+          "c",
+          "d",
+          "a",
+          "g",
+          "b",
+          "f"
+        ]
+      ],
+      "expected": "cdagbf"
+    },
+    {
+      "args": [
+        [
+          "c"
+        ]
+      ],
+      "expected": "c"
+    },
+    {
+      "args": [
+        [
+          "h"
+        ]
+      ],
+      "expected": "h"
+    },
+    {
+      "args": [
+        [
+          "a",
+          "h",
+          "d",
+          "g",
+          "c",
+          "f"
+        ]
+      ],
+      "expected": "ahdgcf"
+    },
+    {
+      "args": [
+        [
+          "h",
+          "d",
+          "c",
+          "h"
+        ]
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        [
+          "c"
+        ]
+      ],
+      "expected": "c"
+    },
+    {
+      "args": [
+        [
+          "f",
+          "b",
+          "e",
+          "d",
+          "c"
+        ]
+      ],
+      "expected": "fbedc"
+    },
+    {
+      "args": [
+        [
+          "f",
+          "g"
+        ]
+      ],
+      "expected": "fg"
+    },
+    {
+      "args": [
+        [
+          "f",
+          "d",
+          "a",
+          "e",
+          "h"
+        ]
+      ],
+      "expected": "fdaeh"
+    },
+    {
+      "args": [
+        [
+          "g",
+          "b",
+          "a",
+          "e",
+          "g"
+        ]
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        [
+          "c",
+          "e"
+        ]
+      ],
+      "expected": "ce"
+    },
+    {
+      "args": [
+        [
+          "f"
+        ]
+      ],
+      "expected": "f"
+    },
+    {
+      "args": [
+        [
+          "e",
+          "h",
+          "d"
+        ]
+      ],
+      "expected": "ehd"
     }
   ],
   "compare": "exact",
@@ -46,5 +471,5 @@
     "type": "string"
   },
   "slug": "alien-dictionary",
-  "source": "examples"
+  "source": "examples+generated"
 }

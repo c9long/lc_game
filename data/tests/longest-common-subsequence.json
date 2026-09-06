@@ -20,6 +20,286 @@
         "def"
       ],
       "expected": 0
+    },
+    {
+      "args": [
+        "bbaaabcac",
+        "bbaacca"
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        "babccaabb",
+        "aaaacba"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "a",
+        "aaccacaa"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "c",
+        "baab"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "bbbbbcbbbaca",
+        "acbcabbbab"
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        "cbccacbab",
+        "cbb"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "abbcbbc",
+        "bacaacabbcab"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "abbcc",
+        "cbbac"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "cab",
+        "abbcbabbcaba"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "bacbaba",
+        "ccaabccbcca"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "bccacac",
+        "bbbabac"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "aaba",
+        "babbba"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "ccca",
+        "cbabbbabbaba"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "",
+        "acab"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "babcccaccbb",
+        "acccbcacbbba"
+      ],
+      "expected": 8
+    },
+    {
+      "args": [
+        "acba",
+        "baaabcb"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "",
+        "abcbc"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "abaaaaccc",
+        "cccaccb"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "",
+        "aaccaaaa"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "cbbcbababc",
+        ""
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "",
+        "aaccb"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "ccabcccccba",
+        "bacac"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "",
+        "acabbaaaa"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "bbc",
+        "baccacccbca"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "bcababb",
+        "ccbac"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "cbabbbbcabc",
+        "bbba"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "cca",
+        "cacbcbbc"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "bc",
+        "baacccacaba"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "cacbac",
+        ""
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "cbcab",
+        "abcaccbb"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "bcbcb",
+        "ababbb"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "a",
+        "bcabbbabbc"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "cc",
+        ""
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "ccb",
+        "ababaabcc"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "cba",
+        "aacaacbb"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "aabaaaccaa",
+        "abacb"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "cabbc",
+        "cacbcc"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "ccccccabbc",
+        "bbb"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "caacabaccba",
+        "cbc"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "cacbccbac",
+        "bbcaa"
+      ],
+      "expected": 3
     }
   ],
   "compare": "exact",
@@ -40,5 +320,5 @@
     "type": "integer"
   },
   "slug": "longest-common-subsequence",
-  "source": "examples"
+  "source": "examples+generated"
 }

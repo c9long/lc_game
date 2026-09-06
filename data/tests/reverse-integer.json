@@ -17,6 +17,246 @@
         120
       ],
       "expected": 21
+    },
+    {
+      "args": [
+        -95
+      ],
+      "expected": -59
+    },
+    {
+      "args": [
+        -82
+      ],
+      "expected": -28
+    },
+    {
+      "args": [
+        24
+      ],
+      "expected": 42
+    },
+    {
+      "args": [
+        1534236469
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        0
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        43
+      ],
+      "expected": 34
+    },
+    {
+      "args": [
+        -2147483648
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        0
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        0
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        1060640681
+      ],
+      "expected": 1860460601
+    },
+    {
+      "args": [
+        -1291693297
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        0
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        -2147483648
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        -2147483648
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        -18
+      ],
+      "expected": -81
+    },
+    {
+      "args": [
+        -2147483648
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        -2147483648
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        1534236469
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        1534236469
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        1534236469
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        -2147483648
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        -1760961333
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        -2147483648
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        49
+      ],
+      "expected": 94
+    },
+    {
+      "args": [
+        21
+      ],
+      "expected": 12
+    },
+    {
+      "args": [
+        -39
+      ],
+      "expected": -93
+    },
+    {
+      "args": [
+        1534236469
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        -2147483648
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        0
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        -2147483648
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        0
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        -2147483648
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        -1111320030
+      ],
+      "expected": -300231111
+    },
+    {
+      "args": [
+        -1246023626
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        1758896480
+      ],
+      "expected": 846988571
+    },
+    {
+      "args": [
+        1534236469
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        716422541
+      ],
+      "expected": 145224617
+    },
+    {
+      "args": [
+        1534236469
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        1534236469
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        -598785052
+      ],
+      "expected": -250587895
     }
   ],
   "compare": "exact",
@@ -33,5 +273,5 @@
     "type": "integer"
   },
   "slug": "reverse-integer",
-  "source": "examples"
+  "source": "examples+generated"
 }

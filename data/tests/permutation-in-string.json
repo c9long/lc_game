@@ -13,6 +13,286 @@
         "eidboaoo"
       ],
       "expected": false
+    },
+    {
+      "args": [
+        "aa",
+        "abbbbb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bbbab",
+        "abababb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "abba",
+        "aabbaababbb"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aba",
+        "aabaa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "a",
+        "bbaba"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aaaa",
+        "aababbba"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "aaba",
+        "babbbbbba"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bbab",
+        "ababbaabaab"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aaa",
+        "bbb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "abba",
+        "bbba"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "abab",
+        "bbb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "babaa",
+        "bbbbbbba"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "baaa",
+        "bbaabbabaab"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "ab",
+        "aa"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "abab",
+        "aaabbb"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bbb",
+        "bbbaabbbb"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "ba",
+        "ab"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "ababa",
+        "bbababa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "b",
+        "bababbbbaba"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bb",
+        "babbabaab"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bbba",
+        "bbbabaaa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "a",
+        "babbabaabb"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "b",
+        "babbbaabaa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "ababb",
+        "abaaba"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bbab",
+        "baaabb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bb",
+        "bbbabbabbba"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "b",
+        "abbbaaabbab"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "babaa",
+        "aabaa"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "abbbb",
+        "bbba"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bb",
+        "abaabb"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aabbb",
+        "aaaaabbb"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "baa",
+        "aabba"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aa",
+        "a"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "abbaa",
+        "bbb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "aaaaa",
+        "bbb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bbb",
+        "bbba"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "abba",
+        "baab"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aab",
+        "abaabababb"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bb",
+        "aba"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "baa",
+        "bbbb"
+      ],
+      "expected": false
     }
   ],
   "compare": "exact",
@@ -33,5 +313,5 @@
     "type": "boolean"
   },
   "slug": "permutation-in-string",
-  "source": "examples"
+  "source": "examples+generated"
 }

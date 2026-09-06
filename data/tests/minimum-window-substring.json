@@ -20,6 +20,286 @@
         "aa"
       ],
       "expected": ""
+    },
+    {
+      "args": [
+        "cccbacabaac",
+        "b"
+      ],
+      "expected": "b"
+    },
+    {
+      "args": [
+        "aaacbbbcba",
+        "bb"
+      ],
+      "expected": "bb"
+    },
+    {
+      "args": [
+        "baaaacccbba",
+        "ccbb"
+      ],
+      "expected": "ccbb"
+    },
+    {
+      "args": [
+        "cacbcaabbbaa",
+        "c"
+      ],
+      "expected": "c"
+    },
+    {
+      "args": [
+        "bcaa",
+        "baa"
+      ],
+      "expected": "bcaa"
+    },
+    {
+      "args": [
+        "cccbacb",
+        "aa"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "c",
+        "cab"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "bc",
+        "bac"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "aaa",
+        "b"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "abcbabbccbb",
+        "aba"
+      ],
+      "expected": "abcba"
+    },
+    {
+      "args": [
+        "aaaccaa",
+        "ccbc"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "ccccaaca",
+        "a"
+      ],
+      "expected": "a"
+    },
+    {
+      "args": [
+        "babcbbcbabcaba",
+        "bbbb"
+      ],
+      "expected": "babcbb"
+    },
+    {
+      "args": [
+        "abca",
+        "cca"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "bca",
+        "a"
+      ],
+      "expected": "a"
+    },
+    {
+      "args": [
+        "baccabaabb",
+        "b"
+      ],
+      "expected": "b"
+    },
+    {
+      "args": [
+        "bbccccabcc",
+        "cba"
+      ],
+      "expected": "cab"
+    },
+    {
+      "args": [
+        "cac",
+        "cbbb"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "ccaca",
+        "baa"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "cababcbabbacca",
+        "a"
+      ],
+      "expected": "a"
+    },
+    {
+      "args": [
+        "bbcba",
+        "aac"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "cbc",
+        "acb"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "cbbcaacccaaba",
+        "bb"
+      ],
+      "expected": "bb"
+    },
+    {
+      "args": [
+        "a",
+        "ccac"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "aaaab",
+        "bcc"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "ccbb",
+        "c"
+      ],
+      "expected": "c"
+    },
+    {
+      "args": [
+        "acbcbbcaababab",
+        "ccab"
+      ],
+      "expected": "acbc"
+    },
+    {
+      "args": [
+        "bbcbcbc",
+        "b"
+      ],
+      "expected": "b"
+    },
+    {
+      "args": [
+        "ccbcaacacabcbc",
+        "c"
+      ],
+      "expected": "c"
+    },
+    {
+      "args": [
+        "aacbaaaaba",
+        "ccbb"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "a",
+        "cbca"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "aabaaaa",
+        "cbbb"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "bcbab",
+        "b"
+      ],
+      "expected": "b"
+    },
+    {
+      "args": [
+        "a",
+        "aa"
+      ],
+      "expected": ""
+    },
+    {
+      "args": [
+        "acacbbabcc",
+        "b"
+      ],
+      "expected": "b"
+    },
+    {
+      "args": [
+        "aabacaaaa",
+        "bcaa"
+      ],
+      "expected": "abac"
+    },
+    {
+      "args": [
+        "bbbabcb",
+        "bb"
+      ],
+      "expected": "bb"
+    },
+    {
+      "args": [
+        "abacbcabbacbbb",
+        "cb"
+      ],
+      "expected": "cb"
+    },
+    {
+      "args": [
+        "caccbccaabcb",
+        "c"
+      ],
+      "expected": "c"
+    },
+    {
+      "args": [
+        "bcaaccaaabbcaa",
+        "caba"
+      ],
+      "expected": "bcaa"
     }
   ],
   "compare": "exact",
@@ -40,5 +320,5 @@
     "type": "string"
   },
   "slug": "minimum-window-substring",
-  "source": "examples"
+  "source": "examples+generated"
 }

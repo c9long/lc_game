@@ -24,8 +24,16 @@
     "generate-parentheses": "unordered",
     "word-search-ii": "unordered",
     "pacific-atlantic-water-flow": "unordered-nested",
-    "n-queens": "unordered"
+    "n-queens": "unordered",
+    "powx-n": "approx",
+    "longest-palindromic-substring": "same-length"
   },
+  "_compare_extra_comment": [
+    "powx-n returns a float, and correct algorithms disagree in the last bits; LeetCode accepts a",
+    "tolerance rather than exact equality, so 'approx' does too.",
+    "longest-palindromic-substring has ties — several palindromes of the maximum length — and any",
+    "of them is correct, so only the length is compared."
+  ],
   "_skip_comment": [
     "LeetCode marks a problem `manual: true` when its own harness serialises the input or output",
     "specially, and for these the published metaData does not describe the real signature (clone-graph",

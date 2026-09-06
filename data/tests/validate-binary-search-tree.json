@@ -23,6 +23,500 @@
         ]
       ],
       "expected": false
+    },
+    {
+      "args": [
+        [
+          -47,
+          -48,
+          -30
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -19,
+          17,
+          -15,
+          -7,
+          null,
+          -15,
+          -7,
+          -3,
+          8
+        ]
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          30,
+          -26,
+          40
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -9,
+          -57,
+          -7
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -13,
+          -28,
+          27,
+          -40,
+          -24,
+          -2,
+          30,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          39
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          30,
+          null,
+          42
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -26,
+          -41,
+          6,
+          -58,
+          -36,
+          -20,
+          8,
+          null,
+          null,
+          null,
+          -28,
+          null,
+          -3,
+          null,
+          27
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          9,
+          1,
+          30
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -46
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          5,
+          -47,
+          9,
+          null,
+          -12,
+          null,
+          60
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          18
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -2,
+          -34,
+          18,
+          -41,
+          -30,
+          7,
+          19,
+          null,
+          null,
+          null,
+          -22,
+          null,
+          null,
+          null,
+          20
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          52
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -18,
+          -24,
+          -16
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -16
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          22,
+          -32,
+          31,
+          -49,
+          -17,
+          24,
+          39,
+          null,
+          null,
+          null,
+          7,
+          null,
+          27,
+          null,
+          55
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          31,
+          -35,
+          33,
+          null,
+          20,
+          null,
+          40
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          1,
+          -54,
+          13,
+          null,
+          null,
+          null,
+          24
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -17
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -11,
+          -15
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          17,
+          16,
+          -7,
+          -7,
+          3,
+          11,
+          18
+        ]
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          32,
+          19,
+          41,
+          -2,
+          28,
+          36,
+          56
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -51,
+          null,
+          -33
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -7
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -18,
+          18,
+          null,
+          -19
+        ]
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          10,
+          -30,
+          24,
+          -47,
+          -22,
+          23,
+          51,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          60
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          57
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -2,
+          -2,
+          2,
+          null,
+          11,
+          -4
+        ]
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          -10,
+          -25,
+          -6,
+          null,
+          null,
+          null,
+          48
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -7
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -20
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          12,
+          null,
+          35
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -1,
+          2,
+          15,
+          -8,
+          20,
+          14,
+          18,
+          -17
+        ]
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          -18
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -18,
+          null,
+          -18,
+          -8,
+          3
+        ]
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          -42,
+          -59,
+          -7
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          20,
+          -55,
+          40,
+          null,
+          17,
+          null,
+          54
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -9,
+          -32,
+          22,
+          -43,
+          -19,
+          7,
+          32,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          50
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -25
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -12,
+          6,
+          2
+        ]
+      ],
+      "expected": false
     }
   ],
   "compare": "exact",
@@ -39,5 +533,5 @@
     "type": "boolean"
   },
   "slug": "validate-binary-search-tree",
-  "source": "examples"
+  "source": "examples+generated"
 }

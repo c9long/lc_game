@@ -416,6 +416,20 @@ def _norm(v, rule):
 def compare(expected, actual, rule: str = "exact") -> bool:
     if rule == "exact":
         return expected == actual
+    if rule == "approx":
+        # Floating point: different but correct algorithms disagree in the last bits. LeetCode
+        # accepts these within a tolerance rather than exactly, and so does this.
+        try:
+            return abs(float(expected) - float(actual)) <= 1e-5 * max(1.0, abs(float(expected)))
+        except (TypeError, ValueError):
+            return expected == actual
+    if rule == "same-length":
+        # For problems where any answer of the optimal length is correct, such as the longest
+        # palindromic substring when several tie.
+        try:
+            return len(expected) == len(actual)
+        except TypeError:
+            return expected == actual
     try:
         return _norm(expected, rule) == _norm(actual, rule)
     except (TypeError, AttributeError):

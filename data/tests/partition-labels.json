@@ -17,6 +17,339 @@
       "expected": [
         10
       ]
+    },
+    {
+      "args": [
+        "daadcbbcbababc"
+      ],
+      "expected": [
+        14
+      ]
+    },
+    {
+      "args": [
+        "bab"
+      ],
+      "expected": [
+        3
+      ]
+    },
+    {
+      "args": [
+        "cbbdbddaddaad"
+      ],
+      "expected": [
+        1,
+        12
+      ]
+    },
+    {
+      "args": [
+        "adcdccc"
+      ],
+      "expected": [
+        1,
+        6
+      ]
+    },
+    {
+      "args": [
+        "accddabadab"
+      ],
+      "expected": [
+        11
+      ]
+    },
+    {
+      "args": [
+        "ccccddddbccaca"
+      ],
+      "expected": [
+        14
+      ]
+    },
+    {
+      "args": [
+        "badacdba"
+      ],
+      "expected": [
+        8
+      ]
+    },
+    {
+      "args": [
+        "cac"
+      ],
+      "expected": [
+        3
+      ]
+    },
+    {
+      "args": [
+        "aaddaaba"
+      ],
+      "expected": [
+        8
+      ]
+    },
+    {
+      "args": [
+        "cbbadccbbc"
+      ],
+      "expected": [
+        10
+      ]
+    },
+    {
+      "args": [
+        "accadb"
+      ],
+      "expected": [
+        4,
+        1,
+        1
+      ]
+    },
+    {
+      "args": [
+        "bdbbb"
+      ],
+      "expected": [
+        5
+      ]
+    },
+    {
+      "args": [
+        "bccdddaadbbbcd"
+      ],
+      "expected": [
+        14
+      ]
+    },
+    {
+      "args": [
+        "cdccbaab"
+      ],
+      "expected": [
+        4,
+        4
+      ]
+    },
+    {
+      "args": [
+        "ccddbccd"
+      ],
+      "expected": [
+        8
+      ]
+    },
+    {
+      "args": [
+        "babddabacdacb"
+      ],
+      "expected": [
+        13
+      ]
+    },
+    {
+      "args": [
+        "bbbabdcd"
+      ],
+      "expected": [
+        5,
+        3
+      ]
+    },
+    {
+      "args": [
+        "cadbbbcccdadd"
+      ],
+      "expected": [
+        13
+      ]
+    },
+    {
+      "args": [
+        "acbbaaacdc"
+      ],
+      "expected": [
+        10
+      ]
+    },
+    {
+      "args": [
+        "d"
+      ],
+      "expected": [
+        1
+      ]
+    },
+    {
+      "args": [
+        "d"
+      ],
+      "expected": [
+        1
+      ]
+    },
+    {
+      "args": [
+        "bc"
+      ],
+      "expected": [
+        1,
+        1
+      ]
+    },
+    {
+      "args": [
+        "cadbacbdabadbbdd"
+      ],
+      "expected": [
+        16
+      ]
+    },
+    {
+      "args": [
+        "bdcb"
+      ],
+      "expected": [
+        4
+      ]
+    },
+    {
+      "args": [
+        "ccc"
+      ],
+      "expected": [
+        3
+      ]
+    },
+    {
+      "args": [
+        "dbbbab"
+      ],
+      "expected": [
+        1,
+        5
+      ]
+    },
+    {
+      "args": [
+        "cbbdcbacacb"
+      ],
+      "expected": [
+        11
+      ]
+    },
+    {
+      "args": [
+        "bcc"
+      ],
+      "expected": [
+        1,
+        2
+      ]
+    },
+    {
+      "args": [
+        "accdaacbbbccdbcb"
+      ],
+      "expected": [
+        16
+      ]
+    },
+    {
+      "args": [
+        "acdccdad"
+      ],
+      "expected": [
+        8
+      ]
+    },
+    {
+      "args": [
+        "cadcacdda"
+      ],
+      "expected": [
+        9
+      ]
+    },
+    {
+      "args": [
+        "bbbcddcba"
+      ],
+      "expected": [
+        8,
+        1
+      ]
+    },
+    {
+      "args": [
+        "adaacddbccd"
+      ],
+      "expected": [
+        11
+      ]
+    },
+    {
+      "args": [
+        "ccdcdcbadd"
+      ],
+      "expected": [
+        10
+      ]
+    },
+    {
+      "args": [
+        "acbddcbcddbcdabc"
+      ],
+      "expected": [
+        16
+      ]
+    },
+    {
+      "args": [
+        "aaacabdcdc"
+      ],
+      "expected": [
+        10
+      ]
+    },
+    {
+      "args": [
+        "abacdcda"
+      ],
+      "expected": [
+        8
+      ]
+    },
+    {
+      "args": [
+        "cbcbcdadd"
+      ],
+      "expected": [
+        5,
+        4
+      ]
+    },
+    {
+      "args": [
+        "bdcc"
+      ],
+      "expected": [
+        1,
+        1,
+        2
+      ]
+    },
+    {
+      "args": [
+        "caaadcbcabcadba"
+      ],
+      "expected": [
+        15
+      ]
     }
   ],
   "compare": "exact",
@@ -33,5 +366,5 @@
     "type": "list<integer>"
   },
   "slug": "partition-labels",
-  "source": "examples"
+  "source": "examples+generated"
 }
