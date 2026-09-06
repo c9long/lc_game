@@ -68,6 +68,8 @@ check 200 -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/j
 check 200 -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" -d '{"lang":"python3","code":"print(1)"}' "$B/api/solve/two-sum/draft"
 check 200 -H "cookie: lc_session=$TOKEN" "$B/drills"
 check 400 -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" -d '{"drillId":"nope","answer":"x"}' "$B/api/drills/answer"
+check 403 -H "cookie: lc_session=$TOKEN" "$B/api/drills/practice"
+check 401 "$B/api/drills/practice"
 check 200 "$B/solutions/python/0001-two-sum.py"
 
 # Drill answer flow: the GET above created today's set; answer its first drill correctly.
@@ -83,6 +85,43 @@ else
   if printf '%s' "$RESP" | grep -q '"correct":true'; then echo "ok   drill answer accepted ($FIRST_ID)"; else echo "FAIL drill answer: $RESP"; fail=1; fi
   INGOTS=$($W execute lc-game --local --persist-to "$STATE" --json --command "SELECT amount FROM resources WHERE kind = 'ingots'" 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s)[0].results;console.log(r.length?r[0].amount:0)})')
   if [ "$INGOTS" -ge 1 ]; then echo "ok   ingots credited ($INGOTS)"; else echo "FAIL ingots not credited"; fail=1; fi
+fi
+
+
+# Unlimited practice: locked above, unlocks once every drill in the set has been answered (a wrong
+# answer still counts as answered), and must never write ingots, schedule or history.
+if [ -n "${FIRST_ID:-}" ]; then
+  ALL_IDS=$(printf '%s' "$SET_JSON" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s)[0].results;console.log(JSON.parse(r[0].value).ids.join(" "))})')
+  for id in $ALL_IDS; do
+    [ "$id" = "$FIRST_ID" ] && continue
+    BODY=$(node -e 'process.stdout.write(JSON.stringify({drillId:process.argv[1],answer:"zzz-not-the-answer"}))' "$id")
+    curl -s -o /dev/null -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" -d "$BODY" "$B/api/drills/answer"
+  done
+
+  count_state() { $W execute lc-game --local --persist-to "$STATE" --json --command "$1" 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s)[0].results;console.log(r.length?Object.values(r[0])[0]:0)})'; }
+  ING_BEFORE=$(count_state "SELECT amount FROM resources WHERE kind = 'ingots'")
+  ATT_BEFORE=$(count_state "SELECT COUNT(*) AS n FROM drill_attempts")
+  SRS_BEFORE=$(count_state "SELECT COUNT(*) AS n FROM drill_state")
+
+  check 200 -H "cookie: lc_session=$TOKEN" "$B/api/drills/practice"
+  PRAC=$(curl -s -H "cookie: lc_session=$TOKEN" "$B/api/drills/practice")
+  PRAC_ID=$(printf '%s' "$PRAC" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const j=JSON.parse(s);console.log(j.drill?j.drill.id:"")})')
+  if [ -z "$PRAC_ID" ]; then echo "FAIL practice returned no drill: $PRAC"; fail=1; else
+    if printf '%s' "$PRAC" | grep -q '"answer"'; then echo "FAIL practice leaked the answer to the client"; fail=1; else echo "ok   practice drill served without its answer"; fi
+    if printf '%s' "$ALL_IDS" | tr ' ' '\n' | grep -qx "$PRAC_ID"; then echo "FAIL practice served a drill from today's set"; fail=1; else echo "ok   practice avoids today's set"; fi
+    PBODY=$(node -e 'process.stdout.write(JSON.stringify({drillId:process.argv[1],answer:"zzz-not-the-answer"}))' "$PRAC_ID")
+    PRESP=$(curl -s -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" -d "$PBODY" "$B/api/drills/practice")
+    if printf '%s' "$PRESP" | grep -q '"correct":false'; then echo "ok   practice answer checked"; else echo "FAIL practice answer: $PRESP"; fail=1; fi
+  fi
+
+  ING_AFTER=$(count_state "SELECT amount FROM resources WHERE kind = 'ingots'")
+  ATT_AFTER=$(count_state "SELECT COUNT(*) AS n FROM drill_attempts")
+  SRS_AFTER=$(count_state "SELECT COUNT(*) AS n FROM drill_state")
+  if [ "$ING_BEFORE" = "$ING_AFTER" ] && [ "$ATT_BEFORE" = "$ATT_AFTER" ] && [ "$SRS_BEFORE" = "$SRS_AFTER" ]; then
+    echo "ok   practice awarded and recorded nothing (ingots $ING_AFTER, attempts $ATT_AFTER, schedule $SRS_AFTER)"
+  else
+    echo "FAIL practice changed state: ingots $ING_BEFORE->$ING_AFTER attempts $ATT_BEFORE->$ATT_AFTER schedule $SRS_BEFORE->$SRS_AFTER"; fail=1
+  fi
 fi
 
 if [ "$fail" = 1 ]; then echo "--- dev server log tail"; tail -40 "$LOG"; exit 1; fi

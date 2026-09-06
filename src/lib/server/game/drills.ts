@@ -122,3 +122,55 @@ export async function answerDrill(
 		setIngots: set.ingots
 	};
 }
+
+// ---------- unlimited practice ----------
+//
+// Practice unlocks only once the day's set is finished, and earns nothing: no Ingots, and no
+// writes to drill_state or drill_attempts. That is deliberate rather than an omission. The daily
+// set is chosen from the spaced-repetition ladder, so letting practice advance srsStep would let
+// an evening of grinding empty tomorrow's set — practising ahead would quietly consume the
+// schedule it is meant to support. Keeping it ephemeral means "no rewards" has no asterisk.
+
+export async function loadDrillSet(db: Db, today: string): Promise<DrillSetState | null> {
+	return getState<DrillSetState | null>(db, key(today), null);
+}
+
+export function isSetComplete(set: DrillSetState | null): boolean {
+	return Boolean(set && set.ids.length > 0 && set.ids.every((id) => id in set.results));
+}
+
+/** A drill for free practice: never one from today's set, and preferring ones not just seen. */
+export function pickPracticeDrill(set: DrillSetState, exclude: string[] = []): Drill | null {
+	const bank = DRILL_BANKS[set.lang] ?? [];
+	if (bank.length === 0) return null;
+	const today = new Set(set.ids);
+	const rest = bank.filter((d) => !today.has(d.id));
+	if (rest.length === 0) return null;
+	// Unlimited means the pool has to wrap: once everything has been seen this session, start over
+	// rather than running dry.
+	const seen = new Set(exclude);
+	const pool = rest.filter((d) => !seen.has(d.id));
+	const from = pool.length > 0 ? pool : rest;
+	return from[Math.floor(Math.random() * from.length)];
+}
+
+export interface PracticeResult {
+	correct: boolean;
+	expected: string;
+	alternatives: string[];
+	url: string;
+	api: string | null;
+}
+
+/** Checks a practice answer. Records nothing: practice never touches scheduling or history. */
+export function checkPracticeAnswer(drillId: string, answer: string): PracticeResult | { error: string } {
+	const drill = drillById(drillId);
+	if (!drill) return { error: 'unknown drill' };
+	return {
+		correct: checkAnswer(drill, answer),
+		expected: drill.answer,
+		alternatives: drill.alternatives ?? [],
+		url: drill.url,
+		api: drill.api ?? null
+	};
+}

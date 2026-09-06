@@ -2,7 +2,7 @@ import type { PageServerLoad } from './$types';
 import { getDb } from '$lib/server/db';
 import { requireUser } from '$lib/server/guard';
 import { loadSnapshot } from '$lib/server/game/state';
-import { getOrCreateDrillSet, loadDrillProgress } from '$lib/server/game/drills';
+import { getOrCreateDrillSet, isSetComplete, loadDrillProgress } from '$lib/server/game/drills';
 import { DRILL_BANKS } from '$lib/game/drillbank';
 import { drillById } from '$lib/game/drillbank';
 
@@ -38,9 +38,14 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 		}
 	}
 
+	const practiceUnlocked = isSetComplete(set);
+
 	return {
 		today: snap.today,
 		lang: set?.lang ?? null,
+		practiceUnlocked,
+		// How much there is to practise, so the unlock says something concrete.
+		practicePool: set ? Math.max(0, (DRILL_BANKS[set.lang]?.length ?? 0) - set.ids.length) : 0,
 		drills,
 		setIngots: set?.ingots ?? 0,
 		ingots: snap.resources.ingots ?? 0,

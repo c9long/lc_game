@@ -65,6 +65,7 @@ Phases 1 to 8 are implemented in one pass: repo hygiene, passkey auth, admin/coo
 - `data/drills/curation.json` holds hand-written drills (`extra`, verified by `scripts/verify-drills.py`), ids to exclude, and a per-module cap. Hand-written drills are served first.
 - Each day gets a set of 5 (`buildDrillSet`): due drills first on a 1, 3, 7, 21, 60 day ladder, then unseen drills alternating kinds. A wrong answer resets the drill to 1 day.
 - Rewards: 1 **Ingot** per correct answer, +2 for a perfect set. Upgrading any building past level 1 costs 3 Ingots per level on top of the scaled resource cost, so drills are the only route to a prosperous city.
+- **Unlimited practice** (added 2026-09-06) unlocks once every drill in the day's set has been answered, and runs as long as you like over the rest of the bank. It earns **nothing**: no Ingots, and no writes to `drill_state` or `drill_attempts`. That is deliberate — the daily set is drawn from the spaced-repetition ladder, so letting practice advance `srsStep` would let an evening of practice empty tomorrow's set, consuming the schedule it is meant to support. The unlock is enforced in `/api/drills/practice`, not just in the page, and answers are checked server-side there as they are for the daily set.
 - The daily plan has a third slot pointing at `/drills`; it does not count toward the weekly budget, which remains about problems.
 - Go and C# banks are future work: Go's `example_test.go` files with `// Output:` comments and the dotnet API docs snippets are the analogous sources.
 

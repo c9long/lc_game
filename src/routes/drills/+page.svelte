@@ -46,6 +46,85 @@
 			else submit();
 		}
 	}
+
+	// --- unlimited practice, unlocked once the day's set is done ---
+	// Nothing here is scored or recorded: the counters are per-session only, and `seen` just keeps
+	// the server from handing back a drill twice in a row until the bank wraps.
+	type PracticeDrill = { id: string; kind: string; module: string; context: string | null; code: string; hint: string | null };
+
+	let practice = $state<PracticeDrill | null>(null);
+	let practiceAnswer = $state('');
+	let practiceBusy = $state(false);
+	let practiceFeedback = $state<null | { correct: boolean; expected: string; alternatives: string[]; url: string; api: string | null }>(null);
+	let practiceDone = $state(0);
+	let practiceCorrect = $state(0);
+	let seen = $state<string[]>([]);
+
+	async function loadPractice() {
+		practiceBusy = true;
+		message = '';
+		try {
+			const q = seen.length ? `?exclude=${encodeURIComponent(seen.join(','))}` : '';
+			const r = await fetch(`/api/drills/practice${q}`);
+			const j = (await r.json()) as any;
+			if (!r.ok) throw new Error(j.message ?? j.error ?? 'failed');
+			practice = j.drill;
+			seen = [...seen, j.drill.id];
+		} catch (e) {
+			message = e instanceof Error ? e.message : String(e);
+			practice = null;
+		} finally {
+			practiceBusy = false;
+		}
+	}
+
+	async function startPractice() {
+		practiceFeedback = null;
+		practiceAnswer = '';
+		await loadPractice();
+	}
+
+	async function submitPractice() {
+		if (!practice || practiceBusy || !practiceAnswer.trim()) return;
+		practiceBusy = true;
+		message = '';
+		try {
+			const r = await fetch('/api/drills/practice', {
+				method: 'POST',
+				headers: { 'content-type': 'application/json' },
+				body: JSON.stringify({ drillId: practice.id, answer: practiceAnswer })
+			});
+			const j = (await r.json()) as any;
+			if (!r.ok) throw new Error(j.message ?? j.error ?? 'failed');
+			practiceFeedback = j;
+			practiceDone += 1;
+			if (j.correct) practiceCorrect += 1;
+		} catch (e) {
+			message = e instanceof Error ? e.message : String(e);
+		} finally {
+			practiceBusy = false;
+		}
+	}
+
+	async function nextPractice() {
+		practiceFeedback = null;
+		practiceAnswer = '';
+		await loadPractice();
+	}
+
+	function stopPractice() {
+		practice = null;
+		practiceFeedback = null;
+		practiceAnswer = '';
+	}
+
+	function onPracticeKey(e: KeyboardEvent) {
+		if (e.key === 'Enter' && !e.shiftKey) {
+			e.preventDefault();
+			if (practiceFeedback) nextPractice();
+			else submitPractice();
+		}
+	}
 </script>
 
 <svelte:head><title>Drills · LC Game</title></svelte:head>
@@ -62,6 +141,57 @@
 		{:else if !current}
 			<h2>Set complete: {correctCount}/{data.drills.length}</h2>
 			<p>Ingots forged today: <strong>{data.setIngots}</strong>. Come back tomorrow for a new set; missed ones return sooner.</p>
+			{#if data.practiceUnlocked && data.practicePool > 0}
+				<hr />
+				<h3>Practice <span class="muted">unlimited · unscored</span></h3>
+				{#if !practice}
+					<p class="muted">
+						{data.practicePool} more drill{data.practicePool === 1 ? '' : 's'} in the bank. Practice forges no
+						Ingots and does not change your schedule, so tomorrow's set is unaffected.
+					</p>
+					<button class="primary" onclick={startPractice} disabled={practiceBusy}>
+						{practiceBusy ? 'Loading…' : 'Practice'}
+					</button>
+				{:else}
+					<div class="row">
+						<span class="pill">practice</span>
+						<span class="pill">{practice.module}</span>
+						<span class="pill">{practice.kind === 'cloze' ? 'fill the blank' : 'what does it print?'}</span>
+						<span class="muted">{practiceCorrect}/{practiceDone} this session</span>
+					</div>
+					{#if practice.context}<pre class="ctx">{practice.context}</pre>{/if}
+					<pre class="code">{practice.code}</pre>
+					{#if practice.kind === 'cloze'}
+						{#if practice.hint}<p class="muted">Produces: <code>{practice.hint}</code></p>{/if}
+						<p>What replaces <code>___</code>?</p>
+					{:else}
+						<p>What is printed?</p>
+					{/if}
+					{#if !practiceFeedback}
+						<div class="row">
+							<input
+								bind:value={practiceAnswer}
+								onkeydown={onPracticeKey}
+								placeholder={practice.kind === 'cloze' ? 'name' : 'output'}
+								autocomplete="off"
+								spellcheck="false"
+								style="flex:1; font-family: ui-monospace, monospace"
+							/>
+							<button class="primary" onclick={submitPractice} disabled={practiceBusy || !practiceAnswer.trim()}>Check</button>
+						</div>
+					{:else}
+						<div class="banner" class:ok={practiceFeedback.correct}>
+							{practiceFeedback.correct ? '✓ Correct' : '✗ Not quite'} · expected <code>{practiceFeedback.expected}</code>
+							{#if practiceFeedback.alternatives.length}<span class="muted"> (also accepted: {practiceFeedback.alternatives.join(', ')})</span>{/if}
+							<br /><a href={practiceFeedback.url} target="_blank" rel="noreferrer">{practiceFeedback.api ?? 'docs'} ↗</a>
+						</div>
+						<div class="row">
+							<button class="primary" onclick={nextPractice} onkeydown={onPracticeKey}>Next</button>
+							<button onclick={stopPractice}>Stop</button>
+						</div>
+					{/if}
+				{/if}
+			{/if}
 		{:else}
 			<div class="row"><span class="pill">{answeredCount + 1} / {data.drills.length}</span> <span class="pill">{current.module}</span> <span class="pill">{current.kind === 'cloze' ? 'fill the blank' : 'what does it print?'}</span></div>
 			{#if current.context}<pre class="ctx">{current.context}</pre>{/if}
