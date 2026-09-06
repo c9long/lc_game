@@ -75,6 +75,7 @@
   ],
   "compare": "exact",
   "entry": "insert",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

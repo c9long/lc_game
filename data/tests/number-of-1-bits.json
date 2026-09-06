@@ -21,6 +21,7 @@
   ],
   "compare": "exact",
   "entry": "hammingWeight",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

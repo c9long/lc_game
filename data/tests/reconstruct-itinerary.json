@@ -66,6 +66,7 @@
   ],
   "compare": "exact",
   "entry": "findItinerary",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

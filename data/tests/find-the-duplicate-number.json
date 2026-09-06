@@ -39,6 +39,7 @@
   ],
   "compare": "exact",
   "entry": "findDuplicate",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

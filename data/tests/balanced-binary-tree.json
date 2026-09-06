@@ -1,0 +1,55 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          3,
+          9,
+          20,
+          null,
+          null,
+          15,
+          7
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          1,
+          2,
+          2,
+          3,
+          3,
+          null,
+          null,
+          4,
+          4
+        ]
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        []
+      ],
+      "expected": true
+    }
+  ],
+  "compare": "exact",
+  "entry": "isBalanced",
+  "exampleCount": 3,
+  "mode": "structure",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    }
+  ],
+  "returns": {
+    "type": "boolean"
+  },
+  "slug": "balanced-binary-tree",
+  "source": "examples"
+}

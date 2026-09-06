@@ -51,6 +51,7 @@
   ],
   "compare": "exact",
   "entry": "carFleet",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

@@ -47,6 +47,7 @@
   ],
   "compare": "unordered-nested",
   "entry": "subsetsWithDup",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

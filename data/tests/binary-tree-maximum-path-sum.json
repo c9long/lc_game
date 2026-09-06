@@ -1,0 +1,43 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        [
+          -10,
+          9,
+          20,
+          null,
+          null,
+          15,
+          7
+        ]
+      ],
+      "expected": 42
+    }
+  ],
+  "compare": "exact",
+  "entry": "maxPathSum",
+  "exampleCount": 2,
+  "mode": "structure",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "binary-tree-maximum-path-sum",
+  "source": "examples"
+}

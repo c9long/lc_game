@@ -147,6 +147,7 @@
   ],
   "compare": "exact",
   "entry": "maxAreaOfIsland",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

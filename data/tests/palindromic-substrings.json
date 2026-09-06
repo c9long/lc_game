@@ -15,6 +15,7 @@
   ],
   "compare": "exact",
   "entry": "countSubstrings",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

@@ -1,0 +1,64 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          3,
+          9,
+          20,
+          null,
+          null,
+          15,
+          7
+        ]
+      ],
+      "expected": [
+        [
+          3
+        ],
+        [
+          9,
+          20
+        ],
+        [
+          15,
+          7
+        ]
+      ]
+    },
+    {
+      "args": [
+        [
+          1
+        ]
+      ],
+      "expected": [
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "args": [
+        []
+      ],
+      "expected": []
+    }
+  ],
+  "compare": "exact",
+  "entry": "levelOrder",
+  "exampleCount": 3,
+  "mode": "structure",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    }
+  ],
+  "returns": {
+    "dealloc": true,
+    "type": "list<list<integer>>"
+  },
+  "slug": "binary-tree-level-order-traversal",
+  "source": "examples"
+}

@@ -40,6 +40,12 @@ class TreeNode:
         self.val = val
         self.left = left
         self.right = right
+
+class Node:
+    def __init__(self, val=0, next=None, random=None):
+        self.val = val
+        self.next = next
+        self.random = random
 """
 
 SCALARS = {"integer", "double", "float", "string", "boolean", "character", "long", "void"}
@@ -115,6 +121,9 @@ def from_tree(root):
     return out
 
 
+STRUCTURES = {"ListNode", "TreeNode"}
+
+
 def decode(type_name: str, value, ns):
     """JSON value -> Python value the solution expects."""
     t = type_name.strip()
@@ -122,6 +131,10 @@ def decode(type_name: str, value, ns):
         return to_linked(value, ns)
     if t == "TreeNode":
         return to_tree(value, ns)
+    # An array of structures, e.g. merge-k-sorted-lists takes ListNode[]: each element is itself a
+    # serialised list, so the element type has to be decoded rather than passed through.
+    if t.endswith("[]") and t[:-2] in STRUCTURES:
+        return [decode(t[:-2], v, ns) for v in value]
     if t.endswith("[]") or t.startswith("list<") or t in SCALARS:
         return value  # JSON already matches: scalars, arrays and nested arrays
     raise Unsupported(f"cannot decode parameter type {type_name!r}")
@@ -134,6 +147,8 @@ def encode(type_name: str, value):
         return from_linked(value)
     if t == "TreeNode":
         return from_tree(value)
+    if t.endswith("[]") and t[:-2] in STRUCTURES:
+        return [encode(t[:-2], v) for v in value]
     if isinstance(value, tuple):
         return list(value)
     return value
@@ -210,12 +225,97 @@ def call_design(ns, spec, raw_args):
     return out
 
 
+# ---------- adapters ----------
+#
+# A few problems cannot be driven from metaData alone: LeetCode's own harness builds the input
+# structure in a way the published schema does not describe. Each is a NAMED adapter selected from
+# data/tests-curation.json, deliberately a short list rather than a script per problem.
+
+
+def adapt_linked_list_cycle(ns, spec, raw_args):
+    """hasCycle(head): metaData declares a second `pos` parameter, but it is not an argument — it
+    is the index the tail links back to."""
+    vals, pos = raw_args[0], raw_args[1]
+    head = to_linked(vals, ns)
+    if head is not None and pos is not None and pos >= 0:
+        target = head
+        for _ in range(pos):
+            target = target.next
+        tail = head
+        while tail.next is not None:
+            tail = tail.next
+        tail.next = target
+    solution = solution_object(ns, spec)
+    return bool(bound_entry(solution, spec["entry"])(head))
+
+
+def adapt_lca_bst(ns, spec, raw_args):
+    """lowestCommonAncestor(root, p, q): p and q arrive as values but the signature takes nodes.
+    The answer is reported by value, which is what LeetCode displays."""
+    root = to_tree(raw_args[0], ns)
+
+    def find(node, val):
+        if node is None:
+            return None
+        if node.val == val:
+            return node
+        return find(node.left, val) or find(node.right, val)
+
+    p, q = find(root, raw_args[1]), find(root, raw_args[2])
+    solution = solution_object(ns, spec)
+    result = bound_entry(solution, spec["entry"])(root, p, q)
+    return None if result is None else result.val
+
+
+def adapt_copy_random_list(ns, spec, raw_args):
+    """copyRandomList(head): input and output are [[value, randomIndex|null], ...], so the random
+    pointers are resolved by index on the way in and re-indexed on the way out."""
+    pairs = raw_args[0]
+    node_cls = ns["Node"]
+    nodes = [node_cls(pair[0]) for pair in pairs]
+    for i, node in enumerate(nodes):
+        node.next = nodes[i + 1] if i + 1 < len(nodes) else None
+        idx = pairs[i][1]
+        node.random = nodes[idx] if idx is not None else None
+
+    original_ids = {id(n) for n in nodes}
+    solution = solution_object(ns, spec)
+    out = bound_entry(solution, spec["entry"])(nodes[0] if nodes else None)
+
+    order, seen = [], set()
+    cur = out
+    while cur is not None and id(cur) not in seen:
+        seen.add(id(cur))
+        order.append(cur)
+        cur = cur.next
+    # A correct deep copy serialises identically to its input, so comparing serialisations alone
+    # would accept `return head`. Aliasing has to be checked directly.
+    if any(id(n) in original_ids for n in order):
+        raise ValueError("returned list shares nodes with the original; it is not a deep copy")
+
+    index = {id(n): i for i, n in enumerate(order)}
+    return [[n.val, None if n.random is None else index.get(id(n.random))] for n in order]
+
+
+ADAPTERS = {
+    'linked-list-cycle': adapt_linked_list_cycle,
+    'lca-bst': adapt_lca_bst,
+    'copy-random-list': adapt_copy_random_list,
+}
+
+
 def run_case(ns, spec, raw_args):
     # Decoding passes arrays through by reference, and plenty of solutions sort or fill their
     # argument in place. Without this copy the caller's inputs are rewritten by the very run that
     # is meant to observe them, which silently corrupts stored test inputs and lets a later case
     # start from a previous case's leftovers.
     raw_args = copy.deepcopy(raw_args)
+    adapter = spec.get("adapt")
+    if adapter:
+        fn = ADAPTERS.get(adapter)
+        if fn is None:
+            raise Unsupported(f"unknown adapter {adapter!r}")
+        return fn(ns, spec, raw_args)
     if spec["mode"] == "design":
         return call_design(ns, spec, raw_args)
     return call_plain(ns, spec, raw_args)

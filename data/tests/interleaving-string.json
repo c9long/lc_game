@@ -27,6 +27,7 @@
   ],
   "compare": "exact",
   "entry": "isInterleave",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

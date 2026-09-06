@@ -41,6 +41,7 @@
   ],
   "compare": "exact",
   "entry": "minEatingSpeed",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

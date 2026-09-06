@@ -37,6 +37,7 @@
   ],
   "compare": "exact",
   "entry": "canAttendMeetings",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

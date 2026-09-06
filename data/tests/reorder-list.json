@@ -1,0 +1,53 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          1,
+          2,
+          3,
+          4
+        ]
+      ],
+      "expected": [
+        1,
+        4,
+        2,
+        3
+      ]
+    },
+    {
+      "args": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      ],
+      "expected": [
+        1,
+        5,
+        2,
+        4,
+        3
+      ]
+    }
+  ],
+  "compare": "exact",
+  "entry": "reorderList",
+  "exampleCount": 2,
+  "mode": "structure",
+  "params": [
+    {
+      "name": "head",
+      "type": "ListNode"
+    }
+  ],
+  "returns": {
+    "type": "void"
+  },
+  "slug": "reorder-list",
+  "source": "examples"
+}

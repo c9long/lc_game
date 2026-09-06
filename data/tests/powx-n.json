@@ -24,6 +24,7 @@
   ],
   "compare": "exact",
   "entry": "myPow",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

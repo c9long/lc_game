@@ -30,6 +30,7 @@
   ],
   "compare": "exact",
   "entry": "minCostClimbingStairs",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

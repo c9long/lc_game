@@ -79,6 +79,7 @@
   ],
   "compare": "exact",
   "entry": "merge",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

@@ -1,0 +1,40 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        [
+          1,
+          2
+        ]
+      ],
+      "expected": 1
+    }
+  ],
+  "compare": "exact",
+  "entry": "diameterOfBinaryTree",
+  "exampleCount": 2,
+  "mode": "structure",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "diameter-of-binary-tree",
+  "source": "examples"
+}

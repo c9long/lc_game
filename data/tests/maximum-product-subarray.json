@@ -24,6 +24,7 @@
   ],
   "compare": "exact",
   "entry": "maxProduct",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

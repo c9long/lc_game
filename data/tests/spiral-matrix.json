@@ -73,6 +73,7 @@
   ],
   "compare": "exact",
   "entry": "spiralOrder",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

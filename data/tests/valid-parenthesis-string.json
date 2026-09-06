@@ -21,6 +21,7 @@
   ],
   "compare": "exact",
   "entry": "checkValidString",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

@@ -1,0 +1,64 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          3,
+          9,
+          20,
+          15,
+          7
+        ],
+        [
+          9,
+          3,
+          15,
+          20,
+          7
+        ]
+      ],
+      "expected": [
+        3,
+        9,
+        20,
+        null,
+        null,
+        15,
+        7
+      ]
+    },
+    {
+      "args": [
+        [
+          -1
+        ],
+        [
+          -1
+        ]
+      ],
+      "expected": [
+        -1
+      ]
+    }
+  ],
+  "compare": "exact",
+  "entry": "buildTree",
+  "exampleCount": 2,
+  "mode": "structure",
+  "params": [
+    {
+      "name": "preorder",
+      "type": "integer[]"
+    },
+    {
+      "name": "inorder",
+      "type": "integer[]"
+    }
+  ],
+  "returns": {
+    "dealloc": true,
+    "type": "TreeNode"
+  },
+  "slug": "construct-binary-tree-from-preorder-and-inorder-traversal",
+  "source": "examples"
+}

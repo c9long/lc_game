@@ -1,0 +1,66 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          1,
+          2,
+          4
+        ],
+        [
+          1,
+          3,
+          4
+        ]
+      ],
+      "expected": [
+        1,
+        1,
+        2,
+        3,
+        4,
+        4
+      ]
+    },
+    {
+      "args": [
+        [],
+        []
+      ],
+      "expected": []
+    },
+    {
+      "args": [
+        [],
+        [
+          0
+        ]
+      ],
+      "expected": [
+        0
+      ]
+    }
+  ],
+  "compare": "exact",
+  "entry": "mergeTwoLists",
+  "exampleCount": 3,
+  "mode": "structure",
+  "params": [
+    {
+      "dealloc": false,
+      "name": "list1",
+      "type": "ListNode"
+    },
+    {
+      "dealloc": false,
+      "name": "list2",
+      "type": "ListNode"
+    }
+  ],
+  "returns": {
+    "dealloc": true,
+    "type": "ListNode"
+  },
+  "slug": "merge-two-sorted-lists",
+  "source": "examples"
+}

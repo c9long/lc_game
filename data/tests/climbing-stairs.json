@@ -15,6 +15,7 @@
   ],
   "compare": "exact",
   "entry": "climbStairs",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

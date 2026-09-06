@@ -55,6 +55,7 @@
   ],
   "compare": "exact",
   "entry": "networkDelayTime",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

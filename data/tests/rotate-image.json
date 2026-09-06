@@ -97,6 +97,7 @@
   ],
   "compare": "exact",
   "entry": "rotate",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

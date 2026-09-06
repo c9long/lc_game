@@ -55,6 +55,7 @@
   ],
   "compare": "exact",
   "entry": "findRedundantConnection",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

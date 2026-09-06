@@ -1,0 +1,53 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          3,
+          1,
+          4,
+          3,
+          null,
+          1,
+          5
+        ]
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        [
+          3,
+          3,
+          null,
+          4,
+          2
+        ]
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        [
+          1
+        ]
+      ],
+      "expected": 1
+    }
+  ],
+  "compare": "exact",
+  "entry": "goodNodes",
+  "exampleCount": 3,
+  "mode": "structure",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "count-good-nodes-in-binary-tree",
+  "source": "examples"
+}

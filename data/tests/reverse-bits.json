@@ -15,6 +15,7 @@
   ],
   "compare": "exact",
   "entry": "reverseBits",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

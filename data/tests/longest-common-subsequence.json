@@ -24,6 +24,7 @@
   ],
   "compare": "exact",
   "entry": "longestCommonSubsequence",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

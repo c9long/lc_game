@@ -33,6 +33,7 @@
   ],
   "compare": "exact",
   "entry": "singleNumber",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

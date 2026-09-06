@@ -44,6 +44,7 @@
   ],
   "compare": "exact",
   "entry": "longestConsecutive",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

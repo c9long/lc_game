@@ -25,6 +25,7 @@
   ],
   "compare": "exact",
   "entry": "canPartition",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

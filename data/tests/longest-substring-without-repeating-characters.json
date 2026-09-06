@@ -21,6 +21,7 @@
   ],
   "compare": "exact",
   "entry": "lengthOfLongestSubstring",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

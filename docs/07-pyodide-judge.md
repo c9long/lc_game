@@ -101,10 +101,12 @@ Awards, SRS scheduling and the ledger key off an accepted verdict exactly as bef
 
 | | Scope | Unlocks | Status |
 |---|---|---|---|
-| **A** | Pyodide worker, type codec, plain driver, tests for the plain problems | Arrays & Hashing onward — most of the tree | **done: 115 suites, all verified** |
-| **B** | `TreeNode` / `ListNode` codecs | +24 problems | not started |
-| **C** | Design-mode driver | +9 problems, all 150 covered | not started |
+| **A** | Pyodide worker, type codec, plain driver, tests for the plain problems | Arrays & Hashing onward — most of the tree | **done: 115 suites** |
+| **B** | `TreeNode` / `ListNode` codecs, plus named adapters | +23 problems | **done: 138 suites, all verified** |
+| **C** | Design-mode driver | +9 problems, and the 3 round-trip skips | not started |
 | **D** | Generator specs for stronger suites | Ongoing, ordered to follow the tree | not started |
+
+Coverage: **138 of 150** generated and verified, 9 design problems deferred to C, 3 skipped.
 
 ### Phase A as built
 
@@ -121,6 +123,19 @@ Three general faults surfaced while generating, all fixed in the pipeline rather
 Confirmed under real Pyodide (Python 3.14.2, WASM) rather than only CPython: correct code passes, wrong answers/syntax errors/runtime errors fail, a no-op on `rotate-image` fails, and `group-anagrams` in a different but valid order passes — so the comparison rules do not reject correct code.
 
 **Not yet exercised:** the worker running in an actual browser. Pyodide, the driver and the endpoints are verified from Node and curl, but loading `/pyodide/worker.js` as a module worker needs a real browser session.
+
+### Phase B as built
+
+The `TreeNode` / `ListNode` codecs were already in the driver, so 19 of the 24 structure problems generated on the first run. What the remainder taught:
+
+- `merge-k-sorted-lists` takes **`ListNode[]`** — an array whose *elements* are serialised lists. The codec passed arrays through untouched, so the solution received lists of ints. `decode`/`encode` now recurse into arrays of structures.
+- Four problems cannot be driven from `metaData` at all, because LeetCode's harness builds the input in a way the published schema does not describe. These use a **named adapter** (`ADAPTERS` in `driver.py`, selected per problem in `tests-curation.json`): `linked-list-cycle` (the declared `pos` parameter is not an argument — it is the index the tail links back to), `lowest-common-ancestor-of-a-binary-search-tree` (`p` and `q` arrive as values but the signature takes nodes) and `copy-list-with-random-pointer` (random pointers resolved by index in and re-indexed out). The list is deliberately short; it is not allowed to grow into a script per problem.
+
+`copy-list-with-random-pointer` exposed a hole worth remembering: **a correct deep copy serialises identically to its input**, so comparing serialisations alone accepts `return head`. Aliasing is now checked directly — if any returned node is the same object as an input node, the case fails.
+
+Confirmed under Pyodide that the suites *discriminate*, not merely accept: identity on `reverse-linked-list`, a no-op on `invert-binary-tree`, a constant `False` on `linked-list-cycle`, always-return-root on the LCA, and `return head` on the deep copy are all rejected, while correct solutions pass.
+
+Still skipped, all needing a round-trip harness that belongs with phase C's design driver: `clone-graph`, `encode-and-decode-strings`, `serialize-and-deserialize-binary-tree`.
 
 ## Risks
 

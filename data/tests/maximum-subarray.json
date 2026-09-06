@@ -39,6 +39,7 @@
   ],
   "compare": "exact",
   "entry": "maxSubArray",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

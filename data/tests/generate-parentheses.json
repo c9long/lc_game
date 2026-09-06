@@ -23,6 +23,7 @@
   ],
   "compare": "unordered",
   "entry": "generateParenthesis",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

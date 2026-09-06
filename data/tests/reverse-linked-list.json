@@ -1,0 +1,57 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      ],
+      "expected": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "args": [
+        [
+          1,
+          2
+        ]
+      ],
+      "expected": [
+        2,
+        1
+      ]
+    },
+    {
+      "args": [
+        []
+      ],
+      "expected": []
+    }
+  ],
+  "compare": "exact",
+  "entry": "reverseList",
+  "exampleCount": 3,
+  "mode": "structure",
+  "params": [
+    {
+      "dealloc": false,
+      "name": "head",
+      "type": "ListNode"
+    }
+  ],
+  "returns": {
+    "dealloc": true,
+    "type": "ListNode"
+  },
+  "slug": "reverse-linked-list",
+  "source": "examples"
+}

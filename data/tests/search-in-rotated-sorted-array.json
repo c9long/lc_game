@@ -42,6 +42,7 @@
   ],
   "compare": "exact",
   "entry": "search",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

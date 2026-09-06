@@ -32,6 +32,7 @@
   ],
   "compare": "unordered",
   "entry": "solveNQueens",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

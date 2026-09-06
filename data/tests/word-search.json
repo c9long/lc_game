@@ -81,6 +81,7 @@
   ],
   "compare": "exact",
   "entry": "exist",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

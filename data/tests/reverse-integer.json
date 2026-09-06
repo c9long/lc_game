@@ -21,6 +21,7 @@
   ],
   "compare": "exact",
   "entry": "reverse",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

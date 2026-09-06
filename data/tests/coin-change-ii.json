@@ -32,6 +32,7 @@
   ],
   "compare": "exact",
   "entry": "change",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

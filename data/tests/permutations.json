@@ -74,6 +74,7 @@
   ],
   "compare": "unordered-nested",
   "entry": "permute",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

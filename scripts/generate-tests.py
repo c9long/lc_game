@@ -139,8 +139,8 @@ def build_spec(slug: str, meta: dict, curation: dict) -> dict:
     returns = md.get("return", {})
     types = [p.get("type", "") for p in params] + [returns.get("type", "")]
     structural = {"TreeNode", "ListNode", "Node"}
-    mode = "structure" if any(t in structural for t in types) else "plain"
-    return {
+    mode = "structure" if any(t.replace("[]", "") in structural for t in types) else "plain"
+    spec = {
         "slug": slug,
         "mode": mode,
         "entry": md["name"],
@@ -148,6 +148,12 @@ def build_spec(slug: str, meta: dict, curation: dict) -> dict:
         "returns": returns,
         "compare": compare,
     }
+    # A named adapter takes over the call entirely, for the few problems whose real input shape is
+    # not what metaData describes.
+    adapter = curation.get("adapt", {}).get(slug)
+    if adapter:
+        spec["adapt"] = adapter
+    return spec
 
 
 def parse_cases(spec: dict, raw: str) -> list:

@@ -32,6 +32,7 @@
   ],
   "compare": "exact",
   "entry": "ladderLength",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

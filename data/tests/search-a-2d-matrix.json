@@ -55,6 +55,7 @@
   ],
   "compare": "exact",
   "entry": "searchMatrix",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

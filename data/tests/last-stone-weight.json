@@ -24,6 +24,7 @@
   ],
   "compare": "exact",
   "entry": "lastStoneWeight",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

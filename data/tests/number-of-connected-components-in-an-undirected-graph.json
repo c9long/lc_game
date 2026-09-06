@@ -47,6 +47,7 @@
   ],
   "compare": "exact",
   "entry": "countComponents",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

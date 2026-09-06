@@ -24,6 +24,7 @@
   ],
   "compare": "exact",
   "entry": "minWindow",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

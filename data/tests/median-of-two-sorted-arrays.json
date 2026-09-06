@@ -28,6 +28,7 @@
   ],
   "compare": "exact",
   "entry": "findMedianSortedArrays",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

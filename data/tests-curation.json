@@ -32,12 +32,20 @@
     "claims integer[][] -> boolean). Generating from it would produce confidently wrong expectations,",
     "so they are skipped until each gets a purpose-built codec."
   ],
+  "_adapt_comment": [
+    "A handful of problems cannot be driven from metaData alone, because LeetCode's own harness",
+    "builds the input structure in a way the published schema does not describe. Each names an",
+    "adapter implemented in src/lib/pyodide/driver.py (ADAPTERS). Kept deliberately short: the",
+    "point of the schema-driven design is that this list does not grow to 150."
+  ],
+  "adapt": {
+    "linked-list-cycle": "linked-list-cycle",
+    "lowest-common-ancestor-of-a-binary-search-tree": "lca-bst",
+    "copy-list-with-random-pointer": "copy-random-list"
+  },
   "skip": {
     "clone-graph": "metaData is manual and misdescribes the signature; needs a Node graph codec",
     "encode-and-decode-strings": "entry point is a dummy; needs an encode/decode round-trip harness",
-    "copy-list-with-random-pointer": "needs a codec for the random pointer",
-    "linked-list-cycle": "input builds a cycle from pos; needs a cyclic list codec",
-    "lowest-common-ancestor-of-a-binary-search-tree": "p and q are node values that must resolve to nodes",
-    "serialize-and-deserialize-binary-tree": "needs a serialize/deserialize round-trip harness"
+    "serialize-and-deserialize-binary-tree": "a Codec class with a serialize/deserialize round trip; phase C"
   }
 }

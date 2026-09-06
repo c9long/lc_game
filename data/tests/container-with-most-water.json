@@ -28,6 +28,7 @@
   ],
   "compare": "exact",
   "entry": "maxArea",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

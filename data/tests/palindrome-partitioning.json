@@ -29,6 +29,7 @@
   ],
   "compare": "unordered",
   "entry": "partition",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

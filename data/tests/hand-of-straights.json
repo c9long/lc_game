@@ -33,6 +33,7 @@
   ],
   "compare": "exact",
   "entry": "isNStraightHand",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

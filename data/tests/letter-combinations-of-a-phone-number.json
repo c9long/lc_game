@@ -29,6 +29,7 @@
   ],
   "compare": "unordered",
   "entry": "letterCombinations",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

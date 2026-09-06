@@ -57,6 +57,7 @@
   ],
   "compare": "exact",
   "entry": "dailyTemperatures",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

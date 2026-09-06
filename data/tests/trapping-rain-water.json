@@ -35,6 +35,7 @@
   ],
   "compare": "exact",
   "entry": "trap",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

@@ -215,6 +215,7 @@
   ],
   "compare": "exact",
   "entry": "isValidSudoku",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

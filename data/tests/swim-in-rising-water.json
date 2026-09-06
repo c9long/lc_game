@@ -60,6 +60,7 @@
   ],
   "compare": "exact",
   "entry": "swimInWater",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

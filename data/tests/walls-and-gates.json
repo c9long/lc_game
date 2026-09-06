@@ -73,6 +73,7 @@
   ],
   "compare": "exact",
   "entry": "wallsAndGates",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

@@ -89,6 +89,7 @@
   ],
   "compare": "unordered-nested",
   "entry": "pacificAtlantic",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

@@ -17,6 +17,7 @@
   ],
   "compare": "exact",
   "entry": "isAnagram",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

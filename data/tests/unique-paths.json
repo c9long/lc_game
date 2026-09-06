@@ -17,6 +17,7 @@
   ],
   "compare": "exact",
   "entry": "uniquePaths",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

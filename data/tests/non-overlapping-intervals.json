@@ -60,6 +60,7 @@
   ],
   "compare": "exact",
   "entry": "eraseOverlapIntervals",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

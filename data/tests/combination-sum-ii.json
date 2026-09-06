@@ -59,6 +59,7 @@
   ],
   "compare": "unordered-nested",
   "entry": "combinationSum2",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

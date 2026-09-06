@@ -1,0 +1,79 @@
+{
+  "adapt": "lca-bst",
+  "cases": [
+    {
+      "args": [
+        [
+          6,
+          2,
+          8,
+          0,
+          4,
+          7,
+          9,
+          null,
+          null,
+          3,
+          5
+        ],
+        2,
+        8
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        [
+          6,
+          2,
+          8,
+          0,
+          4,
+          7,
+          9,
+          null,
+          null,
+          3,
+          5
+        ],
+        2,
+        4
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        [
+          2,
+          1
+        ],
+        2,
+        1
+      ],
+      "expected": 2
+    }
+  ],
+  "compare": "exact",
+  "entry": "lowestCommonAncestor",
+  "exampleCount": 3,
+  "mode": "structure",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    },
+    {
+      "name": "p",
+      "type": "integer"
+    },
+    {
+      "name": "q",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "type": "TreeNode"
+  },
+  "slug": "lowest-common-ancestor-of-a-binary-search-tree",
+  "source": "examples"
+}

@@ -49,6 +49,7 @@
   ],
   "compare": "exact",
   "entry": "minCostConnectPoints",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

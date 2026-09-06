@@ -1,0 +1,61 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        2
+      ],
+      "expected": [
+        2,
+        1,
+        4,
+        3,
+        5
+      ]
+    },
+    {
+      "args": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        3
+      ],
+      "expected": [
+        3,
+        2,
+        1,
+        4,
+        5
+      ]
+    }
+  ],
+  "compare": "exact",
+  "entry": "reverseKGroup",
+  "exampleCount": 2,
+  "mode": "structure",
+  "params": [
+    {
+      "name": "head",
+      "type": "ListNode"
+    },
+    {
+      "name": "k",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "type": "ListNode"
+  },
+  "slug": "reverse-nodes-in-k-group",
+  "source": "examples"
+}

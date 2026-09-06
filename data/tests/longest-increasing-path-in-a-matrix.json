@@ -57,6 +57,7 @@
   ],
   "compare": "exact",
   "entry": "longestIncreasingPath",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

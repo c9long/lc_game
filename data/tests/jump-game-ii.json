@@ -27,6 +27,7 @@
   ],
   "compare": "exact",
   "entry": "jump",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

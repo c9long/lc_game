@@ -37,6 +37,7 @@
   ],
   "compare": "exact",
   "entry": "productExceptSelf",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

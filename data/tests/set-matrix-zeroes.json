@@ -85,6 +85,7 @@
   ],
   "compare": "exact",
   "entry": "setZeroes",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

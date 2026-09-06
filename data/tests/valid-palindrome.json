@@ -21,6 +21,7 @@
   ],
   "compare": "exact",
   "entry": "isPalindrome",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

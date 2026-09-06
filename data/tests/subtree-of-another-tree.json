@@ -1,0 +1,62 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          3,
+          4,
+          5,
+          1,
+          2
+        ],
+        [
+          4,
+          1,
+          2
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          3,
+          4,
+          5,
+          1,
+          2,
+          null,
+          null,
+          null,
+          null,
+          0
+        ],
+        [
+          4,
+          1,
+          2
+        ]
+      ],
+      "expected": false
+    }
+  ],
+  "compare": "exact",
+  "entry": "isSubtree",
+  "exampleCount": 2,
+  "mode": "structure",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    },
+    {
+      "name": "subRoot",
+      "type": "TreeNode"
+    }
+  ],
+  "returns": {
+    "type": "boolean"
+  },
+  "slug": "subtree-of-another-tree",
+  "source": "examples"
+}

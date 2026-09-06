@@ -44,6 +44,7 @@
   ],
   "compare": "exact",
   "entry": "plusOne",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

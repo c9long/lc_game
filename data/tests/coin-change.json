@@ -32,6 +32,7 @@
   ],
   "compare": "exact",
   "entry": "coinChange",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

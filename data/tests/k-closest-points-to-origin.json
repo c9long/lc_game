@@ -53,6 +53,7 @@
   ],
   "compare": "unordered-nested",
   "entry": "kClosest",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

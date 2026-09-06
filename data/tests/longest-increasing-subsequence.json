@@ -45,6 +45,7 @@
   ],
   "compare": "exact",
   "entry": "lengthOfLIS",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

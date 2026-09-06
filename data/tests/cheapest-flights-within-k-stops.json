@@ -91,6 +91,7 @@
   ],
   "compare": "exact",
   "entry": "findCheapestPrice",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

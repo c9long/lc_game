@@ -52,6 +52,7 @@
   ],
   "compare": "unordered",
   "entry": "topKFrequent",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

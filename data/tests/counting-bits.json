@@ -26,6 +26,7 @@
   ],
   "compare": "exact",
   "entry": "countBits",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

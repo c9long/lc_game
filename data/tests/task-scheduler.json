@@ -45,6 +45,7 @@
   ],
   "compare": "exact",
   "entry": "leastInterval",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

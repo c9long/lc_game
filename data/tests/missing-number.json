@@ -38,6 +38,7 @@
   ],
   "compare": "exact",
   "entry": "missingNumber",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

@@ -15,6 +15,7 @@
   ],
   "compare": "exact",
   "entry": "longestPalindrome",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

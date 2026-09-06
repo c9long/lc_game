@@ -58,6 +58,7 @@
   ],
   "compare": "exact",
   "entry": "orangesRotting",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

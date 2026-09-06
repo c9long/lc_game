@@ -45,6 +45,7 @@
   ],
   "compare": "exact",
   "entry": "twoSum",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

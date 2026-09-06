@@ -28,6 +28,7 @@
   ],
   "compare": "exact",
   "entry": "maxProfit",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

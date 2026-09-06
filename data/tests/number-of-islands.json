@@ -73,6 +73,7 @@
   ],
   "compare": "exact",
   "entry": "numIslands",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

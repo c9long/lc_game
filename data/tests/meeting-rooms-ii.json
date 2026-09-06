@@ -37,6 +37,7 @@
   ],
   "compare": "exact",
   "entry": "minMeetingRooms",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

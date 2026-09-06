@@ -1,0 +1,43 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          3,
+          9,
+          20,
+          null,
+          null,
+          15,
+          7
+        ]
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        [
+          1,
+          null,
+          2
+        ]
+      ],
+      "expected": 2
+    }
+  ],
+  "compare": "exact",
+  "entry": "maxDepth",
+  "exampleCount": 2,
+  "mode": "structure",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "maximum-depth-of-binary-tree",
+  "source": "examples"
+}

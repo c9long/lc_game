@@ -61,6 +61,7 @@
   ],
   "compare": "unordered",
   "entry": "findWords",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

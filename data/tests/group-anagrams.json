@@ -53,6 +53,7 @@
   ],
   "compare": "unordered-nested",
   "entry": "groupAnagrams",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

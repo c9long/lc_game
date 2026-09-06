@@ -1,0 +1,87 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          2,
+          4,
+          3
+        ],
+        [
+          5,
+          6,
+          4
+        ]
+      ],
+      "expected": [
+        7,
+        0,
+        8
+      ]
+    },
+    {
+      "args": [
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "expected": [
+        0
+      ]
+    },
+    {
+      "args": [
+        [
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9
+        ],
+        [
+          9,
+          9,
+          9,
+          9
+        ]
+      ],
+      "expected": [
+        8,
+        9,
+        9,
+        9,
+        0,
+        0,
+        0,
+        1
+      ]
+    }
+  ],
+  "compare": "exact",
+  "entry": "addTwoNumbers",
+  "exampleCount": 3,
+  "mode": "structure",
+  "params": [
+    {
+      "dealloc": false,
+      "name": "l1",
+      "type": "ListNode"
+    },
+    {
+      "dealloc": false,
+      "name": "l2",
+      "type": "ListNode"
+    }
+  ],
+  "returns": {
+    "dealloc": true,
+    "type": "ListNode"
+  },
+  "slug": "add-two-numbers",
+  "source": "examples"
+}

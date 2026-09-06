@@ -1,0 +1,77 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          1,
+          2,
+          3,
+          null,
+          5,
+          null,
+          4
+        ]
+      ],
+      "expected": [
+        1,
+        3,
+        4
+      ]
+    },
+    {
+      "args": [
+        [
+          1,
+          2,
+          3,
+          4,
+          null,
+          null,
+          null,
+          5
+        ]
+      ],
+      "expected": [
+        1,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "args": [
+        [
+          1,
+          null,
+          3
+        ]
+      ],
+      "expected": [
+        1,
+        3
+      ]
+    },
+    {
+      "args": [
+        []
+      ],
+      "expected": []
+    }
+  ],
+  "compare": "exact",
+  "entry": "rightSideView",
+  "exampleCount": 4,
+  "mode": "structure",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    }
+  ],
+  "returns": {
+    "dealloc": true,
+    "type": "list<integer>"
+  },
+  "slug": "binary-tree-right-side-view",
+  "source": "examples"
+}

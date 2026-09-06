@@ -47,6 +47,7 @@
   ],
   "compare": "exact",
   "entry": "evalRPN",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

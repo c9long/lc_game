@@ -84,6 +84,7 @@
   ],
   "compare": "exact",
   "entry": "mergeTriplets",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

@@ -21,6 +21,7 @@
   ],
   "compare": "exact",
   "entry": "partitionLabels",
+  "exampleCount": 2,
   "mode": "plain",
   "params": [
     {

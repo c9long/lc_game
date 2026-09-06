@@ -36,6 +36,7 @@
   ],
   "compare": "exact",
   "entry": "wordBreak",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

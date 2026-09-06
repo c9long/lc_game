@@ -53,6 +53,7 @@
   ],
   "compare": "unordered-nested",
   "entry": "threeSum",
+  "exampleCount": 3,
   "mode": "plain",
   "params": [
     {

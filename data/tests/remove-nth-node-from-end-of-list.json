@@ -1,0 +1,64 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        2
+      ],
+      "expected": [
+        1,
+        2,
+        3,
+        5
+      ]
+    },
+    {
+      "args": [
+        [
+          1
+        ],
+        1
+      ],
+      "expected": []
+    },
+    {
+      "args": [
+        [
+          1,
+          2
+        ],
+        1
+      ],
+      "expected": [
+        1
+      ]
+    }
+  ],
+  "compare": "exact",
+  "entry": "removeNthFromEnd",
+  "exampleCount": 3,
+  "mode": "structure",
+  "params": [
+    {
+      "dealloc": false,
+      "name": "head",
+      "type": "ListNode"
+    },
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "dealloc": true,
+    "type": "ListNode"
+  },
+  "slug": "remove-nth-node-from-end-of-list",
+  "source": "examples"
+}
