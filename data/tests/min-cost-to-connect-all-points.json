@@ -1,0 +1,64 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            10
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            7,
+            0
+          ]
+        ]
+      ],
+      "expected": 20
+    },
+    {
+      "args": [
+        [
+          [
+            3,
+            12
+          ],
+          [
+            -2,
+            5
+          ],
+          [
+            -4,
+            1
+          ]
+        ]
+      ],
+      "expected": 18
+    }
+  ],
+  "compare": "exact",
+  "entry": "minCostConnectPoints",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "points",
+      "type": "integer[][]"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "min-cost-to-connect-all-points",
+  "source": "examples"
+}

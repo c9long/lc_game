@@ -1,0 +1,49 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          "wrt",
+          "wrf",
+          "er",
+          "ett",
+          "rftt"
+        ]
+      ],
+      "expected": "wertf"
+    },
+    {
+      "args": [
+        [
+          "z",
+          "x"
+        ]
+      ],
+      "expected": "zx"
+    },
+    {
+      "args": [
+        [
+          "z",
+          "x",
+          "z"
+        ]
+      ],
+      "expected": ""
+    }
+  ],
+  "compare": "exact",
+  "entry": "alienOrder",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "words",
+      "type": "string[]"
+    }
+  ],
+  "returns": {
+    "type": "string"
+  },
+  "slug": "alien-dictionary",
+  "source": "examples"
+}

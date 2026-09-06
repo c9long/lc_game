@@ -1,0 +1,49 @@
+{
+  "cases": [
+    {
+      "args": [
+        4
+      ],
+      "expected": [
+        [
+          ".Q..",
+          "...Q",
+          "Q...",
+          "..Q."
+        ],
+        [
+          "..Q.",
+          "Q...",
+          "...Q",
+          ".Q.."
+        ]
+      ]
+    },
+    {
+      "args": [
+        1
+      ],
+      "expected": [
+        [
+          "Q"
+        ]
+      ]
+    }
+  ],
+  "compare": "unordered",
+  "entry": "solveNQueens",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "colsize": "param_1",
+    "dealloc": true,
+    "type": "list<list<string>>"
+  },
+  "slug": "n-queens",
+  "source": "examples"
+}

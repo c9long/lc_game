@@ -1,0 +1,38 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          1,
+          2,
+          3,
+          0,
+          2
+        ]
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        [
+          1
+        ]
+      ],
+      "expected": 0
+    }
+  ],
+  "compare": "exact",
+  "entry": "maxProfit",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "prices",
+      "type": "integer[]"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "best-time-to-buy-and-sell-stock-with-cooldown",
+  "source": "examples"
+}

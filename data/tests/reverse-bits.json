@@ -1,0 +1,30 @@
+{
+  "cases": [
+    {
+      "args": [
+        43261596
+      ],
+      "expected": 964176192
+    },
+    {
+      "args": [
+        2147483644
+      ],
+      "expected": 1073741822
+    }
+  ],
+  "compare": "exact",
+  "entry": "reverseBits",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "reverse-bits",
+  "source": "examples"
+}

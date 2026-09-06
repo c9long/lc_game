@@ -1,0 +1,88 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          [
+            "X",
+            "X",
+            "X",
+            "X"
+          ],
+          [
+            "X",
+            "O",
+            "O",
+            "X"
+          ],
+          [
+            "X",
+            "X",
+            "O",
+            "X"
+          ],
+          [
+            "X",
+            "O",
+            "X",
+            "X"
+          ]
+        ]
+      ],
+      "expected": [
+        [
+          "X",
+          "X",
+          "X",
+          "X"
+        ],
+        [
+          "X",
+          "X",
+          "X",
+          "X"
+        ],
+        [
+          "X",
+          "X",
+          "X",
+          "X"
+        ],
+        [
+          "X",
+          "O",
+          "X",
+          "X"
+        ]
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "X"
+          ]
+        ]
+      ],
+      "expected": [
+        [
+          "X"
+        ]
+      ]
+    }
+  ],
+  "compare": "exact",
+  "entry": "solve",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "board",
+      "type": "character[][]"
+    }
+  ],
+  "returns": {
+    "type": "void"
+  },
+  "slug": "surrounded-regions",
+  "source": "examples"
+}

@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "args": [
+        "A man, a plan, a canal: Panama"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "race a car"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        " "
+      ],
+      "expected": true
+    }
+  ],
+  "compare": "exact",
+  "entry": "isPalindrome",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "returns": {
+    "type": "boolean"
+  },
+  "slug": "valid-palindrome",
+  "source": "examples"
+}

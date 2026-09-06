@@ -1,0 +1,55 @@
+{
+  "cases": [
+    {
+      "args": [
+        "hit",
+        "cog",
+        [
+          "hot",
+          "dot",
+          "dog",
+          "lot",
+          "log",
+          "cog"
+        ]
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "hit",
+        "cog",
+        [
+          "hot",
+          "dot",
+          "dog",
+          "lot",
+          "log"
+        ]
+      ],
+      "expected": 0
+    }
+  ],
+  "compare": "exact",
+  "entry": "ladderLength",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "beginWord",
+      "type": "string"
+    },
+    {
+      "name": "endWord",
+      "type": "string"
+    },
+    {
+      "name": "wordList",
+      "type": "list<string>"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "word-ladder",
+  "source": "examples"
+}

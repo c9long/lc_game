@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "args": [
+        3,
+        7
+      ],
+      "expected": 28
+    },
+    {
+      "args": [
+        3,
+        2
+      ],
+      "expected": 3
+    }
+  ],
+  "compare": "exact",
+  "entry": "uniquePaths",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "m",
+      "type": "integer"
+    },
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "unique-paths",
+  "source": "examples"
+}

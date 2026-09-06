@@ -1,0 +1,44 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        3
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        [
+          1
+        ],
+        1
+      ],
+      "expected": 1
+    }
+  ],
+  "compare": "exact",
+  "entry": "findTargetSumWays",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    },
+    {
+      "name": "target",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "target-sum",
+  "source": "examples"
+}

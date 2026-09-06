@@ -1,0 +1,60 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          10,
+          9,
+          2,
+          5,
+          3,
+          7,
+          101,
+          18
+        ]
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        [
+          0,
+          1,
+          0,
+          3,
+          2,
+          3
+        ]
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        [
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7
+        ]
+      ],
+      "expected": 1
+    }
+  ],
+  "compare": "exact",
+  "entry": "lengthOfLIS",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "longest-increasing-subsequence",
+  "source": "examples"
+}

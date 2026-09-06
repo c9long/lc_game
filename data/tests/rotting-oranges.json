@@ -1,0 +1,73 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          [
+            2,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ]
+        ]
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        [
+          [
+            2,
+            1,
+            1
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            1
+          ]
+        ]
+      ],
+      "expected": -1
+    },
+    {
+      "args": [
+        [
+          [
+            0,
+            2
+          ]
+        ]
+      ],
+      "expected": 0
+    }
+  ],
+  "compare": "exact",
+  "entry": "orangesRotting",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "grid",
+      "type": "integer[][]"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "rotting-oranges",
+  "source": "examples"
+}

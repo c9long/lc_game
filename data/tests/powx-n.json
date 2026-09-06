@@ -1,0 +1,43 @@
+{
+  "cases": [
+    {
+      "args": [
+        2.0,
+        10
+      ],
+      "expected": 1024.0
+    },
+    {
+      "args": [
+        2.1,
+        3
+      ],
+      "expected": 9.261000000000001
+    },
+    {
+      "args": [
+        2.0,
+        -2
+      ],
+      "expected": 0.25
+    }
+  ],
+  "compare": "exact",
+  "entry": "myPow",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "x",
+      "type": "double"
+    },
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "type": "double"
+  },
+  "slug": "powx-n",
+  "source": "examples"
+}

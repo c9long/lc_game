@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "args": [
+        "ab",
+        "eidbaooo"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "ab",
+        "eidboaoo"
+      ],
+      "expected": false
+    }
+  ],
+  "compare": "exact",
+  "entry": "checkInclusion",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "s1",
+      "type": "string"
+    },
+    {
+      "name": "s2",
+      "type": "string"
+    }
+  ],
+  "returns": {
+    "type": "boolean"
+  },
+  "slug": "permutation-in-string",
+  "source": "examples"
+}

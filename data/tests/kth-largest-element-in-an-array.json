@@ -1,0 +1,53 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          3,
+          2,
+          1,
+          5,
+          6,
+          4
+        ],
+        2
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        [
+          3,
+          2,
+          3,
+          1,
+          2,
+          4,
+          5,
+          5,
+          6
+        ],
+        4
+      ],
+      "expected": 4
+    }
+  ],
+  "compare": "exact",
+  "entry": "findKthLargest",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    },
+    {
+      "name": "k",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "kth-largest-element-in-an-array",
+  "source": "examples"
+}

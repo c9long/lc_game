@@ -1,0 +1,62 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          "2",
+          "1",
+          "+",
+          "3",
+          "*"
+        ]
+      ],
+      "expected": 9
+    },
+    {
+      "args": [
+        [
+          "4",
+          "13",
+          "5",
+          "/",
+          "+"
+        ]
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        [
+          "10",
+          "6",
+          "9",
+          "3",
+          "+",
+          "-11",
+          "*",
+          "/",
+          "*",
+          "17",
+          "+",
+          "5",
+          "+"
+        ]
+      ],
+      "expected": 22
+    }
+  ],
+  "compare": "exact",
+  "entry": "evalRPN",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "tokens",
+      "type": "string[]"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "evaluate-reverse-polish-notation",
+  "source": "examples"
+}

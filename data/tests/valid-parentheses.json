@@ -1,0 +1,48 @@
+{
+  "cases": [
+    {
+      "args": [
+        "()"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "()[]{}"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "(]"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "([])"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "([)]"
+      ],
+      "expected": false
+    }
+  ],
+  "compare": "exact",
+  "entry": "isValid",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "returns": {
+    "type": "boolean"
+  },
+  "slug": "valid-parentheses",
+  "source": "examples"
+}

@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "args": [
+        "abcabcbb"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "bbbbb"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "pwwkew"
+      ],
+      "expected": 3
+    }
+  ],
+  "compare": "exact",
+  "entry": "lengthOfLongestSubstring",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "longest-substring-without-repeating-characters",
+  "source": "examples"
+}

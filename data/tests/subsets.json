@@ -1,0 +1,70 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expected": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        []
+      ]
+    },
+    {
+      "args": [
+        [
+          0
+        ]
+      ],
+      "expected": [
+        [
+          0
+        ],
+        []
+      ]
+    }
+  ],
+  "compare": "unordered-nested",
+  "entry": "subsets",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    }
+  ],
+  "returns": {
+    "dealloc": true,
+    "type": "list<list<integer>>"
+  },
+  "slug": "subsets",
+  "source": "examples"
+}

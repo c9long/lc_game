@@ -11,7 +11,10 @@
 		"sourceMap": true,
 		"strict": true,
 		"moduleResolution": "bundler"
-	}
+	},
+	// The judge worker is a browser asset, not app code: it is copied to static/pyodide/ and only
+	// resolves ./pyodide.mjs from there, so it cannot typecheck in place.
+	"exclude": ["src/lib/pyodide/worker.js"]
 	// Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
 	// except $lib which is handled by https://svelte.dev/docs/kit/configuration#files
 	//

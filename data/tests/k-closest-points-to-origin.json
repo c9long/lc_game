@@ -1,0 +1,72 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          [
+            1,
+            3
+          ],
+          [
+            -2,
+            2
+          ]
+        ],
+        1
+      ],
+      "expected": [
+        [
+          -2,
+          2
+        ]
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            3,
+            3
+          ],
+          [
+            5,
+            -1
+          ],
+          [
+            -2,
+            4
+          ]
+        ],
+        2
+      ],
+      "expected": [
+        [
+          3,
+          3
+        ],
+        [
+          -2,
+          4
+        ]
+      ]
+    }
+  ],
+  "compare": "unordered-nested",
+  "entry": "kClosest",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "points",
+      "type": "integer[][]"
+    },
+    {
+      "name": "k",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "type": "integer[][]"
+  },
+  "slug": "k-closest-points-to-origin",
+  "source": "examples"
+}

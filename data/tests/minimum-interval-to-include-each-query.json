@@ -1,0 +1,90 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            4,
+            4
+          ]
+        ],
+        [
+          2,
+          3,
+          4,
+          5
+        ]
+      ],
+      "expected": [
+        3,
+        3,
+        1,
+        4
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            1,
+            8
+          ],
+          [
+            20,
+            25
+          ]
+        ],
+        [
+          2,
+          19,
+          5,
+          22
+        ]
+      ],
+      "expected": [
+        2,
+        -1,
+        4,
+        6
+      ]
+    }
+  ],
+  "compare": "exact",
+  "entry": "minInterval",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "intervals",
+      "type": "integer[][]"
+    },
+    {
+      "name": "queries",
+      "type": "integer[]"
+    }
+  ],
+  "returns": {
+    "type": "integer[]"
+  },
+  "slug": "minimum-interval-to-include-each-query",
+  "source": "examples"
+}

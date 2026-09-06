@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "args": [
+        "horse",
+        "ros"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "intention",
+        "execution"
+      ],
+      "expected": 5
+    }
+  ],
+  "compare": "exact",
+  "entry": "minDistance",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "word1",
+      "type": "string"
+    },
+    {
+      "name": "word2",
+      "type": "string"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "edit-distance",
+  "source": "examples"
+}

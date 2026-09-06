@@ -1,0 +1,43 @@
+{
+  "cases": [
+    {
+      "args": [
+        "ADOBECODEBANC",
+        "ABC"
+      ],
+      "expected": "BANC"
+    },
+    {
+      "args": [
+        "a",
+        "a"
+      ],
+      "expected": "a"
+    },
+    {
+      "args": [
+        "a",
+        "aa"
+      ],
+      "expected": ""
+    }
+  ],
+  "compare": "exact",
+  "entry": "minWindow",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    },
+    {
+      "name": "t",
+      "type": "string"
+    }
+  ],
+  "returns": {
+    "type": "string"
+  },
+  "slug": "minimum-window-substring",
+  "source": "examples"
+}

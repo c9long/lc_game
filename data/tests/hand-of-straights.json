@@ -1,0 +1,52 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          1,
+          2,
+          3,
+          6,
+          2,
+          3,
+          4,
+          7,
+          8
+        ],
+        3
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        4
+      ],
+      "expected": false
+    }
+  ],
+  "compare": "exact",
+  "entry": "isNStraightHand",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "hand",
+      "type": "integer[]"
+    },
+    {
+      "name": "groupSize",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "type": "boolean"
+  },
+  "slug": "hand-of-straights",
+  "source": "examples"
+}

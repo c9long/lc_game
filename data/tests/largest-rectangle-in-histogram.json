@@ -1,0 +1,40 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          2,
+          1,
+          5,
+          6,
+          2,
+          3
+        ]
+      ],
+      "expected": 10
+    },
+    {
+      "args": [
+        [
+          2,
+          4
+        ]
+      ],
+      "expected": 4
+    }
+  ],
+  "compare": "exact",
+  "entry": "largestRectangleArea",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "heights",
+      "type": "integer[]"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "largest-rectangle-in-histogram",
+  "source": "examples"
+}

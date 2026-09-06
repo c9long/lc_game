@@ -1,0 +1,30 @@
+{
+  "cases": [
+    {
+      "args": [
+        "abc"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "aaa"
+      ],
+      "expected": 6
+    }
+  ],
+  "compare": "exact",
+  "entry": "countSubstrings",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "palindromic-substrings",
+  "source": "examples"
+}

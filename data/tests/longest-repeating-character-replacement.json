@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "args": [
+        "ABAB",
+        2
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "AABABBA",
+        1
+      ],
+      "expected": 4
+    }
+  ],
+  "compare": "exact",
+  "entry": "characterReplacement",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    },
+    {
+      "name": "k",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "longest-repeating-character-replacement",
+  "source": "examples"
+}

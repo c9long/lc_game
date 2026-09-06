@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "args": [
+        "12"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "226"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "06"
+      ],
+      "expected": 0
+    }
+  ],
+  "compare": "exact",
+  "entry": "numDecodings",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "decode-ways",
+  "source": "examples"
+}

@@ -1,0 +1,43 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          7,
+          1,
+          5,
+          3,
+          6,
+          4
+        ]
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        [
+          7,
+          6,
+          4,
+          3,
+          1
+        ]
+      ],
+      "expected": 0
+    }
+  ],
+  "compare": "exact",
+  "entry": "maxProfit",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "prices",
+      "type": "integer[]"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "best-time-to-buy-and-sell-stock",
+  "source": "examples"
+}

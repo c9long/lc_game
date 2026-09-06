@@ -1,0 +1,52 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          [
+            0,
+            30
+          ],
+          [
+            5,
+            10
+          ],
+          [
+            15,
+            20
+          ]
+        ]
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        [
+          [
+            7,
+            10
+          ],
+          [
+            2,
+            4
+          ]
+        ]
+      ],
+      "expected": 1
+    }
+  ],
+  "compare": "exact",
+  "entry": "minMeetingRooms",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "intervals",
+      "type": "integer[][]"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "meeting-rooms-ii",
+  "source": "examples"
+}

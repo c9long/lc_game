@@ -1,0 +1,39 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          2,
+          7,
+          4,
+          1,
+          8,
+          1
+        ]
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        [
+          1
+        ]
+      ],
+      "expected": 1
+    }
+  ],
+  "compare": "exact",
+  "entry": "lastStoneWeight",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "stones",
+      "type": "integer[]"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "last-stone-weight",
+  "source": "examples"
+}

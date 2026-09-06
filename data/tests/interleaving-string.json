@@ -1,0 +1,50 @@
+{
+  "cases": [
+    {
+      "args": [
+        "aabcc",
+        "dbbca",
+        "aadbbcbcac"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aabcc",
+        "dbbca",
+        "aadbbbaccc"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "",
+        "",
+        ""
+      ],
+      "expected": true
+    }
+  ],
+  "compare": "exact",
+  "entry": "isInterleave",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "s1",
+      "type": "string"
+    },
+    {
+      "name": "s2",
+      "type": "string"
+    },
+    {
+      "name": "s3",
+      "type": "string"
+    }
+  ],
+  "returns": {
+    "type": "boolean"
+  },
+  "slug": "interleaving-string",
+  "source": "examples"
+}

@@ -1,0 +1,45 @@
+{
+  "cases": [
+    {
+      "args": [
+        "aab"
+      ],
+      "expected": [
+        [
+          "a",
+          "a",
+          "b"
+        ],
+        [
+          "aa",
+          "b"
+        ]
+      ]
+    },
+    {
+      "args": [
+        "a"
+      ],
+      "expected": [
+        [
+          "a"
+        ]
+      ]
+    }
+  ],
+  "compare": "unordered",
+  "entry": "partition",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "returns": {
+    "dealloc": true,
+    "type": "list<list<string>>"
+  },
+  "slug": "palindrome-partitioning",
+  "source": "examples"
+}

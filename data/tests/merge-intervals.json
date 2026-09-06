@@ -1,0 +1,94 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            8,
+            10
+          ],
+          [
+            15,
+            18
+          ]
+        ]
+      ],
+      "expected": [
+        [
+          1,
+          6
+        ],
+        [
+          8,
+          10
+        ],
+        [
+          15,
+          18
+        ]
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            1,
+            4
+          ],
+          [
+            4,
+            5
+          ]
+        ]
+      ],
+      "expected": [
+        [
+          1,
+          5
+        ]
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            4,
+            7
+          ],
+          [
+            1,
+            4
+          ]
+        ]
+      ],
+      "expected": [
+        [
+          1,
+          7
+        ]
+      ]
+    }
+  ],
+  "compare": "exact",
+  "entry": "merge",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "intervals",
+      "type": "integer[][]"
+    }
+  ],
+  "returns": {
+    "type": "integer[][]"
+  },
+  "slug": "merge-intervals",
+  "source": "examples"
+}

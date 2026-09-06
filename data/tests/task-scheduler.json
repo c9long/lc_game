@@ -1,0 +1,64 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          "A",
+          "A",
+          "A",
+          "B",
+          "B",
+          "B"
+        ],
+        2
+      ],
+      "expected": 8
+    },
+    {
+      "args": [
+        [
+          "A",
+          "C",
+          "A",
+          "B",
+          "D",
+          "B"
+        ],
+        1
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        [
+          "A",
+          "A",
+          "A",
+          "B",
+          "B",
+          "B"
+        ],
+        3
+      ],
+      "expected": 10
+    }
+  ],
+  "compare": "exact",
+  "entry": "leastInterval",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "tasks",
+      "type": "character[]"
+    },
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "task-scheduler",
+  "source": "examples"
+}

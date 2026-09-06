@@ -1,0 +1,74 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          [
+            1,
+            3,
+            5,
+            7
+          ],
+          [
+            10,
+            11,
+            16,
+            20
+          ],
+          [
+            23,
+            30,
+            34,
+            60
+          ]
+        ],
+        3
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          [
+            1,
+            3,
+            5,
+            7
+          ],
+          [
+            10,
+            11,
+            16,
+            20
+          ],
+          [
+            23,
+            30,
+            34,
+            60
+          ]
+        ],
+        13
+      ],
+      "expected": false
+    }
+  ],
+  "compare": "exact",
+  "entry": "searchMatrix",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "matrix",
+      "type": "integer[][]"
+    },
+    {
+      "name": "target",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "type": "boolean"
+  },
+  "slug": "search-a-2d-matrix",
+  "source": "examples"
+}

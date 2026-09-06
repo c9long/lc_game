@@ -1,0 +1,30 @@
+{
+  "cases": [
+    {
+      "args": [
+        19
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        2
+      ],
+      "expected": false
+    }
+  ],
+  "compare": "exact",
+  "entry": "isHappy",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "type": "boolean"
+  },
+  "slug": "happy-number",
+  "source": "examples"
+}

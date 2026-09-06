@@ -1,0 +1,55 @@
+{
+  "cases": [
+    {
+      "args": [
+        "leetcode",
+        [
+          "leet",
+          "code"
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "applepenapple",
+        [
+          "apple",
+          "pen"
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "catsandog",
+        [
+          "cats",
+          "dog",
+          "sand",
+          "and",
+          "cat"
+        ]
+      ],
+      "expected": false
+    }
+  ],
+  "compare": "exact",
+  "entry": "wordBreak",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    },
+    {
+      "name": "wordDict",
+      "type": "list<string>"
+    }
+  ],
+  "returns": {
+    "type": "boolean"
+  },
+  "slug": "word-break",
+  "source": "examples"
+}

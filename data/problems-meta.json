@@ -1,0 +1,602 @@
+{
+  "3sum": {
+    "exampleTestcases": "[-1,0,1,2,-1,-4]\n[0,1,1]\n[0,0,0]",
+    "metaData": "{\n  \"name\": \"threeSum\",\n  \"params\": [\n    {\n      \"name\": \"nums\",\n      \"type\": \"integer[]\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"list<list<integer>>\",\n    \"colsize\": 3,\n    \"dealloc\": true\n  }\n}"
+  },
+  "add-two-numbers": {
+    "exampleTestcases": "[2,4,3]\n[5,6,4]\n[0]\n[0]\n[9,9,9,9,9,9,9]\n[9,9,9,9]",
+    "metaData": "{\r\n  \"name\": \"addTwoNumbers\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"l1\",\r\n      \"type\": \"ListNode\",\r\n      \"dealloc\": false\r\n    },\r\n    {\r\n      \"name\": \"l2\",\r\n      \"type\": \"ListNode\",\r\n      \"dealloc\": false\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"ListNode\",\r\n    \"dealloc\": true\r\n  }\r\n}"
+  },
+  "alien-dictionary": {
+    "exampleTestcases": "[\"wrt\",\"wrf\",\"er\",\"ett\",\"rftt\"]\n[\"z\",\"x\"]\n[\"z\",\"x\",\"z\"]",
+    "metaData": "{\r\n  \"name\": \"alienOrder\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"words\",\r\n      \"type\": \"string[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"string\"\r\n  }\r\n}"
+  },
+  "balanced-binary-tree": {
+    "exampleTestcases": "[3,9,20,null,null,15,7]\n[1,2,2,3,3,null,null,4,4]\n[]",
+    "metaData": "{\r\n  \"name\": \"isBalanced\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"root\",\r\n      \"type\": \"TreeNode\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "best-time-to-buy-and-sell-stock": {
+    "exampleTestcases": "[7,1,5,3,6,4]\n[7,6,4,3,1]",
+    "metaData": "{\r\n  \"name\": \"maxProfit\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"prices\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "best-time-to-buy-and-sell-stock-with-cooldown": {
+    "exampleTestcases": "[1,2,3,0,2]\n[1]",
+    "metaData": "{\r\n  \"name\": \"maxProfit\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"prices\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "binary-search": {
+    "exampleTestcases": "[-1,0,3,5,9,12]\n9\n[-1,0,3,5,9,12]\n2",
+    "metaData": "{\r\n  \"name\": \"search\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"nums\",\r\n      \"type\": \"integer[]\"\r\n    },\r\n    {\r\n      \"name\": \"target\",\r\n      \"type\": \"integer\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "binary-tree-level-order-traversal": {
+    "exampleTestcases": "[3,9,20,null,null,15,7]\n[1]\n[]",
+    "metaData": "{\r\n  \"name\": \"levelOrder\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"root\",\r\n      \"type\": \"TreeNode\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"list<list<integer>>\",\r\n    \"dealloc\": true\r\n  }\r\n}"
+  },
+  "binary-tree-maximum-path-sum": {
+    "exampleTestcases": "[1,2,3]\n[-10,9,20,null,null,15,7]",
+    "metaData": "{\r\n  \"name\": \"maxPathSum\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"root\",\r\n      \"type\": \"TreeNode\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "binary-tree-right-side-view": {
+    "exampleTestcases": "[1,2,3,null,5,null,4]\n[1,2,3,4,null,null,null,5]\n[1,null,3]\n[]",
+    "metaData": "{\r\n  \"name\": \"rightSideView\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"root\",\r\n      \"type\": \"TreeNode\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"list<integer>\",\r\n    \"dealloc\": true\r\n  }\r\n}"
+  },
+  "burst-balloons": {
+    "exampleTestcases": "[3,1,5,8]\n[1,5]",
+    "metaData": "{\n  \"name\": \"maxCoins\",\n  \"params\": [\n    {\n      \"name\": \"nums\",\n      \"type\": \"integer[]\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer\"\n  }\n}"
+  },
+  "car-fleet": {
+    "exampleTestcases": "12\n[10,8,0,5,3]\n[2,4,1,1,3]\n10\n[3]\n[3]\n100\n[0,2,4]\n[4,2,1]",
+    "metaData": "{\r\n  \"name\": \"carFleet\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"target\",\r\n      \"type\": \"integer\"\r\n    },\r\n    {\r\n      \"name\": \"position\",\r\n      \"type\": \"integer[]\"\r\n    },\r\n    {\r\n      \"name\": \"speed\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}\r\n"
+  },
+  "cheapest-flights-within-k-stops": {
+    "exampleTestcases": "4\n[[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]]\n0\n3\n1\n3\n[[0,1,100],[1,2,100],[0,2,500]]\n0\n2\n1\n3\n[[0,1,100],[1,2,100],[0,2,500]]\n0\n2\n0",
+    "metaData": "{\n  \"name\": \"findCheapestPrice\",\n  \"params\": [\n    {\n      \"name\": \"n\",\n      \"type\": \"integer\"\n    },\n    {\n      \"name\": \"flights\",\n      \"type\": \"integer[][]\"\n    },\n    {\n      \"name\": \"src\",\n      \"type\": \"integer\"\n    },\n    {\n      \"name\": \"dst\",\n      \"type\": \"integer\"\n    },\n    {\n      \"name\": \"k\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer\"\n  }\n}"
+  },
+  "climbing-stairs": {
+    "exampleTestcases": "2\n3",
+    "metaData": "{\r\n  \"name\": \"climbStairs\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"n\",\r\n      \"type\": \"integer\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "clone-graph": {
+    "exampleTestcases": "[[2,4],[1,3],[2,4],[1,3]]\n[[]]\n[]",
+    "metaData": "{\n  \"name\": \"cloneGraph\",\n  \"params\": [\n    {\n      \"name\": \"edges\",\n      \"type\": \"integer[][]\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"boolean\"\n  },\n  \"languages\": [\n    \"cpp\",\n    \"java\",\n    \"python\",\n    \"csharp\",\n    \"javascript\",\n    \"python3\",\n    \"golang\",\n    \"swift\",\n    \"kotlin\",\n    \"ruby\",\n    \"c\",\n    \"scala\",\n    \"php\",\n    \"typescript\"\n  ],\n  \"manual\": true,\n    \"typescriptCustomType\" : \"class _Node {\\n    val: number\\n    neighbors: _Node[]\\n\\n    constructor(val?: number, neighbors?: _Node[]) {\\n        this.val = (val===undefined ? 0 : val)\\n        this.neighbors = (neighbors===undefined ? [] : neighbors)\\n    }\\n}\\n\"\n\n}"
+  },
+  "coin-change": {
+    "exampleTestcases": "[1,2,5]\n11\n[2]\n3\n[1]\n0",
+    "metaData": "{\r\n  \"name\": \"coinChange\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"coins\",\r\n      \"type\": \"integer[]\"\r\n    },\r\n    {\r\n      \"name\": \"amount\",\r\n      \"type\": \"integer\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "coin-change-ii": {
+    "exampleTestcases": "5\n[1,2,5]\n3\n[2]\n10\n[10]",
+    "metaData": "{\r\n  \"name\": \"change\",\r\n  \"params\": [\r\n    {\r\n        \"name\": \"amount\",\r\n        \"type\": \"integer\"\r\n    },\r\n    {\r\n      \"name\": \"coins\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}\r\n"
+  },
+  "combination-sum": {
+    "exampleTestcases": "[2,3,6,7]\n7\n[2,3,5]\n8\n[2]\n1",
+    "metaData": "{\n  \"name\": \"combinationSum\",\n  \"params\": [\n    {\n      \"name\": \"candidates\",\n      \"type\": \"integer[]\"\n    },\n    {\n      \"name\": \"target\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"list<list<integer>>\",\n    \"dealloc\": true\n  }\n}"
+  },
+  "combination-sum-ii": {
+    "exampleTestcases": "[10,1,2,7,6,1,5]\n8\n[2,5,2,1,2]\n5",
+    "metaData": "{\n  \"name\": \"combinationSum2\",\n  \"params\": [\n    {\n      \"name\": \"candidates\",\n      \"type\": \"integer[]\"\n    },\n    {\n      \"name\": \"target\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"list<list<integer>>\",\n    \"dealloc\": true\n  }\n}"
+  },
+  "construct-binary-tree-from-preorder-and-inorder-traversal": {
+    "exampleTestcases": "[3,9,20,15,7]\n[9,3,15,20,7]\n[-1]\n[-1]",
+    "metaData": "{\r\n  \"name\": \"buildTree\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"preorder\",\r\n      \"type\": \"integer[]\"\r\n    },\r\n    {\r\n      \"name\": \"inorder\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"TreeNode\",\r\n    \"dealloc\": true\r\n  }\r\n}"
+  },
+  "container-with-most-water": {
+    "exampleTestcases": "[1,8,6,2,5,4,8,3,7]\n[1,1]",
+    "metaData": "{\r\n  \"name\": \"maxArea\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"height\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "contains-duplicate": {
+    "exampleTestcases": "[1,2,3,1]\n[1,2,3,4]\n[1,1,1,3,3,4,3,2,4,2]",
+    "metaData": "{\r\n  \"name\": \"containsDuplicate\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"nums\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "copy-list-with-random-pointer": {
+    "exampleTestcases": "[[7,null],[13,0],[11,4],[10,2],[1,0]]\n[[1,1],[2,1]]\n[[3,null],[3,0],[3,null]]",
+    "metaData": "{\n  \"name\": \"copyRandomList\",\n  \"params\": [\n    {\n      \"name\": \"head\",\n      \"type\": \"ListNode\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"ListNode\"\n  },\n  \"languages\": [\n    \"cpp\",\n    \"java\",\n    \"python\",\n    \"csharp\",\n    \"javascript\",\n    \"python3\",\n    \"golang\",\n    \"swift\",\n    \"kotlin\",\n    \"ruby\",\n    \"c\",\n    \"scala\",\n    \"php\",\n    \"typescript\"\n  ],\n  \"manual\": true,\n\"typescriptCustomType\" : \"class _Node {\\n    val: number\\n    next: _Node | null\\n    random: _Node | null\\n\\n    constructor(val?: number, next?: _Node, random?: _Node) {\\n        this.val = (val===undefined ? 0 : val)\\n        this.next = (next===undefined ? null : next)\\n        this.random = (random===undefined ? null : random)\\n    }\\n}\\n\"\n\n}"
+  },
+  "count-good-nodes-in-binary-tree": {
+    "exampleTestcases": "[3,1,4,3,null,1,5]\n[3,3,null,4,2]\n[1]",
+    "metaData": "{\n  \"name\": \"goodNodes\",\n  \"params\": [\n    {\n      \"name\": \"root\",\n      \"type\": \"TreeNode\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer\"\n  }\n}"
+  },
+  "counting-bits": {
+    "exampleTestcases": "2\n5",
+    "metaData": "{\n  \"name\": \"countBits\",\n  \"params\": [\n    {\n      \"name\": \"n\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer[]\"\n  }\n}"
+  },
+  "course-schedule": {
+    "exampleTestcases": "2\n[[1,0]]\n2\n[[1,0],[0,1]]",
+    "metaData": "{\r\n  \"name\": \"canFinish\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"numCourses\",\r\n      \"type\": \"integer\"\r\n    },\r\n    {\r\n      \"name\": \"prerequisites\",\r\n      \"type\": \"integer[][]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "course-schedule-ii": {
+    "exampleTestcases": "2\n[[1,0]]\n4\n[[1,0],[2,0],[3,1],[3,2]]\n1\n[]",
+    "metaData": "{\r\n  \"name\": \"findOrder\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"numCourses\",\r\n      \"type\": \"integer\"\r\n    },\r\n    {\r\n      \"name\": \"prerequisites\",\r\n      \"type\": \"integer[][]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer[]\"\r\n  }\r\n}"
+  },
+  "daily-temperatures": {
+    "exampleTestcases": "[73,74,75,71,69,72,76,73]\n[30,40,50,60]\n[30,60,90]",
+    "metaData": "{\n  \"name\": \"dailyTemperatures\",\n  \"params\": [\n    {\n      \"name\": \"temperatures\",\n      \"type\": \"integer[]\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer[]\"\n  }\n}"
+  },
+  "decode-ways": {
+    "exampleTestcases": "\"12\"\n\"226\"\n\"06\"",
+    "metaData": "{ \r\n  \"name\": \"numDecodings\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"s\",\r\n      \"type\": \"string\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "design-add-and-search-words-data-structure": {
+    "exampleTestcases": "[\"WordDictionary\",\"addWord\",\"addWord\",\"addWord\",\"search\",\"search\",\"search\",\"search\"]\n[[],[\"bad\"],[\"dad\"],[\"mad\"],[\"pad\"],[\"bad\"],[\".ad\"],[\"b..\"]]",
+    "metaData": "{\n  \"classname\": \"WordDictionary\",\n  \"constructor\": {\n    \"params\": []\n  },\n  \"methods\": [\n    {\n      \"params\": [\n        {\n          \"type\": \"string\",\n          \"name\": \"word\"\n        }\n      ],\n      \"name\": \"addWord\",\n      \"return\": {\n        \"type\": \"void\"\n      }\n    },\n    {\n      \"params\": [\n        {\n          \"type\": \"string\",\n          \"name\": \"word\"\n        }\n      ],\n      \"name\": \"search\",\n      \"return\": {\n        \"type\": \"boolean\"\n      }\n    }\n  ],\n  \"return\": {\n    \"type\": \"boolean\"\n  },\n  \"systemdesign\": true\n}"
+  },
+  "design-twitter": {
+    "exampleTestcases": "[\"Twitter\",\"postTweet\",\"getNewsFeed\",\"follow\",\"postTweet\",\"getNewsFeed\",\"unfollow\",\"getNewsFeed\"]\n[[],[1,5],[1],[1,2],[2,6],[1],[1,2],[1]]",
+    "metaData": "{\n  \"classname\": \"Twitter\",\n  \"constructor\": {\n    \"params\": []\n  },\n  \"methods\": [\n    {\n      \"params\": [\n        {\n          \"type\": \"integer\",\n          \"name\": \"userId\"\n        },\n        {\n          \"type\": \"integer\",\n          \"name\": \"tweetId\"\n        }\n      ],\n      \"return\": {\n        \"type\": \"void\"\n      },\n      \"name\": \"postTweet\"\n    },\n    {\n      \"params\": [\n        {\n          \"type\": \"integer\",\n          \"name\": \"userId\"\n        }\n      ],\n      \"return\": {\n        \"type\": \"list<integer>\"\n      },\n      \"name\": \"getNewsFeed\"\n    },\n    {\n      \"params\": [\n        {\n          \"type\": \"integer\",\n          \"name\": \"followerId\"\n        },\n        {\n          \"type\": \"integer\",\n          \"name\": \"followeeId\"\n        }\n      ],\n      \"return\": {\n        \"type\": \"void\"\n      },\n      \"name\": \"follow\"\n    },\n    {\n      \"params\": [\n        {\n          \"type\": \"integer\",\n          \"name\": \"followerId\"\n        },\n        {\n          \"type\": \"integer\",\n          \"name\": \"followeeId\"\n        }\n      ],\n      \"return\": {\n        \"type\": \"void\"\n      },\n      \"name\": \"unfollow\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"boolean\"\n  },\n  \"systemdesign\": true\n}"
+  },
+  "detect-squares": {
+    "exampleTestcases": "[\"DetectSquares\",\"add\",\"add\",\"add\",\"count\",\"count\",\"add\",\"count\"]\n[[],[[3,10]],[[11,2]],[[3,2]],[[11,10]],[[14,8]],[[11,2]],[[11,10]]]",
+    "metaData": "{\n  \"classname\": \"DetectSquares\",\n  \"constructor\": {\n    \"params\": []\n  },\n  \"methods\": [\n    {\n      \"params\": [\n        {\n          \"type\": \"integer[]\",\n          \"name\": \"point\"\n        }\n      ],\n      \"name\": \"add\",\n      \"return\": {\n        \"type\": \"void\"\n      }\n    },\n    {\n      \"params\": [\n        {\n          \"type\": \"integer[]\",\n          \"name\": \"point\"\n        }\n      ],\n      \"name\": \"count\",\n      \"return\": {\n        \"type\": \"integer\"\n      }\n    }\n  ],\n  \"return\": {\n    \"type\": \"boolean\"\n  },\n  \"systemdesign\": true\n}"
+  },
+  "diameter-of-binary-tree": {
+    "exampleTestcases": "[1,2,3,4,5]\n[1,2]",
+    "metaData": "{\r\n  \"name\": \"diameterOfBinaryTree\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"root\",\r\n      \"type\": \"TreeNode\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}\r\n"
+  },
+  "distinct-subsequences": {
+    "exampleTestcases": "\"rabbbit\"\n\"rabbit\"\n\"babgbag\"\n\"bag\"",
+    "metaData": "{\r\n  \"name\": \"numDistinct\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"s\",\r\n      \"type\": \"string\"\r\n    },\r\n    {\r\n      \"name\": \"t\",\r\n      \"type\": \"string\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "edit-distance": {
+    "exampleTestcases": "\"horse\"\n\"ros\"\n\"intention\"\n\"execution\"",
+    "metaData": "{ \r\n  \"name\": \"minDistance\",\r\n  \"params\": [\r\n    { \r\n      \"name\": \"word1\",\r\n      \"type\": \"string\"\r\n    },\r\n    { \r\n      \"name\": \"word2\",\r\n      \"type\": \"string\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "encode-and-decode-strings": {
+    "exampleTestcases": "[\"Hello\",\"World\"]\n[\"\"]",
+    "metaData": "{\n  \"name\": \"encode\",\n  \"params\": [\n    {\n      \"name\": \"dummy_input\",\n      \"type\": \"list<string>\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"list<string>\"\n  },\n  \"manual\": true\n}"
+  },
+  "evaluate-reverse-polish-notation": {
+    "exampleTestcases": "[\"2\",\"1\",\"+\",\"3\",\"*\"]\n[\"4\",\"13\",\"5\",\"/\",\"+\"]\n[\"10\",\"6\",\"9\",\"3\",\"+\",\"-11\",\"*\",\"/\",\"*\",\"17\",\"+\",\"5\",\"+\"]",
+    "metaData": "{\r\n  \"name\": \"evalRPN\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"tokens\",\r\n      \"type\": \"string[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "find-median-from-data-stream": {
+    "exampleTestcases": "[\"MedianFinder\",\"addNum\",\"addNum\",\"findMedian\",\"addNum\",\"findMedian\"]\n[[],[1],[2],[],[3],[]]",
+    "metaData": "{\n  \"classname\": \"MedianFinder\",\n  \"constructor\": {\n    \"params\": []\n  },\n  \"methods\": [\n    {\n      \"params\": [\n        {\n          \"type\": \"integer\",\n          \"name\": \"num\"\n        }\n      ],\n      \"name\": \"addNum\",\n      \"return\": {\n        \"type\": \"void\"\n      }\n    },\n    {\n      \"params\": [],\n      \"name\": \"findMedian\",\n      \"return\": {\n        \"type\": \"double\"\n      }\n    }\n  ],\n  \"return\": {\n    \"type\": \"boolean\"\n  },\n  \"systemdesign\": true\n}"
+  },
+  "find-minimum-in-rotated-sorted-array": {
+    "exampleTestcases": "[3,4,5,1,2]\n[4,5,6,7,0,1,2]\n[11,13,15,17]",
+    "metaData": "{\r\n  \"name\": \"findMin\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"nums\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "find-the-duplicate-number": {
+    "exampleTestcases": "[1,3,4,2,2]\n[3,1,3,4,2]\n[3,3,3,3,3]",
+    "metaData": "{\r\n  \"name\": \"findDuplicate\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"nums\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "gas-station": {
+    "exampleTestcases": "[1,2,3,4,5]\n[3,4,5,1,2]\n[2,3,4]\n[3,4,3]",
+    "metaData": "{\r\n  \"name\": \"canCompleteCircuit\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"gas\",\r\n      \"type\": \"integer[]\"\r\n    },\r\n    {\r\n      \"name\": \"cost\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "generate-parentheses": {
+    "exampleTestcases": "3\n1",
+    "metaData": "{\r\n  \"name\": \"generateParenthesis\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"n\",\r\n      \"type\": \"integer\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"list<string>\"\r\n  }\r\n}"
+  },
+  "graph-valid-tree": {
+    "exampleTestcases": "5\n[[0,1],[0,2],[0,3],[1,4]]\n5\n[[0,1],[1,2],[2,3],[1,3],[1,4]]",
+    "metaData": "{\r\n  \"name\": \"validTree\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"n\",\r\n      \"type\": \"integer\"\r\n    },\r\n    {\r\n      \"name\": \"edges\",\r\n      \"type\": \"integer[][]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "group-anagrams": {
+    "exampleTestcases": "[\"eat\",\"tea\",\"tan\",\"ate\",\"nat\",\"bat\"]\n[\"\"]\n[\"a\"]",
+    "metaData": "{\r\n  \"name\": \"groupAnagrams\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"strs\",\r\n      \"type\": \"string[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"list<list<string>>\",\r\n    \"dealloc\": true\r\n  }\r\n}"
+  },
+  "hand-of-straights": {
+    "exampleTestcases": "[1,2,3,6,2,3,4,7,8]\n3\n[1,2,3,4,5]\n4",
+    "metaData": "{\n  \"name\": \"isNStraightHand\",\n  \"params\": [\n    {\n      \"name\": \"hand\",\n      \"type\": \"integer[]\"\n    },\n    {\n      \"name\": \"groupSize\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"boolean\"\n  }\n}"
+  },
+  "happy-number": {
+    "exampleTestcases": "19\n2",
+    "metaData": "{\r\n  \"name\": \"isHappy\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"n\",\r\n      \"type\": \"integer\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "house-robber": {
+    "exampleTestcases": "[1,2,3,1]\n[2,7,9,3,1]",
+    "metaData": "{\r\n  \"name\": \"rob\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"nums\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "house-robber-ii": {
+    "exampleTestcases": "[2,3,2]\n[1,2,3,1]\n[1,2,3]",
+    "metaData": "{\n  \"name\": \"rob\",\n  \"params\": [\n    {\n      \"name\": \"nums\",\n      \"type\": \"integer[]\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer\"\n  },\n  \"manual\": false\n}"
+  },
+  "implement-trie-prefix-tree": {
+    "exampleTestcases": "[\"Trie\",\"insert\",\"search\",\"search\",\"startsWith\",\"insert\",\"search\"]\n[[],[\"apple\"],[\"apple\"],[\"app\"],[\"app\"],[\"app\"],[\"app\"]]",
+    "metaData": "{\n  \"classname\": \"Trie\",\n  \"constructor\": {\n    \"params\": []\n  },\n  \"methods\": [\n    {\n      \"params\": [\n        {\n          \"type\": \"string\",\n          \"name\": \"word\"\n        }\n      ],\n      \"name\": \"insert\",\n      \"return\": {\n        \"type\": \"void\"\n      }\n    },\n    {\n      \"params\": [\n        {\n          \"type\": \"string\",\n          \"name\": \"word\"\n        }\n      ],\n      \"name\": \"search\",\n      \"return\": {\n        \"type\": \"boolean\"\n      }\n    },\n    {\n      \"params\": [\n        {\n          \"type\": \"string\",\n          \"name\": \"prefix\"\n        }\n      ],\n      \"name\": \"startsWith\",\n      \"return\": {\n        \"type\": \"boolean\"\n      }\n    }\n  ],\n  \"return\": {\n    \"type\": \"boolean\"\n  },\n  \"systemdesign\": true\n}"
+  },
+  "insert-interval": {
+    "exampleTestcases": "[[1,3],[6,9]]\n[2,5]\n[[1,2],[3,5],[6,7],[8,10],[12,16]]\n[4,8]",
+    "metaData": "{\r\n  \"name\": \"insert\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"intervals\",\r\n      \"type\": \"integer[][]\"\r\n    },\r\n    {\r\n      \"name\": \"newInterval\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer[][]\"\r\n  }\r\n}"
+  },
+  "interleaving-string": {
+    "exampleTestcases": "\"aabcc\"\n\"dbbca\"\n\"aadbbcbcac\"\n\"aabcc\"\n\"dbbca\"\n\"aadbbbaccc\"\n\"\"\n\"\"\n\"\"",
+    "metaData": "{ \r\n  \"name\": \"isInterleave\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"s1\",\r\n      \"type\": \"string\"\r\n    },\r\n    {\r\n      \"name\": \"s2\",\r\n      \"type\": \"string\"\r\n    },\r\n    {\r\n      \"name\": \"s3\",\r\n      \"type\": \"string\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "invert-binary-tree": {
+    "exampleTestcases": "[4,2,7,1,3,6,9]\n[2,1,3]\n[]",
+    "metaData": "{\r\n  \"name\": \"invertTree\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"root\",\r\n      \"type\": \"TreeNode\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"TreeNode\"\r\n  }\r\n}"
+  },
+  "jump-game": {
+    "exampleTestcases": "[2,3,1,1,4]\n[3,2,1,0,4]",
+    "metaData": "{\r\n  \"name\": \"canJump\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"nums\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "jump-game-ii": {
+    "exampleTestcases": "[2,3,1,1,4]\n[2,3,0,1,4]",
+    "metaData": "{\n  \"name\": \"jump\",\n  \"params\": [\n    {\n      \"name\": \"nums\",\n      \"type\": \"integer[]\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer\"\n  }\n}"
+  },
+  "k-closest-points-to-origin": {
+    "exampleTestcases": "[[1,3],[-2,2]]\n1\n[[3,3],[5,-1],[-2,4]]\n2",
+    "metaData": "{\n  \"name\": \"kClosest\",\n  \"params\": [\n    {\n      \"name\": \"points\",\n      \"type\": \"integer[][]\"\n    },\n    {\n      \"name\": \"k\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer[][]\"\n  }\n}"
+  },
+  "koko-eating-bananas": {
+    "exampleTestcases": "[3,6,7,11]\n8\n[30,11,23,4,20]\n5\n[30,11,23,4,20]\n6",
+    "metaData": "{\n  \"name\": \"minEatingSpeed\",\n  \"params\": [\n    {\n      \"name\": \"piles\",\n      \"type\": \"integer[]\"\n    },\n    {\n      \"name\": \"h\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer\"\n  }\n}"
+  },
+  "kth-largest-element-in-a-stream": {
+    "exampleTestcases": "[\"KthLargest\",\"add\",\"add\",\"add\",\"add\",\"add\"]\n[[3,[4,5,8,2]],[3],[5],[10],[9],[4]]\n[\"KthLargest\",\"add\",\"add\",\"add\",\"add\"]\n[[4,[7,7,7,7,8,3]],[2],[10],[9],[9]]",
+    "metaData": "{\n  \"classname\": \"KthLargest\",\n  \"constructor\": {\n    \"params\": [\n      {\n        \"type\": \"integer\",\n        \"name\": \"k\"\n      },\n      {\n        \"type\": \"integer[]\",\n        \"name\": \"nums\"\n      },\n      {\n        \"type\": \"integer\",\n        \"name\": \"numsSize\",\n        \"lang\": \"c\",\n        \"value\": \"size_2\"\n      }\n    ]\n  },\n  \"methods\": [\n    {\n      \"name\": \"add\",\n      \"params\": [\n        {\n          \"type\": \"integer\",\n          \"name\": \"val\"\n        }\n      ],\n      \"return\": {\n        \"type\": \"integer\"\n      }\n    }\n  ],\n  \"systemdesign\": true,\n  \"params\": [\n    {\n      \"name\": \"starts\",\n      \"type\": \"integer[]\"\n    },\n    {\n      \"name\": \"ends\",\n      \"type\": \"integer[]\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"list<boolean>\",\n    \"dealloc\": true\n  },\n  \"manual\": false\n}"
+  },
+  "kth-largest-element-in-an-array": {
+    "exampleTestcases": "[3,2,1,5,6,4]\n2\n[3,2,3,1,2,4,5,5,6]\n4",
+    "metaData": "{\n  \"name\": \"findKthLargest\",\n  \"params\": [\n    {\n      \"name\": \"nums\",\n      \"type\": \"integer[]\"\n    },\n    {\n      \"name\": \"k\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer\"\n  }\n}"
+  },
+  "kth-smallest-element-in-a-bst": {
+    "exampleTestcases": "[3,1,4,null,2]\n1\n[5,3,6,2,4,null,null,1]\n3",
+    "metaData": "{\r\n  \"name\": \"kthSmallest\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"root\",\r\n      \"type\": \"TreeNode\"\r\n    },\r\n    {\r\n      \"name\": \"k\",\r\n      \"type\": \"integer\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "largest-rectangle-in-histogram": {
+    "exampleTestcases": "[2,1,5,6,2,3]\n[2,4]",
+    "metaData": "{\r\n  \"name\": \"largestRectangleArea\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"heights\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "last-stone-weight": {
+    "exampleTestcases": "[2,7,4,1,8,1]\n[1]",
+    "metaData": "{\r\n  \"name\": \"lastStoneWeight\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"stones\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}\r\n"
+  },
+  "letter-combinations-of-a-phone-number": {
+    "exampleTestcases": "\"23\"\n\"2\"",
+    "metaData": "{ \r\n  \"name\": \"letterCombinations\",\r\n  \"params\": [\r\n    { \r\n      \"name\": \"digits\",\r\n      \"type\": \"string\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"list<string>\"\r\n  }\r\n}"
+  },
+  "linked-list-cycle": {
+    "exampleTestcases": "[3,2,0,-4]\n1\n[1,2]\n0\n[1]\n-1",
+    "metaData": "{\n  \"name\": \"hasCycle\",\n  \"params\": [\n    {\n      \"name\": \"head\",\n      \"type\": \"ListNode\"\n    },\n    {\n      \"name\": \"pos\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"boolean\"\n  },\n  \"manual\": true,\n  \"languages\": [\n    \"cpp\",\n    \"java\",\n    \"python\",\n    \"c\",\n    \"csharp\",\n    \"javascript\",\n    \"ruby\",\n    \"swift\",\n    \"golang\",\n    \"python3\",\n    \"scala\",\n    \"kotlin\",\n    \"php\",\n    \"typescript\"\n  ]\n}"
+  },
+  "longest-common-subsequence": {
+    "exampleTestcases": "\"abcde\"\n\"ace\"\n\"abc\"\n\"abc\"\n\"abc\"\n\"def\"",
+    "metaData": "{\n  \"name\": \"longestCommonSubsequence\",\n  \"params\": [\n    {\n      \"name\": \"text1\",\n      \"type\": \"string\"\n    },\n    {\n      \"type\": \"string\",\n      \"name\": \"text2\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer\"\n  }\n}"
+  },
+  "longest-consecutive-sequence": {
+    "exampleTestcases": "[100,4,200,1,3,2]\n[0,3,7,2,5,8,4,6,0,1]\n[1,0,1,2]",
+    "metaData": "{\r\n  \"name\": \"longestConsecutive\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"nums\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "longest-increasing-path-in-a-matrix": {
+    "exampleTestcases": "[[9,9,4],[6,6,8],[2,1,1]]\n[[3,4,5],[3,2,6],[2,2,1]]\n[[1]]",
+    "metaData": "{\r\n  \"name\": \"longestIncreasingPath\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"matrix\",\r\n      \"type\": \"integer[][]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "longest-increasing-subsequence": {
+    "exampleTestcases": "[10,9,2,5,3,7,101,18]\n[0,1,0,3,2,3]\n[7,7,7,7,7,7,7]",
+    "metaData": "{\n  \"name\": \"lengthOfLIS\",\n  \"params\": [\n    {\n      \"name\": \"nums\",\n      \"type\": \"integer[]\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer\"\n  }\n}"
+  },
+  "longest-palindromic-substring": {
+    "exampleTestcases": "\"babad\"\n\"cbbd\"",
+    "metaData": "{ \n  \"name\": \"longestPalindrome\",\n  \"params\": [\n    { \n      \"name\": \"s\",\n      \"type\": \"string\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"string\"\n  }\n}"
+  },
+  "longest-repeating-character-replacement": {
+    "exampleTestcases": "\"ABAB\"\n2\n\"AABABBA\"\n1",
+    "metaData": "{ \r\n  \"name\": \"characterReplacement\",\r\n  \"params\": [\r\n    { \r\n      \"name\": \"s\",\r\n      \"type\": \"string\"\r\n    },\r\n    {\r\n        \"name\": \"k\",\r\n        \"type\": \"integer\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "longest-substring-without-repeating-characters": {
+    "exampleTestcases": "\"abcabcbb\"\n\"bbbbb\"\n\"pwwkew\"",
+    "metaData": "{ \r\n  \"name\": \"lengthOfLongestSubstring\",\r\n  \"params\": [\r\n    { \r\n      \"name\": \"s\",\r\n      \"type\": \"string\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "lowest-common-ancestor-of-a-binary-search-tree": {
+    "exampleTestcases": "[6,2,8,0,4,7,9,null,null,3,5]\n2\n8\n[6,2,8,0,4,7,9,null,null,3,5]\n2\n4\n[2,1]\n2\n1",
+    "metaData": "{\n  \"name\": \"lowestCommonAncestor\",\n  \"params\": [\n    {\n      \"name\": \"root\",\n      \"type\": \"TreeNode\"\n    },\n    {\n      \"name\": \"p\",\n      \"type\": \"integer\"\n    },\n    {\n      \"name\": \"q\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"TreeNode\"\n  },\n  \"manual\": true\n}"
+  },
+  "lru-cache": {
+    "exampleTestcases": "[\"LRUCache\",\"put\",\"put\",\"get\",\"put\",\"get\",\"put\",\"get\",\"get\",\"get\"]\n[[2],[1,1],[2,2],[1],[3,3],[2],[4,4],[1],[3],[4]]",
+    "metaData": "{\n    \"classname\": \"LRUCache\",\n    \"maxbytesperline\": 200000,\n    \"constructor\": {\n        \"params\": [\n            {\n                \"type\": \"integer\",\n                \"name\": \"capacity\"\n            }\n        ]\n    },\n    \"methods\": [\n        {\n            \"name\" : \"get\",\n            \"params\": [\n                {\n                    \"type\": \"integer\",\n                    \"name\": \"key\"\n                }\n            ],\n            \"return\": {\n                \"type\": \"integer\"\n            }\n        },\n        {\n            \"name\" : \"put\",\n            \"params\": [\n                {\n                    \"type\": \"integer\",\n                    \"name\": \"key\"\n                },\n                {\n                    \"type\": \"integer\",\n                    \"name\": \"value\"\n                }\n            ],\n            \"return\": {\n                \"type\": \"void\"\n            }\n        }\n    ],\n    \"systemdesign\": true,\n    \"params\": [\n        {\n            \"name\": \"inputs\",\n            \"type\": \"integer[]\"\n        },\n        {\n            \"name\": \"inputs\",\n            \"type\": \"integer[]\"\n        }\n    ],\n    \"return\": {\n        \"type\": \"list<String>\",\n        \"dealloc\": true\n    }\n}"
+  },
+  "max-area-of-island": {
+    "exampleTestcases": "[[0,0,1,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,1,1,0,1,0,0,0,0,0,0,0,0],[0,1,0,0,1,1,0,0,1,0,1,0,0],[0,1,0,0,1,1,0,0,1,1,1,0,0],[0,0,0,0,0,0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,0,0,0,0,0,0,1,1,0,0,0,0]]\n[[0,0,0,0,0,0,0,0]]",
+    "metaData": "{\r\n  \"name\": \"maxAreaOfIsland\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"grid\",\r\n      \"type\": \"integer[][]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}\r\n"
+  },
+  "maximum-depth-of-binary-tree": {
+    "exampleTestcases": "[3,9,20,null,null,15,7]\n[1,null,2]",
+    "metaData": "{\r\n  \"name\": \"maxDepth\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"root\",\r\n      \"type\": \"TreeNode\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "maximum-product-subarray": {
+    "exampleTestcases": "[2,3,-2,4]\n[-2,0,-1]",
+    "metaData": "{\r\n  \"name\": \"maxProduct\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"nums\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "maximum-subarray": {
+    "exampleTestcases": "[-2,1,-3,4,-1,2,1,-5,4]\n[1]\n[5,4,-1,7,8]",
+    "metaData": "{\r\n  \"name\": \"maxSubArray\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"nums\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "median-of-two-sorted-arrays": {
+    "exampleTestcases": "[1,3]\n[2]\n[1,2]\n[3,4]",
+    "metaData": "{\r\n  \"name\": \"findMedianSortedArrays\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"nums1\",\r\n      \"type\": \"integer[]\"\r\n    },\r\n    {\r\n      \"name\": \"nums2\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"double\"\r\n  }\r\n}"
+  },
+  "meeting-rooms": {
+    "exampleTestcases": "[[0,30],[5,10],[15,20]]\n[[7,10],[2,4]]",
+    "metaData": "{\r\n  \"name\": \"canAttendMeetings\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"intervals\",\r\n      \"type\": \"integer[][]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "meeting-rooms-ii": {
+    "exampleTestcases": "[[0,30],[5,10],[15,20]]\n[[7,10],[2,4]]",
+    "metaData": "{\r\n  \"name\": \"minMeetingRooms\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"intervals\",\r\n      \"type\": \"integer[][]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "merge-intervals": {
+    "exampleTestcases": "[[1,3],[2,6],[8,10],[15,18]]\n[[1,4],[4,5]]\n[[4,7],[1,4]]",
+    "metaData": "{\n  \"name\": \"merge\",\n  \"params\": [\n    {\n      \"name\": \"intervals\",\n      \"type\": \"integer[][]\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer[][]\"\n  }\n}"
+  },
+  "merge-k-sorted-lists": {
+    "exampleTestcases": "[[1,4,5],[1,3,4],[2,6]]\n[]\n[[]]",
+    "metaData": "{\r\n  \"name\": \"mergeKLists\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"lists\",\r\n      \"type\": \"ListNode[]\",\r\n      \"dealloc\": false\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"ListNode\",\r\n    \"dealloc\": true\r\n  }\r\n}"
+  },
+  "merge-triplets-to-form-target-triplet": {
+    "exampleTestcases": "[[2,5,3],[1,8,4],[1,7,5]]\n[2,7,5]\n[[3,4,5],[4,5,6]]\n[3,2,5]\n[[2,5,3],[2,3,4],[1,2,5],[5,2,3]]\n[5,5,5]",
+    "metaData": "{\n  \"name\": \"mergeTriplets\",\n  \"params\": [\n    {\n      \"name\": \"triplets\",\n      \"type\": \"integer[][]\"\n    },\n    {\n      \"type\": \"integer[]\",\n      \"name\": \"target\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"boolean\"\n  }\n}"
+  },
+  "merge-two-sorted-lists": {
+    "exampleTestcases": "[1,2,4]\n[1,3,4]\n[]\n[]\n[]\n[0]",
+    "metaData": "{\n  \"name\": \"mergeTwoLists\",\n  \"params\": [\n    {\n      \"name\": \"list1\",\n      \"type\": \"ListNode\",\n      \"dealloc\": false\n    },\n    {\n      \"name\": \"list2\",\n      \"type\": \"ListNode\",\n      \"dealloc\": false\n    }\n  ],\n  \"return\": {\n    \"type\": \"ListNode\",\n    \"dealloc\": true\n  }\n}"
+  },
+  "min-cost-climbing-stairs": {
+    "exampleTestcases": "[10,15,20]\n[1,100,1,1,1,100,1,1,100,1]",
+    "metaData": "{\r\n  \"name\": \"minCostClimbingStairs\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"cost\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}\r\n"
+  },
+  "min-cost-to-connect-all-points": {
+    "exampleTestcases": "[[0,0],[2,2],[3,10],[5,2],[7,0]]\n[[3,12],[-2,5],[-4,1]]",
+    "metaData": "{\n  \"name\": \"minCostConnectPoints\",\n  \"params\": [\n    {\n      \"name\": \"points\",\n      \"type\": \"integer[][]\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer\"\n  }\n}"
+  },
+  "min-stack": {
+    "exampleTestcases": "[\"MinStack\",\"push\",\"push\",\"push\",\"getMin\",\"pop\",\"top\",\"getMin\"]\n[[],[-2],[0],[-3],[],[],[],[]]",
+    "metaData": "{\n  \"classname\": \"MinStack\",\n  \"constructor\": {\n    \"params\": []\n  },\n  \"methods\": [\n    {\n      \"params\": [\n        {\n          \"type\": \"integer\",\n          \"name\": \"value\"\n        }\n      ],\n      \"return\": {\n        \"type\": \"void\"\n      },\n      \"name\": \"push\"\n    },\n    {\n      \"params\": [],\n      \"return\": {\n        \"type\": \"void\"\n      },\n      \"name\": \"pop\"\n    },\n    {\n      \"params\": [],\n      \"return\": {\n        \"type\": \"integer\"\n      },\n      \"name\": \"top\"\n    },\n    {\n      \"params\": [],\n      \"return\": {\n        \"type\": \"integer\"\n      },\n      \"name\": \"getMin\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"boolean\"\n  },\n  \"systemdesign\": true\n}"
+  },
+  "minimum-interval-to-include-each-query": {
+    "exampleTestcases": "[[1,4],[2,4],[3,6],[4,4]]\n[2,3,4,5]\n[[2,3],[2,5],[1,8],[20,25]]\n[2,19,5,22]",
+    "metaData": "{\n  \"name\": \"minInterval\",\n  \"params\": [\n    {\n      \"name\": \"intervals\",\n      \"type\": \"integer[][]\"\n    },\n    {\n      \"type\": \"integer[]\",\n      \"name\": \"queries\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer[]\"\n  }\n}"
+  },
+  "minimum-window-substring": {
+    "exampleTestcases": "\"ADOBECODEBANC\"\n\"ABC\"\n\"a\"\n\"a\"\n\"a\"\n\"aa\"",
+    "metaData": "{ \r\n  \"name\": \"minWindow\",\r\n  \"params\": [\r\n    { \r\n      \"name\": \"s\",\r\n      \"type\": \"string\"\r\n    },\r\n    { \r\n      \"name\": \"t\",\r\n      \"type\": \"string\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"string\"\r\n  }\r\n}"
+  },
+  "missing-number": {
+    "exampleTestcases": "[3,0,1]\n[0,1]\n[9,6,4,2,3,5,7,0,1]",
+    "metaData": "{\r\n  \"name\": \"missingNumber\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"nums\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "multiply-strings": {
+    "exampleTestcases": "\"2\"\n\"3\"\n\"123\"\n\"456\"",
+    "metaData": "{ \r\n  \"name\": \"multiply\",\r\n  \"params\": [\r\n    { \r\n      \"name\": \"num1\",\r\n      \"type\": \"string\"\r\n    },\r\n    { \r\n      \"name\": \"num2\",\r\n      \"type\": \"string\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"string\"\r\n  }\r\n}"
+  },
+  "n-queens": {
+    "exampleTestcases": "4\n1",
+    "metaData": "{\r\n  \"name\": \"solveNQueens\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"n\",\r\n      \"type\": \"integer\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"list<list<string>>\",\r\n    \"colsize\": \"param_1\",\r\n    \"dealloc\": true\r\n  }\r\n}"
+  },
+  "network-delay-time": {
+    "exampleTestcases": "[[2,1,1],[2,3,1],[3,4,1]]\n4\n2\n[[1,2,1]]\n2\n1\n[[1,2,1]]\n2\n2",
+    "metaData": "{\n  \"name\": \"networkDelayTime\",\n  \"params\": [\n    {\n      \"name\": \"times\",\n      \"type\": \"integer[][]\"\n    },\n    {\n      \"name\": \"n\",\n      \"type\": \"integer\"\n    },\n    {\n      \"name\": \"k\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer\"\n  },\n  \"manual\": false\n}"
+  },
+  "non-overlapping-intervals": {
+    "exampleTestcases": "[[1,2],[2,3],[3,4],[1,3]]\n[[1,2],[1,2],[1,2]]\n[[1,2],[2,3]]",
+    "metaData": "{\r\n  \"name\": \"eraseOverlapIntervals\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"intervals\",\r\n      \"type\": \"integer[][]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "number-of-1-bits": {
+    "exampleTestcases": "11\n128\n2147483645",
+    "metaData": "{\n  \"name\": \"hammingWeight\",\n  \"params\": [\n    {\n      \"name\": \"n\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer\"\n  },\n  \"manual\": false\n}"
+  },
+  "number-of-connected-components-in-an-undirected-graph": {
+    "exampleTestcases": "5\n[[0,1],[1,2],[3,4]]\n5\n[[0,1],[1,2],[2,3],[3,4]]",
+    "metaData": "{\r\n  \"name\": \"countComponents\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"n\",\r\n      \"type\": \"integer\"\r\n    },\r\n    {\r\n      \"name\": \"edges\",\r\n      \"type\": \"integer[][]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "number-of-islands": {
+    "exampleTestcases": "[[\"1\",\"1\",\"1\",\"1\",\"0\"],[\"1\",\"1\",\"0\",\"1\",\"0\"],[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"0\",\"0\"]]\n[[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"1\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"1\",\"1\"]]",
+    "metaData": "{\n  \"name\": \"numIslands\",\n  \"params\": [\n    {\n      \"name\": \"grid\",\n      \"type\": \"character[][]\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer\"\n  },\n  \"manual\": true\n}"
+  },
+  "pacific-atlantic-water-flow": {
+    "exampleTestcases": "[[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]\n[[1]]",
+    "metaData": "{\n  \"name\": \"pacificAtlantic\",\n  \"params\": [\n    {\n      \"name\": \"heights\",\n      \"type\": \"integer[][]\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"list<list<integer>>\"\n  }\n}"
+  },
+  "palindrome-partitioning": {
+    "exampleTestcases": "\"aab\"\n\"a\"",
+    "metaData": "{\r\n  \"name\": \"partition\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"s\",\r\n      \"type\": \"string\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"list<list<string>>\",\r\n    \"dealloc\": true\r\n  }\r\n}"
+  },
+  "palindromic-substrings": {
+    "exampleTestcases": "\"abc\"\n\"aaa\"",
+    "metaData": "{\n  \"name\": \"countSubstrings\",\n  \"params\": [\n    {\n      \"name\": \"s\",\n      \"type\": \"string\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer\"\n  }\n}\n"
+  },
+  "partition-equal-subset-sum": {
+    "exampleTestcases": "[1,5,11,5]\n[1,2,3,5]",
+    "metaData": "{\r\n  \"name\": \"canPartition\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"nums\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "partition-labels": {
+    "exampleTestcases": "\"ababcbacadefegdehijhklij\"\n\"eccbbbbdec\"",
+    "metaData": "{\n  \"name\": \"partitionLabels\",\n  \"params\": [\n    {\n      \"name\": \"s\",\n      \"type\": \"string\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"list<integer>\"\n  }\n}"
+  },
+  "permutation-in-string": {
+    "exampleTestcases": "\"ab\"\n\"eidbaooo\"\n\"ab\"\n\"eidboaoo\"",
+    "metaData": "{\r\n  \"name\": \"checkInclusion\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"s1\",\r\n      \"type\": \"string\"\r\n    },\r\n    {\r\n      \"name\": \"s2\",\r\n      \"type\": \"string\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}\r\n"
+  },
+  "permutations": {
+    "exampleTestcases": "[1,2,3]\n[0,1]\n[1]",
+    "metaData": "{\r\n  \"name\": \"permute\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"nums\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"list<list<integer>>\",\r\n    \"colsize\": \"size_1\",\r\n    \"dealloc\": true\r\n  }\r\n}"
+  },
+  "plus-one": {
+    "exampleTestcases": "[1,2,3]\n[4,3,2,1]\n[9]",
+    "metaData": "{\r\n  \"name\": \"plusOne\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"digits\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer[]\"\r\n  }\r\n}"
+  },
+  "powx-n": {
+    "exampleTestcases": "2.00000\n10\n2.10000\n3\n2.00000\n-2",
+    "metaData": "{\r\n  \"name\": \"myPow\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"x\",\r\n      \"type\": \"double\"\r\n    },\r\n    {\r\n      \"name\": \"n\",\r\n      \"type\": \"integer\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"double\"\r\n  }\r\n}"
+  },
+  "product-of-array-except-self": {
+    "exampleTestcases": "[1,2,3,4]\n[-1,1,0,-3,3]",
+    "metaData": "{\r\n  \"name\": \"productExceptSelf\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"nums\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer[]\"\r\n  }\r\n}"
+  },
+  "reconstruct-itinerary": {
+    "exampleTestcases": "[[\"MUC\",\"LHR\"],[\"JFK\",\"MUC\"],[\"SFO\",\"SJC\"],[\"LHR\",\"SFO\"]]\n[[\"JFK\",\"SFO\"],[\"JFK\",\"ATL\"],[\"SFO\",\"ATL\"],[\"ATL\",\"JFK\"],[\"ATL\",\"SFO\"]]",
+    "metaData": "{\r\n  \"name\": \"findItinerary\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"tickets\",\r\n      \"type\": \"list<list<string>>\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"list<string>\"\r\n  }\r\n}"
+  },
+  "redundant-connection": {
+    "exampleTestcases": "[[1,2],[1,3],[2,3]]\n[[1,2],[2,3],[3,4],[1,4],[1,5]]",
+    "metaData": "{\r\n  \"name\": \"findRedundantConnection\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"edges\",\r\n      \"type\": \"integer[][]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer[]\"\r\n  }\r\n}\r\n"
+  },
+  "regular-expression-matching": {
+    "exampleTestcases": "\"aa\"\n\"a\"\n\"aa\"\n\"a*\"\n\"ab\"\n\".*\"",
+    "metaData": "{ \r\n  \"name\": \"isMatch\",\r\n  \"params\": [\r\n    { \r\n      \"name\": \"s\",\r\n      \"type\": \"string\"\r\n    },\r\n    {\r\n      \"name\": \"p\",\r\n      \"type\": \"string\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "remove-nth-node-from-end-of-list": {
+    "exampleTestcases": "[1,2,3,4,5]\n2\n[1]\n1\n[1,2]\n1",
+    "metaData": "{\r\n  \"name\": \"removeNthFromEnd\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"head\",\r\n      \"type\": \"ListNode\",\r\n      \"dealloc\": false\r\n    },\r\n    {\r\n      \"name\": \"n\",\r\n      \"type\": \"integer\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"ListNode\",\r\n    \"dealloc\": true\r\n  }\r\n}"
+  },
+  "reorder-list": {
+    "exampleTestcases": "[1,2,3,4]\n[1,2,3,4,5]",
+    "metaData": "{\r\n  \"name\": \"reorderList\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"head\",\r\n      \"type\": \"ListNode\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"void\"\r\n  },\r\n  \"output\": {\r\n    \"paramindex\": 0\r\n  }\r\n}"
+  },
+  "reverse-bits": {
+    "exampleTestcases": "43261596\n2147483644",
+    "metaData": "{\n  \"name\": \"reverseBits\",\n  \"params\": [\n    {\n      \"name\": \"n\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer\"\n  },\n  \"manual\": false\n}"
+  },
+  "reverse-integer": {
+    "exampleTestcases": "123\n-123\n120",
+    "metaData": "{\r\n  \"name\": \"reverse\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"x\",\r\n      \"type\": \"integer\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "reverse-linked-list": {
+    "exampleTestcases": "[1,2,3,4,5]\n[1,2]\n[]",
+    "metaData": "{\r\n  \"name\": \"reverseList\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"head\",\r\n      \"type\": \"ListNode\",\r\n      \"dealloc\": false\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"ListNode\",\r\n    \"dealloc\": true\r\n  }\r\n}"
+  },
+  "reverse-nodes-in-k-group": {
+    "exampleTestcases": "[1,2,3,4,5]\n2\n[1,2,3,4,5]\n3",
+    "metaData": "{\r\n  \"name\": \"reverseKGroup\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"head\",\r\n      \"type\": \"ListNode\"\r\n    },\r\n    {\r\n      \"name\": \"k\",\r\n      \"type\": \"integer\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"ListNode\"\r\n  }\r\n}"
+  },
+  "rotate-image": {
+    "exampleTestcases": "[[1,2,3],[4,5,6],[7,8,9]]\n[[5,1,9,11],[2,4,8,10],[13,3,6,7],[15,14,12,16]]",
+    "metaData": "{\r\n  \"name\": \"rotate\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"matrix\",\r\n      \"type\": \"integer[][]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"void\"\r\n  },\r\n  \"output\": {\r\n    \"paramindex\": 0\r\n  }\r\n}"
+  },
+  "rotting-oranges": {
+    "exampleTestcases": "[[2,1,1],[1,1,0],[0,1,1]]\n[[2,1,1],[0,1,1],[1,0,1]]\n[[0,2]]",
+    "metaData": "{\r\n  \"name\": \"orangesRotting\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"grid\",\r\n      \"type\": \"integer[][]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}\r\n"
+  },
+  "same-tree": {
+    "exampleTestcases": "[1,2,3]\n[1,2,3]\n[1,2]\n[1,null,2]\n[1,2,1]\n[1,1,2]",
+    "metaData": "{\r\n  \"name\": \"isSameTree\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"p\",\r\n      \"type\": \"TreeNode\"\r\n    },\r\n    {\r\n      \"name\": \"q\",\r\n      \"type\": \"TreeNode\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "search-a-2d-matrix": {
+    "exampleTestcases": "[[1,3,5,7],[10,11,16,20],[23,30,34,60]]\n3\n[[1,3,5,7],[10,11,16,20],[23,30,34,60]]\n13",
+    "metaData": "{\r\n  \"name\": \"searchMatrix\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"matrix\",\r\n      \"type\": \"integer[][]\"\r\n    },\r\n    {\r\n      \"name\": \"target\",\r\n      \"type\": \"integer\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "search-in-rotated-sorted-array": {
+    "exampleTestcases": "[4,5,6,7,0,1,2]\n0\n[4,5,6,7,0,1,2]\n3\n[1]\n0",
+    "metaData": "{\r\n  \"name\": \"search\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"nums\",\r\n      \"type\": \"integer[]\"\r\n    },\r\n    {\r\n      \"name\": \"target\",\r\n      \"type\": \"integer\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "serialize-and-deserialize-binary-tree": {
+    "exampleTestcases": "[1,2,3,null,null,4,5]\n[]",
+    "metaData": "{\n  \"name\": \"Codec\",\n  \"params\": [\n    {\n      \"name\": \"root\",\n      \"type\": \"TreeNode\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"string\"\n  },\n  \"manual\": true\n}"
+  },
+  "set-matrix-zeroes": {
+    "exampleTestcases": "[[1,1,1],[1,0,1],[1,1,1]]\n[[0,1,2,0],[3,4,5,2],[1,3,1,5]]",
+    "metaData": "{\n  \"name\": \"setZeroes\",\n  \"params\": [\n    {\n      \"name\": \"matrix\",\n      \"type\": \"integer[][]\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"void\"\n  },\n  \"output\": {\n    \"paramindex\": 0\n  },\n  \"manual\": false\n}"
+  },
+  "single-number": {
+    "exampleTestcases": "[2,2,1]\n[4,1,2,1,2]\n[1]",
+    "metaData": "{\r\n  \"name\": \"singleNumber\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"nums\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "sliding-window-maximum": {
+    "exampleTestcases": "[1,3,-1,-3,5,3,6,7]\n3\n[1]\n1",
+    "metaData": "{ \n  \"name\": \"maxSlidingWindow\",\n  \"params\": [\n    { \n      \"name\": \"nums\",\n      \"type\": \"integer[]\"\n    },\n    {\n      \"name\": \"k\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer[]\"\n  }\n}"
+  },
+  "spiral-matrix": {
+    "exampleTestcases": "[[1,2,3],[4,5,6],[7,8,9]]\n[[1,2,3,4],[5,6,7,8],[9,10,11,12]]",
+    "metaData": "{\r\n  \"name\": \"spiralOrder\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"matrix\",\r\n      \"type\": \"integer[][]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"list<integer>\",\r\n    \"size\": \"size_1 * col_size_1\",\r\n    \"dealloc\": true\r\n  }\r\n}"
+  },
+  "subsets": {
+    "exampleTestcases": "[1,2,3]\n[0]",
+    "metaData": "{\r\n  \"name\": \"subsets\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"nums\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"list<list<integer>>\",\r\n    \"dealloc\": true\r\n  }\r\n}"
+  },
+  "subsets-ii": {
+    "exampleTestcases": "[1,2,2]\n[0]",
+    "metaData": "{\r\n  \"name\": \"subsetsWithDup\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"nums\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"list<list<integer>>\",\r\n    \"dealloc\": true\r\n  }\r\n}"
+  },
+  "subtree-of-another-tree": {
+    "exampleTestcases": "[3,4,5,1,2]\n[4,1,2]\n[3,4,5,1,2,null,null,null,null,0]\n[4,1,2]",
+    "metaData": "{\n  \"name\": \"isSubtree\",\n  \"params\": [\n    {\n      \"name\": \"root\",\n      \"type\": \"TreeNode\"\n    },\n    {\n      \"name\": \"subRoot\",\n      \"type\": \"TreeNode\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"boolean\"\n  }\n}"
+  },
+  "sum-of-two-integers": {
+    "exampleTestcases": "1\n2\n2\n3",
+    "metaData": "{\r\n  \"name\": \"getSum\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"a\",\r\n      \"type\": \"integer\"\r\n    },\r\n    {\r\n      \"name\": \"b\",\r\n      \"type\": \"integer\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "surrounded-regions": {
+    "exampleTestcases": "[[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"O\",\"X\"],[\"X\",\"X\",\"O\",\"X\"],[\"X\",\"O\",\"X\",\"X\"]]\n[[\"X\"]]",
+    "metaData": "{\r\n  \"name\": \"solve\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"board\",\r\n      \"type\": \"character[][]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"void\"\r\n  },\r\n  \"output\": {\r\n    \"paramindex\": 0\r\n  }\r\n}"
+  },
+  "swim-in-rising-water": {
+    "exampleTestcases": "[[0,2],[1,3]]\n[[0,1,2,3,4],[24,23,22,21,5],[12,13,14,15,16],[11,17,18,19,20],[10,9,8,7,6]]",
+    "metaData": "{\r\n  \"name\": \"swimInWater\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"grid\",\r\n      \"type\": \"integer[][]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}\r\n"
+  },
+  "target-sum": {
+    "exampleTestcases": "[1,1,1,1,1]\n3\n[1]\n1",
+    "metaData": "{\n  \"name\": \"findTargetSumWays\",\n  \"params\": [\n    {\n      \"name\": \"nums\",\n      \"type\": \"integer[]\"\n    },\n    {\n      \"name\": \"target\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer\"\n  }\n}"
+  },
+  "task-scheduler": {
+    "exampleTestcases": "[\"A\",\"A\",\"A\",\"B\",\"B\",\"B\"]\n2\n[\"A\",\"C\",\"A\",\"B\",\"D\",\"B\"]\n1\n[\"A\",\"A\",\"A\", \"B\",\"B\",\"B\"]\n3",
+    "metaData": "{\n  \"name\": \"leastInterval\",\n  \"params\": [\n    {\n      \"name\": \"tasks\",\n      \"type\": \"character[]\"\n    },\n    {\n      \"name\": \"n\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer\"\n  }\n}"
+  },
+  "time-based-key-value-store": {
+    "exampleTestcases": "[\"TimeMap\",\"set\",\"get\",\"get\",\"set\",\"get\",\"get\"]\n[[],[\"foo\",\"bar\",1],[\"foo\",1],[\"foo\",3],[\"foo\",\"bar2\",4],[\"foo\",4],[\"foo\",5]]",
+    "metaData": "{\n  \"classname\": \"TimeMap\",\n  \"constructor\": {\n    \"params\": []\n  },\n  \"methods\": [\n    {\n      \"params\": [\n        {\n          \"type\": \"string\",\n          \"name\": \"key\"\n        },\n        {\n          \"type\": \"string\",\n          \"name\": \"value\"\n        },\n        {\n          \"type\": \"integer\",\n          \"name\": \"timestamp\"\n        }\n      ],\n      \"return\": {\n        \"type\": \"void\"\n      },\n      \"name\": \"set\"\n    },\n    {\n      \"params\": [\n        {\n          \"type\": \"string\",\n          \"name\": \"key\"\n        },\n        {\n          \"type\": \"integer\",\n          \"name\": \"timestamp\"\n        }\n      ],\n      \"return\": {\n        \"type\": \"string\"\n      },\n      \"name\": \"get\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"boolean\"\n  },\n  \"systemdesign\": true\n}"
+  },
+  "top-k-frequent-elements": {
+    "exampleTestcases": "[1,1,1,2,2,3]\n2\n[1]\n1\n[1,2,1,2,1,2,3,1,3,2]\n2",
+    "metaData": "{\n  \"name\": \"topKFrequent\",\n  \"params\": [\n    {\n      \"name\": \"nums\",\n      \"type\": \"integer[]\"\n    },\n    {\n      \"name\": \"k\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer[]\"\n  }\n}"
+  },
+  "trapping-rain-water": {
+    "exampleTestcases": "[0,1,0,2,1,0,1,3,2,1,2,1]\n[4,2,0,3,2,5]",
+    "metaData": "{\r\n  \"name\": \"trap\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"height\",\r\n      \"type\": \"integer[]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "two-sum": {
+    "exampleTestcases": "[2,7,11,15]\n9\n[3,2,4]\n6\n[3,3]\n6",
+    "metaData": "{\n  \"name\": \"twoSum\",\n  \"params\": [\n    {\n      \"name\": \"nums\",\n      \"type\": \"integer[]\"\n    },\n    {\n      \"name\": \"target\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"integer[]\",\n    \"size\": 2\n  },\n  \"manual\": false\n}"
+  },
+  "two-sum-ii-input-array-is-sorted": {
+    "exampleTestcases": "[2,7,11,15]\n9\n[2,3,4]\n6\n[-1,0]\n-1",
+    "metaData": "{\r\n  \"name\": \"twoSum\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"numbers\",\r\n      \"type\": \"integer[]\"\r\n    },\r\n    {\r\n      \"name\": \"target\",\r\n      \"type\": \"integer\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer[]\"\r\n  }\r\n}"
+  },
+  "unique-paths": {
+    "exampleTestcases": "3\n7\n3\n2",
+    "metaData": "{\r\n  \"name\": \"uniquePaths\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"m\",\r\n      \"type\": \"integer\"\r\n    },\r\n    {\r\n      \"name\": \"n\",\r\n      \"type\": \"integer\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "valid-anagram": {
+    "exampleTestcases": "\"anagram\"\n\"nagaram\"\n\"rat\"\n\"car\"",
+    "metaData": "{\r\n  \"name\": \"isAnagram\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"s\",\r\n      \"type\": \"string\"\r\n    },\r\n    {\r\n      \"name\": \"t\",\r\n      \"type\": \"string\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "valid-palindrome": {
+    "exampleTestcases": "\"A man, a plan, a canal: Panama\"\n\"race a car\"\n\" \"",
+    "metaData": "{ \r\n  \"name\": \"isPalindrome\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"s\",\r\n      \"type\": \"string\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "valid-parentheses": {
+    "exampleTestcases": "\"()\"\n\"()[]{}\"\n\"(]\"\n\"([])\"\n\"([)]\"",
+    "metaData": "{ \r\n  \"name\": \"isValid\",\r\n  \"params\": [\r\n    { \r\n      \"name\": \"s\",\r\n      \"type\": \"string\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "valid-parenthesis-string": {
+    "exampleTestcases": "\"()\"\n\"(*)\"\n\"(*))\"",
+    "metaData": "{\r\n  \"name\": \"checkValidString\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"s\",\r\n      \"type\": \"string\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}\r\n"
+  },
+  "valid-sudoku": {
+    "exampleTestcases": "[[\"5\",\"3\",\".\",\".\",\"7\",\".\",\".\",\".\",\".\"],[\"6\",\".\",\".\",\"1\",\"9\",\"5\",\".\",\".\",\".\"],[\".\",\"9\",\"8\",\".\",\".\",\".\",\".\",\"6\",\".\"],[\"8\",\".\",\".\",\".\",\"6\",\".\",\".\",\".\",\"3\"],[\"4\",\".\",\".\",\"8\",\".\",\"3\",\".\",\".\",\"1\"],[\"7\",\".\",\".\",\".\",\"2\",\".\",\".\",\".\",\"6\"],[\".\",\"6\",\".\",\".\",\".\",\".\",\"2\",\"8\",\".\"],[\".\",\".\",\".\",\"4\",\"1\",\"9\",\".\",\".\",\"5\"],[\".\",\".\",\".\",\".\",\"8\",\".\",\".\",\"7\",\"9\"]]\n[[\"8\",\"3\",\".\",\".\",\"7\",\".\",\".\",\".\",\".\"],[\"6\",\".\",\".\",\"1\",\"9\",\"5\",\".\",\".\",\".\"],[\".\",\"9\",\"8\",\".\",\".\",\".\",\".\",\"6\",\".\"],[\"8\",\".\",\".\",\".\",\"6\",\".\",\".\",\".\",\"3\"],[\"4\",\".\",\".\",\"8\",\".\",\"3\",\".\",\".\",\"1\"],[\"7\",\".\",\".\",\".\",\"2\",\".\",\".\",\".\",\"6\"],[\".\",\"6\",\".\",\".\",\".\",\".\",\"2\",\"8\",\".\"],[\".\",\".\",\".\",\"4\",\"1\",\"9\",\".\",\".\",\"5\"],[\".\",\".\",\".\",\".\",\"8\",\".\",\".\",\"7\",\"9\"]]",
+    "metaData": "{\r\n  \"name\": \"isValidSudoku\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"board\",\r\n      \"type\": \"character[][]\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "validate-binary-search-tree": {
+    "exampleTestcases": "[2,1,3]\n[5,1,4,null,null,3,6]",
+    "metaData": "{\r\n  \"name\": \"isValidBST\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"root\",\r\n      \"type\": \"TreeNode\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "walls-and-gates": {
+    "exampleTestcases": "[[2147483647,-1,0,2147483647],[2147483647,2147483647,2147483647,-1],[2147483647,-1,2147483647,-1],[0,-1,2147483647,2147483647]]\n[[-1]]",
+    "metaData": "{\n  \"name\": \"wallsAndGates\",\n  \"params\": [\n    {\n      \"name\": \"rooms\",\n      \"type\": \"integer[][]\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"void\"\n  },\n  \"output\": {\n    \"paramindex\": 0\n  }\n}"
+  },
+  "word-break": {
+    "exampleTestcases": "\"leetcode\"\n[\"leet\",\"code\"]\n\"applepenapple\"\n[\"apple\",\"pen\"]\n\"catsandog\"\n[\"cats\",\"dog\",\"sand\",\"and\",\"cat\"]",
+    "metaData": "{\r\n  \"name\": \"wordBreak\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"s\",\r\n      \"type\": \"string\"\r\n    },\r\n    {\r\n      \"name\": \"wordDict\",\r\n      \"type\": \"list<string>\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "word-ladder": {
+    "exampleTestcases": "\"hit\"\n\"cog\"\n[\"hot\",\"dot\",\"dog\",\"lot\",\"log\",\"cog\"]\n\"hit\"\n\"cog\"\n[\"hot\",\"dot\",\"dog\",\"lot\",\"log\"]",
+    "metaData": "{\r\n  \"name\": \"ladderLength\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"beginWord\",\r\n      \"type\": \"string\"\r\n    },\r\n    {\r\n      \"name\": \"endWord\",\r\n      \"type\": \"string\"\r\n    },\r\n    {\r\n      \"name\": \"wordList\",\r\n      \"type\": \"list<string>\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"integer\"\r\n  }\r\n}"
+  },
+  "word-search": {
+    "exampleTestcases": "[[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]]\n\"ABCCED\"\n[[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]]\n\"SEE\"\n[[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]]\n\"ABCB\"",
+    "metaData": "{\r\n  \"name\": \"exist\",\r\n  \"params\": [\r\n    {\r\n      \"name\": \"board\",\r\n      \"type\": \"character[][]\"\r\n    },\r\n    {\r\n      \"name\": \"word\",\r\n      \"type\": \"string\"\r\n    }\r\n  ],\r\n  \"return\": {\r\n    \"type\": \"boolean\"\r\n  }\r\n}"
+  },
+  "word-search-ii": {
+    "exampleTestcases": "[[\"o\",\"a\",\"a\",\"n\"],[\"e\",\"t\",\"a\",\"e\"],[\"i\",\"h\",\"k\",\"r\"],[\"i\",\"f\",\"l\",\"v\"]]\n[\"oath\",\"pea\",\"eat\",\"rain\"]\n[[\"a\",\"b\"],[\"c\",\"d\"]]\n[\"abcb\"]",
+    "metaData": "{\n  \"name\": \"findWords\",\n  \"params\": [\n    {\n      \"name\": \"board\",\n      \"type\": \"character[][]\"\n    },\n    {\n      \"name\": \"words\",\n      \"type\": \"string[]\"\n    }\n  ],\n  \"return\": {\n    \"type\": \"list<string>\"\n  }\n}"
+  }
+}

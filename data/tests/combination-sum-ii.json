@@ -1,0 +1,79 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          10,
+          1,
+          2,
+          7,
+          6,
+          1,
+          5
+        ],
+        8
+      ],
+      "expected": [
+        [
+          1,
+          1,
+          6
+        ],
+        [
+          1,
+          2,
+          5
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          2,
+          6
+        ]
+      ]
+    },
+    {
+      "args": [
+        [
+          2,
+          5,
+          2,
+          1,
+          2
+        ],
+        5
+      ],
+      "expected": [
+        [
+          1,
+          2,
+          2
+        ],
+        [
+          5
+        ]
+      ]
+    }
+  ],
+  "compare": "unordered-nested",
+  "entry": "combinationSum2",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "candidates",
+      "type": "integer[]"
+    },
+    {
+      "name": "target",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "dealloc": true,
+    "type": "list<list<integer>>"
+  },
+  "slug": "combination-sum-ii",
+  "source": "examples"
+}

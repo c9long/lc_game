@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "args": [
+        123
+      ],
+      "expected": 321
+    },
+    {
+      "args": [
+        -123
+      ],
+      "expected": -321
+    },
+    {
+      "args": [
+        120
+      ],
+      "expected": 21
+    }
+  ],
+  "compare": "exact",
+  "entry": "reverse",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "x",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "reverse-integer",
+  "source": "examples"
+}

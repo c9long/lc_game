@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "args": [
+        11
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        128
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        2147483645
+      ],
+      "expected": 30
+    }
+  ],
+  "compare": "exact",
+  "entry": "hammingWeight",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "number-of-1-bits",
+  "source": "examples"
+}

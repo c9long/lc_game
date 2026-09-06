@@ -1,0 +1,56 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          3,
+          4,
+          5,
+          1,
+          2
+        ]
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        [
+          2,
+          3,
+          4
+        ],
+        [
+          3,
+          4,
+          3
+        ]
+      ],
+      "expected": -1
+    }
+  ],
+  "compare": "exact",
+  "entry": "canCompleteCircuit",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "gas",
+      "type": "integer[]"
+    },
+    {
+      "name": "cost",
+      "type": "integer[]"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "gas-station",
+  "source": "examples"
+}

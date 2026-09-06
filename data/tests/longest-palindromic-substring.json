@@ -1,0 +1,30 @@
+{
+  "cases": [
+    {
+      "args": [
+        "babad"
+      ],
+      "expected": "bab"
+    },
+    {
+      "args": [
+        "cbbd"
+      ],
+      "expected": "bb"
+    }
+  ],
+  "compare": "exact",
+  "entry": "longestPalindrome",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "returns": {
+    "type": "string"
+  },
+  "slug": "longest-palindromic-substring",
+  "source": "examples"
+}

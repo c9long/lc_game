@@ -1,0 +1,50 @@
+{
+  "cases": [
+    {
+      "args": [
+        2,
+        [
+          [
+            1,
+            0
+          ]
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        2,
+        [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "expected": false
+    }
+  ],
+  "compare": "exact",
+  "entry": "canFinish",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "numCourses",
+      "type": "integer"
+    },
+    {
+      "name": "prerequisites",
+      "type": "integer[][]"
+    }
+  ],
+  "returns": {
+    "type": "boolean"
+  },
+  "slug": "course-schedule",
+  "source": "examples"
+}

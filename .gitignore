@@ -33,5 +33,12 @@ vite.config.ts.timestamp-*
 # Monaco is copied from node_modules at build/dev time (scripts/copy-monaco.mjs)
 static/monaco/
 
+# Pyodide runtime + the worker/driver copies (scripts/copy-pyodide.mjs); driver.py and
+# worker.js are source and live in src/lib/pyodide/
+static/pyodide/
+
 # downloaded doc sources for drill mining
 .cache/
+
+# python bytecode from the drill/test generators
+__pycache__/

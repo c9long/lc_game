@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "args": [
+        "2",
+        "3"
+      ],
+      "expected": "6"
+    },
+    {
+      "args": [
+        "123",
+        "456"
+      ],
+      "expected": "56088"
+    }
+  ],
+  "compare": "exact",
+  "entry": "multiply",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "num1",
+      "type": "string"
+    },
+    {
+      "name": "num2",
+      "type": "string"
+    }
+  ],
+  "returns": {
+    "type": "string"
+  },
+  "slug": "multiply-strings",
+  "source": "examples"
+}

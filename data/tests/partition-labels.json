@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "args": [
+        "ababcbacadefegdehijhklij"
+      ],
+      "expected": [
+        9,
+        7,
+        8
+      ]
+    },
+    {
+      "args": [
+        "eccbbbbdec"
+      ],
+      "expected": [
+        10
+      ]
+    }
+  ],
+  "compare": "exact",
+  "entry": "partitionLabels",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "returns": {
+    "type": "list<integer>"
+  },
+  "slug": "partition-labels",
+  "source": "examples"
+}

@@ -1,0 +1,40 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          1,
+          5,
+          11,
+          5
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          1,
+          2,
+          3,
+          5
+        ]
+      ],
+      "expected": false
+    }
+  ],
+  "compare": "exact",
+  "entry": "canPartition",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    }
+  ],
+  "returns": {
+    "type": "boolean"
+  },
+  "slug": "partition-equal-subset-sum",
+  "source": "examples"
+}

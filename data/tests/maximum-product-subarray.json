@@ -1,0 +1,39 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          2,
+          3,
+          -2,
+          4
+        ]
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        [
+          -2,
+          0,
+          -1
+        ]
+      ],
+      "expected": 0
+    }
+  ],
+  "compare": "exact",
+  "entry": "maxProduct",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "maximum-product-subarray",
+  "source": "examples"
+}

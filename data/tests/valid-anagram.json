@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "args": [
+        "anagram",
+        "nagaram"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "rat",
+        "car"
+      ],
+      "expected": false
+    }
+  ],
+  "compare": "exact",
+  "entry": "isAnagram",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    },
+    {
+      "name": "t",
+      "type": "string"
+    }
+  ],
+  "returns": {
+    "type": "boolean"
+  },
+  "slug": "valid-anagram",
+  "source": "examples"
+}

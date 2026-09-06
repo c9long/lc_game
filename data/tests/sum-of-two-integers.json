@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "args": [
+        1,
+        2
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        2,
+        3
+      ],
+      "expected": 5
+    }
+  ],
+  "compare": "exact",
+  "entry": "getSum",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "a",
+      "type": "integer"
+    },
+    {
+      "name": "b",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "sum-of-two-integers",
+  "source": "examples"
+}

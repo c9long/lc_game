@@ -1,0 +1,51 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          1,
+          2,
+          5
+        ],
+        11
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        [
+          2
+        ],
+        3
+      ],
+      "expected": -1
+    },
+    {
+      "args": [
+        [
+          1
+        ],
+        0
+      ],
+      "expected": 0
+    }
+  ],
+  "compare": "exact",
+  "entry": "coinChange",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "coins",
+      "type": "integer[]"
+    },
+    {
+      "name": "amount",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "coin-change",
+  "source": "examples"
+}

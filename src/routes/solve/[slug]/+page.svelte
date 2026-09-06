@@ -1,15 +1,16 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Editor from '$lib/components/Editor.svelte';
+	import { judge, warmUp, exampleCases, type Suite } from '$lib/pyodide/client';
 	let { data } = $props();
 
 	const STORAGE_LANG = 'lc-game:lang';
 	// svelte-ignore state_referenced_locally
 	let lang = $state(data.lastLang ?? 'python3');
 	let code = $state('');
-	// svelte-ignore state_referenced_locally
-	let input = $state(data.exampleTestcases);
 	let busy = $state<'run' | 'submit' | null>(null);
+	let suite = $state<Suite | null>(null);
+	let suiteError = $state('');
 	let result = $state<Record<string, any> | null>(null);
 	let resultKind = $state<'run' | 'submit' | null>(null);
 	let message = $state('');
@@ -38,7 +39,23 @@
 			if (!data.lastLang && stored && data.snippets[stored]) lang = stored;
 		} catch {}
 		code = initialCode(lang);
+
+		// Downloading and starting Pyodide takes a few seconds, so it begins while the problem is
+		// being read rather than on the first press of Run.
+		void warmUp();
+		void loadSuite();
 	});
+
+	async function loadSuite() {
+		try {
+			const r = await fetch(`/api/solve/${data.slug}/tests`);
+			const j = (await r.json()) as any;
+			if (r.ok) suite = j as Suite;
+			else suiteError = j.message ?? 'No test suite for this problem yet.';
+		} catch {
+			suiteError = 'Could not load the test suite for this problem.';
+		}
+	}
 
 	function switchLang(next: string) {
 		flushSave();
@@ -78,36 +95,43 @@
 		scheduleSave();
 	});
 
-	async function poll(id: string): Promise<Record<string, any>> {
-		for (let i = 0; i < 60; i++) {
-			const r = await fetch(`/api/check/${encodeURIComponent(id)}`);
-			const j = (await r.json()) as any;
-			if (!r.ok) throw new Error(j.message ?? j.error ?? `check failed (${r.status})`);
-			if (j.state === 'SUCCESS') return j;
-			await new Promise((res) => setTimeout(res, 1000));
-		}
-		throw new Error('timed out waiting for the judge');
-	}
-
 	async function execute(kind: 'run' | 'submit') {
-		if (busy) return;
+		if (busy || !suite || !canJudge) return;
 		busy = kind;
 		message = '';
 		award = null;
 		result = null;
 		flushSave();
 		try {
-			const r = await fetch(`/api/solve/${data.slug}/${kind}`, {
+			// Run shows only the cases derived from LeetCode's published examples; Submit is judged
+			// against the whole suite.
+			const cases = kind === 'run' ? exampleCases(suite) : suite.cases;
+			const outcome = await judge(code, suite, cases);
+			result = {
+				status_msg: outcome.verdict,
+				total_correct: outcome.passed,
+				total_testcases: outcome.total,
+				cases: outcome.results,
+				stdout: outcome.stdout,
+				elapsedMs: outcome.elapsedMs
+			};
+			resultKind = kind;
+
+			const r = await fetch(`/api/solve/${data.slug}/verdict`, {
 				method: 'POST',
 				headers: { 'content-type': 'application/json' },
-				body: JSON.stringify({ lang, code, input })
+				body: JSON.stringify({
+					lang,
+					code,
+					kind,
+					verdict: outcome.verdict,
+					passed: outcome.passed,
+					total: outcome.total,
+					elapsedMs: outcome.elapsedMs
+				})
 			});
 			const j = (await r.json()) as any;
-			if (!r.ok) throw new Error(j.message ?? j.error ?? `request failed (${r.status})`);
-			const out = await poll(j.id);
-			result = out.result;
-			resultKind = kind;
-			if (out.award) award = out.award;
+			if (r.ok && j.award) award = j.award;
 		} catch (e) {
 			message = e instanceof Error ? e.message : String(e);
 		} finally {
@@ -153,8 +177,10 @@
 		}
 	}
 
-	const passed = $derived(result?.status_msg === 'Accepted' || (resultKind === 'run' && result?.run_success && result?.correct_answer !== false));
+	const passed = $derived(result?.status_msg === 'Accepted');
 	const kindLabel = $derived(resultKind === 'submit' ? 'Submission' : 'Run');
+	// The in-browser judge is Pyodide, so only Python can be executed (docs/07-pyodide-judge.md).
+	const canJudge = $derived(lang === 'python3' && suite !== null);
 </script>
 
 <svelte:head><title>{data.title} · LC Game</title></svelte:head>
@@ -168,11 +194,13 @@
 	<a class="muted" href="https://leetcode.com/problems/{data.slug}/" target="_blank" rel="noreferrer">on LeetCode ↗</a>
 </div>
 
-{#if !data.lc.connected || !data.lc.ok}
-	<div class="banner">LeetCode judge unavailable: {data.lc.connected ? 'cookie looks expired' : 'no cookie configured'}. <a href="/admin">Fix in Admin</a>. You can still edit and save drafts.</div>
+{#if suiteError}
+	<div class="banner">{suiteError} You can still edit and save drafts here.</div>
+{:else if lang !== 'python3'}
+	<div class="banner">The in-browser judge runs Python only. Switch to Python 3 to run and submit; other languages are editable but cannot be judged yet.</div>
 {/if}
-{#if data.isPaidOnly}
-	<div class="banner">This is a LeetCode Premium problem; submitting needs a Premium account.</div>
+{#if !data.lc.connected || !data.lc.ok}
+	<div class="banner">LeetCode is not connected ({data.lc.connected ? 'the cookie looks expired' : 'no cookie configured'}), so community solutions, editorials and profile sync are unavailable. <a href="/admin">Fix in Admin</a>. Solving still works.</div>
 {/if}
 
 <div class="solve">
@@ -191,16 +219,19 @@
 			<button onclick={resetToStarter}>Starter</button>
 			{#if data.lastAccepted[lang]}<button onclick={loadLastAccepted}>Last accepted</button>{/if}
 			<span class="spacer"></span>
-			<button onclick={() => execute('run')} disabled={busy !== null || !data.lc.ok} title="Ctrl+Enter">{busy === 'run' ? 'Running…' : 'Run'}</button>
-			<button class="primary" onclick={() => execute('submit')} disabled={busy !== null || !data.lc.ok} title="Ctrl+Shift+Enter">{busy === 'submit' ? 'Judging…' : 'Submit'}</button>
+			<button onclick={() => execute('run')} disabled={busy !== null || !canJudge} title="Ctrl+Enter">{busy === 'run' ? 'Running…' : 'Run'}</button>
+			<button class="primary" onclick={() => execute('submit')} disabled={busy !== null || !canJudge} title="Ctrl+Shift+Enter">{busy === 'submit' ? 'Judging…' : 'Submit'}</button>
 		</div>
 
 		<Editor bind:value={code} language={monacoLang} onrun={() => execute('run')} onsubmit={() => execute('submit')} />
 
-		<details class="card" open>
-			<summary>Test input (one argument per line)</summary>
-			<textarea bind:value={input} rows="4"></textarea>
-		</details>
+		{#if suite}
+			<p class="muted">
+				{suite.exampleCount} example case{suite.exampleCount === 1 ? '' : 's'}
+				{#if suite.cases.length > suite.exampleCount}· {suite.cases.length} in total on Submit{/if}
+				{#if suite.compare !== 'exact'}· order-insensitive ({suite.compare}){/if}
+			</p>
+		{/if}
 
 		{#if message}<div class="banner">{message}</div>{/if}
 
@@ -219,28 +250,37 @@
 		{#if result}
 			<div class="card result" class:pass={passed} class:fail={!passed}>
 				<h3>{kindLabel}: {result.status_msg ?? result.state}</h3>
-				{#if result.total_testcases != null}<p>{result.total_correct ?? 0} / {result.total_testcases} test cases passed</p>{/if}
-				{#if result.status_runtime}<p class="muted">{result.status_runtime} · {result.status_memory}{result.runtime_percentile != null ? ` · faster than ${Math.round(result.runtime_percentile)}%` : ''}</p>{/if}
-				{#if result.full_compile_error || result.compile_error}<pre>{result.full_compile_error ?? result.compile_error}</pre>{/if}
-				{#if result.full_runtime_error || result.runtime_error}<pre>{result.full_runtime_error ?? result.runtime_error}</pre>{/if}
-				{#if resultKind === 'run' && result.code_answer}
-					<table>
-						<thead><tr><th>#</th><th>Output</th><th>Expected</th></tr></thead>
-						<tbody>
-							{#each result.code_answer as out, i (i)}
-								<tr class:bad={result.expected_code_answer?.[i] !== undefined && result.expected_code_answer[i] !== out}>
-									<td>{i + 1}</td><td><code>{out}</code></td><td><code>{result.expected_code_answer?.[i] ?? ''}</code></td>
-								</tr>
-							{/each}
-						</tbody>
-					</table>
+				{#if result.total_testcases != null}<p>{result.total_correct ?? 0} / {result.total_testcases} test cases passed <span class="muted">· {result.elapsedMs} ms</span></p>{/if}
+
+				{#if result.cases?.[0]?.fatal}
+					<pre>{result.cases[0].error}</pre>
+				{:else if result.cases?.length}
+					<!-- Submit can run a long suite, so only the failures are worth listing once past the examples. -->
+					{@const shown = resultKind === 'run' ? result.cases : result.cases.filter((c: any) => !c.ok).slice(0, 5)}
+					{#if shown.length}
+						<table>
+							<thead><tr><th>#</th><th>Input</th><th>Expected</th><th>Got</th></tr></thead>
+							<tbody>
+								{#each shown as c, i (i)}
+									<tr class:bad={!c.ok}>
+										<td>{result.cases.indexOf(c) + 1}</td>
+										<td><code>{JSON.stringify(c.args)}</code></td>
+										<td><code>{JSON.stringify(c.expected)}</code></td>
+										<td><code>{c.error ? c.error : JSON.stringify(c.actual)}</code></td>
+									</tr>
+								{/each}
+							</tbody>
+						</table>
+					{/if}
+					{#if resultKind === 'submit' && !passed && result.cases.filter((c: any) => !c.ok).length > 5}
+						<p class="muted">and {result.cases.filter((c: any) => !c.ok).length - 5} more failing case(s)</p>
+					{/if}
+				{:else if result.status_msg === 'Time Limit Exceeded'}
+					<p>Your code did not finish within the time limit, so the run was stopped.</p>
 				{/if}
-				{#if resultKind === 'submit' && result.last_testcase && result.status_msg !== 'Accepted'}
-					<p>Failing input:</p><pre>{result.last_testcase}</pre>
-					<p>Expected <code>{result.expected_output}</code>, got <code>{Array.isArray(result.code_output) ? result.code_output.join('\n') : result.code_output}</code></p>
-				{/if}
-				{#if result.std_output_list?.some((s: string) => s)}
-					<p>stdout:</p><pre>{result.std_output_list.filter((s: string) => s).join('\n---\n')}</pre>
+
+				{#if result.stdout}
+					<p>stdout:</p><pre>{result.stdout}</pre>
 				{/if}
 			</div>
 		{/if}
@@ -287,7 +327,8 @@
 	.desc { max-height: 80vh; overflow: auto; }
 	.work { display: grid; gap: 0.8rem; }
 	.toolbar .spacer { flex: 1; }
-	textarea { width: 100%; }
+	.result table { width: 100%; table-layout: fixed; }
+	.result td code { overflow-wrap: anywhere; }
 	.result.pass { border-color: var(--good); }
 	.result.fail { border-color: var(--bad); }
 	tr.bad td { color: var(--bad); }

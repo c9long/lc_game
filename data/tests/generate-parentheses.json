@@ -1,0 +1,38 @@
+{
+  "cases": [
+    {
+      "args": [
+        3
+      ],
+      "expected": [
+        "((()))",
+        "(()())",
+        "(())()",
+        "()(())",
+        "()()()"
+      ]
+    },
+    {
+      "args": [
+        1
+      ],
+      "expected": [
+        "()"
+      ]
+    }
+  ],
+  "compare": "unordered",
+  "entry": "generateParenthesis",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "returns": {
+    "type": "list<string>"
+  },
+  "slug": "generate-parentheses",
+  "source": "examples"
+}

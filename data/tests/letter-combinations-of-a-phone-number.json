@@ -1,0 +1,44 @@
+{
+  "cases": [
+    {
+      "args": [
+        "23"
+      ],
+      "expected": [
+        "ad",
+        "ae",
+        "af",
+        "bd",
+        "be",
+        "bf",
+        "cd",
+        "ce",
+        "cf"
+      ]
+    },
+    {
+      "args": [
+        "2"
+      ],
+      "expected": [
+        "a",
+        "b",
+        "c"
+      ]
+    }
+  ],
+  "compare": "unordered",
+  "entry": "letterCombinations",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "digits",
+      "type": "string"
+    }
+  ],
+  "returns": {
+    "type": "list<string>"
+  },
+  "slug": "letter-combinations-of-a-phone-number",
+  "source": "examples"
+}

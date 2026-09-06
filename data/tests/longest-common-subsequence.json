@@ -1,0 +1,43 @@
+{
+  "cases": [
+    {
+      "args": [
+        "abcde",
+        "ace"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "abc",
+        "abc"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "abc",
+        "def"
+      ],
+      "expected": 0
+    }
+  ],
+  "compare": "exact",
+  "entry": "longestCommonSubsequence",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "text1",
+      "type": "string"
+    },
+    {
+      "name": "text2",
+      "type": "string"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "longest-common-subsequence",
+  "source": "examples"
+}

@@ -1,0 +1,52 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          [
+            0,
+            30
+          ],
+          [
+            5,
+            10
+          ],
+          [
+            15,
+            20
+          ]
+        ]
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          [
+            7,
+            10
+          ],
+          [
+            2,
+            4
+          ]
+        ]
+      ],
+      "expected": true
+    }
+  ],
+  "compare": "exact",
+  "entry": "canAttendMeetings",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "intervals",
+      "type": "integer[][]"
+    }
+  ],
+  "returns": {
+    "type": "boolean"
+  },
+  "slug": "meeting-rooms",
+  "source": "examples"
+}

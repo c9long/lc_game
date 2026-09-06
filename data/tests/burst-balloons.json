@@ -1,0 +1,38 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          3,
+          1,
+          5,
+          8
+        ]
+      ],
+      "expected": 167
+    },
+    {
+      "args": [
+        [
+          1,
+          5
+        ]
+      ],
+      "expected": 10
+    }
+  ],
+  "compare": "exact",
+  "entry": "maxCoins",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "burst-balloons",
+  "source": "examples"
+}

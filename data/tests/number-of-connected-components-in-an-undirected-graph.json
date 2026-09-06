@@ -1,0 +1,66 @@
+{
+  "cases": [
+    {
+      "args": [
+        5,
+        [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        5,
+        [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      ],
+      "expected": 1
+    }
+  ],
+  "compare": "exact",
+  "entry": "countComponents",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    },
+    {
+      "name": "edges",
+      "type": "integer[][]"
+    }
+  ],
+  "returns": {
+    "type": "integer"
+  },
+  "slug": "number-of-connected-components-in-an-undirected-graph",
+  "source": "examples"
+}

@@ -1,0 +1,42 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          2,
+          3,
+          1,
+          1,
+          4
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          3,
+          2,
+          1,
+          0,
+          4
+        ]
+      ],
+      "expected": false
+    }
+  ],
+  "compare": "exact",
+  "entry": "canJump",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    }
+  ],
+  "returns": {
+    "type": "boolean"
+  },
+  "slug": "jump-game",
+  "source": "examples"
+}

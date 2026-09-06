@@ -1,0 +1,59 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expected": [
+        1,
+        2,
+        4
+      ]
+    },
+    {
+      "args": [
+        [
+          4,
+          3,
+          2,
+          1
+        ]
+      ],
+      "expected": [
+        4,
+        3,
+        2,
+        2
+      ]
+    },
+    {
+      "args": [
+        [
+          9
+        ]
+      ],
+      "expected": [
+        1,
+        0
+      ]
+    }
+  ],
+  "compare": "exact",
+  "entry": "plusOne",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "digits",
+      "type": "integer[]"
+    }
+  ],
+  "returns": {
+    "type": "integer[]"
+  },
+  "slug": "plus-one",
+  "source": "examples"
+}

@@ -1,0 +1,90 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            4,
+            5,
+            6
+          ],
+          [
+            7,
+            8,
+            9
+          ]
+        ]
+      ],
+      "expected": [
+        1,
+        2,
+        3,
+        6,
+        9,
+        8,
+        7,
+        4,
+        5
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            1,
+            2,
+            3,
+            4
+          ],
+          [
+            5,
+            6,
+            7,
+            8
+          ],
+          [
+            9,
+            10,
+            11,
+            12
+          ]
+        ]
+      ],
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        8,
+        12,
+        11,
+        10,
+        9,
+        5,
+        6,
+        7
+      ]
+    }
+  ],
+  "compare": "exact",
+  "entry": "spiralOrder",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "matrix",
+      "type": "integer[][]"
+    }
+  ],
+  "returns": {
+    "dealloc": true,
+    "size": "size_1 * col_size_1",
+    "type": "list<integer>"
+  },
+  "slug": "spiral-matrix",
+  "source": "examples"
+}

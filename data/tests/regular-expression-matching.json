@@ -1,0 +1,43 @@
+{
+  "cases": [
+    {
+      "args": [
+        "aa",
+        "a"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "aa",
+        "a*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "ab",
+        ".*"
+      ],
+      "expected": true
+    }
+  ],
+  "compare": "exact",
+  "entry": "isMatch",
+  "mode": "plain",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    },
+    {
+      "name": "p",
+      "type": "string"
+    }
+  ],
+  "returns": {
+    "type": "boolean"
+  },
+  "slug": "regular-expression-matching",
+  "source": "examples"
+}
