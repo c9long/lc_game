@@ -64,6 +64,7 @@ Phases 1 to 8 are implemented in one pass: repo hygiene, passkey auth, admin/coo
 
   Changed 2026-09-06: difficulty used to pick only the *kind* of material, never the amount. That made a Hard worth no more than an Easy despite six times the research, and — because Easy problems run out as you climb the tree — it made timber unobtainable while gating the Hut, Granary, Hash Market and Window Mill. Yielding downward keeps every supply line open and makes harder strictly better.
 - Buildings are gated by tree nodes (Hash Market needs Arrays & Hashing unlocked, DP Academy needs 1-D DP unlocked, and so on), and by solve counts for Walls and the Monument. Production is scaled by the node's freshness and by morale, and only accrues on days with at least one solve. Coins buy upgrades and Granary freeze days; grid expansion and cosmetics are future work.
+- **Destroy** (added 2026-09-07) demolishes a building and refunds its **level 1 base cost only**, behind a confirmation dialog. Upgrade materials, Ingots and coins are not refunded, so levelling up stays a commitment while a misplaced building remains a mistake you can walk back.
 - 8x8 grid with adjacency bonuses only. Emoji or SVG tiles.
 
 ### Syntax drills (the Forge)

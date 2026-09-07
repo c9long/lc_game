@@ -163,5 +163,19 @@ if [ "$COINS_AGAIN" = "2" ]; then echo "ok   reloading does not pay production t
 MORALE_ROW=$($W execute lc-game --local --persist-to "$STATE" --json --command "SELECT COUNT(*) AS n FROM game_state WHERE key='morale'" 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s)[0].results;console.log(r.length?r[0].n:0)})')
 if [ "$MORALE_ROW" = "1" ]; then echo "ok   morale state persisted on first load"; else echo "FAIL morale never persisted, so it can never tick"; fail=1; fi
 
+
+# Destroy refunds the level 1 base cost and removes the building. The huts above cost 5 timber each.
+check 401 -X POST -H "content-type: application/json" -d '{"id":"smoke-hut-a"}' "$B/api/city/destroy"
+check 404 -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" -d '{"id":"no-such-building"}' "$B/api/city/destroy"
+TIMBER_BEFORE=$(count_state "SELECT amount FROM resources WHERE kind='timber'")
+check 200 -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" -d '{"id":"smoke-hut-a"}' "$B/api/city/destroy"
+TIMBER_AFTER=$(count_state "SELECT amount FROM resources WHERE kind='timber'")
+LEFT=$(count_state "SELECT COUNT(*) AS n FROM buildings WHERE id='smoke-hut-a'")
+if [ "$((TIMBER_AFTER - TIMBER_BEFORE))" = "5" ] && [ "$LEFT" = "0" ]; then
+  echo "ok   destroy refunded the level 1 cost (timber $TIMBER_BEFORE -> $TIMBER_AFTER) and removed the building"
+else
+  echo "FAIL destroy: timber $TIMBER_BEFORE -> $TIMBER_AFTER (want +5), rows left $LEFT"; fail=1
+fi
+
 if [ "$fail" = 1 ]; then echo "--- dev server log tail"; tail -40 "$LOG"; exit 1; fi
 echo "smoke test passed"

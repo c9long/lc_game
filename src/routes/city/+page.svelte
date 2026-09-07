@@ -9,6 +9,13 @@
 	const essence = $derived(Object.entries(data.resources).filter(([k, v]) => k.startsWith('essence:') && v > 0));
 	const cells = $derived(Array.from({ length: data.size * data.size }, (_, i) => ({ x: i % data.size, y: Math.floor(i / data.size) })));
 
+	/** Demolition is irreversible and refunds only the level 1 cost, so it asks first. */
+	function destroy(b: { id: string; name: string; level: number; refund: Record<string, number> }) {
+		const lost = b.level > 1 ? `\n\nThe ${b.level - 1} upgrade(s) are NOT refunded.` : '';
+		if (!confirm(`Destroy the ${b.name}?\n\nRefunds ${fmtCost(b.refund)}.${lost}`)) return;
+		void post('/api/city/destroy', { id: b.id });
+	}
+
 	async function post(url: string, body: unknown) {
 		busy = true;
 		message = '';
@@ -60,8 +67,14 @@
 				<h3>{b.emoji} {b.name} <span class="muted">level {b.level}</span></h3>
 				{#if b.next}
 					<p>Upgrade: {fmtCost(b.next)}</p>
-					<button class="primary" disabled={busy || !b.canUpgrade} onclick={() => post('/api/city/build', { id: b.id })}>Upgrade</button>
 				{:else}<p class="muted">Max level.</p>{/if}
+				<p class="muted">Destroy refunds the level 1 cost: {fmtCost(b.refund)}{b.level > 1 ? ' — upgrades are not refunded' : ''}</p>
+				<div class="row">
+					{#if b.next}
+						<button class="primary" disabled={busy || !b.canUpgrade} onclick={() => post('/api/city/build', { id: b.id })}>Upgrade</button>
+					{/if}
+					<button class="destructive" disabled={busy} onclick={() => destroy(b)}>Destroy</button>
+				</div>
 			{:else}
 				<h3>Build at ({selected.x}, {selected.y})</h3>
 				<ul class="catalog">

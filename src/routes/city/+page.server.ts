@@ -43,7 +43,7 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 	const buildings = snap.buildings.map((p) => {
 		const kind = BUILDINGS.find((b) => b.id === p.kind)!;
 		const next = p.level < kind.maxLevel ? costAtLevel(kind, p.level + 1) : null;
-		return { ...p, name: kind.name, emoji: kind.emoji, next, canUpgrade: next ? canAfford(snap.resources, next) : false };
+		return { ...p, name: kind.name, emoji: kind.emoji, next, canUpgrade: next ? canAfford(snap.resources, next) : false, refund: costAtLevel(kind, 1) };
 	});
 	return {
 		size: GRID_SIZE,
