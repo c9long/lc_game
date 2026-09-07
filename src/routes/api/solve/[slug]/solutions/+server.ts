@@ -21,10 +21,10 @@ export const GET: RequestHandler = async (event) => {
 
 	const state = await db.select({ n: problemState.solveCount }).from(problemState).where(eq(problemState.slug, slug)).get();
 	if (!(state?.n ?? 0)) {
-		await recordSolutionView(db, slug, localDate(new Date(), user.timezone), problem.tags);
+		await recordSolutionView(db, slug, localDate(new Date(), user.timezone));
 	} else {
 		// Solved before: still a view for SRS purposes, but free.
-		await recordSolutionView(db, slug, localDate(new Date(), user.timezone), []);
+		await recordSolutionView(db, slug, localDate(new Date(), user.timezone));
 	}
 
 	try {

@@ -71,7 +71,7 @@ Phases 1 to 8 are implemented in one pass: repo hygiene, passkey auth, admin/coo
 
 ### Solutions
 
-Three tabs on the solve page: the NeetCode reference solution vendored from the MIT-licensed repo (served from `static/solutions/`), LeetCode community solutions filtered to the current language, and the editorial (in-app when free, a link when Premium). Opening the drawer before the problem is accepted costs 2 essence drawn from the problem's topic tags and marks that day's solve as assisted. After acceptance it is free. A "Last accepted" button loads your previous accepted code into the editor for comparison.
+Three tabs on the solve page: the NeetCode reference solution vendored from the MIT-licensed repo (served from `static/solutions/`), LeetCode community solutions filtered to the current language, and the editorial (in-app when free, a link when Premium). Opening the drawer is free (changed 2026-09-06: it used to cost 2 essence, which taxed the thing that actually teaches you). Opening it before a **refresh** is accepted still marks that solve assisted, halving its award and resetting its interval, since a repetition you needed help with has not stuck. A first solve carries no penalty either way. A "Last accepted" button loads your previous accepted code into the editor for comparison.
 
 ## Architecture
 

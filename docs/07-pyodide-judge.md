@@ -62,7 +62,7 @@ Runs on your machine under CPython 3, never in production. The **oracle** is the
    ```
 6. **Sanity gate:** where the problem statement supplies an expected output for an example, the oracle must reproduce it. A mismatch fails that slug rather than baking in a wrong expectation.
 
-Reference solutions are **never shipped to the browser for judging** — only inputs and expected outputs. (The solutions drawer serves them deliberately, gated by its essence cost, as before.)
+Reference solutions are **never shipped to the browser for judging** — only inputs and expected outputs. (The solutions drawer serves them deliberately, and viewing is free.)
 
 ## Runtime (browser)
 

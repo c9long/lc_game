@@ -1,13 +1,11 @@
 import { json } from '@sveltejs/kit';
-import { and, eq, gte, sql } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import type { Db } from './db';
-import { attempts, resources, solutionViews } from './db/schema';
+import { attempts, solutionViews } from './db/schema';
 import { randomId } from './crypto';
 import { LeetCodeError } from './leetcode/client';
 import { markLcStatus } from './leetcode/auth';
 import { LANG_BY_SLUG } from '$lib/langs';
-
-export const SOLUTION_PEEK_COST = 2;
 
 export function validLang(lang: unknown): lang is string {
 	return typeof lang === 'string' && LANG_BY_SLUG.has(lang);
@@ -49,8 +47,15 @@ export async function upsertDraft(db: Db, slug: string, lang: string, code: stri
 	else await db.insert(attempts).values({ id: randomId(), slug, lang, kind: 'draft', code, createdAt: now });
 }
 
-/** Records that solutions were viewed today (once) and charges essence from the problem's tags, if available. */
-export async function recordSolutionView(db: Db, slug: string, date: string, tags: string[]): Promise<void> {
+/** Records that solutions were viewed today, once per problem per day.
+ *
+ *  Viewing is free. It used to cost 2 essence of the problem's topics, which was meant to make
+ *  peeking a decision rather than a reflex — but for someone learning the material the first time,
+ *  a solution is the teaching, and taxing it discourages exactly the thing that helps. The record
+ *  is still kept: a REFRESH solved after peeking still counts as assisted, since a repetition you
+ *  needed help with genuinely has not stuck. First solves carry no penalty either way.
+ */
+export async function recordSolutionView(db: Db, slug: string, date: string): Promise<void> {
 	const existing = await db
 		.select({ slug: solutionViews.slug })
 		.from(solutionViews)
@@ -58,17 +63,5 @@ export async function recordSolutionView(db: Db, slug: string, date: string, tag
 		.get();
 	if (existing) return;
 	await db.insert(solutionViews).values({ slug, date, createdAt: new Date() });
-	let remaining = SOLUTION_PEEK_COST;
-	for (const tag of tags) {
-		if (remaining <= 0) break;
-		const kind = `essence:${tag}`;
-		const row = await db.select().from(resources).where(eq(resources.kind, kind)).get();
-		const take = Math.min(remaining, row?.amount ?? 0);
-		if (take <= 0) continue;
-		await db
-			.update(resources)
-			.set({ amount: sql`${resources.amount} - ${take}` })
-			.where(and(eq(resources.kind, kind), gte(resources.amount, take)));
-		remaining -= take;
-	}
 }
+

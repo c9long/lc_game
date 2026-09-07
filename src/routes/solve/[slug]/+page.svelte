@@ -288,7 +288,7 @@
 		<div class="card">
 			<div class="row">
 				<strong>Solutions</strong>
-				{#if !data.solved && !data.viewedToday}<span class="muted">Opening before you solve costs 2 essence and marks a refresh as assisted.</span>{/if}
+				{#if !data.solved && !data.viewedToday}<span class="muted">Free to open. On a refresh it marks the solve as assisted, so it comes back sooner.</span>{/if}
 				<button onclick={() => openDrawer('reference')} disabled={drawerBusy}>NeetCode reference</button>
 				<button onclick={() => openDrawer('community')} disabled={drawerBusy}>Community ({langMeta.name})</button>
 				<button onclick={() => openDrawer('editorial')} disabled={drawerBusy}>Editorial</button>
