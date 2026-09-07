@@ -5,7 +5,7 @@ import { NODES, NODE_ORDER, PROBLEM_BY_SLUG, PROBLEMS, problemsForNode } from '.
 import { computeTree, dueRefreshes, isServable, nextNewProblems, type ProblemProgress } from './tree';
 import { computeAward } from './awards';
 import { WEEKLY_BUDGET, advanceMorale, freezeCost, freezePurchasesThisWeek, weeklyCount } from './budget';
-import { BUILDINGS, baseProduction, canAfford, costAtLevel, dailyCoins, gateSatisfied, settleProduction } from './city';
+import { BUILDINGS, baseProduction, buildingYield, canAfford, costAtLevel, dailyCoins, gateSatisfied, settleProduction } from './city';
 import { DRILL_INTERVALS, afterDrill, buildDrillSet, checkAnswer, ingotsFor, normalizeOutput, type Drill } from './drills';
 
 const DAY = 86_400_000;
@@ -377,5 +377,44 @@ describe('difficulty yields', () => {
 		const refresh = computeAward({ ...base, difficulty: 'Medium', prev: { solveCount: 1, lastLang: 'python3' } });
 		expect(refresh.multiplier).toBe(0.5);
 		expect(refresh.resources.timber).toBeGreaterThanOrEqual(1);
+	});
+});
+
+describe('per-building yield', () => {
+	const tree = computeTree({ progress: new Map(), research: new Map(), hasPremium: false, now: t0 });
+
+	it('breaks a building down into the factors that produce its number', () => {
+		const hut = [{ id: 'a', kind: 'hut', x: 0, y: 0, level: 2 }];
+		const y = buildingYield(hut[0], hut, tree, 100);
+		expect(y).toMatchObject({ base: 2, freshness: 1, adjacency: 1, beforeMorale: 2, perDay: 2 });
+	});
+
+	it('applies morale and the road bonus', () => {
+		const placed = [
+			{ id: 'a', kind: 'hut', x: 0, y: 0, level: 1 },
+			{ id: 'r', kind: 'graph-roads', x: 1, y: 0, level: 1 }
+		];
+		const y = buildingYield(placed[0], placed, tree, 50);
+		expect(y.adjacency).toBe(1.25);
+		expect(y.beforeMorale).toBe(1.25);
+		expect(y.perDay).toBe(0.625);
+	});
+
+	it('reports nothing for a building that produces no coins', () => {
+		const placed = [{ id: 'g', kind: 'granary', x: 0, y: 0, level: 1 }];
+		expect(buildingYield(placed[0], placed, tree, 100).perDay).toBe(0);
+	});
+
+	it('sums to the city total, which is the same formula', () => {
+		// baseProduction sums buildingYield, so a drift between the tile panel and the city header
+		// is impossible by construction. This pins that they stay wired together.
+		const placed = [
+			{ id: 'a', kind: 'hut', x: 0, y: 0, level: 1 },
+			{ id: 'b', kind: 'hut', x: 3, y: 3, level: 2 },
+			{ id: 'r', kind: 'graph-roads', x: 1, y: 0, level: 1 }
+		];
+		const summed = placed.reduce((n, b) => n + buildingYield(b, placed, tree).beforeMorale, 0);
+		expect(baseProduction(placed, tree)).toBeCloseTo(summed);
+		expect(dailyCoins(placed, tree, 100)).toBe(Math.round(summed));
 	});
 });

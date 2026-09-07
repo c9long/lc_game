@@ -97,25 +97,64 @@ export function inBounds(x: number, y: number, size = GRID_SIZE): boolean {
 }
 
 /** Coins produced by the city for one active day, before the morale factor. */
-export function baseProduction(placed: PlacedBuilding[], tree: Map<string, NodeView>): number {
+export const ROAD_ADJACENCY_BONUS = 1.25;
+
+/** What one building contributes per active day, and where the number comes from. */
+export interface BuildingYield {
+	/** The building's rate at level 1, times its level, before any scaling. */
+	base: number;
+	/** The node's freshness, or 1 for a building not tied to a node. */
+	freshness: number;
+	/** ROAD_ADJACENCY_BONUS when it neighbours Graph Roads, else 1. */
+	adjacency: number;
+	/** Coins per active day before morale is applied. */
+	beforeMorale: number;
+	/** Coins per active day after morale. Unrounded: the city total is rounded once after summing,
+	 *  so per-building figures will not always add up to it exactly. */
+	perDay: number;
+}
+
+/**
+ * The per-building half of the production formula.
+ *
+ * baseProduction() sums this rather than repeating the arithmetic, so the breakdown shown on a
+ * tile and the city's total can never drift apart.
+ */
+export function buildingYield(
+	b: PlacedBuilding,
+	placed: PlacedBuilding[],
+	tree: Map<string, NodeView>,
+	morale = 100
+): BuildingYield {
+	const kind = BUILDING_BY_ID.get(b.kind);
+	const none = { base: 0, freshness: 1, adjacency: 1, beforeMorale: 0, perDay: 0 };
+	if (!kind || kind.coins === 0) return none;
+
 	const roads = new Set(
-		placed.filter((b) => BUILDING_BY_ID.get(b.kind)?.effect === 'adjacency').map((b) => `${b.x},${b.y}`)
+		placed.filter((p) => BUILDING_BY_ID.get(p.kind)?.effect === 'adjacency').map((p) => `${p.x},${p.y}`)
 	);
+	const neighbours: [number, number][] = [
+		[b.x + 1, b.y],
+		[b.x - 1, b.y],
+		[b.x, b.y + 1],
+		[b.x, b.y - 1]
+	];
+	const base = kind.coins * b.level;
+	const freshness = kind.node ? (tree.get(kind.node)?.freshness ?? 1) : 1;
+	const adjacency = neighbours.some(([x, y]) => roads.has(`${x},${y}`)) ? ROAD_ADJACENCY_BONUS : 1;
+	const beforeMorale = base * freshness * adjacency;
+	return {
+		base,
+		freshness,
+		adjacency,
+		beforeMorale,
+		perDay: beforeMorale * (Math.max(0, Math.min(100, morale)) / 100)
+	};
+}
+
+export function baseProduction(placed: PlacedBuilding[], tree: Map<string, NodeView>): number {
 	let total = 0;
-	for (const b of placed) {
-		const kind = BUILDING_BY_ID.get(b.kind);
-		if (!kind || kind.coins === 0) continue;
-		let coins = kind.coins * b.level;
-		if (kind.node) coins *= tree.get(kind.node)?.freshness ?? 1;
-		const adjacent = [
-			[b.x + 1, b.y],
-			[b.x - 1, b.y],
-			[b.x, b.y + 1],
-			[b.x, b.y - 1]
-		].some(([x, y]) => roads.has(`${x},${y}`));
-		if (adjacent) coins *= 1.25;
-		total += coins;
-	}
+	for (const b of placed) total += buildingYield(b, placed, tree).beforeMorale;
 	return total;
 }
 

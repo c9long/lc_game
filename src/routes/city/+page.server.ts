@@ -4,7 +4,7 @@ import { requireUser } from '$lib/server/guard';
 import { getState, loadSnapshot } from '$lib/server/game/state';
 import { freezeCost as freezeCostFor, freezePurchasesThisWeek, type FreezePurchases } from '$lib/game/budget';
 import { weekStartOf } from '$lib/game/dates';
-import { BUILDINGS, GRID_SIZE, canAfford, costAtLevel, dailyCoins, gateSatisfied, hasEffect } from '$lib/game/city';
+import { BUILDINGS, GRID_SIZE, buildingYield, canAfford, costAtLevel, dailyCoins, gateSatisfied, hasEffect } from '$lib/game/city';
 import { NODE_BY_ID } from '$lib/game/curriculum';
 
 
@@ -43,7 +43,19 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 	const buildings = snap.buildings.map((p) => {
 		const kind = BUILDINGS.find((b) => b.id === p.kind)!;
 		const next = p.level < kind.maxLevel ? costAtLevel(kind, p.level + 1) : null;
-		return { ...p, name: kind.name, emoji: kind.emoji, next, canUpgrade: next ? canAfford(snap.resources, next) : false, refund: costAtLevel(kind, 1) };
+		return {
+			...p,
+			name: kind.name,
+			emoji: kind.emoji,
+			next,
+			canUpgrade: next ? canAfford(snap.resources, next) : false,
+			refund: costAtLevel(kind, 1),
+			rate: kind.coins,
+			hasNode: Boolean(kind.node),
+			effect: kind.effect ?? null,
+			// Computed with the same function the city total sums, so the two always agree.
+			yield: buildingYield(p, snap.buildings, snap.tree, snap.morale.morale)
+		};
 	});
 	return {
 		size: GRID_SIZE,

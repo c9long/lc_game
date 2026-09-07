@@ -38,6 +38,8 @@
 		}
 	}
 	const fmtCost = formatCost;
+	/** Per-building output is fractional once freshness or morale are below full. */
+	const fmtCoins = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(2).replace(/\.?0+$/, ''));
 </script>
 
 <h1>City</h1>
@@ -71,6 +73,20 @@
 			{@const b = at(selected.x, selected.y)}
 			{#if b}
 				<h3>{b.emoji} {b.name} <span class="muted">level {b.level}</span></h3>
+				{#if b.rate > 0}
+					<p class="yield">🪙 <strong>{fmtCoins(b.yield.perDay)}</strong> coins per active day</p>
+					<p class="muted breakdown">
+						{b.rate} base × level {b.level} = {fmtCoins(b.yield.base)}
+						{#if b.hasNode}<br />× freshness {Math.round(b.yield.freshness * 100)}%{/if}
+						{#if b.yield.adjacency > 1}<br />× roads ×{b.yield.adjacency}{/if}
+						<br />× morale {Math.round(data.morale.morale)}%
+					</p>
+					{#if b.hasNode && b.yield.freshness < 1}
+						<p class="muted">Refresh this node's overdue problems to restore full output.</p>
+					{/if}
+				{:else}
+					<p class="muted">Produces no coins{b.effect ? ` — its value is its effect (${b.effect})` : ''}.</p>
+				{/if}
 				{#if b.next}
 					<p>Upgrade: {fmtCost(b.next)}</p>
 				{:else}<p class="muted">Max level.</p>{/if}
@@ -123,6 +139,8 @@
 	.cell { aspect-ratio: 1; padding: 0; border-radius: 6px; background: #1b2a1e; border: 1px solid #263a2a; position: relative; font-size: clamp(14px, 3vw, 28px); }
 	.cell:hover { border-color: var(--accent); }
 	.cell.selected { outline: 2px solid var(--accent); }
+	.yield { margin: 0.2rem 0; }
+	.breakdown { font-size: 0.85rem; line-height: 1.5; }
 	.lvl { position: absolute; right: 3px; bottom: 1px; font-size: 0.6rem; color: var(--muted); }
 	.catalog { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; max-height: 70vh; overflow: auto; }
 	.catalog li { border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
