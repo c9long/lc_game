@@ -159,7 +159,7 @@ Two mechanisms, both supplying only *inputs* — expected outputs still come fro
 
 **How the generators are validated, and why `verify-tests.py` is not enough.** That script re-runs the same reference solution that produced the expectations, so a generator that violates a precondition enshrines garbage and still "verifies". The failure mode that matters is *rejecting correct code*. So generators are checked against **independent implementations** — brute force, deliberately written differently from NeetCode's — which must pass 100%: an unsorted array fed to a binary search, or a two-sum with two answers, fails immediately. 19 such solutions pass every generated case, and the cheats the thin suites used to accept now fail: the naive comma-join encoder (26/42), a never-evicting `LRUCache` (0/3), `search == startsWith` (0/2), constant answers for `jump-game-ii` (17/42) and `last-stone-weight` (14/42), and a `TimeMap` that ignores timestamps (1/2).
 
-**113 of 150 problems still have example cases only** — roughly two apiece, weak enough to accept a wrong solution. Generators are added in tree order, so the nodes being worked on are the best covered.
+**See [08-test-hardening.md](08-test-hardening.md)** for the audit of suite strength, opened after a suite was found excluding its own edge cases. **113 of 150 problems still have example cases only** — roughly two apiece, weak enough to accept a wrong solution. Generators are added in tree order, so the nodes being worked on are the best covered.
 
 ## Risks
 

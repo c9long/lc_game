@@ -31,7 +31,7 @@
   "_compare_extra_comment": [
     "powx-n returns a float, and correct algorithms disagree in the last bits; LeetCode accepts a",
     "tolerance rather than exact equality, so 'approx' does too.",
-    "longest-palindromic-substring has ties — several palindromes of the maximum length — and any",
+    "longest-palindromic-substring has ties \u2014 several palindromes of the maximum length \u2014 and any",
     "of them is correct, so only the length is compared."
   ],
   "_skip_comment": [
@@ -56,7 +56,7 @@
   },
   "_extra_comment": [
     "Hand-written extra INPUTS (phase D). Expected outputs are still produced by the oracle, so",
-    "these only have to describe a case the examples miss — no answers are written by hand.",
+    "these only have to describe a case the examples miss \u2014 no answers are written by hand.",
     "Mostly design problems, whose single published example exercises almost nothing: LeetCode's",
     "LRUCache example never forces an eviction that is later read back, and the Trie example never",
     "searches a strict prefix, so `search == startsWith` passes it.",
@@ -64,34 +64,409 @@
   ],
   "extra": {
     "lru-cache": [
-      [["LRUCache", "put", "put", "put", "get", "get", "get"], [[2], [1, 1], [2, 2], [3, 3], [1], [2], [3]]],
-      [["LRUCache", "put", "get", "put", "put", "get", "get"], [[1], [1, 1], [1], [2, 2], [1, 3], [2], [1]]]
+      [
+        [
+          "LRUCache",
+          "put",
+          "put",
+          "put",
+          "get",
+          "get",
+          "get"
+        ],
+        [
+          [
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ]
+        ]
+      ],
+      [
+        [
+          "LRUCache",
+          "put",
+          "get",
+          "put",
+          "put",
+          "get",
+          "get"
+        ],
+        [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2
+          ],
+          [
+            1
+          ]
+        ]
+      ]
     ],
     "min-stack": [
-      [["MinStack", "push", "push", "push", "getMin", "pop", "getMin", "pop", "getMin"], [[], [2], [0], [3], [], [], [], [], []]],
-      [["MinStack", "push", "push", "pop", "top", "getMin"], [[], [-1], [-1], [], [], []]]
+      [
+        [
+          "MinStack",
+          "push",
+          "push",
+          "push",
+          "getMin",
+          "pop",
+          "getMin",
+          "pop",
+          "getMin"
+        ],
+        [
+          [],
+          [
+            2
+          ],
+          [
+            0
+          ],
+          [
+            3
+          ],
+          [],
+          [],
+          [],
+          [],
+          []
+        ]
+      ],
+      [
+        [
+          "MinStack",
+          "push",
+          "push",
+          "pop",
+          "top",
+          "getMin"
+        ],
+        [
+          [],
+          [
+            -1
+          ],
+          [
+            -1
+          ],
+          [],
+          [],
+          []
+        ]
+      ]
     ],
     "implement-trie-prefix-tree": [
-      [["Trie", "insert", "search", "search", "startsWith", "startsWith"], [[], ["app"], ["ap"], ["app"], ["ap"], ["apple"]]]
+      [
+        [
+          "Trie",
+          "insert",
+          "search",
+          "search",
+          "startsWith",
+          "startsWith"
+        ],
+        [
+          [],
+          [
+            "app"
+          ],
+          [
+            "ap"
+          ],
+          [
+            "app"
+          ],
+          [
+            "ap"
+          ],
+          [
+            "apple"
+          ]
+        ]
+      ]
     ],
     "design-add-and-search-words-data-structure": [
-      [["WordDictionary", "addWord", "search", "search", "search", "search"], [[], ["ab"], ["a"], [".."], ["a."], ["..."]]]
+      [
+        [
+          "WordDictionary",
+          "addWord",
+          "search",
+          "search",
+          "search",
+          "search"
+        ],
+        [
+          [],
+          [
+            "ab"
+          ],
+          [
+            "a"
+          ],
+          [
+            ".."
+          ],
+          [
+            "a."
+          ],
+          [
+            "..."
+          ]
+        ]
+      ]
     ],
     "time-based-key-value-store": [
-      [["TimeMap", "get", "set", "get", "get", "set", "get"], [[], ["k", 1], ["k", "v1", 5], ["k", 3], ["k", 7], ["k", "v2", 5], ["k", 5]]]
+      [
+        [
+          "TimeMap",
+          "get",
+          "set",
+          "get",
+          "get",
+          "set",
+          "get"
+        ],
+        [
+          [],
+          [
+            "k",
+            1
+          ],
+          [
+            "k",
+            "v1",
+            5
+          ],
+          [
+            "k",
+            3
+          ],
+          [
+            "k",
+            7
+          ],
+          [
+            "k",
+            "v2",
+            5
+          ],
+          [
+            "k",
+            5
+          ]
+        ]
+      ]
     ],
     "find-median-from-data-stream": [
-      [["MedianFinder", "addNum", "findMedian", "addNum", "findMedian", "addNum", "findMedian", "addNum", "findMedian"], [[], [5], [], [1], [], [3], [], [-2], []]]
+      [
+        [
+          "MedianFinder",
+          "addNum",
+          "findMedian",
+          "addNum",
+          "findMedian",
+          "addNum",
+          "findMedian",
+          "addNum",
+          "findMedian"
+        ],
+        [
+          [],
+          [
+            5
+          ],
+          [],
+          [
+            1
+          ],
+          [],
+          [
+            3
+          ],
+          [],
+          [
+            -2
+          ],
+          []
+        ]
+      ]
     ],
     "kth-largest-element-in-a-stream": [
-      [["KthLargest", "add", "add", "add", "add"], [[1, []], [-1], [-5], [7], [0]]]
+      [
+        [
+          "KthLargest",
+          "add",
+          "add",
+          "add",
+          "add"
+        ],
+        [
+          [
+            1,
+            []
+          ],
+          [
+            -1
+          ],
+          [
+            -5
+          ],
+          [
+            7
+          ],
+          [
+            0
+          ]
+        ]
+      ]
     ],
     "detect-squares": [
-      [["DetectSquares", "add", "add", "add", "count", "add", "count"], [[], [[0, 0]], [[0, 2]], [[2, 0]], [[2, 2]], [[2, 2]], [[2, 2]]]]
+      [
+        [
+          "DetectSquares",
+          "add",
+          "add",
+          "add",
+          "count",
+          "add",
+          "count"
+        ],
+        [
+          [],
+          [
+            [
+              0,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              2,
+              2
+            ]
+          ],
+          [
+            [
+              2,
+              2
+            ]
+          ],
+          [
+            [
+              2,
+              2
+            ]
+          ]
+        ]
+      ]
     ],
     "design-twitter": [
-      [["Twitter", "postTweet", "postTweet", "getNewsFeed", "follow", "getNewsFeed", "unfollow", "getNewsFeed"], [[], [1, 1], [1, 2], [1], [2, 1], [2], [2, 1], [2]]]
+      [
+        [
+          "Twitter",
+          "postTweet",
+          "postTweet",
+          "getNewsFeed",
+          "follow",
+          "getNewsFeed",
+          "unfollow",
+          "getNewsFeed"
+        ],
+        [
+          [],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2
+          ]
+        ]
+      ]
     ]
   },
-  "skip": {}
+  "skip": {},
+  "_validate_comment": [
+    "Problems where more than one answer is correct: repeated values in two-sum, tied frequencies,",
+    "several valid topological orders. Generation used to reject those inputs to keep one expected",
+    "answer meaningful, which deleted the hardest cases from the suite entirely. These are judged by",
+    "a validator in driver.py (VALIDATORS) that checks the answer is correct, not that it matches."
+  ],
+  "validate": {
+    "two-sum": "two-sum",
+    "two-sum-ii-input-array-is-sorted": "two-sum-ii",
+    "top-k-frequent-elements": "top-k-frequent",
+    "k-closest-points-to-origin": "k-closest",
+    "gas-station": "gas-station",
+    "course-schedule-ii": "course-order",
+    "alien-dictionary": "alien-order"
+  }
 }

@@ -166,17 +166,18 @@ def _valid_anagram(rng):
 
 @generator("two-sum")
 def _two_sum(rng):
+    # A narrow value range so duplicates are COMMON. This used to reject any draw with a second
+    # valid pair, which is the same thing as rejecting duplicates, so the hardest inputs never
+    # appeared. The validator accepts any correct pair, so ambiguity is no longer a problem.
     n = rng.randint(2, 20)
-    nums = distinct_ints(rng, n, -200, 200)
-    if nums is None:
-        return None
+    if rng.random() < 0.35:
+        v = rng.randint(-12, 12)                     # force the answer to be a pair of equal values
+        nums = ints(rng, n - 2, -12, 12) + [v, v]
+        rng.shuffle(nums)
+        return [nums, 2 * v]
+    nums = ints(rng, n, -12, 12)
     i, j = rng.sample(range(n), 2)
-    target = nums[i] + nums[j]
-    # LeetCode guarantees exactly one answer; a second pair would make the expectation arbitrary.
-    pairs = sum(
-        1 for a in range(n) for b in range(a + 1, n) if nums[a] + nums[b] == target
-    )
-    return None if pairs != 1 else [nums, target]
+    return [nums, nums[i] + nums[j]]
 
 
 @generator("group-anagrams")
@@ -192,15 +193,16 @@ def _group_anagrams(rng):
 
 @generator("top-k-frequent-elements")
 def _top_k_frequent(rng):
-    # Ties make the expected answer ambiguous, so frequencies are kept distinct.
-    values = distinct_ints(rng, rng.randint(1, 6), -20, 20)
-    if values is None:
-        return None
-    freqs = rng.sample(range(1, 12), len(values))
-    nums = [v for v, f in zip(values, freqs) for _ in range(f)]
-    rng.shuffle(nums)
-    k = rng.randint(1, len(values))
-    if len(set(freqs[:k])) != k or (k < len(values) and sorted(freqs)[-k] == sorted(freqs)[-k - 1]):
+    # "It is guaranteed that the answer is unique", so the k-th and (k+1)-th frequencies must
+    # differ; anything else is an input the problem promises will not occur. Ties BELOW the cut are
+    # allowed, which the old generator forbade by making every frequency distinct.
+    nums = ints(rng, rng.randint(1, 20), -6, 6)
+    counts = {}
+    for n in nums:
+        counts[n] = counts.get(n, 0) + 1
+    k = rng.randint(1, len(counts))
+    ranked = sorted(counts.values(), reverse=True)
+    if k < len(ranked) and ranked[k - 1] == ranked[k]:
         return None
     return [nums, k]
 
@@ -241,12 +243,16 @@ def _valid_palindrome(rng):
 
 @generator("two-sum-ii-input-array-is-sorted")
 def _two_sum_ii(rng):
+    # Duplicates are the whole point here: a solution that refuses to pair a value with an equal
+    # value passed 43/43 while these were being filtered out.
     n = rng.randint(2, 18)
-    nums = sorted(ints(rng, n, -100, 100))
+    if rng.random() < 0.35:
+        v = rng.randint(-12, 12)                     # force the answer to be a pair of equal values
+        nums = sorted(ints(rng, n - 2, -12, 12) + [v, v])
+        return [nums, 2 * v]
+    nums = sorted(ints(rng, n, -12, 12))
     i, j = sorted(rng.sample(range(n), 2))
-    target = nums[i] + nums[j]
-    pairs = sum(1 for a in range(n) for b in range(a + 1, n) if nums[a] + nums[b] == target)
-    return None if pairs != 1 else [nums, target]
+    return [nums, nums[i] + nums[j]]
 
 
 @generator("3sum")
@@ -659,15 +665,10 @@ def _course_schedule(rng):
 
 @generator("course-schedule-ii")
 def _course_schedule_ii(rng):
-    # A valid order is not unique in general, and exact comparison would reject a correct
-    # alternative, so prerequisites are built as a chain, which pins the order down to one.
-    n = rng.randint(1, 7)
-    order = list(range(n))
-    rng.shuffle(order)
-    prereqs = [[order[i + 1], order[i]] for i in range(n - 1)]
-    if rng.random() < 0.25 and n >= 2:
-        prereqs.append([order[0], order[-1]])       # introduces a cycle: answer becomes []
-    return [n, prereqs]
+    # Arbitrary prerequisite graphs, not just chains. The validator checks the returned ordering
+    # respects every edge, so the many valid orders of a wide graph are all accepted.
+    n = rng.randint(1, 8)
+    return [n, _distinct_edges(rng, n, rng.randint(0, n + 3), directed=True)]
 
 
 @generator("number-of-connected-components-in-an-undirected-graph")
@@ -734,12 +735,16 @@ def _word_ladder(rng):
 
 @generator("alien-dictionary")
 def _alien_dictionary(rng):
-    # Several orders can satisfy a partial constraint set, and exact comparison would reject a
-    # correct alternative. Single-letter words in the true order pin it to exactly one.
-    letters = rng.sample(string.ascii_lowercase[:8], rng.randint(1, 6))
-    words = [c for c in letters]
-    if rng.random() < 0.25 and len(letters) >= 2:
-        words = words + [words[0]]                  # trailing repeat makes it invalid: answer ""
+    # Real multi-letter word lists, not just single letters. Words are sorted by a secret alphabet
+    # so the input is satisfiable, then sometimes perturbed to contradict itself. The validator
+    # accepts any ordering consistent with the words, so partial constraints are fine.
+    letters = rng.sample(string.ascii_lowercase[:6], rng.randint(1, 5))
+    rank = {c: i for i, c in enumerate(letters)}
+    words = [word(rng, rng.randint(1, 3), "".join(letters)) for _ in range(rng.randint(1, 6))]
+    words.sort(key=lambda w: [rank[c] for c in w])
+    if rng.random() < 0.3 and len(words) > 1:
+        i = rng.randrange(len(words) - 1)
+        words[i], words[i + 1] = words[i + 1], words[i]
     return [words]
 
 
@@ -992,21 +997,9 @@ def _jump_game(rng):
 @generator("gas-station")
 def _gas_station(rng):
     n = rng.randint(1, 10)
-    gas, cost = ints(rng, n, 0, 15), ints(rng, n, 0, 15)
-    # "If there exists a solution, it is guaranteed to be unique." Random gas/cost breaks that
-    # often, and then the expectation is whichever start the oracle happens to find, which fails
-    # correct solutions that find the other one. Draws with two valid starts are rejected.
-    starts = 0
-    for s in range(n):
-        tank = 0
-        for k in range(n):
-            i = (s + k) % n
-            tank += gas[i] - cost[i]
-            if tank < 0:
-                break
-        else:
-            starts += 1
-    return None if starts > 1 else [gas, cost]
+    # Several valid starting stations are fine now: the validator checks that the station returned
+    # actually completes the circuit, rather than matching whichever one the oracle found.
+    return [ints(rng, n, 0, 15), ints(rng, n, 0, 15)]
 
 
 @generator("hand-of-straights")
@@ -1029,18 +1022,9 @@ def _partition_labels(rng):
 
 @generator("k-closest-points-to-origin")
 def _k_closest(rng):
-    # Distinct distances, otherwise which of the tied points is returned is arbitrary.
-    seen, pts = set(), []
-    for _ in range(60):
-        if len(pts) >= rng.randint(1, 7) and pts:
-            break
-        x, y = rng.randint(-12, 12), rng.randint(-12, 12)
-        d = x * x + y * y
-        if d in seen:
-            continue
-        seen.add(d)
-        pts.append([x, y])
-    return None if not pts else [pts, rng.randint(1, len(pts))]
+    # Tied and repeated points are deliberate now; the validator accepts any k of the closest.
+    pts = [[rng.randint(-6, 6), rng.randint(-6, 6)] for _ in range(rng.randint(1, 8))]
+    return [pts, rng.randint(1, len(pts))]
 
 
 @generator("kth-largest-element-in-an-array")

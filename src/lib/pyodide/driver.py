@@ -369,6 +369,153 @@ def adapt_codec_tree(ns, spec, raw_args):
     return from_tree(codec.deserialize(data))
 
 
+# ---------- validators ----------
+#
+# Some problems accept more than one correct answer: two-sum with repeated values, a tie in
+# top-k-frequent, several valid topological orders. Generation used to REJECT those inputs so a
+# single expected output stayed meaningful — which silently deleted the hardest cases from every
+# suite. A solution that could not pair equal values passed two-sum-ii 43/43.
+#
+# So instead of comparing to one blessed answer, these check whether the answer given is correct.
+# `expected` stays in the file as the oracle's answer, for display when a case fails.
+
+
+def _pair_indices(args, actual, offset, ordered):
+    nums, target = args[0], args[1]
+    if not isinstance(actual, (list, tuple)) or len(actual) != 2:
+        return False
+    try:
+        i, j = int(actual[0]) - offset, int(actual[1]) - offset
+    except (TypeError, ValueError):
+        return False
+    if ordered and not i < j:
+        return False
+    if i == j or not (0 <= i < len(nums) and 0 <= j < len(nums)):
+        return False
+    return nums[i] + nums[j] == target
+
+
+def validate_two_sum(args, actual, expected):
+    """Any pair of distinct indices summing to the target, in either order."""
+    return _pair_indices(args, actual, offset=0, ordered=False)
+
+
+def validate_two_sum_ii(args, actual, expected):
+    """One-indexed, and the problem requires index1 < index2."""
+    return _pair_indices(args, actual, offset=1, ordered=True)
+
+
+def validate_top_k_frequent(args, actual, expected):
+    """Any k values whose frequencies are the k highest; ties may be broken either way."""
+    nums, k = args[0], args[1]
+    if not isinstance(actual, (list, tuple)) or len(actual) != k or len(set(actual)) != k:
+        return False
+    counts = {}
+    for n in nums:
+        counts[n] = counts.get(n, 0) + 1
+    if any(v not in counts for v in actual):
+        return False
+    cutoff = sorted(counts.values(), reverse=True)[k - 1]
+    return all(counts[v] >= cutoff for v in actual)
+
+
+def validate_k_closest(args, actual, expected):
+    """Any k of the input points whose distances are the k smallest."""
+    points, k = args[0], args[1]
+    if not isinstance(actual, (list, tuple)) or len(actual) != k:
+        return False
+    dist = lambda p: p[0] * p[0] + p[1] * p[1]
+    remaining = [list(p) for p in points]
+    for p in actual:
+        q = list(p)
+        if q not in remaining:
+            return False
+        remaining.remove(q)
+    cutoff = sorted(dist(p) for p in points)[k - 1]
+    return all(dist(p) <= cutoff for p in actual)
+
+
+def validate_gas_station(args, actual, expected):
+    """Any starting station that completes the circuit, or -1 when none can."""
+    gas, cost = args[0], args[1]
+    n = len(gas)
+
+    def completes(start):
+        tank = 0
+        for step in range(n):
+            i = (start + step) % n
+            tank += gas[i] - cost[i]
+            if tank < 0:
+                return False
+        return True
+
+    if actual == -1:
+        return not any(completes(s) for s in range(n))
+    if not isinstance(actual, int) or not 0 <= actual < n:
+        return False
+    return completes(actual)
+
+
+def validate_course_order(args, actual, expected):
+    """Any ordering that respects every prerequisite, or [] when a cycle makes it impossible."""
+    n, prereqs = args[0], args[1]
+    if actual == []:
+        # Only correct when no valid ordering exists: run Kahn's to find out.
+        indeg = [0] * n
+        adj = {i: [] for i in range(n)}
+        for a, b in prereqs:
+            adj[b].append(a)
+            indeg[a] += 1
+        queue = [i for i in range(n) if indeg[i] == 0]
+        seen = 0
+        while queue:
+            node = queue.pop()
+            seen += 1
+            for m in adj[node]:
+                indeg[m] -= 1
+                if indeg[m] == 0:
+                    queue.append(m)
+        return seen != n
+    if not isinstance(actual, (list, tuple)) or sorted(actual) != list(range(n)):
+        return False
+    position = {course: idx for idx, course in enumerate(actual)}
+    return all(position[b] < position[a] for a, b in prereqs)
+
+
+def validate_alien_order(args, actual, expected):
+    """Any ordering consistent with the words, or "" when they contradict each other."""
+    words = args[0]
+    if not isinstance(actual, str):
+        return False
+    letters = {c for w in words for c in w}
+    if actual == "":
+        return expected == ""      # the oracle already determined it is unsatisfiable
+    if set(actual) != letters or len(set(actual)) != len(actual):
+        return False
+    rank = {c: i for i, c in enumerate(actual)}
+    for first, second in zip(words, words[1:]):
+        for a, b in zip(first, second):
+            if a != b:
+                if rank[a] > rank[b]:
+                    return False
+                break
+        else:
+            if len(first) > len(second):
+                return False
+    return True
+
+
+VALIDATORS = {
+    'two-sum': validate_two_sum,
+    'two-sum-ii': validate_two_sum_ii,
+    'top-k-frequent': validate_top_k_frequent,
+    'k-closest': validate_k_closest,
+    'gas-station': validate_gas_station,
+    'course-order': validate_course_order,
+    'alien-order': validate_alien_order,
+}
+
+
 ADAPTERS = {
     'linked-list-cycle': adapt_linked_list_cycle,
     'lca-bst': adapt_lca_bst,
@@ -439,6 +586,9 @@ def compare(expected, actual, rule: str = "exact") -> bool:
 def judge(source: str, spec: dict, cases: list) -> list:
     """Run `source` against stored cases. Returns one result dict per case, never raising."""
     rule = spec.get("compare", "exact")
+    validator = VALIDATORS.get(spec.get("validate") or "")
+    if spec.get("validate") and validator is None:
+        return [{"ok": False, "error": f"unknown validator {spec.get('validate')!r}", "fatal": True}]
     try:
         ns = namespace(source)
     except Exception as e:  # a syntax or import error is a whole-submission failure
@@ -450,7 +600,11 @@ def judge(source: str, spec: dict, cases: list) -> list:
         try:
             actual = run_case(ns, spec, case["args"])
             entry["actual"] = actual
-            entry["ok"] = compare(case["expected"], actual, rule)
+            entry["ok"] = (
+                validator(case["args"], actual, case["expected"])
+                if validator
+                else compare(case["expected"], actual, rule)
+            )
         except Exception as e:
             entry["ok"] = False
             entry["error"] = f"{type(e).__name__}: {e}"

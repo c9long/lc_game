@@ -156,6 +156,11 @@ def build_spec(slug: str, meta: dict, curation: dict) -> dict:
     adapter = curation.get("adapt", {}).get(slug)
     if adapter:
         spec["adapt"] = adapter
+    # A validator replaces comparison entirely: the answer is checked for correctness rather than
+    # matched against the oracle's, so inputs with several right answers are usable.
+    validator = curation.get("validate", {}).get(slug)
+    if validator:
+        spec["validate"] = validator
     return spec
 
 
