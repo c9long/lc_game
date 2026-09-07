@@ -95,13 +95,21 @@ export function buildDrillSet(
 		chosen.add(d.id);
 	}
 	let lastKind: DrillKind | null = out.length ? out[out.length - 1].kind : null;
+	// Round-robin across modules as well as alternating kinds. The bank is grouped by module, so
+	// taking unseen drills in bank order gave a whole day from one module — nine heapq drills, then
+	// bisect, then collections. Always taking from the module least represented in the set spreads
+	// it evenly, and still fills the set when only one module has drills left.
+	const perModule = new Map<string, number>();
+	for (const d of out) perModule.set(d.module, (perModule.get(d.module) ?? 0) + 1);
 	const unseen = bank.filter((d) => !progress.has(d.id) && !chosen.has(d.id));
 	while (out.length < size && unseen.length > 0) {
-		let idx = unseen.findIndex((d) => d.kind !== lastKind);
-		if (idx < 0) idx = 0;
+		const fewest = Math.min(...unseen.map((d) => perModule.get(d.module) ?? 0));
+		let idx = unseen.findIndex((d) => (perModule.get(d.module) ?? 0) === fewest && d.kind !== lastKind);
+		if (idx < 0) idx = unseen.findIndex((d) => (perModule.get(d.module) ?? 0) === fewest);
 		const [d] = unseen.splice(idx, 1);
 		out.push(d);
 		chosen.add(d.id);
+		perModule.set(d.module, (perModule.get(d.module) ?? 0) + 1);
 		lastKind = d.kind;
 	}
 	return out;

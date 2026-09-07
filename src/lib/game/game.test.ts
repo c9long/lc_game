@@ -322,3 +322,29 @@ describe('city economy', () => {
 		expect(r).toEqual({ coins: 2, coinsAsOf: '2026-09-03' });
 	});
 });
+
+describe('drill set variety', () => {
+	const bank: Drill[] = [];
+	// Mirrors the real bank: grouped by module, which is what made a day's set monotonous.
+	for (const [module, n] of [['heapq', 9], ['bisect', 4], ['collections', 9]] as const) {
+		for (let i = 0; i < n; i++) {
+			bank.push({
+				id: `${module}-${i}`, lang: 'python', module,
+				kind: i % 2 === 0 ? 'cloze' : 'output',
+				context: null, code: 'x', answer: 'y', hint: null, api: null, url: ''
+			} as Drill);
+		}
+	}
+
+	it('spreads a fresh set across modules instead of marching through one', () => {
+		const set = buildDrillSet(bank, new Map(), new Date('2026-09-06T12:00:00Z'), 5);
+		expect(set).toHaveLength(5);
+		expect(new Set(set.map((d) => d.module)).size).toBe(3); // every module available, none repeated needlessly
+		expect(set.filter((d) => d.module === 'heapq').length).toBeLessThanOrEqual(2);
+	});
+
+	it('still fills the set when only one module has drills left', () => {
+		const single = bank.filter((d) => d.module === 'heapq');
+		expect(buildDrillSet(single, new Map(), new Date('2026-09-06T12:00:00Z'), 5)).toHaveLength(5);
+	});
+});
