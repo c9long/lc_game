@@ -348,3 +348,34 @@ describe('drill set variety', () => {
 		expect(buildDrillSet(single, new Map(), new Date('2026-09-06T12:00:00Z'), 5)).toHaveLength(5);
 	});
 });
+
+describe('difficulty yields', () => {
+	const base = { tags: [] as string[], lang: 'python3', prev: null, isDaily: false, assisted: false };
+
+	it('pays the easier materials too, so no supply line closes as you climb', () => {
+		// Difficulty used to choose only the KIND of material. Easy problems run out up the tree, so
+		// timber — which gates the Hut, Granary, Hash Market and Window Mill — became unobtainable.
+		expect(computeAward({ ...base, difficulty: 'Easy' }).resources).toEqual({ timber: 3 });
+		expect(computeAward({ ...base, difficulty: 'Medium' }).resources).toEqual({ stone: 3, timber: 1 });
+		expect(computeAward({ ...base, difficulty: 'Hard' }).resources).toEqual({ iron: 3, stone: 2, timber: 1 });
+	});
+
+	it('makes a Hard strictly better than an Easy, not merely different', () => {
+		const easy = computeAward({ ...base, difficulty: 'Easy' }).resources;
+		const hard = computeAward({ ...base, difficulty: 'Hard' }).resources;
+		const total = (r: Record<string, number>) => Object.values(r).reduce((a, b) => a + b, 0);
+		expect(total(hard)).toBeGreaterThan(total(easy));
+	});
+
+	it('scales the secondary materials by the same multiplier', () => {
+		const go = computeAward({ ...base, difficulty: 'Hard', lang: 'golang', isDaily: true });
+		expect(go.multiplier).toBe(3); // 1.5 bonus language x 2 daily
+		expect(go.resources).toEqual({ iron: 9, stone: 6, timber: 3 });
+	});
+
+	it('never rounds a secondary yield away to nothing', () => {
+		const refresh = computeAward({ ...base, difficulty: 'Medium', prev: { solveCount: 1, lastLang: 'python3' } });
+		expect(refresh.multiplier).toBe(0.5);
+		expect(refresh.resources.timber).toBeGreaterThanOrEqual(1);
+	});
+});
