@@ -33,6 +33,7 @@
 	<span class="muted">· {data.production} coins per active day · morale {Math.round(data.morale.morale)} · freeze days {data.morale.freezeDays}/3</span>
 	{#if data.hasGranary}
 		<button disabled={busy || (data.resources.coins ?? 0) < data.freezeCost || data.morale.freezeDays >= 3} onclick={() => post('/api/city/freeze', {})}>Buy freeze day ({data.freezeCost} coins)</button>
+		<span class="muted">{data.freezeBought} bought this week · price doubles each time, resets Monday</span>
 	{/if}
 </div>
 {#if essence.length}<p class="row">{#each essence as [k, v] (k)}<span class="pill">{k.slice(8)} {v}</span>{/each}</p>{/if}

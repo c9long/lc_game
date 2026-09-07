@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { addDays, daysBetween, localDate } from './dates';
+import { addDays, daysBetween, localDate, weekStartOf } from './dates';
 import { INTERVALS, afterSolve, badlyOverdue, isDue, type SrsState } from './srs';
 import { NODES, NODE_ORDER, PROBLEM_BY_SLUG, PROBLEMS, problemsForNode } from './curriculum';
 import { computeTree, dueRefreshes, isServable, nextNewProblems, type ProblemProgress } from './tree';
 import { computeAward } from './awards';
-import { WEEKLY_BUDGET, advanceMorale, weeklyCount } from './budget';
+import { WEEKLY_BUDGET, advanceMorale, freezeCost, freezePurchasesThisWeek, weeklyCount } from './budget';
 import { BUILDINGS, baseProduction, canAfford, costAtLevel, dailyCoins, gateSatisfied, settleProduction } from './city';
 import { DRILL_INTERVALS, afterDrill, buildDrillSet, checkAnswer, ingotsFor, normalizeOutput, type Drill } from './drills';
 
@@ -188,9 +188,10 @@ describe('city', () => {
 		expect(gateSatisfied({ node: 'arrays-hashing', status: 'unlocked' }, ctx)).toBe(false);
 		expect(gateSatisfied({ hard: 3 }, { ...ctx, hardSolves: 3 })).toBe(true);
 		const hut = BUILDINGS.find((b) => b.id === 'hut')!;
-		expect(costAtLevel(hut, 2)).toEqual({ timber: 8, ingots: 3 });
+		expect(costAtLevel(hut, 2)).toEqual({ timber: 8, ingots: 3, coins: 15 });
 		expect(canAfford({ timber: 8 }, costAtLevel(hut, 2))).toBe(false);
-		expect(canAfford({ timber: 8, ingots: 3 }, costAtLevel(hut, 2))).toBe(true);
+		expect(canAfford({ timber: 8, ingots: 3 }, costAtLevel(hut, 2))).toBe(false); // coins now count too
+		expect(canAfford({ timber: 8, ingots: 3, coins: 15 }, costAtLevel(hut, 2))).toBe(true);
 		const placed = [
 			{ id: 'a', kind: 'hut', x: 0, y: 0, level: 2 },
 			{ id: 'r', kind: 'graph-roads', x: 1, y: 0, level: 1 },
@@ -283,5 +284,41 @@ describe('production settlement', () => {
 			moraleByDate: new Map(), currentMorale: 100, perDay, addDays: addD
 		});
 		expect(r).toEqual({ coins: 6, coinsAsOf: '2026-09-06' });
+	});
+});
+
+describe('city economy', () => {
+	it('doubles the freeze price within a week and resets on Monday', () => {
+		expect([0, 1, 2, 3].map(freezeCost)).toEqual([20, 40, 80, 160]);
+		// A record from an earlier week does not carry over.
+		const monday = weekStartOf('2026-09-09'); // a Wednesday
+		expect(monday).toBe('2026-09-07');
+		expect(freezePurchasesThisWeek({ week: '2026-09-07', count: 2 }, monday)).toBe(2);
+		expect(freezePurchasesThisWeek({ week: '2026-08-31', count: 2 }, monday)).toBe(0);
+		expect(freezePurchasesThisWeek(null, monday)).toBe(0);
+	});
+
+	it('anchors the week to Monday whichever day it is asked about', () => {
+		expect(weekStartOf('2026-09-07')).toBe('2026-09-07'); // Monday itself
+		expect(weekStartOf('2026-09-13')).toBe('2026-09-07'); // the Sunday after
+		expect(weekStartOf('2026-09-06')).toBe('2026-08-31'); // Sunday belongs to the week before
+	});
+
+	it('charges coins as well as materials and ingots to upgrade', () => {
+		const hut = BUILDINGS.find((b) => b.id === 'hut')!;
+		expect(costAtLevel(hut, 1).coins).toBeUndefined(); // building it costs no coins
+		expect(costAtLevel(hut, 2)).toMatchObject({ ingots: 3, coins: 15 });
+		expect(costAtLevel(hut, 3)).toMatchObject({ ingots: 6, coins: 30 });
+	});
+
+	it('pays no production for a frozen day, because nothing was solved', () => {
+		// A freeze day holds morale on a zero-solve day; it must not also pay out.
+		const r = settleProduction({
+			coinsAsOf: '2026-09-01', today: '2026-09-04', earliest: '2026-08-01',
+			active: new Set(['2026-09-03']), // 09-02 was frozen, not solved
+			moraleByDate: new Map(), currentMorale: 100,
+			perDay: () => 2, addDays
+		});
+		expect(r).toEqual({ coins: 2, coinsAsOf: '2026-09-03' });
 	});
 });

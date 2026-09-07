@@ -4,6 +4,29 @@ export const WEEKLY_BUDGET = 14;
 export const DAILY_TARGET = 2;
 export const MORALE_STEP = 15;
 export const MAX_FREEZE_DAYS = 3;
+export const FREEZE_BASE_COST = 20;
+export const FREEZE_COST_MULT = 2;
+
+/** What the next freeze day costs, given how many have been bought since the week began.
+ *
+ *  A flat price meant that once production outran it, freeze days could be bought indefinitely and
+ *  morale stopped being a constraint at all. Doubling within the week makes the first cheap and the
+ *  fourth ruinous, while the Monday reset stops a bad week from pricing you out forever.
+ */
+export function freezeCost(purchasesThisWeek: number): number {
+	return FREEZE_BASE_COST * Math.pow(FREEZE_COST_MULT, Math.max(0, purchasesThisWeek));
+}
+
+export interface FreezePurchases {
+	/** Monday of the week these purchases belong to. */
+	week: string;
+	count: number;
+}
+
+/** Purchases counted against `today`'s week, discarding a record from an earlier week. */
+export function freezePurchasesThisWeek(record: FreezePurchases | null, weekStart: string): number {
+	return record && record.week === weekStart ? record.count : 0;
+}
 
 /** Credits in the 7-day window ending on `today` (inclusive). */
 export function weeklyCount(ledgerDates: Iterable<string>, today: string): number {

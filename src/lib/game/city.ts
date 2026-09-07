@@ -73,12 +73,18 @@ export function gateSatisfied(gate: Gate | undefined, ctx: GateContext): boolean
 }
 
 export const INGOTS_PER_UPGRADE_LEVEL = 3;
+/** Upgrades also cost coins, so daily production — and therefore finishing the expedition — is
+ *  what funds a growing city, rather than coins existing only to buy freeze days. */
+export const COINS_PER_UPGRADE_LEVEL = 15;
 
 /** Upgrades cost the base resources scaled up, plus Ingots (earned only from syntax drills). */
 export function costAtLevel(kind: BuildingKind, level: number): Record<string, number> {
 	const out: Record<string, number> = {};
 	for (const [k, v] of Object.entries(kind.cost)) out[k] = Math.ceil(v * Math.pow(UPGRADE_COST_MULT, level - 1));
-	if (level > 1) out.ingots = INGOTS_PER_UPGRADE_LEVEL * (level - 1);
+	if (level > 1) {
+		out.ingots = INGOTS_PER_UPGRADE_LEVEL * (level - 1);
+		out.coins = COINS_PER_UPGRADE_LEVEL * (level - 1);
+	}
 	return out;
 }
 

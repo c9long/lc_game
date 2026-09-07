@@ -37,3 +37,10 @@ export function isValidTimeZone(tz: string): boolean {
 		return false;
 	}
 }
+
+/** The Monday on or before `date`. The budget's 7-day window rolls, so anything that must RESET
+ *  weekly needs a fixed boundary instead. */
+export function weekStartOf(date: string): string {
+	const day = new Date(toUtcMs(date)).getUTCDay(); // 0 = Sunday
+	return addDays(date, -((day + 6) % 7));
+}
