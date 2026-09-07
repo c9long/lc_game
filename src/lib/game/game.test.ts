@@ -331,7 +331,7 @@ describe('drill set variety', () => {
 			bank.push({
 				id: `${module}-${i}`, lang: 'python', module,
 				kind: i % 2 === 0 ? 'cloze' : 'output',
-				context: null, code: 'x', answer: 'y', hint: null, api: null, url: ''
+				context: '', code: 'x', answer: 'y', hint: null, api: null, url: ''
 			} as Drill);
 		}
 	}
