@@ -120,3 +120,40 @@ export function dailyCoins(placed: PlacedBuilding[], tree: Map<string, NodeView>
 export function hasEffect(placed: PlacedBuilding[], effect: BuildingKind['effect']): boolean {
 	return placed.some((b) => BUILDING_BY_ID.get(b.kind)?.effect === effect);
 }
+
+/** Settles daily production for every day that is ready to be paid.
+ *
+ *  A day is only payable once its ledger means something. Production used to be paid inside the
+ *  morale tick, which runs for TODAY on the first page load of the day — at that moment nothing has
+ *  been solved yet, so the "at least one solve" test failed and the day was written off for good.
+ *  So: finished days are paid from their final ledger, and today is paid as soon as it has a solve.
+ *
+ *  Pure so the rule can be tested without a database. `earliest` bounds the walk, since the ledger
+ *  is only loaded for a recent window.
+ */
+export function settleProduction(input: {
+	coinsAsOf: string;
+	today: string;
+	earliest: string;
+	active: Set<string>;
+	moraleByDate: Map<string, number>;
+	currentMorale: number;
+	perDay: (morale: number) => number;
+	addDays: (date: string, n: number) => string;
+}): { coins: number; coinsAsOf: string } {
+	const { today, earliest, active, moraleByDate, currentMorale, perDay, addDays } = input;
+	let coinsAsOf = input.coinsAsOf < earliest ? addDays(earliest, -1) : input.coinsAsOf;
+	const yesterday = addDays(today, -1);
+	let coins = 0;
+
+	for (let d = addDays(coinsAsOf, 1); d <= yesterday; d = addDays(d, 1)) {
+		if (active.has(d)) coins += perDay(moraleByDate.get(d) ?? currentMorale);
+		coinsAsOf = d;
+	}
+	// Today is paid the moment it has a solve, and only once.
+	if (coinsAsOf < today && active.has(today)) {
+		coins += perDay(currentMorale);
+		coinsAsOf = today;
+	}
+	return { coins, coinsAsOf };
+}

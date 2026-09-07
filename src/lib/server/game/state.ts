@@ -2,7 +2,7 @@ import { eq, gte, sql } from 'drizzle-orm';
 import type { Db } from '../db';
 import { awards, buildings, gameState, ledger, problemState, resources, type User } from '../db/schema';
 import { advanceMorale, weeklyCount, type MoraleState } from '$lib/game/budget';
-import { dailyCoins, hasEffect, type PlacedBuilding } from '$lib/game/city';
+import { dailyCoins, hasEffect, settleProduction, type PlacedBuilding } from '$lib/game/city';
 import { PROBLEM_BY_SLUG } from '$lib/game/curriculum';
 import { addDays, localDate } from '$lib/game/dates';
 import { computeTree, type NodeView, type ProblemProgress } from '$lib/game/tree';
@@ -93,18 +93,39 @@ export async function loadSnapshot(db: Db, user: User, now = new Date()): Promis
 
 	const tree = computeTree({ progress, research, hasPremium: user.hasPremium, now });
 
-	let morale = await getState<MoraleState>(db, 'morale', { morale: 100, asOf: today, freezeDays: 0 });
-	let tickCoins = 0;
+	// Morale must be stored the first time it is seen. It used to be written only inside the tick
+	// branch below, while the fallback it reads is dated today — so the branch was never true, the
+	// state was never persisted, and the next day fell back to a fresh "today" again. The condition
+	// could not become true on any day, so production never accrued at all.
+	const storedMorale = await getState<MoraleState | null>(db, 'morale', null);
+	let morale: MoraleState = storedMorale ?? { morale: 100, asOf: today, freezeDays: 0 };
+	if (!storedMorale) await setState(db, 'morale', morale);
+
+	const active = new Set(ledgerDates);
+	const moraleByDate = new Map<string, number>();
 	if (morale.asOf < today) {
-		const active = new Set(ledgerDates);
 		const { state, ticks } = advanceMorale(morale, ledgerDates, today, { hasWalls: hasEffect(placed, 'walls') });
-		for (const t of ticks) if (active.has(t.date)) tickCoins += dailyCoins(placed, tree, t.after);
+		for (const t of ticks) moraleByDate.set(t.date, t.after);
 		morale = state;
 		await setState(db, 'morale', morale);
-		if (tickCoins > 0) {
-			await addResourceStatement(db, 'coins', tickCoins);
-			res.coins = (res.coins ?? 0) + tickCoins;
-		}
+	}
+
+	const settledThrough = await getState<string>(db, 'coinsAsOf', addDays(today, -1));
+	const settled = settleProduction({
+		coinsAsOf: settledThrough,
+		today,
+		earliest: since,
+		active,
+		moraleByDate,
+		currentMorale: morale.morale,
+		perDay: (m) => dailyCoins(placed, tree, m),
+		addDays
+	});
+	const tickCoins = settled.coins;
+	if (settled.coinsAsOf !== settledThrough) await setState(db, 'coinsAsOf', settled.coinsAsOf);
+	if (tickCoins > 0) {
+		await addResourceStatement(db, 'coins', tickCoins);
+		res.coins = (res.coins ?? 0) + tickCoins;
 	}
 
 	return {

@@ -5,7 +5,7 @@ import { NODES, NODE_ORDER, PROBLEM_BY_SLUG, PROBLEMS, problemsForNode } from '.
 import { computeTree, dueRefreshes, isServable, nextNewProblems, type ProblemProgress } from './tree';
 import { computeAward } from './awards';
 import { WEEKLY_BUDGET, advanceMorale, weeklyCount } from './budget';
-import { BUILDINGS, baseProduction, canAfford, costAtLevel, dailyCoins, gateSatisfied } from './city';
+import { BUILDINGS, baseProduction, canAfford, costAtLevel, dailyCoins, gateSatisfied, settleProduction } from './city';
 import { DRILL_INTERVALS, afterDrill, buildDrillSet, checkAnswer, ingotsFor, normalizeOutput, type Drill } from './drills';
 
 const DAY = 86_400_000;
@@ -227,5 +227,61 @@ describe('drills', () => {
 		]);
 		const set = buildDrillSet(bank, progress, t0, 4);
 		expect(set.map((d) => d.id)).toEqual(['5', '3', '1', '4']);
+	});
+});
+
+describe('production settlement', () => {
+	const addD = (d: string, n: number) => addDays(d, n);
+	const perDay = () => 2; // two huts
+
+	it('pays today as soon as it has a solve, not on the first page load', () => {
+		// The original bug: production for today was paid inside the morale tick, which fires on the
+		// first load of the day, when nothing has been solved yet.
+		const empty = settleProduction({
+			coinsAsOf: '2026-09-05', today: '2026-09-06', earliest: '2026-07-01',
+			active: new Set(['2026-09-05']), moraleByDate: new Map(), currentMorale: 100, perDay, addDays: addD
+		});
+		expect(empty).toEqual({ coins: 0, coinsAsOf: '2026-09-05' });
+
+		// Same day, once a solve lands.
+		const solved = settleProduction({
+			coinsAsOf: '2026-09-05', today: '2026-09-06', earliest: '2026-07-01',
+			active: new Set(['2026-09-05', '2026-09-06']), moraleByDate: new Map(), currentMorale: 100, perDay, addDays: addD
+		});
+		expect(solved).toEqual({ coins: 2, coinsAsOf: '2026-09-06' });
+	});
+
+	it('pays each day once', () => {
+		const first = settleProduction({
+			coinsAsOf: '2026-09-05', today: '2026-09-06', earliest: '2026-07-01',
+			active: new Set(['2026-09-06']), moraleByDate: new Map(), currentMorale: 100, perDay, addDays: addD
+		});
+		expect(first.coins).toBe(2);
+		const again = settleProduction({
+			coinsAsOf: first.coinsAsOf, today: '2026-09-06', earliest: '2026-07-01',
+			active: new Set(['2026-09-06']), moraleByDate: new Map(), currentMorale: 100, perDay, addDays: addD
+		});
+		expect(again.coins).toBe(0);
+	});
+
+	it('catches up missed days using that day\'s morale, and skips idle days', () => {
+		const r = settleProduction({
+			coinsAsOf: '2026-09-01', today: '2026-09-05', earliest: '2026-07-01',
+			active: new Set(['2026-09-02', '2026-09-04']),
+			moraleByDate: new Map([['2026-09-02', 50], ['2026-09-04', 100]]),
+			currentMorale: 100,
+			perDay: (m) => Math.round(2 * (m / 100)),
+			addDays: addD
+		});
+		expect(r).toEqual({ coins: 1 + 2, coinsAsOf: '2026-09-04' });
+	});
+
+	it('never walks back further than the ledger window', () => {
+		const r = settleProduction({
+			coinsAsOf: '2020-01-01', today: '2026-09-06', earliest: '2026-09-04',
+			active: new Set(['2026-09-04', '2026-09-05', '2026-09-06']),
+			moraleByDate: new Map(), currentMorale: 100, perDay, addDays: addD
+		});
+		expect(r).toEqual({ coins: 6, coinsAsOf: '2026-09-06' });
 	});
 });
