@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { page } from '$app/state';
+	import ResourceBar from '$lib/components/ResourceBar.svelte';
 	let { data, children } = $props();
 	const links = [
 		['/', 'Today'],
@@ -25,5 +26,6 @@
 			<form method="POST" action="/auth/logout"><button type="submit">Log out</button></form>
 		</nav>
 	{/if}
+	{#if data.showResourceBar}<ResourceBar resources={data.resources} />{/if}
 	<main>{@render children()}</main>
 </div>

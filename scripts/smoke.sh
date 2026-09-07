@@ -177,5 +177,15 @@ else
   echo "FAIL destroy: timber $TIMBER_BEFORE -> $TIMBER_AFTER (want +5), rows left $LEFT"; fail=1
 fi
 
+
+# The resource bar overlays most views but is hidden while solving, drilling or reading the tree.
+has_bar() { curl -s -H "cookie: lc_session=$TOKEN" "$B$1" | grep -qi 'aria-label="Resources"' && echo yes || echo no; }
+for route in / /city /admin; do
+  [ "$(has_bar $route)" = "yes" ] && echo "ok   resource bar shown on $route" || { echo "FAIL resource bar missing on $route"; fail=1; }
+done
+for route in /tree /drills /solve/two-sum; do
+  [ "$(has_bar $route)" = "no" ] && echo "ok   resource bar hidden on $route" || { echo "FAIL resource bar should be hidden on $route"; fail=1; }
+done
+
 if [ "$fail" = 1 ]; then echo "--- dev server log tail"; tail -40 "$LOG"; exit 1; fi
 echo "smoke test passed"

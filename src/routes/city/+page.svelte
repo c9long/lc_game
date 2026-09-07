@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
+	import ConfirmDialog from '$lib/components/ConfirmDialog.svelte';
+	import { RESOURCE_META, formatCost } from '$lib/game/resources';
 	let { data } = $props();
 	let selected = $state<{ x: number; y: number } | null>(null);
 	let message = $state('');
@@ -10,10 +12,14 @@
 	const cells = $derived(Array.from({ length: data.size * data.size }, (_, i) => ({ x: i % data.size, y: Math.floor(i / data.size) })));
 
 	/** Demolition is irreversible and refunds only the level 1 cost, so it asks first. */
+	let pendingDestroy = $state<null | { id: string; name: string; level: number; refund: Record<string, number> }>(null);
+	// Real state, not derived: the dialog writes `open` back when you cancel or press Escape, and a
+	// derived value would discard that write and reopen itself.
+	let confirmOpen = $state(false);
+
 	function destroy(b: { id: string; name: string; level: number; refund: Record<string, number> }) {
-		const lost = b.level > 1 ? `\n\nThe ${b.level - 1} upgrade(s) are NOT refunded.` : '';
-		if (!confirm(`Destroy the ${b.name}?\n\nRefunds ${fmtCost(b.refund)}.${lost}`)) return;
-		void post('/api/city/destroy', { id: b.id });
+		pendingDestroy = b;
+		confirmOpen = true;
 	}
 
 	async function post(url: string, body: unknown) {
@@ -31,12 +37,12 @@
 			busy = false;
 		}
 	}
-	const fmtCost = (c: Record<string, number>) => Object.entries(c).map(([k, v]) => `${v} ${k}`).join(', ');
+	const fmtCost = formatCost;
 </script>
 
 <h1>City</h1>
 <div class="row summary">
-	{#each ['coins', 'timber', 'stone', 'iron', 'ingots'] as k (k)}<span class="pill">{k} <strong>{data.resources[k] ?? 0}</strong></span>{/each}
+	{#each RESOURCE_META as m (m.kind)}<span class="pill">{m.emoji} {m.label} <strong>{data.resources[m.kind] ?? 0}</strong></span>{/each}
 	<span class="muted">· {data.production} coins per active day · morale {Math.round(data.morale.morale)} · freeze days {data.morale.freezeDays}/3</span>
 	{#if data.hasGranary}
 		<button disabled={busy || (data.resources.coins ?? 0) < data.freezeCost || data.morale.freezeDays >= 3} onclick={() => post('/api/city/freeze', {})}>Buy freeze day ({data.freezeCost} coins)</button>
@@ -93,6 +99,22 @@
 		{/if}
 	</aside>
 </div>
+
+<ConfirmDialog
+	bind:open={confirmOpen}
+	title={pendingDestroy ? `Destroy the ${pendingDestroy.name}?` : ''}
+	body={pendingDestroy ? `This refunds ${fmtCost(pendingDestroy.refund)}.` : ''}
+	note={pendingDestroy && pendingDestroy.level > 1
+		? `The ${pendingDestroy.level - 1} upgrade${pendingDestroy.level > 2 ? 's are' : ' is'} not refunded.`
+		: ''}
+	confirmLabel="Destroy"
+	destructive
+	onconfirm={() => {
+		const b = pendingDestroy;
+		pendingDestroy = null;
+		if (b) void post('/api/city/destroy', { id: b.id });
+	}}
+/>
 
 <style>
 	.city { display: grid; grid-template-columns: minmax(320px, 2fr) minmax(280px, 1fr); gap: 1rem; align-items: start; }
