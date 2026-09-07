@@ -6,7 +6,7 @@ import { getState, setState, type Snapshot } from './state';
 import { PROBLEM_BY_SLUG } from '$lib/game/curriculum';
 import { dueRefreshes, isServable, nextNewProblems } from '$lib/game/tree';
 import { DRILL_LANGS } from '$lib/game/drillbank';
-import { langForDate } from './drills';
+import { isSetComplete, langForDate, loadDrillSet } from './drills';
 
 export interface PlanItem {
 	slot: number;
@@ -34,17 +34,45 @@ export async function getDaily(db: Db, today: string): Promise<Daily | null> {
 	return daily;
 }
 
-function decorate(items: { slot: number; slug: string; kind: PlanItem['kind']; done: boolean }[], doneToday: Set<string>): PlanItem[] {
+/** Whether a plan item counts as done.
+ *
+ *  Always derived from the underlying record rather than trusting the stored flag, because a plan
+ *  can be created after the work was already finished. The stored flag is written once, at the
+ *  moment the work completes, so a plan built later never receives it: regenerating today's plan
+ *  after finishing the drills left the Forge slot permanently unticked with no way to earn it
+ *  again. The ledger plays this role for problems; the day's drill set plays it for drills.
+ */
+export function planItemDone(
+	item: { kind: PlanItem['kind']; slug: string; done: boolean },
+	doneToday: Set<string>,
+	drillsDone: boolean
+): boolean {
+	if (item.kind === 'drills') return item.done || drillsDone;
+	return item.done || doneToday.has(item.slug);
+}
+
+function decorate(
+	items: { slot: number; slug: string; kind: PlanItem['kind']; done: boolean }[],
+	doneToday: Set<string>,
+	drillsDone: boolean
+): PlanItem[] {
 	return items
 		.sort((a, b) => a.slot - b.slot)
 		.map((i) => {
 			if (i.kind === 'drills') {
-				return { ...i, title: `Syntax drills (${i.slug})`, difficulty: '', nodeId: null, pattern: 'Forge' };
+				return {
+					...i,
+					done: planItemDone(i, doneToday, drillsDone),
+					title: `Syntax drills (${i.slug})`,
+					difficulty: '',
+					nodeId: null,
+					pattern: 'Forge'
+				};
 			}
 			const p = PROBLEM_BY_SLUG.get(i.slug);
 			return {
 				...i,
-				done: i.done || doneToday.has(i.slug),
+				done: planItemDone(i, doneToday, drillsDone),
 				title: p?.title ?? i.slug,
 				difficulty: p?.difficulty ?? '',
 				nodeId: p?.nodeId ?? null,
@@ -58,8 +86,12 @@ export async function getOrCreatePlan(db: Db, snap: Snapshot): Promise<PlanItem[
 	const doneRows = await db.select({ slug: ledger.slug }).from(ledger).where(eq(ledger.date, snap.today)).all();
 	const doneToday = new Set(doneRows.map((r) => r.slug));
 
+	// The day's drill set is the source of truth for the Forge slot, exactly as the ledger is for
+	// problem slots. Reading it here means a plan regenerated mid-day reflects work already done.
+	const drillsDone = isSetComplete(await loadDrillSet(db, snap.today));
+
 	const existing = await db.select().from(planItems).where(eq(planItems.planDate, snap.today)).all();
-	if (existing.length > 0) return decorate(existing, doneToday);
+	if (existing.length > 0) return decorate(existing, doneToday, drillsDone);
 
 	const daily = await getDaily(db, snap.today);
 	const hasPremium = snap.user.hasPremium;
@@ -104,7 +136,7 @@ export async function getOrCreatePlan(db: Db, snap: Snapshot): Promise<PlanItem[
 	}
 
 	if (DRILL_LANGS.length > 0) {
-		chosen.push({ slot: 3, slug: langForDate(snap.today), kind: 'drills', done: false });
+		chosen.push({ slot: 3, slug: langForDate(snap.today), kind: 'drills', done: drillsDone });
 	}
 
 	if (chosen.length > 0) {
@@ -113,10 +145,10 @@ export async function getOrCreatePlan(db: Db, snap: Snapshot): Promise<PlanItem[
 			...chosen.map((c) =>
 				db
 					.insert(planItems)
-					.values({ planDate: snap.today, slot: c.slot, slug: c.slug, kind: c.kind, done: false })
+					.values({ planDate: snap.today, slot: c.slot, slug: c.slug, kind: c.kind, done: c.done })
 					.onConflictDoNothing()
 			)
 		]);
 	}
-	return decorate(chosen, doneToday);
+	return decorate(chosen, doneToday, drillsDone);
 }

@@ -124,5 +124,17 @@ if [ -n "${FIRST_ID:-}" ]; then
   fi
 fi
 
+
+# Regenerating the plan after the drills are finished must not lose the Forge tick. The stored flag
+# is written once, when the set completes, so a plan built later never receives it; doneness has to
+# come from the drill set itself.
+if [ -n "${FIRST_ID:-}" ]; then
+  $W execute lc-game --local --persist-to "$STATE" --command \
+    "DELETE FROM plan_items WHERE plan_date = '$TODAY'; DELETE FROM plans WHERE date = '$TODAY';" >/dev/null
+  curl -s -o /dev/null -H "cookie: lc_session=$TOKEN" "$B/"   # rebuilds today's plan
+  DRILLS_DONE=$($W execute lc-game --local --persist-to "$STATE" --json --command "SELECT done FROM plan_items WHERE plan_date = '$TODAY' AND kind = 'drills'" 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s)[0].results;console.log(r.length?r[0].done:"missing")})')
+  if [ "$DRILLS_DONE" = "1" ]; then echo "ok   regenerated plan keeps the drills slot done"; else echo "FAIL regenerated plan lost the drills tick (done=$DRILLS_DONE)"; fail=1; fi
+fi
+
 if [ "$fail" = 1 ]; then echo "--- dev server log tail"; tail -40 "$LOG"; exit 1; fi
 echo "smoke test passed"
