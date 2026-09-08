@@ -17,9 +17,19 @@ export interface Drill {
 	alternatives?: string[];
 	api?: string | null;
 	url: string;
+	/** A couple of sentences on WHY, shown behind a toggle. A documentation link tells you where to
+	 *  read; this tells you what is going on, which is the part worth having for something like a
+	 *  bitwise operator. Optional: mined drills have none and fall back to the link. */
+	explain?: string | null;
 }
 
 export const DRILL_SET_SIZE = 5;
+/** How many of a set may be reviews. The rest introduce new material, when any is left.
+ *
+ *  Without this the day is filled purely by what is due, most overdue first, and a backlog in one
+ *  module owns every slot: nine heapq drills started early meant a set of five heapq drills, then
+ *  another, indefinitely, because the set never reached the new-material stage at all. */
+export const MAX_DUE_PER_SET = 3;
 export const INGOT_PER_CORRECT = 1;
 export const PERFECT_SET_BONUS = 2;
 /** Faster ladder than problems: drills are cheap to repeat. Days. */
@@ -89,29 +99,31 @@ export function buildDrillSet(
 		.map(([id]) => byId.get(id)!);
 	const out: Drill[] = [];
 	const chosen = new Set<string>();
-	for (const d of due) {
-		if (out.length >= size) break;
-		out.push(d);
-		chosen.add(d.id);
-	}
-	let lastKind: DrillKind | null = out.length ? out[out.length - 1].kind : null;
-	// Round-robin across modules as well as alternating kinds. The bank is grouped by module, so
-	// taking unseen drills in bank order gave a whole day from one module — nine heapq drills, then
-	// bisect, then collections. Always taking from the module least represented in the set spreads
-	// it evenly, and still fills the set when only one module has drills left.
 	const perModule = new Map<string, number>();
-	for (const d of out) perModule.set(d.module, (perModule.get(d.module) ?? 0) + 1);
-	const unseen = bank.filter((d) => !progress.has(d.id) && !chosen.has(d.id));
-	while (out.length < size && unseen.length > 0) {
-		const fewest = Math.min(...unseen.map((d) => perModule.get(d.module) ?? 0));
-		let idx = unseen.findIndex((d) => (perModule.get(d.module) ?? 0) === fewest && d.kind !== lastKind);
-		if (idx < 0) idx = unseen.findIndex((d) => (perModule.get(d.module) ?? 0) === fewest);
-		const [d] = unseen.splice(idx, 1);
-		out.push(d);
-		chosen.add(d.id);
-		perModule.set(d.module, (perModule.get(d.module) ?? 0) + 1);
-		lastKind = d.kind;
-	}
+
+	/** Take from `pool`, always from the module least represented in the set so far, and preferring
+	 *  to alternate cloze with output so a set is not all of one shape. */
+	const take = (pool: Drill[], limit: number) => {
+		const rest = pool.filter((d) => !chosen.has(d.id));
+		while (out.length < limit && rest.length > 0) {
+			const fewest = Math.min(...rest.map((d) => perModule.get(d.module) ?? 0));
+			const lastKind = out.length ? out[out.length - 1].kind : null;
+			let idx = rest.findIndex((d) => (perModule.get(d.module) ?? 0) === fewest && d.kind !== lastKind);
+			if (idx < 0) idx = rest.findIndex((d) => (perModule.get(d.module) ?? 0) === fewest);
+			const [d] = rest.splice(idx, 1);
+			out.push(d);
+			chosen.add(d.id);
+			perModule.set(d.module, (perModule.get(d.module) ?? 0) + 1);
+		}
+	};
+
+	// Reviews first, but capped, and spread across modules rather than taken strictly by overdueness.
+	take(due, Math.min(size, MAX_DUE_PER_SET));
+	// Then new material, also spread across modules.
+	take(bank.filter((d) => !progress.has(d.id)), size);
+
+	// Only if there is no new material left does the rest of the backlog fill the day.
+	take(due, size);
 	return out;
 }
 

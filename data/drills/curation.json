@@ -13,7 +13,8 @@
       "answer": "5",
       "hint": null,
       "api": "assignment",
-      "url": "https://docs.python.org/3.12/tutorial/introduction.html"
+      "url": "https://docs.python.org/3.12/tutorial/introduction.html",
+      "explain": "Assignment binds a name to a value; it does not link the two names. `y = x` copies the reference at that instant, so rebinding `x` afterwards leaves `y` where it was."
     },
     {
       "id": "hand-py-fund-swap",
@@ -25,7 +26,8 @@
       "answer": "(2, 1)",
       "hint": null,
       "api": "assignment",
-      "url": "https://docs.python.org/3.12/tutorial/introduction.html"
+      "url": "https://docs.python.org/3.12/tutorial/introduction.html",
+      "explain": "The right-hand side is evaluated fully before anything is assigned, so `a, b = b, a` builds the tuple `(2, 1)` from the old values and only then unpacks it. No temporary variable needed."
     },
     {
       "id": "hand-py-fund-floordiv",
@@ -37,7 +39,8 @@
       "answer": "3",
       "hint": null,
       "api": "//",
-      "url": "https://docs.python.org/3.12/tutorial/introduction.html"
+      "url": "https://docs.python.org/3.12/tutorial/introduction.html",
+      "explain": "`//` divides and rounds towards negative infinity, giving an int when both sides are ints."
     },
     {
       "id": "hand-py-fund-floordiv-negative",
@@ -49,7 +52,8 @@
       "answer": "-4",
       "hint": null,
       "api": "//",
-      "url": "https://docs.python.org/3.12/tutorial/introduction.html"
+      "url": "https://docs.python.org/3.12/tutorial/introduction.html",
+      "explain": "The surprise: `//` floors rather than truncating, so it rounds DOWN, away from zero for negatives. -3.5 floors to -4, not -3. This bites in binary search and midpoint arithmetic."
     },
     {
       "id": "hand-py-fund-truediv",
@@ -61,7 +65,8 @@
       "answer": "2.5",
       "hint": null,
       "api": "/",
-      "url": "https://docs.python.org/3.12/tutorial/introduction.html"
+      "url": "https://docs.python.org/3.12/tutorial/introduction.html",
+      "explain": null
     },
     {
       "id": "hand-py-fund-truediv-type",
@@ -73,7 +78,8 @@
       "answer": "<class 'float'>",
       "hint": null,
       "api": "/",
-      "url": "https://docs.python.org/3.12/tutorial/introduction.html"
+      "url": "https://docs.python.org/3.12/tutorial/introduction.html",
+      "explain": "`/` is true division and ALWAYS produces a float, even when the result is a whole number. Use `//` when you want an int, especially for indices."
     },
     {
       "id": "hand-py-fund-modulo",
@@ -85,7 +91,8 @@
       "answer": "1",
       "hint": null,
       "api": "%",
-      "url": "https://docs.python.org/3.12/tutorial/introduction.html"
+      "url": "https://docs.python.org/3.12/tutorial/introduction.html",
+      "explain": "`%` is the remainder left after floor division."
     },
     {
       "id": "hand-py-fund-modulo-negative",
@@ -97,7 +104,8 @@
       "answer": "2",
       "hint": null,
       "api": "%",
-      "url": "https://docs.python.org/3.12/tutorial/introduction.html"
+      "url": "https://docs.python.org/3.12/tutorial/introduction.html",
+      "explain": "Python's `%` always takes the sign of the RIGHT operand, so -7 % 3 is 2, not -1 as in C or Java. Useful for wrapping an index: `i % n` is always in range."
     },
     {
       "id": "hand-py-fund-divmod",
@@ -109,7 +117,8 @@
       "answer": "(3, 1)",
       "hint": null,
       "api": "divmod",
-      "url": "https://docs.python.org/3.12/library/functions.html#divmod"
+      "url": "https://docs.python.org/3.12/library/functions.html#divmod",
+      "explain": "`divmod(a, b)` returns the floor division and the remainder together as a tuple, doing in one step what `a // b` and `a % b` do in two."
     },
     {
       "id": "hand-py-fund-power",
@@ -121,7 +130,8 @@
       "answer": "1024",
       "hint": null,
       "api": "**",
-      "url": "https://docs.python.org/3.12/tutorial/introduction.html"
+      "url": "https://docs.python.org/3.12/tutorial/introduction.html",
+      "explain": null
     },
     {
       "id": "hand-py-fund-augmented",
@@ -133,7 +143,8 @@
       "answer": "6",
       "hint": null,
       "api": "+=",
-      "url": "https://docs.python.org/3.12/tutorial/introduction.html"
+      "url": "https://docs.python.org/3.12/tutorial/introduction.html",
+      "explain": null
     },
     {
       "id": "hand-py-fund-int-cast",
@@ -145,7 +156,8 @@
       "answer": "int",
       "hint": "43",
       "api": "int",
-      "url": "https://docs.python.org/3.12/library/functions.html#int"
+      "url": "https://docs.python.org/3.12/library/functions.html#int",
+      "explain": "`int(s)` parses a string of digits into a number. Python never converts implicitly, so `\\\"42\\\" + 1` is an error rather than 43."
     },
     {
       "id": "hand-py-fund-falsy",
@@ -157,7 +169,8 @@
       "answer": "(False, False, False)",
       "hint": null,
       "api": "bool",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#truth"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#truth",
+      "explain": "Zero, the empty string and the empty list are all falsy, so `if not xs:` is the idiomatic empty check. Careful: it cannot tell an empty list from a zero."
     },
     {
       "id": "hand-py-fund-str-index",
@@ -169,7 +182,8 @@
       "answer": "'l'",
       "hint": null,
       "api": "str",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str",
+      "explain": "Strings index like lists, and indexing gives a one-character string. Python has no separate char type."
     },
     {
       "id": "hand-py-fund-index-negative",
@@ -181,7 +195,8 @@
       "answer": "'e'",
       "hint": null,
       "api": "str",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str",
+      "explain": "Negative indices count from the end: -1 is the last character, -2 the second last. Shorter and safer than `len(s) - 1`."
     },
     {
       "id": "hand-py-fund-slice",
@@ -193,7 +208,8 @@
       "answer": "'eet'",
       "hint": null,
       "api": "slice",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str",
+      "explain": "`s[a:b]` takes from a up to but NOT including b, so the length of the slice is exactly b - a. The half-open convention is why `s[:i] + s[i:]` reassembles the original."
     },
     {
       "id": "hand-py-fund-slice-open",
@@ -205,7 +221,8 @@
       "answer": "'lee'",
       "hint": null,
       "api": "slice",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str",
+      "explain": null
     },
     {
       "id": "hand-py-fund-slice-reverse",
@@ -217,7 +234,8 @@
       "answer": "'edocteel'",
       "hint": null,
       "api": "slice",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str",
+      "explain": "A slice takes `[start:stop:step]`, and a step of -1 walks backwards, so `s[::-1]` is the whole string reversed."
     },
     {
       "id": "hand-py-fund-immutable",
@@ -229,7 +247,8 @@
       "answer": "'abc'",
       "hint": null,
       "api": "str.replace",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str",
+      "explain": "Strings cannot be changed in place. Every string method returns a NEW string and leaves the original alone, so ignoring the return value does nothing."
     },
     {
       "id": "hand-py-fund-split",
@@ -241,7 +260,8 @@
       "answer": "split",
       "hint": "['a', 'b', 'c']",
       "api": "str.split",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str",
+      "explain": null
     },
     {
       "id": "hand-py-fund-join",
@@ -253,7 +273,8 @@
       "answer": "join",
       "hint": "'a-b'",
       "api": "str.join",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str",
+      "explain": "`sep.join(parts)` is called on the separator, not on the list. Building a string by repeated `+=` in a loop is quadratic; join is linear."
     },
     {
       "id": "hand-py-fund-ord",
@@ -265,7 +286,8 @@
       "answer": "97",
       "hint": null,
       "api": "ord",
-      "url": "https://docs.python.org/3.12/library/functions.html#ord"
+      "url": "https://docs.python.org/3.12/library/functions.html#ord",
+      "explain": "`ord` gives a character's code point and `chr` reverses it. `ord(c) - ord('a')` maps 'a'..'z' onto 0..25, which is how you index a 26-slot count array."
     },
     {
       "id": "hand-py-fund-chr",
@@ -277,7 +299,8 @@
       "answer": "'b'",
       "hint": null,
       "api": "chr",
-      "url": "https://docs.python.org/3.12/library/functions.html#chr"
+      "url": "https://docs.python.org/3.12/library/functions.html#chr",
+      "explain": null
     },
     {
       "id": "hand-py-fund-fstring",
@@ -289,7 +312,8 @@
       "answer": "'n=3'",
       "hint": null,
       "api": "f-string",
-      "url": "https://docs.python.org/3.12/tutorial/inputoutput.html"
+      "url": "https://docs.python.org/3.12/tutorial/inputoutput.html",
+      "explain": null
     },
     {
       "id": "hand-py-fund-count",
@@ -301,7 +325,8 @@
       "answer": "3",
       "hint": null,
       "api": "str.count",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str",
+      "explain": null
     },
     {
       "id": "hand-py-fund-in",
@@ -313,7 +338,8 @@
       "answer": "True",
       "hint": null,
       "api": "in",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str",
+      "explain": null
     },
     {
       "id": "hand-py-fund-list-index",
@@ -325,7 +351,8 @@
       "answer": "2",
       "hint": null,
       "api": "list",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html",
+      "explain": null
     },
     {
       "id": "hand-py-fund-slice-tail",
@@ -337,7 +364,8 @@
       "answer": "[2, 3]",
       "hint": null,
       "api": "slice",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html",
+      "explain": null
     },
     {
       "id": "hand-py-fund-append",
@@ -349,7 +377,8 @@
       "answer": "[1, 2, 3]",
       "hint": null,
       "api": "list.append",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html",
+      "explain": null
     },
     {
       "id": "hand-py-fund-pop",
@@ -361,7 +390,8 @@
       "answer": "3",
       "hint": null,
       "api": "list.pop",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html",
+      "explain": null
     },
     {
       "id": "hand-py-fund-pop-front",
@@ -373,7 +403,8 @@
       "answer": "1",
       "hint": null,
       "api": "list.pop",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html",
+      "explain": null
     },
     {
       "id": "hand-py-fund-alias",
@@ -385,7 +416,8 @@
       "answer": "[1, 2, 3]",
       "hint": null,
       "api": "aliasing",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html",
+      "explain": "`b = a` does not copy the list, it gives the same list a second name, so mutating through either is visible from both. This is the single most common source of surprise bugs in Python."
     },
     {
       "id": "hand-py-fund-copy",
@@ -397,7 +429,8 @@
       "answer": "[1, 2]",
       "hint": null,
       "api": "slice copy",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html",
+      "explain": "`a[:]` builds a new list with the same elements, so appending to the copy leaves the original alone. Note it is a SHALLOW copy: nested lists inside are still shared."
     },
     {
       "id": "hand-py-fund-repeat",
@@ -409,7 +442,8 @@
       "answer": "[0, 0, 0]",
       "hint": null,
       "api": "*",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html",
+      "explain": null
     },
     {
       "id": "hand-py-fund-grid-trap",
@@ -421,7 +455,8 @@
       "answer": "[[9, 0], [9, 0]]",
       "hint": null,
       "api": "*",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html",
+      "explain": "`[[0] * 2] * 2` repeats the same inner list object twice, so both rows are the same list and writing to one writes to both. Almost never what you want for a grid."
     },
     {
       "id": "hand-py-fund-grid-right",
@@ -433,7 +468,8 @@
       "answer": "[[9, 0], [0, 0]]",
       "hint": null,
       "api": "comprehension",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html",
+      "explain": "The comprehension evaluates `[0] * 2` afresh each iteration, producing genuinely separate rows. This is the correct way to build a 2-D grid."
     },
     {
       "id": "hand-py-fund-sorted-returns",
@@ -445,7 +481,8 @@
       "answer": "[1, 2, 3]",
       "hint": null,
       "api": "sorted",
-      "url": "https://docs.python.org/3.12/library/functions.html#sorted"
+      "url": "https://docs.python.org/3.12/library/functions.html#sorted",
+      "explain": null
     },
     {
       "id": "hand-py-fund-sort-inplace",
@@ -457,7 +494,8 @@
       "answer": "[1, 2, 3]",
       "hint": null,
       "api": "list.sort",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html",
+      "explain": null
     },
     {
       "id": "hand-py-fund-sort-returns-none",
@@ -469,7 +507,8 @@
       "answer": "None",
       "hint": null,
       "api": "list.sort",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html",
+      "explain": "`list.sort()` sorts in place and returns None, while `sorted(xs)` leaves the input alone and returns a new list. Writing `xs = xs.sort()` silently sets xs to None."
     },
     {
       "id": "hand-py-fund-sort-key",
@@ -481,7 +520,8 @@
       "answer": "key",
       "hint": "['a', 'cc', 'bbb']",
       "api": "sorted",
-      "url": "https://docs.python.org/3.12/library/functions.html#sorted"
+      "url": "https://docs.python.org/3.12/library/functions.html#sorted",
+      "explain": "`key` takes a function applied to each element to decide the ordering; the elements themselves are returned unchanged. `key=len` sorts by length."
     },
     {
       "id": "hand-py-fund-sort-reverse",
@@ -493,7 +533,8 @@
       "answer": "[3, 2, 1]",
       "hint": null,
       "api": "sorted",
-      "url": "https://docs.python.org/3.12/library/functions.html#sorted"
+      "url": "https://docs.python.org/3.12/library/functions.html#sorted",
+      "explain": null
     },
     {
       "id": "hand-py-fund-concat",
@@ -505,7 +546,8 @@
       "answer": "[1, 2, 3]",
       "hint": null,
       "api": "+",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html",
+      "explain": null
     },
     {
       "id": "hand-py-fund-range",
@@ -517,7 +559,8 @@
       "answer": "[0, 1, 2]",
       "hint": null,
       "api": "range",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#range"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#range",
+      "explain": "`range(n)` counts 0, 1, ... n-1 \u2014 n values, ending one before n. The exclusive end is why `range(len(xs))` covers exactly the valid indices."
     },
     {
       "id": "hand-py-fund-range-start",
@@ -529,7 +572,8 @@
       "answer": "[1, 2, 3]",
       "hint": null,
       "api": "range",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#range"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#range",
+      "explain": null
     },
     {
       "id": "hand-py-fund-range-step",
@@ -541,7 +585,8 @@
       "answer": "[0, 3, 6, 9]",
       "hint": null,
       "api": "range",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#range"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#range",
+      "explain": null
     },
     {
       "id": "hand-py-fund-range-down",
@@ -553,7 +598,8 @@
       "answer": "[3, 2, 1]",
       "hint": null,
       "api": "range",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#range"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#range",
+      "explain": "With a negative step the range counts down, and the end is still exclusive, so `range(3, 0, -1)` stops at 1 and never reaches 0."
     },
     {
       "id": "hand-py-fund-accumulate",
@@ -565,7 +611,8 @@
       "answer": "6",
       "hint": null,
       "api": "for",
-      "url": "https://docs.python.org/3.12/tutorial/controlflow.html"
+      "url": "https://docs.python.org/3.12/tutorial/controlflow.html",
+      "explain": null
     },
     {
       "id": "hand-py-fund-enumerate",
@@ -577,7 +624,8 @@
       "answer": "[(0, 'a'), (1, 'b')]",
       "hint": null,
       "api": "enumerate",
-      "url": "https://docs.python.org/3.12/library/functions.html#enumerate"
+      "url": "https://docs.python.org/3.12/library/functions.html#enumerate",
+      "explain": "`enumerate(xs)` yields (index, value) pairs, replacing the `range(len(xs))` plus manual indexing pattern."
     },
     {
       "id": "hand-py-fund-enumerate-cloze",
@@ -589,7 +637,8 @@
       "answer": "enumerate",
       "hint": "[(0, 'a'), (1, 'b')]",
       "api": "enumerate",
-      "url": "https://docs.python.org/3.12/library/functions.html#enumerate"
+      "url": "https://docs.python.org/3.12/library/functions.html#enumerate",
+      "explain": null
     },
     {
       "id": "hand-py-fund-zip",
@@ -601,7 +650,8 @@
       "answer": "[(1, 'a'), (2, 'b')]",
       "hint": null,
       "api": "zip",
-      "url": "https://docs.python.org/3.12/library/functions.html#zip"
+      "url": "https://docs.python.org/3.12/library/functions.html#zip",
+      "explain": "`zip` pairs up elements position by position."
     },
     {
       "id": "hand-py-fund-zip-short",
@@ -613,7 +663,8 @@
       "answer": "[(1, 'a')]",
       "hint": null,
       "api": "zip",
-      "url": "https://docs.python.org/3.12/library/functions.html#zip"
+      "url": "https://docs.python.org/3.12/library/functions.html#zip",
+      "explain": "zip stops at the SHORTEST input, silently dropping the tail of the longer one. Convenient for comparing neighbours with `zip(xs, xs[1:])`, and a trap when the lengths were meant to match."
     },
     {
       "id": "hand-py-fund-break",
@@ -625,7 +676,8 @@
       "answer": "2",
       "hint": null,
       "api": "break",
-      "url": "https://docs.python.org/3.12/tutorial/controlflow.html"
+      "url": "https://docs.python.org/3.12/tutorial/controlflow.html",
+      "explain": null
     },
     {
       "id": "hand-py-fund-continue",
@@ -637,7 +689,8 @@
       "answer": "[0, 2, 4]",
       "hint": null,
       "api": "continue",
-      "url": "https://docs.python.org/3.12/tutorial/controlflow.html"
+      "url": "https://docs.python.org/3.12/tutorial/controlflow.html",
+      "explain": "`continue` skips the rest of this iteration and moves to the next; `break` leaves the loop entirely."
     },
     {
       "id": "hand-py-fund-while",
@@ -649,7 +702,8 @@
       "answer": "2",
       "hint": null,
       "api": "while",
-      "url": "https://docs.python.org/3.12/tutorial/controlflow.html"
+      "url": "https://docs.python.org/3.12/tutorial/controlflow.html",
+      "explain": null
     },
     {
       "id": "hand-py-fund-over-dict",
@@ -661,7 +715,8 @@
       "answer": "['a', 'b']",
       "hint": null,
       "api": "for",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html",
+      "explain": "Iterating a dict yields its KEYS, not its values or pairs. Since Python 3.7 they come back in insertion order."
     },
     {
       "id": "hand-py-fund-reversed",
@@ -673,7 +728,8 @@
       "answer": "[3, 2, 1]",
       "hint": null,
       "api": "reversed",
-      "url": "https://docs.python.org/3.12/library/functions.html#reversed"
+      "url": "https://docs.python.org/3.12/library/functions.html#reversed",
+      "explain": null
     },
     {
       "id": "hand-py-fund-ternary",
@@ -685,7 +741,8 @@
       "answer": "'big'",
       "hint": null,
       "api": "conditional expression",
-      "url": "https://docs.python.org/3.12/tutorial/controlflow.html"
+      "url": "https://docs.python.org/3.12/tutorial/controlflow.html",
+      "explain": "The conditional expression reads value-if-true, condition, value-if-false. It is an expression, so it can sit anywhere a value can."
     },
     {
       "id": "hand-py-fund-chained",
@@ -697,7 +754,8 @@
       "answer": "True",
       "hint": null,
       "api": "comparison",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#comparisons"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#comparisons",
+      "explain": "Comparisons chain the way they do in mathematics: `1 < 2 < 3` means `1 < 2 and 2 < 3`, and the middle value is only evaluated once."
     },
     {
       "id": "hand-py-fund-not-empty",
@@ -709,7 +767,8 @@
       "answer": "True",
       "hint": null,
       "api": "not",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#truth"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#truth",
+      "explain": null
     },
     {
       "id": "hand-py-fund-or-default",
@@ -721,7 +780,8 @@
       "answer": "'fallback'",
       "hint": null,
       "api": "or",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#truth"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#truth",
+      "explain": "`or` returns one of its OPERANDS, not True or False: the first truthy one, else the last. Hence `x or default` as a fallback."
     },
     {
       "id": "hand-py-fund-and-shortcircuit",
@@ -733,7 +793,8 @@
       "answer": "0",
       "hint": null,
       "api": "and",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#truth"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#truth",
+      "explain": "`and` returns the first falsy operand, else the last. It also short-circuits, so the right side is never evaluated when the left is falsy \u2014 which is what makes `i < len(xs) and xs[i]` safe."
     },
     {
       "id": "hand-py-fund-is-none",
@@ -745,7 +806,8 @@
       "answer": "True",
       "hint": null,
       "api": "is",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#comparisons"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#comparisons",
+      "explain": "`is` compares identity, `==` compares value. For None always use `is`, since a class can define `==` to do anything."
     },
     {
       "id": "hand-py-fund-lookup",
@@ -757,7 +819,8 @@
       "answer": "1",
       "hint": null,
       "api": "dict",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html",
+      "explain": null
     },
     {
       "id": "hand-py-fund-get-default",
@@ -769,7 +832,8 @@
       "answer": "get",
       "hint": "0",
       "api": "dict.get",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#dict"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#dict",
+      "explain": "`d.get(k, default)` returns the default when the key is missing instead of raising KeyError, so it needs no `in` check first."
     },
     {
       "id": "hand-py-fund-in-checks-keys",
@@ -781,7 +845,8 @@
       "answer": "True",
       "hint": null,
       "api": "in",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#dict"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#dict",
+      "explain": null
     },
     {
       "id": "hand-py-fund-count-pattern",
@@ -793,7 +858,8 @@
       "answer": "{'x': 2}",
       "hint": null,
       "api": "dict.get",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#dict"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#dict",
+      "explain": "`d[k] = d.get(k, 0) + 1` is the standard counting idiom: read with a default of 0, add one, store back. `collections.Counter` does the same thing."
     },
     {
       "id": "hand-py-fund-items",
@@ -805,7 +871,8 @@
       "answer": "[('a', 1), ('b', 2)]",
       "hint": null,
       "api": "dict.items",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#dict"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#dict",
+      "explain": null
     },
     {
       "id": "hand-py-fund-setdefault",
@@ -817,7 +884,8 @@
       "answer": "setdefault",
       "hint": "{'k': [1]}",
       "api": "dict.setdefault",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#dict"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#dict",
+      "explain": "`d.setdefault(k, [])` returns the existing value, or inserts the default and returns THAT, so the append lands in the dict. `defaultdict(list)` is the tidier version."
     },
     {
       "id": "hand-py-fund-dedupe",
@@ -829,7 +897,8 @@
       "answer": "[1, 2, 3]",
       "hint": null,
       "api": "set",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#set"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#set",
+      "explain": "A set stores each value once and tests membership in constant time, which is why converting to a set is the usual way to de-duplicate or to check 'have I seen this'."
     },
     {
       "id": "hand-py-fund-intersect",
@@ -841,7 +910,8 @@
       "answer": "{2}",
       "hint": null,
       "api": "set",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#set"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#set",
+      "explain": null
     },
     {
       "id": "hand-py-fund-membership",
@@ -853,7 +923,8 @@
       "answer": "True",
       "hint": null,
       "api": "in",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#set"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#set",
+      "explain": null
     },
     {
       "id": "hand-py-fund-tuple-index",
@@ -865,7 +936,8 @@
       "answer": "1",
       "hint": null,
       "api": "tuple",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html",
+      "explain": null
     },
     {
       "id": "hand-py-fund-unpack",
@@ -877,7 +949,8 @@
       "answer": "1",
       "hint": null,
       "api": "unpacking",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html",
+      "explain": "Unpacking assigns positionally, so the number of names must match the number of values."
     },
     {
       "id": "hand-py-fund-map",
@@ -889,7 +962,8 @@
       "answer": "[2, 4, 6]",
       "hint": null,
       "api": "comprehension",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html#list-comprehensions"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html#list-comprehensions",
+      "explain": "A comprehension builds a new list by evaluating the expression for each element."
     },
     {
       "id": "hand-py-fund-filter",
@@ -901,7 +975,8 @@
       "answer": "[0, 2, 4]",
       "hint": null,
       "api": "comprehension",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html#list-comprehensions"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html#list-comprehensions",
+      "explain": "The trailing `if` keeps only the elements that pass, so a comprehension can map and filter in one pass."
     },
     {
       "id": "hand-py-fund-dict-comp",
@@ -913,7 +988,8 @@
       "answer": "{'a': 1, 'bb': 2}",
       "hint": null,
       "api": "comprehension",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html#list-comprehensions"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html#list-comprehensions",
+      "explain": null
     },
     {
       "id": "hand-py-fund-set-comp",
@@ -925,7 +1001,8 @@
       "answer": "['a', 'b']",
       "hint": null,
       "api": "comprehension",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html#list-comprehensions"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html#list-comprehensions",
+      "explain": null
     },
     {
       "id": "hand-py-fund-nested",
@@ -937,7 +1014,8 @@
       "answer": "['a', 'b', 'c']",
       "hint": null,
       "api": "comprehension",
-      "url": "https://docs.python.org/3.12/tutorial/datastructures.html#list-comprehensions"
+      "url": "https://docs.python.org/3.12/tutorial/datastructures.html#list-comprehensions",
+      "explain": "In a nested comprehension the loops read left to right, in the same order you would write them as nested `for` statements."
     },
     {
       "id": "hand-py-fund-define",
@@ -949,7 +1027,8 @@
       "answer": "5",
       "hint": null,
       "api": "def",
-      "url": "https://docs.python.org/3.12/tutorial/controlflow.html#defining-functions"
+      "url": "https://docs.python.org/3.12/tutorial/controlflow.html#defining-functions",
+      "explain": "`def` defines a function and `return` hands a value back to the caller."
     },
     {
       "id": "hand-py-fund-default-arg",
@@ -961,7 +1040,8 @@
       "answer": "6",
       "hint": null,
       "api": "def",
-      "url": "https://docs.python.org/3.12/tutorial/controlflow.html#defining-functions"
+      "url": "https://docs.python.org/3.12/tutorial/controlflow.html#defining-functions",
+      "explain": "A parameter with a default may be omitted at the call site."
     },
     {
       "id": "hand-py-fund-implicit-none",
@@ -973,7 +1053,8 @@
       "answer": "None",
       "hint": null,
       "api": "return",
-      "url": "https://docs.python.org/3.12/tutorial/controlflow.html#defining-functions"
+      "url": "https://docs.python.org/3.12/tutorial/controlflow.html#defining-functions",
+      "explain": "A function with no `return` returns None. So does a bare `return`. This is why forgetting to return leaves you with None rather than an error."
     },
     {
       "id": "hand-py-fund-mutable-default",
@@ -985,7 +1066,8 @@
       "answer": "([1, 2], [1, 2])",
       "hint": null,
       "api": "def",
-      "url": "https://docs.python.org/3.12/tutorial/controlflow.html#defining-functions"
+      "url": "https://docs.python.org/3.12/tutorial/controlflow.html#defining-functions",
+      "explain": "The default is evaluated ONCE, when the function is defined, so a mutable default is shared by every call and accumulates. Use `None` as the default and build the list inside instead."
     },
     {
       "id": "hand-py-fund-max",
@@ -997,7 +1079,8 @@
       "answer": "5",
       "hint": null,
       "api": "max",
-      "url": "https://docs.python.org/3.12/library/functions.html#max"
+      "url": "https://docs.python.org/3.12/library/functions.html#max",
+      "explain": null
     },
     {
       "id": "hand-py-fund-sum",
@@ -1009,7 +1092,8 @@
       "answer": "6",
       "hint": null,
       "api": "sum",
-      "url": "https://docs.python.org/3.12/library/functions.html#sum"
+      "url": "https://docs.python.org/3.12/library/functions.html#sum",
+      "explain": null
     },
     {
       "id": "hand-py-fund-any",
@@ -1021,7 +1105,8 @@
       "answer": "True",
       "hint": null,
       "api": "any",
-      "url": "https://docs.python.org/3.12/library/functions.html#any"
+      "url": "https://docs.python.org/3.12/library/functions.html#any",
+      "explain": null
     },
     {
       "id": "hand-py-fund-all-empty",
@@ -1033,7 +1118,8 @@
       "answer": "True",
       "hint": null,
       "api": "all",
-      "url": "https://docs.python.org/3.12/library/functions.html#all"
+      "url": "https://docs.python.org/3.12/library/functions.html#all",
+      "explain": "`all([])` is True and `any([])` is False, which follows from `all` meaning 'no counterexample'. Worth knowing before relying on either for an empty input."
     },
     {
       "id": "hand-py-fund-len",
@@ -1045,7 +1131,164 @@
       "answer": "3",
       "hint": null,
       "api": "len",
-      "url": "https://docs.python.org/3.12/library/functions.html#len"
+      "url": "https://docs.python.org/3.12/library/functions.html#len",
+      "explain": null
+    },
+    {
+      "id": "hand-py-fund-and",
+      "lang": "python",
+      "module": "bitwise",
+      "kind": "output",
+      "context": null,
+      "code": ">>> 5 & 3",
+      "answer": "1",
+      "hint": null,
+      "api": "&",
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#bitwise-operations-on-integer-types",
+      "explain": "AND keeps a bit only where BOTH numbers have it. 5 is 101 and 3 is 011, so only the last bit survives: 001, which is 1. `x & 1` is the standard odd/even test."
+    },
+    {
+      "id": "hand-py-fund-or",
+      "lang": "python",
+      "module": "bitwise",
+      "kind": "output",
+      "context": null,
+      "code": ">>> 5 | 3",
+      "answer": "7",
+      "hint": null,
+      "api": "|",
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#bitwise-operations-on-integer-types",
+      "explain": "OR sets a bit where EITHER number has it. 101 | 011 = 111, which is 7. Used to switch flags on."
+    },
+    {
+      "id": "hand-py-fund-xor",
+      "lang": "python",
+      "module": "bitwise",
+      "kind": "output",
+      "context": null,
+      "code": ">>> 5 ^ 3",
+      "answer": "6",
+      "hint": null,
+      "api": "^",
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#bitwise-operations-on-integer-types",
+      "explain": "XOR sets a bit where the two DIFFER. 101 ^ 011 = 110, which is 6."
+    },
+    {
+      "id": "hand-py-fund-xor-self",
+      "lang": "python",
+      "module": "bitwise",
+      "kind": "output",
+      "context": null,
+      "code": ">>> 4 ^ 4",
+      "answer": "0",
+      "hint": null,
+      "api": "^",
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#bitwise-operations-on-integer-types",
+      "explain": "Anything XORed with itself is 0, and anything XORed with 0 is unchanged. XOR is also order-independent, so XORing a whole list cancels every value that appears twice and leaves the one that appears once \u2014 the entire trick behind Single Number."
+    },
+    {
+      "id": "hand-py-fund-not",
+      "lang": "python",
+      "module": "bitwise",
+      "kind": "output",
+      "context": null,
+      "code": ">>> ~5",
+      "answer": "-6",
+      "hint": null,
+      "api": "~",
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#bitwise-operations-on-integer-types",
+      "explain": "`~x` flips every bit, which in two's complement equals -x - 1. Python integers are conceptually infinite-width, so the sign bit extends forever and the result is negative rather than wrapping."
+    },
+    {
+      "id": "hand-py-fund-shift-left",
+      "lang": "python",
+      "module": "bitwise",
+      "kind": "output",
+      "context": null,
+      "code": ">>> 1 << 3",
+      "answer": "8",
+      "hint": null,
+      "api": "<<",
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#bitwise-operations-on-integer-types",
+      "explain": "Shifting left by n multiplies by 2**n, filling with zeros. `1 << n` builds a mask with only bit n set."
+    },
+    {
+      "id": "hand-py-fund-shift-right",
+      "lang": "python",
+      "module": "bitwise",
+      "kind": "output",
+      "context": null,
+      "code": ">>> 20 >> 2",
+      "answer": "5",
+      "hint": null,
+      "api": ">>",
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#bitwise-operations-on-integer-types",
+      "explain": "Shifting right by n divides by 2**n and discards the bits shifted off. `x >> 1` is a halving step."
+    },
+    {
+      "id": "hand-py-fund-shift-right-negative",
+      "lang": "python",
+      "module": "bitwise",
+      "kind": "output",
+      "context": null,
+      "code": ">>> -5 >> 1",
+      "answer": "-3",
+      "hint": null,
+      "api": ">>",
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#bitwise-operations-on-integer-types",
+      "explain": "Right shift on a negative number keeps the sign and rounds DOWN, matching `//` rather than truncating towards zero. -5 // 2 is -3, not -2."
+    },
+    {
+      "id": "hand-py-fund-test-bit",
+      "lang": "python",
+      "module": "bitwise",
+      "kind": "output",
+      "context": null,
+      "code": ">>> (13 >> 2) & 1",
+      "answer": "1",
+      "hint": null,
+      "api": "&",
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#bitwise-operations-on-integer-types",
+      "explain": "To read bit n, shift it down to the bottom and mask with 1. 13 is 1101, so bit 2 is 1."
+    },
+    {
+      "id": "hand-py-fund-clear-lowest",
+      "lang": "python",
+      "module": "bitwise",
+      "kind": "output",
+      "context": null,
+      "code": ">>> 12 & 11",
+      "answer": "8",
+      "hint": null,
+      "api": "&",
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#bitwise-operations-on-integer-types",
+      "explain": "`n & (n - 1)` clears the lowest set bit: 12 is 1100 and 11 is 1011, leaving 1000. Repeating it counts set bits in as many steps as there are ones, rather than 32."
+    },
+    {
+      "id": "hand-py-fund-isolate-lowest",
+      "lang": "python",
+      "module": "bitwise",
+      "kind": "output",
+      "context": null,
+      "code": ">>> 12 & -12",
+      "answer": "4",
+      "hint": null,
+      "api": "&",
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#bitwise-operations-on-integer-types",
+      "explain": "`n & -n` isolates the lowest set bit, because -n is ~n + 1, which flips everything above that bit and leaves it alone. 12 is 1100, so the answer is 100."
+    },
+    {
+      "id": "hand-py-fund-bin",
+      "lang": "python",
+      "module": "bitwise",
+      "kind": "output",
+      "context": null,
+      "code": ">>> bin(10)",
+      "answer": "'0b1010'",
+      "hint": null,
+      "api": "bin",
+      "url": "https://docs.python.org/3.12/library/functions.html#bin",
+      "explain": "`bin` renders an int in binary with an '0b' prefix; slice with [2:] to drop it. `bin(x).count('1')` counts set bits in one line."
     },
     {
       "id": "hand-py-heapify",

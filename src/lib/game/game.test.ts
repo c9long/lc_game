@@ -6,7 +6,7 @@ import { computeTree, dueRefreshes, isServable, nextNewProblems, type ProblemPro
 import { computeAward } from './awards';
 import { WEEKLY_BUDGET, advanceMorale, freezeCost, freezePurchasesThisWeek, weeklyCount } from './budget';
 import { BUILDINGS, baseProduction, buildingYield, canAfford, costAtLevel, dailyCoins, gateSatisfied, settleProduction } from './city';
-import { DRILL_INTERVALS, afterDrill, buildDrillSet, checkAnswer, ingotsFor, normalizeOutput, type Drill } from './drills';
+import { DRILL_INTERVALS, MAX_DUE_PER_SET, afterDrill, buildDrillSet, checkAnswer, ingotsFor, normalizeOutput, type Drill, type DrillProgress } from './drills';
 
 const DAY = 86_400_000;
 const t0 = new Date('2026-09-04T12:00:00Z');
@@ -416,5 +416,47 @@ describe('per-building yield', () => {
 		const summed = placed.reduce((n, b) => n + buildingYield(b, placed, tree).beforeMorale, 0);
 		expect(baseProduction(placed, tree)).toBeCloseTo(summed);
 		expect(dailyCoins(placed, tree, 100)).toBe(Math.round(summed));
+	});
+});
+
+describe('drill set composition', () => {
+	const bank: Drill[] = [];
+	for (const [module, n] of [['heapq', 9], ['bisect', 4], ['basics', 9], ['strings', 6]] as const) {
+		for (let i = 0; i < n; i++) {
+			bank.push({
+				id: `${module}-${i}`, lang: 'python', module,
+				kind: i % 2 === 0 ? 'cloze' : 'output',
+				context: '', code: 'x', answer: 'y', hint: null, api: null, url: ''
+			} as Drill);
+		}
+	}
+	const now = new Date('2026-09-08T12:00:00Z');
+	const overdue = new Date(now.getTime() - DAY);
+
+	it('caps reviews so a backlog in one module cannot own the day', () => {
+		// The reported case: nine heapq drills started, all coming due, filling every slot for days
+		// while the fundamentals sat untouched behind them.
+		const progress = new Map<string, DrillProgress>();
+		for (let i = 0; i < 9; i++) progress.set(`heapq-${i}`, { srsStep: 0, dueAt: overdue, correct: 0, wrong: 1 });
+		const set = buildDrillSet(bank, progress, now, 5);
+		expect(set).toHaveLength(5);
+		expect(set.filter((d) => progress.has(d.id)).length).toBe(MAX_DUE_PER_SET);
+		expect(set.filter((d) => d.module === 'heapq').length).toBeLessThanOrEqual(MAX_DUE_PER_SET);
+		expect(set.some((d) => !progress.has(d.id))).toBe(true); // new material got in
+	});
+
+	it('spreads the reviews it does take across modules', () => {
+		const progress = new Map<string, DrillProgress>();
+		for (const id of ['heapq-0', 'heapq-1', 'heapq-2', 'bisect-0', 'bisect-1']) {
+			progress.set(id, { srsStep: 0, dueAt: overdue, correct: 0, wrong: 1 });
+		}
+		const reviews = buildDrillSet(bank, progress, now, 5).filter((d) => progress.has(d.id));
+		expect(new Set(reviews.map((d) => d.module)).size).toBeGreaterThan(1);
+	});
+
+	it('falls back to the backlog once no new material is left', () => {
+		const progress = new Map<string, DrillProgress>();
+		for (const d of bank) progress.set(d.id, { srsStep: 0, dueAt: overdue, correct: 0, wrong: 1 });
+		expect(buildDrillSet(bank, progress, now, 5)).toHaveLength(5);
 	});
 });

@@ -5,7 +5,7 @@
 	let idx = $state(0);
 	let answer = $state('');
 	let busy = $state(false);
-	let feedback = $state<null | { correct: boolean; expected: string; alternatives: string[]; url: string; api: string | null; ingots: number; setDone: boolean }>(null);
+	let feedback = $state<null | { correct: boolean; expected: string; alternatives: string[]; url: string; api: string | null; explain: string | null; ingots: number; setDone: boolean }>(null);
 	let message = $state('');
 
 	const remaining = $derived(data.drills.filter((d) => d.answered === undefined));
@@ -39,6 +39,20 @@
 		await invalidateAll();
 	}
 
+	/** Enter advances whichever card is showing feedback, wherever focus happens to be.
+	 *  Submitting replaces the input with the feedback banner, so focus lands on nothing and the
+	 *  element-level handlers never saw the keypress. */
+	function onWindowKey(e: KeyboardEvent) {
+		if (e.key !== 'Enter' || e.shiftKey || e.isComposing) return;
+		if (feedback) {
+			e.preventDefault();
+			void next();
+		} else if (practiceFeedback) {
+			e.preventDefault();
+			void nextPractice();
+		}
+	}
+
 	function onkey(e: KeyboardEvent) {
 		if (e.key === 'Enter' && !e.shiftKey) {
 			e.preventDefault();
@@ -55,7 +69,7 @@
 	let practice = $state<PracticeDrill | null>(null);
 	let practiceAnswer = $state('');
 	let practiceBusy = $state(false);
-	let practiceFeedback = $state<null | { correct: boolean; expected: string; alternatives: string[]; url: string; api: string | null }>(null);
+	let practiceFeedback = $state<null | { correct: boolean; expected: string; alternatives: string[]; url: string; api: string | null; explain: string | null }>(null);
 	let practiceDone = $state(0);
 	let practiceCorrect = $state(0);
 	let seen = $state<string[]>([]);
@@ -127,6 +141,8 @@
 	}
 </script>
 
+<svelte:window onkeydown={onWindowKey} />
+
 <svelte:head><title>Drills · LC Game</title></svelte:head>
 
 <h1>Syntax drills <span class="muted">{data.today}{data.lang ? ` · ${data.lang}` : ''}</span></h1>
@@ -185,8 +201,14 @@
 							{#if practiceFeedback.alternatives.length}<span class="muted"> (also accepted: {practiceFeedback.alternatives.join(', ')})</span>{/if}
 							<br /><a href={practiceFeedback.url} target="_blank" rel="noreferrer">{practiceFeedback.api ?? 'docs'} ↗</a>
 						</div>
+						{#if practiceFeedback.explain}
+							<details class="explain">
+								<summary>Why?</summary>
+								<p>{practiceFeedback.explain}</p>
+							</details>
+						{/if}
 						<div class="row">
-							<button class="primary" onclick={nextPractice} onkeydown={onPracticeKey}>Next</button>
+							<button class="primary" onclick={nextPractice} onkeydown={onPracticeKey}>Next <span class="muted">↵</span></button>
 							<button onclick={stopPractice}>Stop</button>
 						</div>
 					{/if}
@@ -235,5 +257,8 @@
 
 <style>
 	pre.ctx { color: var(--muted); }
+	.explain { margin: 0.6rem 0; }
+	.explain summary { cursor: pointer; color: var(--accent-2); }
+	.explain p { margin: 0.5rem 0 0; line-height: 1.55; }
 	pre.code { border: 1px solid var(--accent); }
 </style>

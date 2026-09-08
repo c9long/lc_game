@@ -54,6 +54,7 @@ export interface AnswerResult {
 	alternatives: string[];
 	url: string;
 	api: string | null;
+	explain: string | null;
 	ingots: number;
 	setDone: boolean;
 	setIngots: number;
@@ -117,6 +118,7 @@ export async function answerDrill(
 		alternatives: drill.alternatives ?? [],
 		url: drill.url,
 		api: drill.api ?? null,
+		explain: drill.explain ?? null,
 		ingots: delta,
 		setDone,
 		setIngots: set.ingots
@@ -160,6 +162,7 @@ export interface PracticeResult {
 	alternatives: string[];
 	url: string;
 	api: string | null;
+	explain: string | null;
 }
 
 /** Checks a practice answer. Records nothing: practice never touches scheduling or history. */
@@ -171,6 +174,7 @@ export function checkPracticeAnswer(drillId: string, answer: string): PracticeRe
 		expected: drill.answer,
 		alternatives: drill.alternatives ?? [],
 		url: drill.url,
-		api: drill.api ?? null
+		api: drill.api ?? null,
+		explain: drill.explain ?? null
 	};
 }
