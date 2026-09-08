@@ -144,6 +144,8 @@ def intervals(rng, n, lo=0, hi=40):
 @generator("contains-duplicate")
 def _contains_duplicate(rng):
     n = max(2, edge_sizes(rng))
+    if rng.random() < 0.10:
+        return [[rng.randint(-50, 50)]]             # the shortest the constraints allow
     if rng.random() < 0.5:
         return [distinct_ints(rng, n)]              # answer False
     # The duplicate is planted at two random positions rather than left to chance, so it is usually
@@ -161,6 +163,9 @@ def _contains_duplicate(rng):
 
 @generator("valid-anagram")
 def _valid_anagram(rng):
+    if rng.random() < 0.08:
+        a, b = word(rng, 1, "ab"), word(rng, 1, "ab")
+        return [a, b]                               # single characters, the shortest allowed
     n = max(2, edge_sizes(rng))
     s = word(rng, n, "abc")
     roll = rng.random()
@@ -202,11 +207,15 @@ def _two_sum(rng):
 
 @generator("group-anagrams")
 def _group_anagrams(rng):
-    roots = [word(rng, rng.randint(1, 5), "abc") for _ in range(rng.randint(1, 5))]
+    # The empty string is LeetCode's own example 2 — [""] -> [[""]] — and the generator produced
+    # none, because word lengths started at 1. It is its own anagram group.
+    if rng.random() < 0.08:
+        return [[""] * rng.randint(1, 3)]
+    roots = [word(rng, rng.randint(0, 5), "abc") for _ in range(rng.randint(1, 5))]
     out = []
     for root in roots:
         for _ in range(rng.randint(1, 3)):
-            out.append("".join(rng.sample(root, len(root))))
+            out.append("".join(rng.sample(root, len(root))) if root else "")
     rng.shuffle(out)
     return [out]
 
@@ -259,6 +268,8 @@ def _encode_decode(rng):
 def _longest_consecutive(rng):
     if rng.random() < 0.08:
         return [[]]                                 # the constraints allow an empty array
+    if rng.random() < 0.08:
+        return [[rng.randint(-10 ** 9, 10 ** 9)]]   # one element, at the far end of the value range
     nums = []
     for _ in range(rng.randint(1, 4)):
         start = rng.randint(-30, 30)

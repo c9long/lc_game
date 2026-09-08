@@ -102,8 +102,8 @@
         ]
       ],
       "expected": [
-        "b",
-        "abb"
+        "abb",
+        "b"
       ]
     },
     {
@@ -212,9 +212,9 @@
         ]
       ],
       "expected": [
-        "bc",
         "caa",
-        "caab"
+        "caab",
+        "bc"
       ]
     },
     {
@@ -316,11 +316,11 @@
         ]
       ],
       "expected": [
-        "ca",
         "bacc",
-        "ab",
         "cc",
-        "cbb"
+        "cbb",
+        "ab",
+        "ca"
       ]
     },
     {
@@ -365,8 +365,8 @@
       ],
       "expected": [
         "b",
-        "bc",
-        "a"
+        "a",
+        "bc"
       ]
     },
     {
@@ -412,8 +412,8 @@
         ]
       ],
       "expected": [
-        "abcb",
-        "bac"
+        "bac",
+        "abcb"
       ]
     },
     {
@@ -528,8 +528,8 @@
         ]
       ],
       "expected": [
-        "aab",
-        "ca"
+        "ca",
+        "aab"
       ]
     },
     {
@@ -658,8 +658,8 @@
         ]
       ],
       "expected": [
-        "ccbb",
         "ac",
+        "ccbb",
         "babb"
       ]
     },
@@ -693,8 +693,8 @@
         ]
       ],
       "expected": [
-        "cba",
         "cab",
+        "cba",
         "c"
       ]
     },
@@ -726,8 +726,8 @@
         ]
       ],
       "expected": [
-        "cbc",
-        "c"
+        "c",
+        "cbc"
       ]
     },
     {
@@ -830,10 +830,10 @@
         ]
       ],
       "expected": [
-        "acb",
         "cb",
         "cca",
-        "bca"
+        "bca",
+        "acb"
       ]
     },
     {
@@ -935,9 +935,9 @@
       ],
       "expected": [
         "cbca",
+        "ca",
         "caca",
-        "bac",
-        "ca"
+        "bac"
       ]
     },
     {

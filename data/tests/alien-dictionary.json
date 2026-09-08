@@ -253,7 +253,7 @@
           "cde"
         ]
       ],
-      "expected": "becd"
+      "expected": "bedc"
     },
     {
       "args": [
@@ -436,7 +436,7 @@
           "d"
         ]
       ],
-      "expected": "afced"
+      "expected": "afedc"
     }
   ],
   "compare": "exact",

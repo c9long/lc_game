@@ -90,6 +90,24 @@ it to think about.
 The `trapping-rain-water` near-miss now scores **2/42**: subtracting without clamping at zero is wrong
 almost everywhere once real basins exist, and was invisible before.
 
+### Batch 1 revisited
+
+Batch 1 was audited before the research step existed — its edge cases came from reasoning about the
+problems rather than looking them up. Re-running it with research found gaps the reasoning missed,
+which is the argument for the step:
+
+| problem | the gap research found | after |
+|---|---|---|
+| `group-anagrams` | the empty string is LeetCode's own example 2 (`[""]` -> `[[""]]`), and the generator produced none: word lengths started at 1. The single case present came from the published example, not from generation | 13 |
+| `contains-duplicate` | **0** single-element arrays, though the constraints allow `n == 1` | 7 |
+| `longest-consecutive-sequence` | **0** single-element arrays, and none near the ends of the stated value range | 4 |
+| `valid-anagram` | **0** single-character strings, the shortest the constraints allow | 2 |
+| `product-of-array-except-self` | the documented off-by-one — multiplying into the accumulator *before* storing, so an element is included in its own product — had no near-miss pinning it | now fails 14/42 |
+
+The lesson worth keeping: reasoning about a problem finds the edge cases you already know about. The
+`valid-palindrome` digit trap and the `group-anagrams` empty string were both invisible that way,
+because the generator contained no digits and no empty strings to prompt the thought.
+
 ### What batch 1 found
 
 Measuring before changing anything is the point of step 3; each of these was a count, not a hunch.

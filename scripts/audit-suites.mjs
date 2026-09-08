@@ -299,7 +299,31 @@ const cases = [
         for i in range(len(height)):
             l = max(height[:i+1]); r = max(height[i:])
             total += min(l, r) - height[i]
-        return total`]
+        return total`],
+
+	// ---- batch 1 revisited, after researching each problem rather than reasoning alone ----
+	['group-anagrams', 'NEAR-MISS skips empty strings', false, `class Solution:
+    def groupAnagrams(self, strs):
+        d = {}
+        for s in strs:
+            if not s: continue
+            d.setdefault("".join(sorted(s)), []).append(s)
+        return list(d.values())`],
+	['product-of-array-except-self', 'NEAR-MISS multiplies before storing, including itself', false, `class Solution:
+    def productExceptSelf(self, nums):
+        n = len(nums); res = [1] * n
+        prefix = 1
+        for i in range(n):
+            prefix *= nums[i]
+            res[i] = prefix
+        postfix = 1
+        for i in range(n - 1, -1, -1):
+            postfix *= nums[i]
+            res[i] *= postfix
+        return res`],
+	['contains-duplicate', 'NEAR-MISS assumes at least two elements', false, `class Solution:
+    def containsDuplicate(self, nums):
+        return len(set(nums)) != len(nums) or len(nums) < 2`]
 ];
 
 let bad = 0;
