@@ -143,24 +143,44 @@ def intervals(rng, n, lo=0, hi=40):
 
 @generator("contains-duplicate")
 def _contains_duplicate(rng):
-    n = edge_sizes(rng)
-    # Half the draws are duplicate-free, so True is not the constant answer.
+    n = max(2, edge_sizes(rng))
     if rng.random() < 0.5:
-        return [distinct_ints(rng, n)]
-    return [ints(rng, n, -8, 8)]
+        return [distinct_ints(rng, n)]              # answer False
+    # The duplicate is planted at two random positions rather than left to chance, so it is usually
+    # far apart: a solution that only compares neighbours has to actually fail.
+    nums = distinct_ints(rng, max(n, 4), -50, 50)
+    if nums is None:
+        return None
+    # Separate the pair explicitly. Sampling two indices left them adjacent on short arrays, which
+    # is the one arrangement a neighbours-only check survives.
+    i = rng.randrange(len(nums) - 2)
+    j = rng.randrange(i + 2, len(nums))
+    nums[j] = nums[i]
+    return [nums]
 
 
 @generator("valid-anagram")
 def _valid_anagram(rng):
-    n = edge_sizes(rng)
-    s = word(rng, n, "abcde")
+    n = max(2, edge_sizes(rng))
+    s = word(rng, n, "abc")
     roll = rng.random()
-    if roll < 0.4:
+    if roll < 0.35:
         t = "".join(rng.sample(s, len(s)))          # a genuine anagram
-    elif roll < 0.7:
-        t = word(rng, n, "abcde")                   # same length, probably not
+    elif roll < 0.65:
+        # Same letters, different counts — "aab" vs "abb". A solution comparing set() instead of
+        # counts calls these equal, and it was the case the suite almost never contained.
+        letters = sorted(set(s))
+        if len(letters) < 2:
+            return None
+        a, b = rng.sample(letters, 2)
+        idx = s.index(a)
+        t = s[:idx] + b + s[idx + 1 :]
+        if set(t) != set(s) or sorted(t) == sorted(s):
+            return None
+    elif roll < 0.85:
+        t = word(rng, n, "abc")                     # same length, probably not
     else:
-        t = word(rng, max(0, n - 1), "abcde")       # length mismatch
+        t = word(rng, max(0, n - 1), "abc")         # length mismatch
     return [s, t]
 
 
@@ -209,24 +229,45 @@ def _top_k_frequent(rng):
 
 @generator("product-of-array-except-self")
 def _product_except_self(rng):
+    # The three zero regimes behave completely differently, and picking each element independently
+    # buried the interesting two: 29 of 42 cases had three or more zeros, only 2 had none and 2 had
+    # exactly one. They are now drawn in roughly equal thirds.
     n = rng.randint(2, 15)
-    # Zeros are the interesting case and division-based solutions break on two of them.
-    return [[rng.choice([0, 0, rng.randint(-9, 9)]) for _ in range(n)]]
+    nonzero = lambda: rng.choice([v for v in range(-9, 10) if v != 0])
+    nums = [nonzero() for _ in range(n)]
+    roll = rng.random()
+    if roll < 0.33:
+        return [nums]                               # no zeros: division-based solutions survive
+    if roll < 0.66:
+        nums[rng.randrange(n)] = 0                  # exactly one zero: one non-zero output
+        return [nums]
+    for i in rng.sample(range(n), min(n, rng.randint(2, 3))):
+        nums[i] = 0                                 # two or more zeros: every output is zero
+    return [nums]
 
 
 @generator("encode-and-decode-strings")
 def _encode_decode(rng):
-    # The whole problem is delimiters appearing inside the payload, which no example covers.
+    # Two traps. Delimiters inside the payload, which no example covers; and strings of length >= 10,
+    # without which a length-prefixed decoder that reads a SINGLE digit passes everything.
     alphabet = rng.choice(["ab#", "ab,", "#,:", "ab", "0123456789#"])
-    return [[word(rng, rng.randint(0, 6), alphabet) for _ in range(rng.randint(1, 6))]]
+    lengths = lambda: rng.choice([0, 1, 2, 3, 6, 11, 14, 23])
+    return [[word(rng, lengths(), alphabet) for _ in range(rng.randint(1, 6))]]
 
 
 @generator("longest-consecutive-sequence")
 def _longest_consecutive(rng):
+    if rng.random() < 0.08:
+        return [[]]                                 # the constraints allow an empty array
     nums = []
     for _ in range(rng.randint(1, 4)):
         start = rng.randint(-30, 30)
-        nums += list(range(start, start + rng.randint(1, 6)))
+        run = list(range(start, start + rng.randint(1, 6)))
+        # Repeat a value inside the run: a counter that does not de-duplicate treats the repeat as
+        # extending the sequence and overcounts.
+        if run and rng.random() < 0.5:
+            run.append(rng.choice(run))
+        nums += run
     nums += ints(rng, rng.randint(0, 4), -30, 30)
     rng.shuffle(nums)
     return [nums]
@@ -1189,11 +1230,62 @@ def _multiply_strings(rng):
     return [num(rng.randint(0, 6)), num(rng.randint(0, 6))]
 
 
+def _sudoku_place(board, r, c, d):
+    """Place d at (r, c) only if it breaks no rule, so 'valid' boards really are valid."""
+    if board[r][c] != ".":
+        return False
+    for i in range(9):
+        if board[r][i] == d or board[i][c] == d:
+            return False
+    br, bc = r // 3 * 3, c // 3 * 3
+    for i in range(3):
+        for j in range(3):
+            if board[br + i][bc + j] == d:
+                return False
+    board[r][c] = d
+    return True
+
+
 @generator("valid-sudoku")
 def _valid_sudoku(rng):
+    # Scattering random digits gave 1 box-only conflict in 42 cases, so a checker that verified rows
+    # and columns but never the 3x3 boxes scored 41/42. Each violation is now built on purpose.
     board = [["." for _ in range(9)] for _ in range(9)]
-    for _ in range(rng.randint(1, 20)):
-        board[rng.randrange(9)][rng.randrange(9)] = str(rng.randint(1, 9))
+    for _ in range(rng.randint(8, 22)):
+        _sudoku_place(board, rng.randrange(9), rng.randrange(9), str(rng.randint(1, 9)))
+
+    roll = rng.random()
+    if roll < 0.35:
+        return [board]                              # valid by construction
+
+    d = str(rng.randint(1, 9))
+    if roll < 0.55:                                 # row conflict, in two different boxes
+        r = rng.randrange(9)
+        c1, c2 = rng.sample(range(9), 2)
+        if c1 // 3 == c2 // 3:
+            return None
+        board[r][c1] = board[r][c2] = d
+    elif roll < 0.75:                               # column conflict, in two different boxes
+        c = rng.randrange(9)
+        r1, r2 = rng.sample(range(9), 2)
+        if r1 // 3 == r2 // 3:
+            return None
+        board[r1][c] = board[r2][c] = d
+    else:
+        # BOX-ONLY: same digit twice inside one 3x3 box, on different rows AND different columns,
+        # so neither the row nor the column rule can catch it.
+        br, bc = rng.randrange(3) * 3, rng.randrange(3) * 3
+        # Choose the rows and the columns separately so the two cells always differ in both. Drawing
+        # two cells at random and rejecting the rest threw away half the draws.
+        r1, r2 = rng.sample(range(3), 2)
+        c1, c2 = rng.sample(range(3), 2)
+        for r, c in ((br + r1, bc + c1), (br + r2, bc + c2)):
+            for i in range(9):                      # keep the row and column clean of d
+                if board[r][i] == d:
+                    board[r][i] = "."
+                if board[i][c] == d:
+                    board[i][c] = "."
+        board[br + r1][bc + c1] = board[br + r2][bc + c2] = d
     return [board]
 
 

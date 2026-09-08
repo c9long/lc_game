@@ -22,7 +22,8 @@
     "prebuild": "node scripts/copy-monaco.mjs && node scripts/copy-pyodide.mjs",
     "pyodide": "node scripts/copy-pyodide.mjs",
     "tests:generate": "python3 scripts/generate-tests.py",
-    "tests:verify": "python3 scripts/verify-tests.py"
+    "tests:verify": "python3 scripts/verify-tests.py",
+    "audit": "node scripts/audit-suites.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20260905.1",

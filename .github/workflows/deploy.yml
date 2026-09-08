@@ -51,6 +51,11 @@ jobs:
       - name: Verify generated test suites
         run: python3 scripts/verify-tests.py
 
+      # verify-tests re-runs the reference that produced the expectations, so it cannot tell whether
+      # a suite is strong. This runs the near-miss solutions that must fail (docs/08-test-hardening.md).
+      - name: Audit suite strength
+        run: pnpm run audit
+
       # --- deploy ------------------------------------------------------------
       - name: Build
         run: pnpm run build

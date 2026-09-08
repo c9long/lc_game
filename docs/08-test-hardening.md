@@ -66,20 +66,36 @@ is what the audit below is for.
 
 Steps 5 and 6 are the ones that count. Steps 1 to 4 are how you know what to write for step 5.
 
+Every pair lives in `scripts/audit-suites.mjs` and runs in CI, so a suite that weakens later is
+caught rather than rediscovered.
+
+### What batch 1 found
+
+Measuring before changing anything is the point of step 3; each of these was a count, not a hunch.
+
+| problem | the gap | after |
+|---|---|---|
+| `valid-sudoku` | **1** case in 42 had a conflict only inside a 3x3 box, so a rows-and-columns-only checker scored 41/42 | 13 |
+| `encode-and-decode-strings` | **0** cases contained a string of length >= 10, so a length prefix reading a single digit passed everything | 25 |
+| `product-of-array-except-self` | 29 of 42 cases had three or more zeros; only **2** had none and **2** exactly one, which are the regimes that differ | 16 / 12 |
+| `longest-consecutive-sequence` | no empty arrays, and duplicates never sat inside a run | 32 with duplicates, 3 empty |
+| `valid-anagram` | **5** cases had the same letters in different counts, the case that defeats comparing `set()` | 12 |
+| `contains-duplicate` | duplicates were usually adjacent, which a neighbours-only check survives | 25 non-adjacent |
+
 ## Status
 
-7 of 150 audited. Batches follow the tech tree, so the nodes in play are hardened first.
+14 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
 
-### Batch 1: Arrays & Hashing (2/9 audited)
-- [ ] `contains-duplicate` — Easy
-- [ ] `valid-anagram` — Easy
+### Batch 1: Arrays & Hashing (9/9 audited)
+- [x] `contains-duplicate` — Easy
+- [x] `valid-anagram` — Easy
 - [x] `two-sum` — Easy
-- [ ] `group-anagrams` — Medium
+- [x] `group-anagrams` — Medium
 - [x] `top-k-frequent-elements` — Medium
-- [ ] `product-of-array-except-self` — Medium
-- [ ] `valid-sudoku` — Medium
-- [ ] `encode-and-decode-strings` — Medium
-- [ ] `longest-consecutive-sequence` — Medium
+- [x] `product-of-array-except-self` — Medium
+- [x] `valid-sudoku` — Medium
+- [x] `encode-and-decode-strings` — Medium
+- [x] `longest-consecutive-sequence` — Medium
 ### Batch 2: Two Pointers (1/5 audited)
 - [ ] `valid-palindrome` — Easy
 - [x] `two-sum-ii-input-array-is-sorted` — Medium
