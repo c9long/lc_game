@@ -226,7 +226,80 @@ const cases = [
         while i < len(s):
             j = s.index("#", i); n = int(s[i:j]); i = j + 1
             out.append(s[i:i+n]); i += n
-        return out`]
+        return out`],
+
+	// ---- batch 2: Two Pointers ----
+	['valid-palindrome', 'NEAR-MISS filters with isalpha, dropping digits', false, `class Solution:
+    def isPalindrome(self, s):
+        t = [c.lower() for c in s if c.isalpha()]
+        return t == t[::-1]`],
+	['valid-palindrome', 'NEAR-MISS never lowercases', false, `class Solution:
+    def isPalindrome(self, s):
+        t = [c for c in s if c.isalnum()]
+        return t == t[::-1]`],
+	['valid-palindrome', 'correct two-pointer', true, `class Solution:
+    def isPalindrome(self, s):
+        l, r = 0, len(s) - 1
+        while l < r:
+            while l < r and not s[l].isalnum(): l += 1
+            while l < r and not s[r].isalnum(): r -= 1
+            if s[l].lower() != s[r].lower(): return False
+            l += 1; r -= 1
+        return True`],
+
+	['3sum', 'NEAR-MISS does not de-duplicate triplets', false, `class Solution:
+    def threeSum(self, nums):
+        nums.sort(); res = []
+        for i in range(len(nums) - 2):
+            l, r = i + 1, len(nums) - 1
+            while l < r:
+                s = nums[i] + nums[l] + nums[r]
+                if s < 0: l += 1
+                elif s > 0: r -= 1
+                else:
+                    res.append([nums[i], nums[l], nums[r]]); l += 1; r -= 1
+        return res`],
+	['3sum', 'correct brute force with a set', true, `class Solution:
+    def threeSum(self, nums):
+        n = len(nums); out = set()
+        for i in range(n):
+            for j in range(i + 1, n):
+                for k in range(j + 1, n):
+                    if nums[i] + nums[j] + nums[k] == 0:
+                        out.add(tuple(sorted((nums[i], nums[j], nums[k]))))
+        return [list(t) for t in out]`],
+
+	['container-with-most-water', 'NEAR-MISS moves the taller wall inward', false, `class Solution:
+    def maxArea(self, height):
+        l, r, best = 0, len(height) - 1, 0
+        while l < r:
+            best = max(best, min(height[l], height[r]) * (r - l))
+            if height[l] > height[r]: l += 1
+            else: r -= 1
+        return best`],
+	['container-with-most-water', 'correct O(n^2) brute force', true, `class Solution:
+    def maxArea(self, height):
+        best = 0
+        for i in range(len(height)):
+            for j in range(i + 1, len(height)):
+                best = max(best, min(height[i], height[j]) * (j - i))
+        return best`],
+
+	['trapping-rain-water', 'NEAR-MISS prefix maxima without clamping at zero', false, `class Solution:
+    def trap(self, height):
+        n = len(height)
+        if n == 0: return 0
+        left = [0] * n; right = [0] * n
+        for i in range(1, n): left[i] = max(left[i-1], height[i-1])
+        for i in range(n - 2, -1, -1): right[i] = max(right[i+1], height[i+1])
+        return sum(min(left[i], right[i]) - height[i] for i in range(n))`],
+	['trapping-rain-water', 'correct per-index min of maxima', true, `class Solution:
+    def trap(self, height):
+        total = 0
+        for i in range(len(height)):
+            l = max(height[:i+1]); r = max(height[i:])
+            total += min(l, r) - height[i]
+        return total`]
 ];
 
 let bad = 0;

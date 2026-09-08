@@ -277,9 +277,39 @@ def _longest_consecutive(rng):
 
 @generator("valid-palindrome")
 def _valid_palindrome(rng):
-    core = word(rng, rng.randint(0, 6), "aba c,:")
-    s = core + ("" if rng.random() < 0.5 else core[::-1])
-    return [s]
+    # The old alphabet was "aba c,:" — no digits and no capitals — so the two solutions this problem
+    # exists to catch both passed: one that filters with isalpha() and silently drops digits, and one
+    # that never lowercases. Each trap is now built deliberately.
+    letters = "abcAB"
+    roll = rng.random()
+
+    if roll < 0.10:
+        return [rng.choice(["", " ", ".,", "  ,  ", "!!!", "_"])]   # filters to empty -> True
+
+    core = word(rng, rng.randint(1, 4), letters)
+    palindrome = core + core[::-1]
+
+    if roll < 0.30:
+        # DIGIT TRAP, the "0P" case: alphanumeric-only filtering keeps the digit and the answer is
+        # False, but dropping digits leaves a palindrome and the answer flips to True.
+        return [rng.choice("0123456789") + palindrome]
+
+    if roll < 0.50:
+        # CASE TRAP: a palindrome only once lowercased, so skipping .lower() flips it to False.
+        return ["".join(ch.upper() if i % 2 else ch.lower() for i, ch in enumerate(palindrome))]
+
+    if roll < 0.75:
+        # A genuine palindrome with punctuation, digits and mixed case sprinkled through.
+        body = word(rng, rng.randint(1, 3), letters + "019")
+        mirrored = body + (rng.choice(letters + "019") if rng.random() < 0.5 else "") + body[::-1]
+        out = []
+        for ch in mirrored:
+            out.append(ch.upper() if rng.random() < 0.5 else ch.lower())
+            if rng.random() < 0.3:
+                out.append(rng.choice(" ,:!-"))
+        return ["".join(out)]
+
+    return [word(rng, rng.randint(1, 10), letters + "019 ,:")]      # usually not a palindrome
 
 
 @generator("two-sum-ii-input-array-is-sorted")
@@ -298,12 +328,42 @@ def _two_sum_ii(rng):
 
 @generator("3sum")
 def _three_sum(rng):
-    return [ints(rng, rng.randint(0, 14), -8, 8)]
+    # Random arrays gave only 1 case in 43 with three or more zeros, and 26 of 43 had an empty
+    # answer, so returning [] scored 26/43. Triplets are now planted so most cases have a real
+    # answer, with repeats so that failing to de-duplicate shows up.
+    roll = rng.random()
+    if roll < 0.08:
+        return [[0] * rng.randint(3, 6)]                     # exactly one triplet: [0, 0, 0]
+    if roll < 0.14:
+        return [ints(rng, rng.randint(0, 2), -8, 8)]         # n < 3 -> []
+    if roll < 0.22:
+        sign = rng.choice([1, -1])
+        return [[sign * rng.randint(1, 9) for _ in range(rng.randint(3, 8))]]   # all one sign -> []
+
+    nums = []
+    for _ in range(rng.randint(1, 3)):
+        a, b = rng.randint(-8, 8), rng.randint(-8, 8)
+        nums += [a, b, -(a + b)]                             # a guaranteed triplet
+    nums += ints(rng, rng.randint(0, 5), -8, 8)
+    if rng.random() < 0.5 and nums:
+        nums += nums[: rng.randint(1, 3)]                    # repeats, so de-duplication matters
+    rng.shuffle(nums)
+    return [nums]
 
 
 @generator("container-with-most-water")
 def _container(rng):
-    return [ints(rng, rng.randint(2, 20), 0, 40)]
+    n = rng.randint(2, 20)
+    roll = rng.random()
+    if roll < 0.12:
+        return [sorted(ints(rng, n, 0, 40))]                 # monotonic increasing
+    if roll < 0.24:
+        return [sorted(ints(rng, n, 0, 40), reverse=True)]   # monotonic decreasing
+    if roll < 0.32:
+        return [[rng.randint(1, 40)] * n]                    # all equal: widest pair wins
+    if roll < 0.42:
+        return [ints(rng, 2, 0, 40)]                         # the minimum size
+    return [ints(rng, n, 0, 40)]
 
 
 # ---------- Sliding Window / Stack ----------
@@ -1178,7 +1238,23 @@ def _median_two(rng):
 
 @generator("trapping-rain-water")
 def _trapping_rain(rng):
-    return [ints(rng, rng.randint(0, 15), 0, 10)]
+    roll = rng.random()
+    if roll < 0.06:
+        return [[]]
+    if roll < 0.12:
+        return [ints(rng, rng.randint(1, 2), 0, 10)]         # too short to hold anything
+    if roll < 0.24:
+        s = sorted(ints(rng, rng.randint(3, 12), 0, 10))
+        return [s if rng.random() < 0.5 else s[::-1]]        # monotonic: traps nothing
+    if roll < 0.32:
+        return [[rng.randint(0, 10)] * rng.randint(3, 8)]    # a plateau: traps nothing
+    if roll < 0.48:
+        # One basin with the global maximum at an end. A prefix-max solution that takes the max
+        # STRICTLY to one side goes negative here unless it clamps at zero.
+        wall = rng.randint(5, 10)
+        middle = [rng.randint(0, wall - 1) for _ in range(rng.randint(1, 6))]
+        return [[wall] + middle + [rng.randint(1, wall)]]
+    return [ints(rng, rng.randint(3, 15), 0, 10)]
 
 
 # ---------- Math & Geometry ----------

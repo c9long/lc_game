@@ -36,8 +36,8 @@
         ]
       ],
       "expected": [
-        "eat",
-        "oath"
+        "oath",
+        "eat"
       ]
     },
     {
@@ -102,8 +102,8 @@
         ]
       ],
       "expected": [
-        "abb",
-        "b"
+        "b",
+        "abb"
       ]
     },
     {
@@ -212,9 +212,9 @@
         ]
       ],
       "expected": [
-        "caab",
         "bc",
-        "caa"
+        "caa",
+        "caab"
       ]
     },
     {
@@ -283,8 +283,8 @@
         ]
       ],
       "expected": [
-        "baa",
-        "bbc"
+        "bbc",
+        "baa"
       ]
     },
     {
@@ -316,11 +316,11 @@
         ]
       ],
       "expected": [
-        "cc",
+        "ca",
         "bacc",
         "ab",
-        "cbb",
-        "ca"
+        "cc",
+        "cbb"
       ]
     },
     {
@@ -364,9 +364,9 @@
         ]
       ],
       "expected": [
-        "a",
+        "b",
         "bc",
-        "b"
+        "a"
       ]
     },
     {
@@ -560,9 +560,9 @@
         ]
       ],
       "expected": [
-        "c",
+        "acc",
         "a",
-        "acc"
+        "c"
       ]
     },
     {
@@ -619,8 +619,8 @@
         ]
       ],
       "expected": [
-        "a",
-        "b"
+        "b",
+        "a"
       ]
     },
     {
@@ -658,9 +658,9 @@
         ]
       ],
       "expected": [
+        "ccbb",
         "ac",
-        "babb",
-        "ccbb"
+        "babb"
       ]
     },
     {
@@ -694,8 +694,8 @@
       ],
       "expected": [
         "cba",
-        "c",
-        "cab"
+        "cab",
+        "c"
       ]
     },
     {
@@ -726,8 +726,8 @@
         ]
       ],
       "expected": [
-        "c",
-        "cbc"
+        "cbc",
+        "c"
       ]
     },
     {
@@ -752,8 +752,8 @@
         ]
       ],
       "expected": [
-        "a",
-        "b"
+        "b",
+        "a"
       ]
     },
     {
@@ -830,10 +830,10 @@
         ]
       ],
       "expected": [
-        "bca",
         "acb",
+        "cb",
         "cca",
-        "cb"
+        "bca"
       ]
     },
     {
@@ -854,8 +854,8 @@
         ]
       ],
       "expected": [
-        "c",
-        "b"
+        "b",
+        "c"
       ]
     },
     {
@@ -876,8 +876,8 @@
         ]
       ],
       "expected": [
-        "a",
-        "b"
+        "b",
+        "a"
       ]
     },
     {
@@ -934,10 +934,10 @@
         ]
       ],
       "expected": [
-        "ca",
-        "caca",
         "cbca",
-        "bac"
+        "caca",
+        "bac",
+        "ca"
       ]
     },
     {
@@ -985,8 +985,8 @@
         ]
       ],
       "expected": [
-        "a",
-        "abaa"
+        "abaa",
+        "a"
       ]
     },
     {

@@ -20,163 +20,85 @@
     },
     {
       "args": [
-        "::,"
+        "bBbB"
       ],
       "expected": true
     },
     {
       "args": [
-        "cc"
+        "a!AA,Aa!"
       ],
       "expected": true
     },
     {
       "args": [
-        "::a  "
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "a"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "c"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        ",,"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "aa"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        ",bb,cc,bb,"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "b: bb :b"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        ",,b"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        ":"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "a,,"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "a:cc:a"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        ""
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "b c"
+        "4AbAbbAbA"
       ],
       "expected": false
     },
     {
       "args": [
-        "cc "
+        "aAaAaA"
       ],
       "expected": true
     },
     {
       "args": [
-        ":a  ::  a:"
+        "aA"
       ],
       "expected": true
     },
     {
       "args": [
-        "a:,:,"
+        "B1!1B"
       ],
       "expected": true
     },
     {
       "args": [
-        "acaccaca"
+        "BBbbBbB"
       ],
       "expected": true
     },
     {
       "args": [
-        "ab ,a"
+        "bAaAaB"
       ],
       "expected": true
     },
     {
       "args": [
-        " bca  acb "
+        "1AccAAccA"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "b"
       ],
       "expected": true
     },
     {
       "args": [
-        ",c cc c,"
+        "a909A"
       ],
       "expected": true
     },
     {
       "args": [
-        ""
+        "BA9 B:"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "011,0"
       ],
       "expected": true
     },
     {
       "args": [
-        "a::aa,"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        ",acca,"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "  a  "
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "a:c"
+        "5cAAc"
       ],
       "expected": false
     },
@@ -188,73 +110,151 @@
     },
     {
       "args": [
-        "cb,"
+        "0B!00B0"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        ":b9aB0:ab"
       ],
       "expected": false
     },
     {
       "args": [
-        "b b"
+        "aAaA"
       ],
       "expected": true
     },
     {
       "args": [
-        " a,aa"
+        "!!!"
       ],
       "expected": true
     },
     {
       "args": [
-        ""
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "ca"
+        "1bb"
       ],
       "expected": false
     },
     {
       "args": [
-        "cc"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        " bcca,"
+        "8bb"
       ],
       "expected": false
     },
     {
       "args": [
-        " :ca:,,:ac: "
+        "AA"
       ],
       "expected": true
     },
     {
       "args": [
-        ""
+        "1 1:"
       ],
       "expected": true
     },
     {
       "args": [
-        ":  a  a  :"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "a,a c "
+        "1b,19:9A 1"
       ],
       "expected": false
     },
     {
       "args": [
-        "::"
+        "bBbBbBbB"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "9bccAAccb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "cC"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "9c9a,,A"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "5AcaacA"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "2BB"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "abbbBBA:"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "1a,0a1"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "a-B 0!A0 ba"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "9cabaabac"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "!!!"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bBbB"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "19CC91"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "0:"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "Ba:B-"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "cC"
       ],
       "expected": true
     }

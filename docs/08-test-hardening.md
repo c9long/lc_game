@@ -69,6 +69,27 @@ Steps 5 and 6 are the ones that count. Steps 1 to 4 are how you know what to wri
 Every pair lives in `scripts/audit-suites.mjs` and runs in CI, so a suite that weakens later is
 caught rather than rediscovered.
 
+### Researching each problem
+
+Duplicate handling is one trap among many, and guessing which one a problem hides does not scale.
+From batch 2 onward each problem is looked up — its known edge cases, and the wrong solutions people
+actually write — before the suite is measured. That is what found the digit trap below; no amount of
+staring at the generator would have suggested it, because the generator's alphabet had no digits in
+it to think about.
+
+### What batch 2 found
+
+| problem | the gap | after |
+|---|---|---|
+| `valid-palindrome` | **0** cases contained a digit, so filtering with `isalpha()` — which silently drops digits, the `"0P"` case — passed all 43 | 22 |
+| `valid-palindrome` | **1** case contained an uppercase letter, so never calling `.lower()` passed 42 of 43 | 30 |
+| `3sum` | **1** case had three or more zeros, and 26 of 43 had an empty answer, so returning `[]` scored 26/43 | 4 zeros-cases; 33 non-empty |
+| `container-with-most-water` | **2** monotonic cases, where moving the wrong pointer is most visible | 17 |
+| `trapping-rain-water` | few basins with the global maximum at an end, the shape that makes unclamped prefix maxima go negative | 23 with a non-zero answer |
+
+The `trapping-rain-water` near-miss now scores **2/42**: subtracting without clamping at zero is wrong
+almost everywhere once real basins exist, and was invisible before.
+
 ### What batch 1 found
 
 Measuring before changing anything is the point of step 3; each of these was a count, not a hunch.
@@ -84,7 +105,7 @@ Measuring before changing anything is the point of step 3; each of these was a c
 
 ## Status
 
-14 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
+18 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
 
 ### Batch 1: Arrays & Hashing (9/9 audited)
 - [x] `contains-duplicate` — Easy
@@ -96,12 +117,12 @@ Measuring before changing anything is the point of step 3; each of these was a c
 - [x] `valid-sudoku` — Medium
 - [x] `encode-and-decode-strings` — Medium
 - [x] `longest-consecutive-sequence` — Medium
-### Batch 2: Two Pointers (1/5 audited)
-- [ ] `valid-palindrome` — Easy
+### Batch 2: Two Pointers (5/5 audited)
+- [x] `valid-palindrome` — Easy
 - [x] `two-sum-ii-input-array-is-sorted` — Medium
-- [ ] `3sum` — Medium
-- [ ] `container-with-most-water` — Medium
-- [ ] `trapping-rain-water` — Hard
+- [x] `3sum` — Medium
+- [x] `container-with-most-water` — Medium
+- [x] `trapping-rain-water` — Hard
 ### Batch 3: Sliding Window (0/6 audited)
 - [ ] `best-time-to-buy-and-sell-stock` — Easy
 - [ ] `longest-substring-without-repeating-characters` — Medium
