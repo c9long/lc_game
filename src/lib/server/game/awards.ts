@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, gt } from 'drizzle-orm';
 import type { Db } from '../db';
 import { awards, ledger, planItems, problemState, solutionViews, type User } from '../db/schema';
 import { randomId } from '../crypto';
@@ -68,10 +68,19 @@ export async function applyAccepted(db: Db, user: User, input: AcceptedInput): P
 		return { duplicate: false, counted: false, date, nodeId: cur?.nodeId, title };
 	}
 
+	// Assistance is measured from the last solve rather than from midnight. A refresh worked across
+	// two days -- peek in the evening, finish in the morning -- fell outside a same-day window and
+	// was recorded as clean, advancing the ladder for a repetition that had needed the answer.
+	const since = prev?.lastSolvedAt ?? null;
 	const viewed = await db
 		.select({ slug: solutionViews.slug })
 		.from(solutionViews)
-		.where(and(eq(solutionViews.slug, input.slug), eq(solutionViews.date, date)))
+		.where(
+			and(
+				eq(solutionViews.slug, input.slug),
+				since ? gt(solutionViews.createdAt, since) : eq(solutionViews.date, date)
+			)
+		)
 		.get();
 	const isRefresh = Boolean(prev && prev.solveCount > 0);
 	const assisted = isRefresh && Boolean(viewed);

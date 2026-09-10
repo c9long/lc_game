@@ -27,7 +27,7 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 
 	const state = await db.select().from(problemState).where(eq(problemState.slug, slug)).get();
 	const draftRows = await db
-		.select({ lang: attempts.lang, code: attempts.code })
+		.select({ lang: attempts.lang, code: attempts.code, createdAt: attempts.createdAt })
 		.from(attempts)
 		.where(and(eq(attempts.slug, slug), eq(attempts.kind, 'draft')))
 		.all();
@@ -40,6 +40,24 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 		.all();
 	const lastAccepted: Record<string, string> = {};
 	for (const r of acceptedRows) if (!(r.lang in lastAccepted)) lastAccepted[r.lang] = r.code;
+
+	// A leftover draft is not work in progress: the draft is autosaved as you type, so on a solved
+	// problem it holds whatever was in the editor when the solve happened -- usually the accepted
+	// solution itself. Opening a refresh on that lets the repetition be passed without re-deriving
+	// anything. Clearing the editor on accept prevents this going forward; dropping stale drafts
+	// here covers every problem solved before that shipped.
+	//
+	// Stale means either byte-identical to an accepted submission, or written no later than the
+	// last solve. The timestamp is the load-bearing half: a draft can be leftover without matching
+	// any accepted code -- an untouched starter in a language the problem was never solved in, or a
+	// solve recorded by profile sync, which stores no attempt row to compare against. Work done
+	// since the last solve is newer than it, and is still restored.
+	const solvedAt = state?.lastSolvedAt ?? null;
+	const acceptedCode = new Set(acceptedRows.map((r) => `${r.lang}\u0000${r.code}`));
+	const isStale = (r: { lang: string; code: string; createdAt: Date }) =>
+		acceptedCode.has(`${r.lang}\u0000${r.code}`) ||
+		(solvedAt !== null && r.createdAt.getTime() <= solvedAt.getTime());
+	const drafts = Object.fromEntries(draftRows.filter((r) => !isStale(r)).map((r) => [r.lang, r.code]));
 	const viewed = await db
 		.select({ slug: solutionViews.slug })
 		.from(solutionViews)
@@ -67,7 +85,7 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 		isPaidOnly: problem.isPaidOnly,
 		editorialFree: problem.editorialFree,
 		snippets,
-		drafts: Object.fromEntries(draftRows.map((r) => [r.lang, r.code])),
+		drafts,
 		lastAccepted,
 		lc: { connected: Boolean(await getLcAuth(db, env)), ok: status?.ok ?? false },
 		solved: (state?.solveCount ?? 0) > 0,

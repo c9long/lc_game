@@ -4,7 +4,7 @@ import { ledger, planItems, plans } from '../db/schema';
 import { fetchDaily, type Daily } from '../leetcode/client';
 import { getState, setState, type Snapshot } from './state';
 import { PROBLEM_BY_SLUG } from '$lib/game/curriculum';
-import { dueRefreshes, isServable, nextNewProblems } from '$lib/game/tree';
+import { dueRefreshes, isServable, nextNewProblems, type NodeView, type ProblemProgress } from '$lib/game/tree';
 import { DRILL_LANGS } from '$lib/game/drillbank';
 import { isSetComplete, langForDate, loadDrillSet } from './drills';
 
@@ -81,19 +81,31 @@ function decorate(
 		});
 }
 
-/** Two slots: the most overdue refresh (else a new problem), then the daily challenge if it is in the curriculum, else the next new problem. */
-export async function getOrCreatePlan(db: Db, snap: Snapshot): Promise<PlanItem[]> {
-	const doneRows = await db.select({ slug: ledger.slug }).from(ledger).where(eq(ledger.date, snap.today)).all();
-	const doneToday = new Set(doneRows.map((r) => r.slug));
+/** How many due refreshes make the expedition drop new problems and work the backlog instead. */
+export const REFRESH_BACKLOG_TAKEOVER = 3;
 
-	// The day's drill set is the source of truth for the Forge slot, exactly as the ledger is for
-	// problem slots. Reading it here means a plan regenerated mid-day reflects work already done.
-	const drillsDone = isSetComplete(await loadDrillSet(db, snap.today));
-
-	const existing = await db.select().from(planItems).where(eq(planItems.planDate, snap.today)).all();
-	if (existing.length > 0) return decorate(existing, doneToday, drillsDone);
-
-	const daily = await getDaily(db, snap.today);
+/** The two problem slots, chosen from the tree, the SRS schedule and the day's daily challenge.
+ *
+ *  Slot 1 is the most overdue refresh, else a new problem. Slot 2 is the daily challenge when it
+ *  sits in a node the tree has actually opened, else a new problem, else another refresh. The daily
+ *  is gated on the node because otherwise LeetCode's pick decides the difficulty: one day's was
+ *  distinct-subsequences, a 2-D DP problem, offered while 1-D DP was still locked.
+ *
+ *  Once the backlog reaches REFRESH_BACKLOG_TAKEOVER both slots become refreshes and the daily is
+ *  skipped along with new problems, since it is itself a problem that has never been solved. One
+ *  refresh slot a day cannot keep pace with a growing set of due problems, so the backlog only ever
+ *  grew: every repetition then arrived far past its interval, held its SRS step instead of
+ *  advancing, and rescheduled at the same short interval, pinning the whole curriculum to the
+ *  bottom rung and the city to permanent rusting. Two refreshes let the backlog drain.
+ *
+ *  Pure so the slot rules can be tested without a database.
+ */
+export function chooseSlots(
+	// Only what the rules read, rather than Pick<Snapshot, ...>: the slot choice depends on nothing
+	// else, and the narrower type is what lets it be exercised without building a whole snapshot.
+	snap: { tree: Map<string, NodeView>; progress: Map<string, ProblemProgress>; now: Date },
+	daily: Daily | null
+): { slot: number; slug: string; kind: PlanItem['kind']; done: boolean }[] {
 	const refreshes = dueRefreshes(snap.progress, snap.now);
 	const exclude = new Set<string>();
 	const chosen: { slot: number; slug: string; kind: PlanItem['kind']; done: boolean }[] = [];
@@ -115,12 +127,12 @@ export async function getOrCreatePlan(db: Db, snap: Snapshot): Promise<PlanItem[
 
 	if (!takeRefresh(1)) takeNew(1);
 
-	// The daily challenge is only taken when it sits in a node the tree has actually opened.
-	// Otherwise LeetCode's pick decides the difficulty: today's was distinct-subsequences, a 2-D DP
-	// problem, offered while 1-D DP was still locked.
+	const backlog = refreshes.length >= REFRESH_BACKLOG_TAKEOVER;
+
 	const dailyNode = daily ? PROBLEM_BY_SLUG.get(daily.slug)?.nodeId : undefined;
 	const dailyNodeView = dailyNode ? snap.tree.get(dailyNode) : undefined;
 	const dailyIsCandidate =
+		!backlog &&
 		daily &&
 		dailyNodeView &&
 		isServable(dailyNodeView) &&
@@ -130,9 +142,29 @@ export async function getOrCreatePlan(db: Db, snap: Snapshot): Promise<PlanItem[
 	if (dailyIsCandidate) {
 		chosen.push({ slot: 2, slug: daily!.slug, kind: 'daily', done: false });
 		exclude.add(daily!.slug);
+	} else if (backlog) {
+		if (!takeRefresh(2)) takeNew(2);
 	} else if (!takeNew(2)) {
 		takeRefresh(2);
 	}
+	return chosen;
+}
+
+/** Today's expedition: two problem slots from chooseSlots plus the Forge drill slot, persisted on
+ *  first read so the day's plan is stable. */
+export async function getOrCreatePlan(db: Db, snap: Snapshot): Promise<PlanItem[]> {
+	const doneRows = await db.select({ slug: ledger.slug }).from(ledger).where(eq(ledger.date, snap.today)).all();
+	const doneToday = new Set(doneRows.map((r) => r.slug));
+
+	// The day's drill set is the source of truth for the Forge slot, exactly as the ledger is for
+	// problem slots. Reading it here means a plan regenerated mid-day reflects work already done.
+	const drillsDone = isSetComplete(await loadDrillSet(db, snap.today));
+
+	const existing = await db.select().from(planItems).where(eq(planItems.planDate, snap.today)).all();
+	if (existing.length > 0) return decorate(existing, doneToday, drillsDone);
+
+	const daily = await getDaily(db, snap.today);
+	const chosen = chooseSlots(snap, daily);
 
 	if (DRILL_LANGS.length > 0) {
 		chosen.push({ slot: 3, slug: langForDate(snap.today), kind: 'drills', done: drillsDone });
