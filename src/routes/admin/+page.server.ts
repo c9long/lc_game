@@ -32,14 +32,13 @@ export const actions: Actions = {
 		const form = await request.formData();
 		const lcUsername = String(form.get('lcUsername') ?? '').trim();
 		const timezone = String(form.get('timezone') ?? '').trim();
-		const hasPremium = form.get('hasPremium') === 'on';
 		if (!isValidTimeZone(timezone)) return fail(400, { profile: 'unknown timezone' });
 		if (lcUsername && !/^[\w.-]{1,40}$/.test(lcUsername)) return fail(400, { profile: 'username looks wrong' });
 		if (lcUsername && lcUsername !== user.lcUsername) {
 			const exists = await fetchUserExists(lcUsername).catch(() => true);
 			if (!exists) return fail(400, { profile: `LeetCode has no user "${lcUsername}"` });
 		}
-		await db.update(users).set({ lcUsername: lcUsername || null, timezone, hasPremium }).where(eq(users.id, user.id));
+		await db.update(users).set({ lcUsername: lcUsername || null, timezone }).where(eq(users.id, user.id));
 		return { profile: 'saved' };
 	},
 	cookie: async ({ request, locals, platform }) => {

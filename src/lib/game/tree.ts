@@ -42,7 +42,6 @@ export interface NodeView {
 export interface TreeInput {
 	progress: Map<string, ProblemProgress>;
 	research: Map<string, number>;
-	hasPremium: boolean;
 	now: Date;
 }
 
@@ -50,7 +49,7 @@ export function computeTree(input: TreeInput): Map<string, NodeView> {
 	const views = new Map<string, NodeView>();
 	for (const id of NODE_ORDER) {
 		const node = NODE_BY_ID.get(id)!;
-		const problems = problemsForNode(id, input.hasPremium);
+		const problems = problemsForNode(id);
 		let solved = 0;
 		let due = 0;
 		for (const p of problems) {
@@ -106,7 +105,6 @@ export function isServable(view: NodeView): boolean {
 export function nextNewProblems(
 	tree: Map<string, NodeView>,
 	progress: Map<string, ProblemProgress>,
-	hasPremium: boolean,
 	limit: number,
 	exclude: Set<string> = new Set()
 ): CurriculumProblem[] {
@@ -114,7 +112,7 @@ export function nextNewProblems(
 	for (const id of NODE_ORDER) {
 		const view = tree.get(id)!;
 		if (!isServable(view) || view.status === 'complete') continue;
-		for (const p of problemsForNode(id, hasPremium)) {
+		for (const p of problemsForNode(id)) {
 			if (exclude.has(p.slug)) continue;
 			const s = progress.get(p.slug);
 			if (s && s.solveCount > 0) continue;
@@ -128,12 +126,8 @@ export function nextNewProblems(
 /** Solved problems that are due, most overdue first. */
 export function dueRefreshes(
 	progress: Map<string, ProblemProgress>,
-	hasPremium: boolean,
 	now: Date
 ): { slug: string; overdueMs: number }[] {
-	const premiumSlugs = new Set(
-		NODES.flatMap((n) => problemsForNode(n.id, true).filter((p) => p.premium).map((p) => p.slug))
-	);
 	const out: { slug: string; overdueMs: number }[] = [];
 	for (const [slug, s] of progress) {
 		// Profile sync records every accepted submission so solves made on leetcode.com still count
@@ -142,7 +136,6 @@ export function dueRefreshes(
 		// outputs come from the vendored reference solutions, there is no suite to judge them with.
 		if (!PROBLEM_BY_SLUG.has(slug)) continue;
 		if (s.solveCount === 0 || !isDue(s, now)) continue;
-		if (!hasPremium && premiumSlugs.has(slug)) continue;
 		out.push({ slug, overdueMs: now.getTime() - s.dueAt!.getTime() });
 	}
 	return out.sort((a, b) => b.overdueMs - a.overdueMs);

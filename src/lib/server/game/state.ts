@@ -91,7 +91,7 @@ export async function loadSnapshot(db: Db, user: User, now = new Date()): Promis
 	const ledgerRows = await db.select({ date: ledger.date }).from(ledger).where(gte(ledger.date, since)).all();
 	const ledgerDates = ledgerRows.map((r) => r.date);
 
-	const tree = computeTree({ progress, research, hasPremium: user.hasPremium, now });
+	const tree = computeTree({ progress, research, now });
 
 	// Morale must be stored the first time it is seen. It used to be written only inside the tick
 	// branch below, while the fallback it reads is dated today — so the branch was never true, the

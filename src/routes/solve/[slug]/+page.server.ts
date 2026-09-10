@@ -9,6 +9,9 @@ import { getLcAuth, getLcStatus } from '$lib/server/leetcode/auth';
 import { LANGS } from '$lib/langs';
 import { PROBLEM_BY_SLUG } from '$lib/game/curriculum';
 import { localDate } from '$lib/game/dates';
+import ownDescriptions from '../../../../data/premium-descriptions.json';
+
+const OWN_DESCRIPTIONS = ownDescriptions as Record<string, { title: string; html: string }>;
 
 export const load: PageServerLoad = async ({ params, locals, platform }) => {
 	const user = requireUser(locals);
@@ -51,7 +54,10 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 		slug,
 		title: problem.title,
 		difficulty: problem.difficulty,
-		contentHtml: problem.contentHtml,
+		// LeetCode returns content: null for Premium problems, so these pages rendered blank. The
+		// statement is supplied from data/premium-descriptions.json instead.
+		contentHtml: problem.contentHtml ?? OWN_DESCRIPTIONS[problem.slug]?.html ?? null,
+		ownDescription: !problem.contentHtml && Boolean(OWN_DESCRIPTIONS[problem.slug]),
 		tags: problem.tags,
 		exampleTestcases: problem.exampleTestcases ?? '',
 		isPaidOnly: problem.isPaidOnly,

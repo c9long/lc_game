@@ -15,7 +15,7 @@
 		<thead><tr><th>Problem</th><th>Difficulty</th><th>Solved</th><th>Last language</th><th>Due</th><th>Reference</th></tr></thead>
 		<tbody>
 			{#each data.problems as p (p.slug)}
-				<tr class:due={p.due} class:skip={!p.counted}>
+				<tr class:due={p.due}>
 					<td><a href="/solve/{p.slug}">{p.title}</a>{#if p.premium} <span class="pill">Premium</span>{/if}</td>
 					<td><span class="pill {p.difficulty}">{p.difficulty}</span></td>
 					<td>{p.solveCount > 0 ? `×${p.solveCount}` : '—'}</td>
@@ -26,12 +26,11 @@
 			{/each}
 		</tbody>
 	</table>
-	{#if data.problems.some((p) => !p.counted)}
-		<p class="muted">Premium problems are not counted toward this node unless Premium is enabled in Admin.</p>
+	{#if data.problems.some((p) => p.premium)}
+		<p class="muted">Premium problems count like any other: LeetCode withholds their statement, so the app supplies its own.</p>
 	{/if}
 </div>
 
 <style>
 	tr.due td:nth-child(5) { color: var(--warn); font-weight: 600; }
-	tr.skip { opacity: 0.55; }
 </style>

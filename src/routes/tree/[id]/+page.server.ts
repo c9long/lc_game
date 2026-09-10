@@ -12,14 +12,13 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 	if (!node) error(404, 'no such node');
 	const snap = await loadSnapshot(getDb(platform), user);
 	const view = snap.tree.get(node.id)!;
-	const problems = problemsForNode(node.id, true).map((p) => {
+	const problems = problemsForNode(node.id).map((p) => {
 		const s = snap.progress.get(p.slug);
 		return {
 			slug: p.slug,
 			title: p.title,
 			difficulty: p.difficulty,
 			premium: p.premium,
-			counted: user.hasPremium || !p.premium,
 			solveCount: s?.solveCount ?? 0,
 			lastLang: s?.lastLang ?? null,
 			dueAt: s?.dueAt ?? null,

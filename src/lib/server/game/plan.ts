@@ -94,13 +94,12 @@ export async function getOrCreatePlan(db: Db, snap: Snapshot): Promise<PlanItem[
 	if (existing.length > 0) return decorate(existing, doneToday, drillsDone);
 
 	const daily = await getDaily(db, snap.today);
-	const hasPremium = snap.user.hasPremium;
-	const refreshes = dueRefreshes(snap.progress, hasPremium, snap.now);
+	const refreshes = dueRefreshes(snap.progress, snap.now);
 	const exclude = new Set<string>();
 	const chosen: { slot: number; slug: string; kind: PlanItem['kind']; done: boolean }[] = [];
 
 	const takeNew = (slot: number) => {
-		const [n] = nextNewProblems(snap.tree, snap.progress, hasPremium, 1, exclude);
+		const [n] = nextNewProblems(snap.tree, snap.progress, 1, exclude);
 		if (!n) return false;
 		chosen.push({ slot, slug: n.slug, kind: 'new', done: false });
 		exclude.add(n.slug);

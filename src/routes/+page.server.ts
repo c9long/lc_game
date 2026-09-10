@@ -35,7 +35,7 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 		production: dailyCoins(snap.buildings, snap.tree, snap.morale.morale),
 		tickCoins: snap.tickCoins,
 		totalSolves: snap.totalSolves,
-		dueCount: dueRefreshes(snap.progress, user.hasPremium, snap.now).length,
+		dueCount: dueRefreshes(snap.progress, snap.now).length,
 		frontier: nodes
 			.filter((n) => n.status === 'available' || n.status === 'unlocked')
 			.map((n) => ({ id: n.id, pattern: n.pattern, solved: n.solved, total: n.total, status: n.status })),

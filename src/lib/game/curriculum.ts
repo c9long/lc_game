@@ -38,8 +38,12 @@ export const PROBLEMS: CurriculumProblem[] = (problemsJson as Omit<CurriculumPro
 
 export const PROBLEM_BY_SLUG = new Map(PROBLEMS.map((p) => [p.slug, p]));
 
-export function problemsForNode(nodeId: string, includePremium: boolean): CurriculumProblem[] {
-	return PROBLEMS.filter((p) => p.nodeId === nodeId && (includePremium || !p.premium));
+export function problemsForNode(nodeId: string): CurriculumProblem[] {
+	// Every problem counts, Premium or not. LeetCode withholds the statement for its seven Premium
+	// problems, so they used to be excluded unless you owned a subscription; the statements now come
+	// from data/premium-descriptions.json and the suites were always generated from public metadata,
+	// so there is nothing left for a subscription to unlock.
+	return PROBLEMS.filter((p) => p.nodeId === nodeId);
 }
 
 /** Depth-first order of nodes: prerequisites before dependants, then by row/col. */

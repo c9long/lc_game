@@ -50,8 +50,7 @@ describe('curriculum', () => {
 		for (const n of NODES) {
 			for (const r of n.requires) expect(NODE_ORDER.indexOf(r)).toBeLessThan(NODE_ORDER.indexOf(n.id));
 		}
-		expect(problemsForNode('arrays-hashing', true).length).toBe(9);
-		expect(problemsForNode('arrays-hashing', false).length).toBe(8);
+		expect(problemsForNode('arrays-hashing').length).toBe(9); // Premium problems count too
 	});
 });
 
@@ -61,34 +60,34 @@ function progressFor(slugs: string[], dueAt: Date | null = null): Map<string, Pr
 
 describe('tree', () => {
 	it('starts with only the root available and unlocks at half', () => {
-		const empty = computeTree({ progress: new Map(), research: new Map(), hasPremium: false, now: t0 });
+		const empty = computeTree({ progress: new Map(), research: new Map(), now: t0 });
 		expect(empty.get('arrays-hashing')!.status).toBe('available');
 		expect(empty.get('two-pointers')!.status).toBe('locked');
-		const root = problemsForNode('arrays-hashing', false).map((p) => p.slug);
-		const half = computeTree({ progress: progressFor(root.slice(0, 4)), research: new Map(), hasPremium: false, now: t0 });
+		const root = problemsForNode('arrays-hashing').map((p) => p.slug);
+		const half = computeTree({ progress: progressFor(root.slice(0, 5)), research: new Map(), now: t0 });
 		expect(half.get('arrays-hashing')!.status).toBe('unlocked');
 		expect(half.get('two-pointers')!.status).toBe('available');
 		expect(half.get('stack')!.status).toBe('available');
 		expect(half.get('binary-search')!.status).toBe('locked');
-		const full = computeTree({ progress: progressFor(root), research: new Map(), hasPremium: false, now: t0 });
+		const full = computeTree({ progress: progressFor(root), research: new Map(), now: t0 });
 		expect(full.get('arrays-hashing')!.status).toBe('complete');
 	});
 	it('computes freshness, rusting and refresh ordering', () => {
-		const root = problemsForNode('arrays-hashing', false).map((p) => p.slug);
+		const root = problemsForNode('arrays-hashing').map((p) => p.slug);
 		const overdue = new Date(t0.getTime() - 2 * DAY);
 		const progress = new Map<string, ProblemProgress>();
 		root.slice(0, 4).forEach((s, i) =>
 			progress.set(s, { solveCount: 1, srsStep: 0, dueAt: i < 3 ? new Date(overdue.getTime() - i * DAY) : new Date(t0.getTime() + DAY) })
 		);
-		const tree = computeTree({ progress, research: new Map(), hasPremium: false, now: t0 });
+		const tree = computeTree({ progress, research: new Map(), now: t0 });
 		const v = tree.get('arrays-hashing')!;
 		expect(v.solved).toBe(4);
 		expect(v.due).toBe(3);
 		expect(v.freshness).toBeCloseTo(0.25);
 		expect(v.rusting).toBe(true);
-		const refreshes = dueRefreshes(progress, false, t0);
+		const refreshes = dueRefreshes(progress, t0);
 		expect(refreshes.map((r) => r.slug)).toEqual([root[2], root[1], root[0]]);
-		const next = nextNewProblems(tree, progress, false, 2);
+		const next = nextNewProblems(tree, progress, 2);
 		expect(next.map((p) => p.slug)).toEqual(root.slice(4, 6));
 	});
 
@@ -99,25 +98,25 @@ describe('tree', () => {
 		// vendored NeetCode 150.
 		const t0 = new Date('2026-09-06T12:00:00Z');
 		const overdue = new Date(t0.getTime() - 5 * DAY);
-		const inCurriculum = problemsForNode('arrays-hashing', true)[0].slug;
+		const inCurriculum = problemsForNode('arrays-hashing')[0].slug;
 		const progress = new Map<string, ProblemProgress>([
 			[inCurriculum, { solveCount: 1, srsStep: 0, dueAt: overdue }],
 			['maximum-number-of-vowels-in-a-substring-of-given-length', { solveCount: 1, srsStep: 0, dueAt: overdue }],
 			['most-common-word', { solveCount: 2, srsStep: 1, dueAt: overdue }]
 		]);
-		expect(dueRefreshes(progress, false, t0).map((r) => r.slug)).toEqual([inCurriculum]);
+		expect(dueRefreshes(progress, t0).map((r) => r.slug)).toEqual([inCurriculum]);
 	});
 
 	it('never serves problems from a node whose prerequisites are still locked', () => {
 		const t0 = new Date('2026-09-06T12:00:00Z');
-		const tree = computeTree({ progress: new Map(), research: new Map(), hasPremium: false, now: t0 });
+		const tree = computeTree({ progress: new Map(), research: new Map(), now: t0 });
 		const dp2d = tree.get('dp-2d')!;
 		expect(dp2d.requires).toContain('dp-1d');
 		expect(dp2d.prereqsMet).toBe(false);
 		expect(isServable(dp2d)).toBe(false);
 
 		// Nothing offered may come from a node that is not reachable yet.
-		const offered = nextNewProblems(tree, new Map(), false, 20);
+		const offered = nextNewProblems(tree, new Map(), 20);
 		for (const p of offered) expect(isServable(tree.get(p.nodeId)!)).toBe(true);
 		expect(offered.some((p) => p.nodeId === 'dp-2d')).toBe(false);
 
@@ -132,10 +131,10 @@ describe('tree', () => {
 		// Profile sync can record enough solves on a deep node to mark it `unlocked` long before the
 		// path to it opens, which would otherwise let the expedition serve from it.
 		const t0 = new Date('2026-09-06T12:00:00Z');
-		const dp2d = problemsForNode('dp-2d', true);
+		const dp2d = problemsForNode('dp-2d');
 		const progress = new Map<string, ProblemProgress>();
 		for (const p of dp2d) progress.set(p.slug, { solveCount: 1, srsStep: 3, dueAt: new Date(t0.getTime() + 30 * DAY) });
-		const tree = computeTree({ progress, research: new Map(), hasPremium: false, now: t0 });
+		const tree = computeTree({ progress, research: new Map(), now: t0 });
 		const view = tree.get('dp-2d')!;
 		expect(view.status).toBe('complete');
 		expect(view.prereqsMet).toBe(false);
@@ -182,7 +181,7 @@ describe('budget and morale', () => {
 
 describe('city', () => {
 	it('gates, prices and produces', () => {
-		const tree = computeTree({ progress: new Map(), research: new Map(), hasPremium: false, now: t0 });
+		const tree = computeTree({ progress: new Map(), research: new Map(), now: t0 });
 		const ctx = { tree, totalSolves: 0, hardSolves: 0 };
 		expect(gateSatisfied(undefined, ctx)).toBe(true);
 		expect(gateSatisfied({ node: 'arrays-hashing', status: 'unlocked' }, ctx)).toBe(false);
@@ -381,7 +380,7 @@ describe('difficulty yields', () => {
 });
 
 describe('per-building yield', () => {
-	const tree = computeTree({ progress: new Map(), research: new Map(), hasPremium: false, now: t0 });
+	const tree = computeTree({ progress: new Map(), research: new Map(), now: t0 });
 
 	it('breaks a building down into the factors that produce its number', () => {
 		const hut = [{ id: 'a', kind: 'hut', x: 0, y: 0, level: 2 }];

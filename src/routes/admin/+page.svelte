@@ -11,7 +11,6 @@
 		<form method="POST" action="?/profile" use:enhance>
 			<label>LeetCode username <input name="lcUsername" value={data.user.lcUsername} placeholder="for profile sync" /></label>
 			<label>Timezone <input name="timezone" value={data.user.timezone} /></label>
-			<label class="row"><input type="checkbox" name="hasPremium" checked={data.user.hasPremium} /> I have LeetCode Premium (count Premium problems)</label>
 			<button class="primary">Save</button>
 			{#if form?.profile}<span class="muted">{form.profile}</span>{/if}
 		</form>
@@ -54,7 +53,6 @@
 <style>
 	form { display: grid; gap: 0.6rem; margin-top: 0.5rem; }
 	label { display: grid; gap: 0.25rem; }
-	label.row { grid-auto-flow: column; justify-content: start; }
 	.ok { color: var(--good); }
 	.small { font-size: 0.85rem; }
 </style>
