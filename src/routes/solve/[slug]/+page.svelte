@@ -17,6 +17,10 @@
 	let award = $state<Record<string, any> | null>(null);
 	let saveTimer: ReturnType<typeof setTimeout> | undefined;
 	let lastSaved = '';
+	/** A solution accepted in this session. The server's lastAccepted only refreshes on reload,
+	 *  and the editor is cleared the moment a submit passes, so without this the code would be
+	 *  briefly unreachable from the very page that just accepted it. */
+	let justAccepted = $state<Record<string, string>>({});
 
 	let drawer = $state<'closed' | 'reference' | 'community' | 'editorial'>('closed');
 	let reference = $state('');
@@ -28,6 +32,7 @@
 	const langMeta = $derived(data.langs.find((l) => l.slug === lang) ?? data.langs[0]);
 	const monacoLang = $derived(langMeta.monaco);
 	const hasReference = $derived(Boolean(data.cur?.solutions?.[langMeta.dir]));
+	const lastAcceptedFor = $derived(justAccepted[lang] ?? data.lastAccepted[lang] ?? '');
 
 	function initialCode(l: string) {
 		return data.drafts[l] ?? data.snippets[l] ?? '';
@@ -69,8 +74,7 @@
 	}
 
 	function loadLastAccepted() {
-		const prev = data.lastAccepted[lang];
-		if (prev) code = prev;
+		if (lastAcceptedFor) code = lastAcceptedFor;
 	}
 
 	async function saveDraft() {
@@ -132,6 +136,19 @@
 			});
 			const j = (await r.json()) as any;
 			if (r.ok && j.award) award = j.award;
+
+			// A solved problem comes back as a refresh, and leaving the accepted code in the editor
+			// meant the repetition could be passed by pressing Submit on an answer that was never
+			// re-derived. The code is kept — "Last accepted" restores it — but it is no longer what
+			// the window opens with. Saving immediately makes the reset survive a reload.
+			// Gated on the server's verdict, not the worker's: the server additionally requires a
+			// non-empty suite, so a problem with no cases reports Accepted here while storing no
+			// accepted attempt. Clearing on that would discard the only copy of the code.
+			if (kind === 'submit' && r.ok && j.accepted) {
+				justAccepted[lang] = code;
+				code = data.snippets[lang] ?? '';
+				flushSave();
+			}
 		} catch (e) {
 			message = e instanceof Error ? e.message : String(e);
 		} finally {
@@ -220,7 +237,7 @@
 				{/each}
 			</select>
 			<button onclick={resetToStarter}>Starter</button>
-			{#if data.lastAccepted[lang]}<button onclick={loadLastAccepted}>Last accepted</button>{/if}
+			{#if lastAcceptedFor}<button onclick={loadLastAccepted}>Last accepted</button>{/if}
 			<span class="spacer"></span>
 			<button onclick={() => execute('run')} disabled={busy !== null || !canJudge} title="Ctrl+Enter">{busy === 'run' ? 'Running…' : 'Run'}</button>
 			<button class="primary" onclick={() => execute('submit')} disabled={busy !== null || !canJudge} title="Ctrl+Shift+Enter">{busy === 'submit' ? 'Judging…' : 'Submit'}</button>
