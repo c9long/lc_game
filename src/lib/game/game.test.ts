@@ -354,9 +354,9 @@ describe('difficulty yields', () => {
 	it('pays the easier materials too, so no supply line closes as you climb', () => {
 		// Difficulty used to choose only the KIND of material. Easy problems run out up the tree, so
 		// timber — which gates the Hut, Granary, Hash Market and Window Mill — became unobtainable.
-		expect(computeAward({ ...base, difficulty: 'Easy' }).resources).toEqual({ timber: 3 });
-		expect(computeAward({ ...base, difficulty: 'Medium' }).resources).toEqual({ stone: 3, timber: 1 });
-		expect(computeAward({ ...base, difficulty: 'Hard' }).resources).toEqual({ iron: 3, stone: 2, timber: 1 });
+		expect(computeAward({ ...base, difficulty: 'Easy' }).resources).toEqual({ timber: 3, stone: 1 });
+		expect(computeAward({ ...base, difficulty: 'Medium' }).resources).toEqual({ stone: 3, timber: 3 });
+		expect(computeAward({ ...base, difficulty: 'Hard' }).resources).toEqual({ iron: 3, stone: 3, timber: 3 });
 	});
 
 	it('makes a Hard strictly better than an Easy, not merely different', () => {
@@ -369,7 +369,7 @@ describe('difficulty yields', () => {
 	it('scales the secondary materials by the same multiplier', () => {
 		const go = computeAward({ ...base, difficulty: 'Hard', lang: 'golang', isDaily: true });
 		expect(go.multiplier).toBe(3); // 1.5 bonus language x 2 daily
-		expect(go.resources).toEqual({ iron: 9, stone: 6, timber: 3 });
+		expect(go.resources).toEqual({ iron: 9, stone: 9, timber: 9 });
 	});
 
 	it('never rounds a secondary yield away to nothing', () => {

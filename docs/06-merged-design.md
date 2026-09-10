@@ -58,9 +58,11 @@ Phases 1 to 8 are implemented in one pass: repo hygiene, passkey auth, admin/coo
 
   | | yields |
   |---|---|
-  | Easy | 3 timber |
-  | Medium | 3 stone + 1 timber |
-  | Hard | 3 iron + 2 stone + 1 timber |
+  | Easy | 3 timber + 1 stone |
+  | Medium | 3 stone + 3 timber |
+  | Hard | 3 iron + 3 stone + 3 timber |
+
+  Rebalanced 2026-09-09: the secondary amounts were 1, which is too thin once the real difficulty mix is counted. The 150 is **101 Medium against 28 Easy**, so a normal week is mostly Mediums — a flood of stone and a trickle of timber, while every building reachable before the tree opens (Hut, Hash Market, Granary) is timber-first. Their 83 timber took about **60 solves**, by which point roughly **138 stone** had piled up against the 35 those same buildings need. Timber now matches the primary yield on a Medium, so the commonest problem feeds the buildings you can actually reach.
 
   Changed 2026-09-06: difficulty used to pick only the *kind* of material, never the amount. That made a Hard worth no more than an Easy despite six times the research, and — because Easy problems run out as you climb the tree — it made timber unobtainable while gating the Hut, Granary, Hash Market and Window Mill. Yielding downward keeps every supply line open and makes harder strictly better.
 - **Premium problems (resolved 2026-09-09).** Seven of the 150 are LeetCode Premium, and LeetCode returns `content: null` for them, so their pages rendered blank while still counting toward the tree. NeetCode publishes them, but only through a client-rendered SPA — every path returns the same shell and the text is never in the HTML — so there is nothing to fetch. The statements are written in `data/premium-descriptions.json` instead, from the published `metaData` signature, the vendored reference solution and the real generated cases, with the examples pulled from the suite so the prose cannot drift from what the judge runs. The page says when a description is the app's own. Their test suites always existed: `metaData` and `exampleTestcases` are public even for Premium. Premium therefore no longer gates anything, the `hasPremium` toggle is gone from Admin, and all 150 count.

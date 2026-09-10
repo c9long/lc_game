@@ -11,7 +11,7 @@ import { PROBLEM_BY_SLUG } from '$lib/game/curriculum';
 import { localDate } from '$lib/game/dates';
 import ownDescriptions from '../../../../data/premium-descriptions.json';
 
-const OWN_DESCRIPTIONS = ownDescriptions as Record<string, { title: string; html: string }>;
+const OWN_DESCRIPTIONS = ownDescriptions as Record<string, { title: string; html: string; starterPython?: string }>;
 
 export const load: PageServerLoad = async ({ params, locals, platform }) => {
 	const user = requireUser(locals);
@@ -49,6 +49,10 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 	const status = await getLcStatus(db);
 	const snippets: Record<string, string> = {};
 	for (const l of LANGS) if (problem.snippets[l.slug]) snippets[l.slug] = problem.snippets[l.slug];
+	// Premium withholds codeSnippets as well as the statement, so the editor opened empty. The
+	// signature is derived from the public metaData instead.
+	const ownStarter = OWN_DESCRIPTIONS[problem.slug]?.starterPython;
+	if (ownStarter && !snippets.python3) snippets.python3 = ownStarter;
 
 	return {
 		slug,
