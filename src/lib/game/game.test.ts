@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { addDays, daysBetween, localDate, weekStartOf } from './dates';
-import { INTERVALS, afterSolve, badlyOverdue, isDue, type SrsState } from './srs';
+import { INTERVALS, afterSolve, isDue, type SrsState } from './srs';
 import { NODES, NODE_ORDER, PROBLEM_BY_SLUG, PROBLEMS, problemsForNode } from './curriculum';
 import { computeTree, dueRefreshes, isServable, nextNewProblems, type ProblemProgress } from './tree';
 import { computeAward } from './awards';
@@ -30,15 +30,20 @@ describe('srs', () => {
 		const reset = afterSolve(s1, 'assisted', new Date(s1.dueAt!.getTime()));
 		expect(reset.srsStep).toBe(0);
 	});
-	it('holds the step when badly overdue and caps at the ladder end', () => {
+	it('advances a clean solve however late it is, and caps at the ladder end', () => {
+		// A late unaided solve is evidence of retention, not neglect: the step must climb.
 		const s1 = afterSolve(afterSolve(null, 'clean', t0), 'clean', new Date(t0.getTime() + 4 * DAY));
-		const late = new Date(s1.dueAt!.getTime() + (INTERVALS[1] + 1) * DAY);
-		expect(badlyOverdue(s1, late)).toBe(true);
-		expect(afterSolve(s1, 'clean', late).srsStep).toBe(1);
+		const late = new Date(s1.dueAt!.getTime() + 10 * INTERVALS[1] * DAY);
+		expect(afterSolve(s1, 'clean', late).srsStep).toBe(2);
 		let s: SrsState = { srsStep: INTERVALS.length - 1, dueAt: t0 };
 		s = afterSolve(s, 'clean', t0);
 		expect(s.srsStep).toBe(INTERVALS.length - 1);
 		expect(isDue(s, t0)).toBe(false);
+	});
+	it('has a strictly increasing ladder', () => {
+		// Climbing must never shorten the gap. The values are tuned by hand and expected to change;
+		// what must hold is that a clean on-time solve always buys more time than the one before it.
+		for (let i = 1; i < INTERVALS.length; i++) expect(INTERVALS[i]).toBeGreaterThan(INTERVALS[i - 1]);
 	});
 });
 

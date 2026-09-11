@@ -43,7 +43,7 @@ Phases 1 to 8 are implemented in one pass: repo hygiene, passkey auth, admin/coo
 
 - Nodes are the 18 NeetCode patterns with prerequisite edges in `data/roadmap.json`. A node is **available** when its prerequisites are unlocked, **unlocks** at 50% of its problems solved, **completes** at 100%.
 - **Research** per accepted solve: Easy 10, Medium 25, Hard 60. Non-Python x1.5. Daily-challenge overlap x2. It is a score on the node; unlocking is driven by solved counts so the rule is legible.
-- **Freshness**: each solved problem is scheduled at 3, 7, 21, 60, 120, 240 days (`src/lib/game/srs.ts`). A clean re-solve advances the interval; a re-solve made after peeking at solutions ("assisted") resets it to 3 days; a badly overdue re-solve holds the interval. Overdue problems appear as **refresh** tasks. A node under 50% freshness is **rusting**, which scales its buildings' output through the freshness factor.
+- **Freshness**: each solved problem is scheduled at 3, 7, 14, 21, 30 days (`src/lib/game/srs.ts`), capped at 30 so nothing drops out of circulation for months at a time. A clean re-solve advances the interval however late it is; a re-solve made after peeking at solutions ("assisted") resets it to 3 days. Overdue problems appear as **refresh** tasks. A node under 50% freshness is **rusting**, which scales its buildings' output through the freshness factor.
 - Re-solves count toward the budget and yield x0.5 resources, or x1 when done in a different language from the last accepted attempt.
 
 ### Weekly budget, morale, daily plan
