@@ -1,8 +1,6 @@
 import { json } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
 import { getDb, getEnv } from '$lib/server/db';
-import { problemState } from '$lib/server/db/schema';
 import { requireUser } from '$lib/server/guard';
 import { getProblem } from '$lib/server/problems';
 import { getLcAuth } from '$lib/server/leetcode/auth';
@@ -19,16 +17,14 @@ export const GET: RequestHandler = async (event) => {
 	const problem = await getProblem(db, slug);
 	if (!problem) return json({ error: 'not_found' }, { status: 404 });
 
-	const state = await db.select({ n: problemState.solveCount }).from(problemState).where(eq(problemState.slug, slug)).get();
-	if (!(state?.n ?? 0)) {
-		await recordSolutionView(db, slug, localDate(new Date(), user.timezone));
-	} else {
-		// Solved before: still a view for SRS purposes, but free.
-		await recordSolutionView(db, slug, localDate(new Date(), user.timezone));
-	}
+	// Every kind records a view, including 'own': loading your last accepted solution into the
+	// editor is as much a peek as opening the NeetCode reference, so on a refresh it must count as
+	// assisted in exactly the same way. The code itself never leaves the page loader; this call
+	// exists only to leave the record.
+	await recordSolutionView(db, slug, localDate(new Date(), user.timezone));
 
 	try {
-		if (kind === 'reference') return json({ ok: true });
+		if (kind === 'reference' || kind === 'own') return json({ ok: true });
 		if (kind === 'community') {
 			const lang = event.url.searchParams.get('lang') ?? '';
 			const tag = LANG_BY_SLUG.has(lang) ? [lang] : [];

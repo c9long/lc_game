@@ -89,7 +89,7 @@ Phases 1 to 8 are implemented in one pass: repo hygiene, passkey auth, admin/coo
 
 ### Solutions
 
-Three tabs on the solve page: the NeetCode reference solution vendored from the MIT-licensed repo (served from `static/solutions/`), LeetCode community solutions filtered to the current language, and the editorial (in-app when free, a link when Premium). Opening the drawer is free (changed 2026-09-06: it used to cost 2 essence, which taxed the thing that actually teaches you). Opening it before a **refresh** is accepted still marks that solve assisted, halving its award and resetting its interval, since a repetition you needed help with has not stuck. A first solve carries no penalty either way. A "Last accepted" button loads your previous accepted code into the editor for comparison.
+Three tabs on the solve page: the NeetCode reference solution vendored from the MIT-licensed repo (served from `static/solutions/`), LeetCode community solutions filtered to the current language, and the editorial (in-app when free, a link when Premium). Opening the drawer is free (changed 2026-09-06: it used to cost 2 essence, which taxed the thing that actually teaches you). Opening it before a **refresh** is accepted still marks that solve assisted, halving its award and resetting its interval, since a repetition you needed help with has not stuck. A first solve carries no penalty either way. A "Last accepted" button loads your previous accepted code into the editor for comparison; since 2026-09-17 it records a solution view first, so on a refresh it is penalised exactly like the reference drawer (it used to be a free pass: load the old answer, submit, refresh cleared).
 
 ## Architecture
 
@@ -108,7 +108,7 @@ Worker
   /api/solve/<slug>/submit     → leetcode submit
   /api/check/<id>              → leetcode check; on an Accepted submit it applies the award (idempotent on submission id)
   /api/solve/<slug>/draft      autosaved editor drafts
-  /api/solve/<slug>/solutions  community / article / editorial proxy; records solution views
+  /api/solve/<slug>/solutions  community / article / editorial proxy; records solution views (kind=own for "Last accepted")
   /api/city/build, /api/city/destroy  server-validated placement, upgrade, demolition
   /api/sync                    recentAcSubmissionList fallback (also runs on Today, throttled to 5 min)
   /drills, /api/drills/answer  daily drill set (stored in game_state), server-side answer checking, ingots

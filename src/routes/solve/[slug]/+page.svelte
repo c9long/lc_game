@@ -73,8 +73,14 @@
 		if (confirm('Replace the editor contents with the starter code?')) code = data.snippets[lang] ?? '';
 	}
 
-	function loadLastAccepted() {
-		if (lastAcceptedFor) code = lastAcceptedFor;
+	/** Loads the previous accepted solution -- and records it as a solution view first, so on a
+	 *  refresh it is penalised exactly like opening the NeetCode reference. Without the record the
+	 *  button was a free pass: a refresh could be cleared by loading the old answer and submitting. */
+	async function loadLastAccepted() {
+		if (!lastAcceptedFor) return;
+		if (data.solved && !confirm('Loading your last accepted solution counts as assistance on a refresh: the award is halved and the refresh timer resets to 3 days. Continue?')) return;
+		await fetch(`/api/solve/${data.slug}/solutions?kind=own`).catch(() => {});
+		code = lastAcceptedFor;
 	}
 
 	async function saveDraft() {
@@ -308,7 +314,7 @@
 		<div class="card">
 			<div class="row">
 				<strong>Solutions</strong>
-				{#if !data.solved && !data.viewedToday}<span class="muted">Free to open. On a refresh it marks the solve as assisted, so it comes back sooner.</span>{/if}
+				{#if !data.solved && !data.viewedToday}<span class="muted">Free to open. On a refresh it marks the solve as assisted, so it comes back sooner. Loading "Last accepted" counts the same way.</span>{/if}
 				<button onclick={() => openDrawer('reference')} disabled={drawerBusy}>NeetCode reference</button>
 				<button onclick={() => openDrawer('community')} disabled={drawerBusy}>Community ({langMeta.name})</button>
 				<button onclick={() => openDrawer('editorial')} disabled={drawerBusy}>Editorial</button>
