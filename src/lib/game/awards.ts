@@ -27,6 +27,18 @@ export const SECONDARY_RESOURCES: Record<Difficulty, Record<string, number>> = {
 	Hard: { stone: 3, timber: 3 }
 };
 export const BONUS_LANG_MULT = 1.5;
+
+/** Building effects on the haul. The Granary adds a flat pinch of both common materials to every
+ *  solve, after the multipliers, so it is worth the same on a half-value refresh as on a new
+ *  problem. The Walls scale iron, the one material only Hard problems yield and the one every
+ *  late building is short of. */
+export const HAULS_BONUS: Record<string, number> = { timber: 1, stone: 1 };
+export const IRONWORKS_MULT = 1.5;
+
+export interface BuildingEffects {
+	hauls?: boolean;
+	ironworks?: boolean;
+}
 export const DAILY_MULT = 2;
 export const REFRESH_MULT = 0.5;
 
@@ -39,6 +51,7 @@ export interface AwardInput {
 	prev: { solveCount: number; lastLang: string | null } | null;
 	isDaily: boolean;
 	assisted: boolean;
+	effects?: BuildingEffects;
 }
 
 export interface Award {
@@ -65,6 +78,8 @@ export function computeAward(a: AwardInput): Award {
 	for (const [kind, base] of Object.entries(SECONDARY_RESOURCES[a.difficulty])) {
 		resources[kind] = (resources[kind] ?? 0) + Math.max(1, Math.round(base * mult));
 	}
+	if (a.effects?.ironworks && resources.iron) resources.iron = Math.round(resources.iron * IRONWORKS_MULT);
+	if (a.effects?.hauls) for (const [k, n] of Object.entries(HAULS_BONUS)) resources[k] = (resources[k] ?? 0) + n;
 	for (const tag of a.tags) resources[`essence:${tag}`] = (resources[`essence:${tag}`] ?? 0) + 1;
 
 	return {

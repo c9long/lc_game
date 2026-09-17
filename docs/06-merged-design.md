@@ -8,11 +8,11 @@ This is the option being built. It merges [01-commit-city.md](01-commit-city.md)
 |---|---|---|
 | Curriculum | NeetCode 150, as a tech tree of its 18 patterns | Finite, ordered, community-maintained; reference solutions exist in every language |
 | Refreshing techs | Per-problem spaced repetition; a node's freshness is the share of its solved problems not overdue | "Unlocked" must not mean "done forever" |
-| Pace | 2 problems/day as a rolling weekly budget of 14 | A missed day is recoverable; morale tracks the weekly average |
+| Pace | 2 problems/day as a rolling weekly budget of 14, shown but not enforced | Absence is already penalised through refresh freshness; morale (a second, city-wide penalty) was removed 2026-09-16 |
 | IDE | Monaco in the browser | Self-contained, VS Code keybindings, no coding on leetcode.com |
 | Execution | ~~LeetCode's judge, driven through the session cookie~~ → **Pyodide in the browser**, see [07-pyodide-judge.md](07-pyodide-judge.md) | Superseded 2026-09-06: LeetCode's judge is Cloudflare-blocked to all server callers. Still no server executes code |
 | Languages | Python, Go, C# front-line; C++ and Rust selectable | The judge supports all of them; non-Python solves earn x1.5 |
-| Hosting | Cloudflare Workers + D1 | $0, SQLite locally and in prod, secrets in one place. No cron: morale and coins tick lazily on the next request |
+| Hosting | Cloudflare Workers + D1 | $0, SQLite locally and in prod, secrets in one place. No cron: coins accrue lazily on the next request |
 | Fallback hosting | Vercel + Turso, then Cloudflare Tunnel from the WSL box | Only if LeetCode blocks run/submit from Workers egress |
 | Syntax drills | Recall drills (cloze and output prediction) mined from CPython's documentation, verified by execution at generation time; no runtime execution | Added 2026-09-04. Ingots from drills are the only way to upgrade buildings |
 | AI | None | Chris's call |
@@ -46,10 +46,10 @@ Phases 1 to 8 are implemented in one pass: repo hygiene, passkey auth, admin/coo
 - **Freshness**: each solved problem is scheduled at 3, 7, 14, 21, 30 days (`src/lib/game/srs.ts`), capped at 30 so nothing drops out of circulation for months at a time. A clean re-solve advances the interval however late it is; a re-solve made after peeking at solutions ("assisted") resets it to 3 days. Overdue problems appear as **refresh** tasks. A node under 50% freshness is **rusting**, which scales its buildings' output through the freshness factor.
 - Re-solves count toward the budget and yield x0.5 resources, or x1 when done in a different language from the last accepted attempt.
 
-### Weekly budget, morale, daily plan
+### Weekly budget and daily plan
 
-- Every accepted solve (new or refresh, one per problem per day) is a ledger entry. Budget is 14 per rolling 7 days.
-- Morale moves toward `100 * min(1, weekly / 14)` by 15 points per day. Production is multiplied by morale/100. The Granary holds up to 3 freeze days that hold morale on a zero-solve day.
+- Every accepted solve (new or refresh, one per problem per day) is a ledger entry. The home page shows the count against 14 per rolling 7 days; nothing scales with it.
+- **Morale removed 2026-09-16.** It was a 0–100 multiplier on all income that chased `100 * min(1, weekly / 14)` by 15 points a day, with a Granary holding up to 3 purchasable freeze days and Walls halving the daily loss. The refresh system already penalises absence — every overdue problem lowers its node's freshness, and with it that node's buildings — so a second penalty for the same thing only made income harder to read. Production is now `base × freshness × adjacency`, on days with at least one solve.
 - The daily plan has two slots: the earliest due refresh in curriculum order if any (else a new problem), and the next new problem in roadmap order from the lowest available incomplete node. If LeetCode's daily challenge is in the NeetCode 150 it takes slot two with x2. At three or more due refreshes both slots become refreshes and the daily is skipped, until the backlog drains.
   - Changed 2026-09-16: refreshes were most-overdue-first, which let a deep node's refresh pre-empt a root node's simply by having waited longer. Now refreshes walk the tree exactly as new problems do, so foundations stay fresh before deeper material is revisited.
 
@@ -67,7 +67,8 @@ Phases 1 to 8 are implemented in one pass: repo hygiene, passkey auth, admin/coo
 
   Changed 2026-09-06: difficulty used to pick only the *kind* of material, never the amount. That made a Hard worth no more than an Easy despite six times the research, and — because Easy problems run out as you climb the tree — it made timber unobtainable while gating the Hut, Granary, Hash Market and Window Mill. Yielding downward keeps every supply line open and makes harder strictly better.
 - **Premium problems (resolved 2026-09-09).** Seven of the 150 are LeetCode Premium, and LeetCode returns `content: null` for them, so their pages rendered blank while still counting toward the tree. NeetCode publishes them, but only through a client-rendered SPA — every path returns the same shell and the text is never in the HTML — so there is nothing to fetch. The statements are written in `data/premium-descriptions.json` instead, from the published `metaData` signature, the vendored reference solution and the real generated cases, with the examples pulled from the suite so the prose cannot drift from what the judge runs. The page says when a description is the app's own. Their test suites always existed: `metaData` and `exampleTestcases` are public even for Premium. Premium therefore no longer gates anything, the `hasPremium` toggle is gone from Admin, and all 150 count.
-- Buildings are gated by tree nodes (Hash Market needs Arrays & Hashing unlocked, DP Academy needs 1-D DP unlocked, and so on), and by solve counts for Walls and the Monument. Production is scaled by the node's freshness and by morale, and only accrues on days with at least one solve. Coins buy upgrades and Granary freeze days; grid expansion and cosmetics are future work.
+- Buildings are gated by tree nodes (Hash Market needs Arrays & Hashing unlocked, DP Academy needs 1-D DP unlocked, and so on), and by solve counts for Walls and the Monument. Production is scaled by the node's freshness and by adjacency to Graph Roads, and only accrues on days with at least one solve. Coins buy upgrades; grid expansion and cosmetics are future work.
+- **Granary and Walls repurposed 2026-09-16**, since their effects were morale's. The Granary adds +1 timber and +1 stone to every solve's haul, after multipliers. The Walls (3 Hard solves) scale iron ×1.5 — the one material only Hard problems yield, and the one every late building is short of.
 - **Destroy** (added 2026-09-07) demolishes a building and refunds its **level 1 base cost only**, behind a confirmation dialog. Upgrade materials, Ingots and coins are not refunded, so levelling up stays a commitment while a misplaced building remains a mistake you can walk back.
 - 8x8 grid with adjacency bonuses only. Emoji or SVG tiles.
 
@@ -94,7 +95,7 @@ Three tabs on the solve page: the NeetCode reference solution vendored from the 
 
 ```
 Browser (SvelteKit + Monaco)
-  /            today: plan slots, budget bar, morale, tree frontier, city summary
+  /            today: plan slots, budget bar, tree frontier, city summary
   /tree        atlas SVG of 18 nodes with freshness rings
   /tree/<id>   node problems and state
   /solve/<slug> editor, run/submit, results, solutions drawer
@@ -108,10 +109,10 @@ Worker
   /api/check/<id>              → leetcode check; on an Accepted submit it applies the award (idempotent on submission id)
   /api/solve/<slug>/draft      autosaved editor drafts
   /api/solve/<slug>/solutions  community / article / editorial proxy; records solution views
-  /api/city/build, /api/city/freeze   server-validated placement, upgrade, freeze days
+  /api/city/build, /api/city/destroy  server-validated placement, upgrade, demolition
   /api/sync                    recentAcSubmissionList fallback (also runs on Today, throttled to 5 min)
   /drills, /api/drills/answer  daily drill set (stored in game_state), server-side answer checking, ingots
-  No cron: loadSnapshot() advances morale and accrues coins for elapsed days on each request; the daily plan is created on first load of the day.
+  No cron: loadSnapshot() accrues coins for elapsed active days on each request; the daily plan is created on first load of the day.
 
 D1: users, passkeys, sessions, challenges, settings (encrypted rows), problems (cache), problem_state,
     attempts, awards, ledger, resources, buildings, game_state, plans, plan_items, solution_views,

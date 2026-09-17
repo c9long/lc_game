@@ -40,7 +40,7 @@
 	<section class="card">
 		<h2>Weekly budget</h2>
 		<div class="bar"><span style="width: {pct}%"></span></div>
-		<p><strong>{data.weekly}</strong> / {data.budget} solves in the last 7 days · morale <strong>{Math.round(data.morale.morale)}</strong> · freeze days {data.morale.freezeDays}</p>
+		<p><strong>{data.weekly}</strong> / {data.budget} solves in the last 7 days</p>
 		<p class="muted">City produces {data.production} coins per active day. Total solved: {data.totalSolves}.</p>
 		<div class="row">
 			{#each Object.entries(data.resources).filter(([k]) => !k.startsWith('essence:')) as [k, v] (k)}

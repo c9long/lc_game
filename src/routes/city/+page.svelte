@@ -38,18 +38,14 @@
 		}
 	}
 	const fmtCost = formatCost;
-	/** Per-building output is fractional once freshness or morale are below full. */
+	/** Per-building output is fractional once freshness is below full or roads apply. */
 	const fmtCoins = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(2).replace(/\.?0+$/, ''));
 </script>
 
 <h1>City</h1>
 <div class="row summary">
 	{#each RESOURCE_META as m (m.kind)}<span class="pill">{m.emoji} {m.label} <strong>{data.resources[m.kind] ?? 0}</strong></span>{/each}
-	<span class="muted">· {data.production} coins per active day · morale {Math.round(data.morale.morale)} · freeze days {data.morale.freezeDays}/3</span>
-	{#if data.hasGranary}
-		<button disabled={busy || (data.resources.coins ?? 0) < data.freezeCost || data.morale.freezeDays >= 3} onclick={() => post('/api/city/freeze', {})}>Buy freeze day ({data.freezeCost} coins)</button>
-		<span class="muted">{data.freezeBought} bought this week · price doubles each time, resets Monday</span>
-	{/if}
+	<span class="muted">· {data.production} coins per active day</span>
 </div>
 {#if essence.length}<p class="row">{#each essence as [k, v] (k)}<span class="pill">{k.slice(8)} {v}</span>{/each}</p>{/if}
 {#if message}<div class="banner">{message}</div>{/if}
@@ -79,13 +75,12 @@
 						{b.rate} base × level {b.level} = {fmtCoins(b.yield.base)}
 						{#if b.hasNode}<br />× freshness {Math.round(b.yield.freshness * 100)}%{/if}
 						{#if b.yield.adjacency > 1}<br />× roads ×{b.yield.adjacency}{/if}
-						<br />× morale {Math.round(data.morale.morale)}%
 					</p>
 					{#if b.hasNode && b.yield.freshness < 1}
 						<p class="muted">Refresh this node's overdue problems to restore full output.</p>
 					{/if}
 				{:else}
-					<p class="muted">Produces no coins{b.effect ? ` — its value is its effect (${b.effect})` : ''}.</p>
+					<p class="muted">Produces no coins{b.effect ? ` — ${b.effect}` : ''}.</p>
 				{/if}
 				{#if b.next}
 					<p>Upgrade: {fmtCost(b.next)}</p>

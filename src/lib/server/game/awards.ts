@@ -1,10 +1,11 @@
 import { and, eq, gt } from 'drizzle-orm';
 import type { Db } from '../db';
-import { awards, ledger, planItems, problemState, solutionViews, type User } from '../db/schema';
+import { awards, buildings, ledger, planItems, problemState, solutionViews, type User } from '../db/schema';
 import { randomId } from '../crypto';
 import { getProblem } from '../problems';
 import { addResourceStatement, getState } from './state';
 import { computeAward, type Award } from '$lib/game/awards';
+import { hasEffect, type PlacedBuilding } from '$lib/game/city';
 import { PROBLEM_BY_SLUG, type Difficulty } from '$lib/game/curriculum';
 import { localDate } from '$lib/game/dates';
 import { afterSolve } from '$lib/game/srs';
@@ -85,6 +86,9 @@ export async function applyAccepted(db: Db, user: User, input: AcceptedInput): P
 	const isRefresh = Boolean(prev && prev.solveCount > 0);
 	const assisted = isRefresh && Boolean(viewed);
 	const daily = await getState<Daily | null>(db, `daily:${date}`, null);
+	const placed: PlacedBuilding[] = (await db.select().from(buildings).all()).map((b) => ({
+		id: b.id, kind: b.kind, x: b.x, y: b.y, level: b.level
+	}));
 
 	const award = computeAward({
 		difficulty,
@@ -92,7 +96,8 @@ export async function applyAccepted(db: Db, user: User, input: AcceptedInput): P
 		lang: input.lang,
 		prev: prev ? { solveCount: prev.solveCount, lastLang: prev.lastLang } : null,
 		isDaily: daily?.slug === input.slug,
-		assisted
+		assisted,
+		effects: { hauls: hasEffect(placed, 'hauls'), ironworks: hasEffect(placed, 'ironworks') }
 	});
 	const srs = afterSolve(
 		prev ? { srsStep: prev.srsStep, dueAt: prev.dueAt } : null,

@@ -137,9 +137,9 @@ if [ -n "${FIRST_ID:-}" ]; then
 fi
 
 
-# Daily production. The reported bug: coins were paid inside the morale tick, which fires on the
-# first page load of the day, when today's ledger is still empty — so a day with buildings and
-# solves earned nothing, and never got another chance. Two huts must yield two coins.
+# Daily production. The reported bug: coins were paid inside a tick that fired on the first page
+# load of the day, when today's ledger is still empty — so a day with buildings and solves earned
+# nothing, and never got another chance. Two huts must yield two coins.
 $W execute lc-game --local --persist-to "$STATE" --command \
   "INSERT OR IGNORE INTO buildings (id, kind, x, y, level, built_at) VALUES ('smoke-hut-a','hut',0,0,1,$NOW), ('smoke-hut-b','hut',1,0,1,$NOW);" >/dev/null
 curl -s -o /dev/null -H "cookie: lc_session=$TOKEN" "$B/"   # first load of the day: nothing solved yet
@@ -156,12 +156,6 @@ fi
 curl -s -o /dev/null -H "cookie: lc_session=$TOKEN" "$B/"   # a reload must not pay twice
 COINS_AGAIN=$($W execute lc-game --local --persist-to "$STATE" --json --command "SELECT amount FROM resources WHERE kind='coins'" 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s)[0].results;console.log(r.length?r[0].amount:0)})')
 if [ "$COINS_AGAIN" = "2" ]; then echo "ok   reloading does not pay production twice"; else echo "FAIL production paid again on reload: $COINS_AGAIN"; fail=1; fi
-
-
-# Morale has to be persisted on first sight, or its fallback (dated today) makes the "asOf < today"
-# tick permanently unreachable and morale never moves at all.
-MORALE_ROW=$($W execute lc-game --local --persist-to "$STATE" --json --command "SELECT COUNT(*) AS n FROM game_state WHERE key='morale'" 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s)[0].results;console.log(r.length?r[0].n:0)})')
-if [ "$MORALE_ROW" = "1" ]; then echo "ok   morale state persisted on first load"; else echo "FAIL morale never persisted, so it can never tick"; fail=1; fi
 
 
 # Destroy refunds the level 1 base cost and removes the building. The huts above cost 5 timber each.

@@ -150,7 +150,7 @@ export const buildings = sqliteTable(
 	(t) => [uniqueIndex('buildings_xy_unique').on(t.x, t.y)]
 );
 
-/** Small mutable game-wide values: morale, freeze days, grid size, last tick. */
+/** Small mutable game-wide values: coins settled through, the day's drill set, cached daily. */
 export const gameState = sqliteTable('game_state', {
 	key: text('key').primaryKey(),
 	value: text('value', { mode: 'json' }).$type<unknown>().notNull(),

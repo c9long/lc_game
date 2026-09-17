@@ -15,9 +15,21 @@ export interface BuildingKind {
 	coins: number;
 	/** Production scales with this node's freshness. */
 	node?: string;
-	effect?: 'adjacency' | 'walls' | 'granary' | 'monument';
+	effect?: BuildingEffect;
 	maxLevel: number;
 }
+
+export type BuildingEffect = 'adjacency' | 'hauls' | 'ironworks' | 'monument';
+
+/** What each effect does, for the city page. The Granary and Walls were repurposed on 2026-09-16
+ *  when morale went: the Granary held freeze days and Walls halved morale loss, and neither had
+ *  anything left to do. Their new effects live in awards.ts, where the haul is computed. */
+export const EFFECT_TEXT: Record<BuildingEffect, string> = {
+	adjacency: 'neighbouring buildings produce ×1.25',
+	hauls: '+1 timber and +1 stone on every solve',
+	ironworks: '×1.5 iron from Hard solves',
+	monument: 'a monument'
+};
 
 export const GRID_SIZE = 8;
 export const UPGRADE_COST_MULT = 1.5;
@@ -41,8 +53,8 @@ export const BUILDINGS: BuildingKind[] = [
 	{ id: 'interval-clock', name: 'Interval Clocktower', emoji: '🕰️', cost: { stone: 12, iron: 4 }, gate: { node: 'intervals', status: 'unlocked' }, coins: 5, node: 'intervals', maxLevel: 3 },
 	{ id: 'bit-workshop', name: 'Bit Workshop', emoji: '🔧', cost: { iron: 10 }, gate: { node: 'bit-manipulation', status: 'unlocked' }, coins: 6, node: 'bit-manipulation', maxLevel: 3 },
 	{ id: 'geometry-hall', name: 'Geometry Hall', emoji: '📐', cost: { stone: 20, iron: 10 }, gate: { node: 'math-geometry', status: 'unlocked' }, coins: 8, node: 'math-geometry', maxLevel: 3 },
-	{ id: 'granary', name: 'Granary', emoji: '🌾', cost: { timber: 10, stone: 10 }, coins: 0, effect: 'granary', maxLevel: 1 },
-	{ id: 'walls', name: 'Walls', emoji: '🧱', cost: { stone: 30 }, gate: { hard: 3 }, coins: 0, effect: 'walls', maxLevel: 1 },
+	{ id: 'granary', name: 'Granary', emoji: '🌾', cost: { timber: 10, stone: 10 }, coins: 0, effect: 'hauls', maxLevel: 1 },
+	{ id: 'walls', name: 'Walls', emoji: '🧱', cost: { stone: 30 }, gate: { hard: 3 }, coins: 0, effect: 'ironworks', maxLevel: 1 },
 	{ id: 'monument', name: 'Monument', emoji: '🗿', cost: { iron: 50 }, gate: { solves: 100 }, coins: 0, effect: 'monument', maxLevel: 1 }
 ];
 
@@ -74,7 +86,7 @@ export function gateSatisfied(gate: Gate | undefined, ctx: GateContext): boolean
 
 export const INGOTS_PER_UPGRADE_LEVEL = 3;
 /** Upgrades also cost coins, so daily production — and therefore finishing the expedition — is
- *  what funds a growing city, rather than coins existing only to buy freeze days. */
+ *  what funds a growing city, rather than coins having nothing to be spent on. */
 export const COINS_PER_UPGRADE_LEVEL = 15;
 
 /** Upgrades cost the base resources scaled up, plus Ingots (earned only from syntax drills). */
@@ -96,7 +108,7 @@ export function inBounds(x: number, y: number, size = GRID_SIZE): boolean {
 	return Number.isInteger(x) && Number.isInteger(y) && x >= 0 && y >= 0 && x < size && y < size;
 }
 
-/** Coins produced by the city for one active day, before the morale factor. */
+/** Coins produced by the city for one active day. */
 export const ROAD_ADJACENCY_BONUS = 1.25;
 
 /** What one building contributes per active day, and where the number comes from. */
@@ -107,10 +119,8 @@ export interface BuildingYield {
 	freshness: number;
 	/** ROAD_ADJACENCY_BONUS when it neighbours Graph Roads, else 1. */
 	adjacency: number;
-	/** Coins per active day before morale is applied. */
-	beforeMorale: number;
-	/** Coins per active day after morale. Unrounded: the city total is rounded once after summing,
-	 *  so per-building figures will not always add up to it exactly. */
+	/** Coins per active day. Unrounded: the city total is rounded once after summing, so
+	 *  per-building figures will not always add up to it exactly. */
 	perDay: number;
 }
 
@@ -123,11 +133,10 @@ export interface BuildingYield {
 export function buildingYield(
 	b: PlacedBuilding,
 	placed: PlacedBuilding[],
-	tree: Map<string, NodeView>,
-	morale = 100
+	tree: Map<string, NodeView>
 ): BuildingYield {
 	const kind = BUILDING_BY_ID.get(b.kind);
-	const none = { base: 0, freshness: 1, adjacency: 1, beforeMorale: 0, perDay: 0 };
+	const none = { base: 0, freshness: 1, adjacency: 1, perDay: 0 };
 	if (!kind || kind.coins === 0) return none;
 
 	const roads = new Set(
@@ -142,24 +151,17 @@ export function buildingYield(
 	const base = kind.coins * b.level;
 	const freshness = kind.node ? (tree.get(kind.node)?.freshness ?? 1) : 1;
 	const adjacency = neighbours.some(([x, y]) => roads.has(`${x},${y}`)) ? ROAD_ADJACENCY_BONUS : 1;
-	const beforeMorale = base * freshness * adjacency;
-	return {
-		base,
-		freshness,
-		adjacency,
-		beforeMorale,
-		perDay: beforeMorale * (Math.max(0, Math.min(100, morale)) / 100)
-	};
+	return { base, freshness, adjacency, perDay: base * freshness * adjacency };
 }
 
 export function baseProduction(placed: PlacedBuilding[], tree: Map<string, NodeView>): number {
 	let total = 0;
-	for (const b of placed) total += buildingYield(b, placed, tree).beforeMorale;
+	for (const b of placed) total += buildingYield(b, placed, tree).perDay;
 	return total;
 }
 
-export function dailyCoins(placed: PlacedBuilding[], tree: Map<string, NodeView>, morale: number): number {
-	return Math.round(baseProduction(placed, tree) * (Math.max(0, Math.min(100, morale)) / 100));
+export function dailyCoins(placed: PlacedBuilding[], tree: Map<string, NodeView>): number {
+	return Math.round(baseProduction(placed, tree));
 }
 
 export function hasEffect(placed: PlacedBuilding[], effect: BuildingKind['effect']): boolean {
@@ -169,7 +171,7 @@ export function hasEffect(placed: PlacedBuilding[], effect: BuildingKind['effect
 /** Settles daily production for every day that is ready to be paid.
  *
  *  A day is only payable once its ledger means something. Production used to be paid inside the
- *  morale tick, which runs for TODAY on the first page load of the day — at that moment nothing has
+ *  daily tick, which runs for TODAY on the first page load of the day — at that moment nothing has
  *  been solved yet, so the "at least one solve" test failed and the day was written off for good.
  *  So: finished days are paid from their final ledger, and today is paid as soon as it has a solve.
  *
@@ -181,23 +183,23 @@ export function settleProduction(input: {
 	today: string;
 	earliest: string;
 	active: Set<string>;
-	moraleByDate: Map<string, number>;
-	currentMorale: number;
-	perDay: (morale: number) => number;
+	/** The city's output for one active day, at today's freshness. Earlier days are paid at this
+	 *  rate too: freshness is not recorded per day, and morale -- which was -- is gone. */
+	perDay: number;
 	addDays: (date: string, n: number) => string;
 }): { coins: number; coinsAsOf: string } {
-	const { today, earliest, active, moraleByDate, currentMorale, perDay, addDays } = input;
+	const { today, earliest, active, perDay, addDays } = input;
 	let coinsAsOf = input.coinsAsOf < earliest ? addDays(earliest, -1) : input.coinsAsOf;
 	const yesterday = addDays(today, -1);
 	let coins = 0;
 
 	for (let d = addDays(coinsAsOf, 1); d <= yesterday; d = addDays(d, 1)) {
-		if (active.has(d)) coins += perDay(moraleByDate.get(d) ?? currentMorale);
+		if (active.has(d)) coins += perDay;
 		coinsAsOf = d;
 	}
 	// Today is paid the moment it has a solve, and only once.
 	if (coinsAsOf < today && active.has(today)) {
-		coins += perDay(currentMorale);
+		coins += perDay;
 		coinsAsOf = today;
 	}
 	return { coins, coinsAsOf };

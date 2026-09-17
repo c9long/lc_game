@@ -3,8 +3,8 @@ import { addDays, daysBetween, localDate, weekStartOf } from './dates';
 import { INTERVALS, afterSolve, isDue, type SrsState } from './srs';
 import { NODES, NODE_ORDER, PROBLEM_BY_SLUG, PROBLEMS, problemsForNode } from './curriculum';
 import { computeTree, dueRefreshes, isServable, nextNewProblems, type ProblemProgress } from './tree';
-import { computeAward } from './awards';
-import { WEEKLY_BUDGET, advanceMorale, freezeCost, freezePurchasesThisWeek, weeklyCount } from './budget';
+import { HAULS_BONUS, IRONWORKS_MULT, computeAward } from './awards';
+import { WEEKLY_BUDGET, weeklyCount } from './budget';
 import { BUILDINGS, baseProduction, buildingYield, canAfford, costAtLevel, dailyCoins, gateSatisfied, settleProduction } from './city';
 import { DRILL_INTERVALS, MAX_DUE_PER_SET, afterDrill, buildDrillSet, checkAnswer, ingotsFor, normalizeOutput, type Drill, type DrillProgress } from './drills';
 
@@ -162,26 +162,12 @@ describe('awards', () => {
 	});
 });
 
-describe('budget and morale', () => {
+describe('weekly budget', () => {
 	it('counts a rolling week', () => {
 		const dates = ['2026-08-28', '2026-08-29', '2026-09-03', '2026-09-04', '2026-09-04'];
 		expect(weeklyCount(dates, '2026-09-04')).toBe(4);
 		expect(weeklyCount(dates, '2026-09-03')).toBe(3);
 		expect(WEEKLY_BUDGET).toBe(14);
-	});
-	it('moves toward the weekly target, halves losses with walls, spends freeze days', () => {
-		const start = { morale: 100, asOf: '2026-09-01', freezeDays: 1 };
-		const { state, ticks } = advanceMorale(start, [], '2026-09-04', { hasWalls: false });
-		expect(ticks.length).toBe(3);
-		expect(ticks[0].usedFreeze).toBe(true);
-		expect(ticks[0].after).toBe(100);
-		expect(ticks[1].after).toBe(85);
-		expect(state).toEqual({ morale: 70, asOf: '2026-09-04', freezeDays: 0 });
-		const walls = advanceMorale({ morale: 100, asOf: '2026-09-01', freezeDays: 0 }, [], '2026-09-02', { hasWalls: true });
-		expect(walls.state.morale).toBe(92.5);
-		const full = Array.from({ length: 14 }, (_, i) => addDays('2026-08-29', Math.floor(i / 2)));
-		const up = advanceMorale({ morale: 50, asOf: '2026-09-03', freezeDays: 0 }, full, '2026-09-04', { hasWalls: false });
-		expect(up.state.morale).toBe(65);
 	});
 });
 
@@ -203,7 +189,7 @@ describe('city', () => {
 			{ id: 'g', kind: 'granary', x: 5, y: 5, level: 1 }
 		];
 		expect(baseProduction(placed, tree)).toBeCloseTo(2 * 1.25 + 2);
-		expect(dailyCoins(placed, tree, 50)).toBe(2);
+		expect(dailyCoins(placed, tree)).toBe(5); // 4.5 rounds up
 	});
 });
 
@@ -238,21 +224,21 @@ describe('drills', () => {
 
 describe('production settlement', () => {
 	const addD = (d: string, n: number) => addDays(d, n);
-	const perDay = () => 2; // two huts
+	const perDay = 2; // two huts
 
 	it('pays today as soon as it has a solve, not on the first page load', () => {
-		// The original bug: production for today was paid inside the morale tick, which fires on the
-		// first load of the day, when nothing has been solved yet.
+		// The original bug: production for today was paid inside a tick that fired on the first
+		// load of the day, when nothing has been solved yet.
 		const empty = settleProduction({
 			coinsAsOf: '2026-09-05', today: '2026-09-06', earliest: '2026-07-01',
-			active: new Set(['2026-09-05']), moraleByDate: new Map(), currentMorale: 100, perDay, addDays: addD
+			active: new Set(['2026-09-05']), perDay, addDays: addD
 		});
 		expect(empty).toEqual({ coins: 0, coinsAsOf: '2026-09-05' });
 
 		// Same day, once a solve lands.
 		const solved = settleProduction({
 			coinsAsOf: '2026-09-05', today: '2026-09-06', earliest: '2026-07-01',
-			active: new Set(['2026-09-05', '2026-09-06']), moraleByDate: new Map(), currentMorale: 100, perDay, addDays: addD
+			active: new Set(['2026-09-05', '2026-09-06']), perDay, addDays: addD
 		});
 		expect(solved).toEqual({ coins: 2, coinsAsOf: '2026-09-06' });
 	});
@@ -260,49 +246,36 @@ describe('production settlement', () => {
 	it('pays each day once', () => {
 		const first = settleProduction({
 			coinsAsOf: '2026-09-05', today: '2026-09-06', earliest: '2026-07-01',
-			active: new Set(['2026-09-06']), moraleByDate: new Map(), currentMorale: 100, perDay, addDays: addD
+			active: new Set(['2026-09-06']), perDay, addDays: addD
 		});
 		expect(first.coins).toBe(2);
 		const again = settleProduction({
 			coinsAsOf: first.coinsAsOf, today: '2026-09-06', earliest: '2026-07-01',
-			active: new Set(['2026-09-06']), moraleByDate: new Map(), currentMorale: 100, perDay, addDays: addD
+			active: new Set(['2026-09-06']), perDay, addDays: addD
 		});
 		expect(again.coins).toBe(0);
 	});
 
-	it('catches up missed days using that day\'s morale, and skips idle days', () => {
+	it('catches up missed active days and skips idle ones', () => {
 		const r = settleProduction({
 			coinsAsOf: '2026-09-01', today: '2026-09-05', earliest: '2026-07-01',
 			active: new Set(['2026-09-02', '2026-09-04']),
-			moraleByDate: new Map([['2026-09-02', 50], ['2026-09-04', 100]]),
-			currentMorale: 100,
-			perDay: (m) => Math.round(2 * (m / 100)),
-			addDays: addD
+			perDay, addDays: addD
 		});
-		expect(r).toEqual({ coins: 1 + 2, coinsAsOf: '2026-09-04' });
+		expect(r).toEqual({ coins: 4, coinsAsOf: '2026-09-04' });
 	});
 
 	it('never walks back further than the ledger window', () => {
 		const r = settleProduction({
 			coinsAsOf: '2020-01-01', today: '2026-09-06', earliest: '2026-09-04',
 			active: new Set(['2026-09-04', '2026-09-05', '2026-09-06']),
-			moraleByDate: new Map(), currentMorale: 100, perDay, addDays: addD
+			perDay, addDays: addD
 		});
 		expect(r).toEqual({ coins: 6, coinsAsOf: '2026-09-06' });
 	});
 });
 
 describe('city economy', () => {
-	it('doubles the freeze price within a week and resets on Monday', () => {
-		expect([0, 1, 2, 3].map(freezeCost)).toEqual([20, 40, 80, 160]);
-		// A record from an earlier week does not carry over.
-		const monday = weekStartOf('2026-09-09'); // a Wednesday
-		expect(monday).toBe('2026-09-07');
-		expect(freezePurchasesThisWeek({ week: '2026-09-07', count: 2 }, monday)).toBe(2);
-		expect(freezePurchasesThisWeek({ week: '2026-08-31', count: 2 }, monday)).toBe(0);
-		expect(freezePurchasesThisWeek(null, monday)).toBe(0);
-	});
-
 	it('anchors the week to Monday whichever day it is asked about', () => {
 		expect(weekStartOf('2026-09-07')).toBe('2026-09-07'); // Monday itself
 		expect(weekStartOf('2026-09-13')).toBe('2026-09-07'); // the Sunday after
@@ -316,13 +289,11 @@ describe('city economy', () => {
 		expect(costAtLevel(hut, 3)).toMatchObject({ ingots: 6, coins: 30 });
 	});
 
-	it('pays no production for a frozen day, because nothing was solved', () => {
-		// A freeze day holds morale on a zero-solve day; it must not also pay out.
+	it('pays nothing for an idle day', () => {
 		const r = settleProduction({
 			coinsAsOf: '2026-09-01', today: '2026-09-04', earliest: '2026-08-01',
-			active: new Set(['2026-09-03']), // 09-02 was frozen, not solved
-			moraleByDate: new Map(), currentMorale: 100,
-			perDay: () => 2, addDays
+			active: new Set(['2026-09-03']), // nothing solved on 09-02
+			perDay: 2, addDays
 		});
 		expect(r).toEqual({ coins: 2, coinsAsOf: '2026-09-03' });
 	});
@@ -383,6 +354,27 @@ describe('difficulty yields', () => {
 		expect(refresh.multiplier).toBe(0.5);
 		expect(refresh.resources.timber).toBeGreaterThanOrEqual(1);
 	});
+
+	it('adds the Granary pinch after the multipliers, on every solve', () => {
+		const plain = computeAward({ ...base, difficulty: 'Medium' }).resources;
+		const withGranary = computeAward({ ...base, difficulty: 'Medium', effects: { hauls: true } }).resources;
+		expect(withGranary.timber).toBe(plain.timber + HAULS_BONUS.timber);
+		expect(withGranary.stone).toBe(plain.stone + HAULS_BONUS.stone);
+		// Flat, so a half-value refresh still gets the full pinch.
+		const refresh = { ...base, difficulty: 'Easy' as const, prev: { solveCount: 1, lastLang: 'python3' } };
+		const r0 = computeAward(refresh).resources;
+		const r1 = computeAward({ ...refresh, effects: { hauls: true } }).resources;
+		expect(r1.timber - r0.timber).toBe(HAULS_BONUS.timber);
+	});
+
+	it('scales iron with the Walls, and only iron', () => {
+		const hard = computeAward({ ...base, difficulty: 'Hard', effects: { ironworks: true } }).resources;
+		expect(hard.iron).toBe(Math.round(3 * IRONWORKS_MULT));
+		expect(hard.stone).toBe(3);
+		// A Medium yields no iron, so the Walls add nothing to it.
+		const medium = computeAward({ ...base, difficulty: 'Medium', effects: { ironworks: true } }).resources;
+		expect(medium.iron).toBeUndefined();
+	});
 });
 
 describe('per-building yield', () => {
@@ -390,24 +382,23 @@ describe('per-building yield', () => {
 
 	it('breaks a building down into the factors that produce its number', () => {
 		const hut = [{ id: 'a', kind: 'hut', x: 0, y: 0, level: 2 }];
-		const y = buildingYield(hut[0], hut, tree, 100);
-		expect(y).toMatchObject({ base: 2, freshness: 1, adjacency: 1, beforeMorale: 2, perDay: 2 });
+		const y = buildingYield(hut[0], hut, tree);
+		expect(y).toMatchObject({ base: 2, freshness: 1, adjacency: 1, perDay: 2 });
 	});
 
-	it('applies morale and the road bonus', () => {
+	it('applies the road bonus', () => {
 		const placed = [
 			{ id: 'a', kind: 'hut', x: 0, y: 0, level: 1 },
 			{ id: 'r', kind: 'graph-roads', x: 1, y: 0, level: 1 }
 		];
-		const y = buildingYield(placed[0], placed, tree, 50);
+		const y = buildingYield(placed[0], placed, tree);
 		expect(y.adjacency).toBe(1.25);
-		expect(y.beforeMorale).toBe(1.25);
-		expect(y.perDay).toBe(0.625);
+		expect(y.perDay).toBe(1.25);
 	});
 
 	it('reports nothing for a building that produces no coins', () => {
 		const placed = [{ id: 'g', kind: 'granary', x: 0, y: 0, level: 1 }];
-		expect(buildingYield(placed[0], placed, tree, 100).perDay).toBe(0);
+		expect(buildingYield(placed[0], placed, tree).perDay).toBe(0);
 	});
 
 	it('sums to the city total, which is the same formula', () => {
@@ -418,9 +409,9 @@ describe('per-building yield', () => {
 			{ id: 'b', kind: 'hut', x: 3, y: 3, level: 2 },
 			{ id: 'r', kind: 'graph-roads', x: 1, y: 0, level: 1 }
 		];
-		const summed = placed.reduce((n, b) => n + buildingYield(b, placed, tree).beforeMorale, 0);
+		const summed = placed.reduce((n, b) => n + buildingYield(b, placed, tree).perDay, 0);
 		expect(baseProduction(placed, tree)).toBeCloseTo(summed);
-		expect(dailyCoins(placed, tree, 100)).toBe(Math.round(summed));
+		expect(dailyCoins(placed, tree)).toBe(Math.round(summed));
 	});
 });
 

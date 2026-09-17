@@ -1,32 +1,12 @@
 import { addDays } from './dates';
 
+/** The pace the home page shows progress against. It is information, not a rule: nothing scales
+ *  with it. Morale used to -- a 0-100 multiplier on all income that chased 100 * min(1, weekly/14)
+ *  by 15 points a day, with purchasable freeze days to hold it on idle days -- but the refresh
+ *  system already penalises absence through node freshness, and a second, city-wide penalty for
+ *  the same thing only made income harder to read. Removed 2026-09-16. */
 export const WEEKLY_BUDGET = 14;
 export const DAILY_TARGET = 2;
-export const MORALE_STEP = 15;
-export const MAX_FREEZE_DAYS = 3;
-export const FREEZE_BASE_COST = 20;
-export const FREEZE_COST_MULT = 2;
-
-/** What the next freeze day costs, given how many have been bought since the week began.
- *
- *  A flat price meant that once production outran it, freeze days could be bought indefinitely and
- *  morale stopped being a constraint at all. Doubling within the week makes the first cheap and the
- *  fourth ruinous, while the Monday reset stops a bad week from pricing you out forever.
- */
-export function freezeCost(purchasesThisWeek: number): number {
-	return FREEZE_BASE_COST * Math.pow(FREEZE_COST_MULT, Math.max(0, purchasesThisWeek));
-}
-
-export interface FreezePurchases {
-	/** Monday of the week these purchases belong to. */
-	week: string;
-	count: number;
-}
-
-/** Purchases counted against `today`'s week, discarding a record from an earlier week. */
-export function freezePurchasesThisWeek(record: FreezePurchases | null, weekStart: string): number {
-	return record && record.week === weekStart ? record.count : 0;
-}
 
 /** Credits in the 7-day window ending on `today` (inclusive). */
 export function weeklyCount(ledgerDates: Iterable<string>, today: string): number {
@@ -34,61 +14,4 @@ export function weeklyCount(ledgerDates: Iterable<string>, today: string): numbe
 	let n = 0;
 	for (const d of ledgerDates) if (d >= start && d <= today) n++;
 	return n;
-}
-
-export interface MoraleState {
-	morale: number;
-	/** Local date the morale value is valid for. */
-	asOf: string;
-	freezeDays: number;
-}
-
-export interface MoraleOptions {
-	/** Walls halve daily losses. */
-	hasWalls: boolean;
-}
-
-export interface MoraleTick {
-	date: string;
-	before: number;
-	after: number;
-	usedFreeze: boolean;
-}
-
-/**
- * Advance morale one day at a time from state.asOf to `today`.
- * Each day morale moves toward 100 * min(1, weekly/14) by at most MORALE_STEP (losses halved with walls).
- * A zero-solve day that would lose morale consumes a freeze day instead, if one is stored.
- */
-export function advanceMorale(
-	state: MoraleState,
-	ledgerDates: string[],
-	today: string,
-	opts: MoraleOptions
-): { state: MoraleState; ticks: MoraleTick[] } {
-	const ticks: MoraleTick[] = [];
-	let { morale, asOf, freezeDays } = state;
-	const dates = new Set(ledgerDates);
-	while (asOf < today) {
-		const day = addDays(asOf, 1);
-		const target = 100 * Math.min(1, weeklyCount(ledgerDates, day) / WEEKLY_BUDGET);
-		const delta = target - morale;
-		const before = morale;
-		let usedFreeze = false;
-		if (delta < 0) {
-			const loss = Math.min(-delta, opts.hasWalls ? MORALE_STEP / 2 : MORALE_STEP);
-			if (!dates.has(day) && freezeDays > 0) {
-				freezeDays -= 1;
-				usedFreeze = true;
-			} else {
-				morale = Math.max(0, morale - loss);
-			}
-		} else {
-			morale = Math.min(100, morale + Math.min(delta, MORALE_STEP));
-		}
-		morale = Math.round(morale * 100) / 100;
-		ticks.push({ date: day, before, after: morale, usedFreeze });
-		asOf = day;
-	}
-	return { state: { morale, asOf, freezeDays }, ticks };
 }
