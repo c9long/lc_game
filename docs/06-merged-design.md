@@ -50,7 +50,8 @@ Phases 1 to 8 are implemented in one pass: repo hygiene, passkey auth, admin/coo
 
 - Every accepted solve (new or refresh, one per problem per day) is a ledger entry. Budget is 14 per rolling 7 days.
 - Morale moves toward `100 * min(1, weekly / 14)` by 15 points per day. Production is multiplied by morale/100. The Granary holds up to 3 freeze days that hold morale on a zero-solve day.
-- The daily plan has two slots: the most overdue refresh if any (else a new problem), and the next new problem in roadmap order from the lowest available incomplete node. If LeetCode's daily challenge is in the NeetCode 150 it takes slot two with x2.
+- The daily plan has two slots: the earliest due refresh in curriculum order if any (else a new problem), and the next new problem in roadmap order from the lowest available incomplete node. If LeetCode's daily challenge is in the NeetCode 150 it takes slot two with x2. At three or more due refreshes both slots become refreshes and the daily is skipped, until the backlog drains.
+  - Changed 2026-09-16: refreshes were most-overdue-first, which let a deep node's refresh pre-empt a root node's simply by having waited longer. Now refreshes walk the tree exactly as new problems do, so foundations stay fresh before deeper material is revisited.
 
 ### City
 

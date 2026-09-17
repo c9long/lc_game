@@ -54,8 +54,21 @@ describe('expedition slot choice', () => {
 		const progress = progressWith(root.slice(0, 6), REFRESH_BACKLOG_TAKEOVER);
 		const chosen = chooseSlots(snapFor(progress), null);
 		expect(chosen.map((c) => c.kind)).toEqual(['refresh', 'refresh']);
-		// Most overdue first, and never the same problem twice.
+		// Never the same problem twice.
 		expect(new Set(chosen.map((c) => c.slug)).size).toBe(2);
+	});
+
+	it('serves the shallower node first, however long the deeper one has waited', () => {
+		// A due Two Pointers problem one day late must come before a due 1-D DP problem ten days
+		// late. Refreshes walk the tree from the root, exactly as new problems do.
+		const shallow = problemsForNode('two-pointers')[0].slug;
+		const deep = problemsForNode('dp-1d')[0].slug;
+		const progress = new Map<string, ProblemProgress>([
+			[deep, { solveCount: 1, srsStep: 0, dueAt: new Date(now.getTime() - 10 * DAY) }],
+			[shallow, { solveCount: 1, srsStep: 0, dueAt: new Date(now.getTime() - DAY) }]
+		]);
+		const chosen = chooseSlots(snapFor(progress), null);
+		expect(chosen[0]).toMatchObject({ slot: 1, kind: 'refresh', slug: shallow });
 	});
 
 	it('drops the daily challenge while the backlog stands', () => {

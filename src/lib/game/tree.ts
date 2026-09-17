@@ -1,11 +1,4 @@
-import {
-	NODES,
-	NODE_BY_ID,
-	NODE_ORDER,
-	PROBLEM_BY_SLUG,
-	problemsForNode,
-	type CurriculumProblem
-} from './curriculum';
+import { NODES, NODE_BY_ID, NODE_ORDER, problemsForNode, type CurriculumProblem } from './curriculum';
 import { isDue } from './srs';
 
 export const UNLOCK_FRACTION = 0.5;
@@ -123,20 +116,30 @@ export function nextNewProblems(
 	return out;
 }
 
-/** Solved problems that are due, most overdue first. */
+/** Solved problems that are due, in curriculum order: earliest node first, then problem order
+ *  within the node.
+ *
+ *  Mirrors nextNewProblems, so refreshes and new problems walk the tree the same way. It used to
+ *  be most-overdue-first, which let a deep node's refresh pre-empt a root node's simply by having
+ *  waited longer: a due 1-D DP problem was served ahead of a due Two Pointers one.
+ *
+ *  Walking the curriculum, rather than the progress map, is also what keeps non-curriculum
+ *  problems out. Profile sync records every accepted submission so solves made on leetcode.com
+ *  still count towards the weekly budget, which means progress holds problems outside the 150.
+ *  Those must never become refresh tasks: the tree does not track them and, since expected
+ *  outputs come from the vendored reference solutions, there is no suite to judge them with.
+ */
 export function dueRefreshes(
 	progress: Map<string, ProblemProgress>,
 	now: Date
 ): { slug: string; overdueMs: number }[] {
 	const out: { slug: string; overdueMs: number }[] = [];
-	for (const [slug, s] of progress) {
-		// Profile sync records every accepted submission so solves made on leetcode.com still count
-		// towards the weekly budget, which means progress holds problems outside the curriculum.
-		// Those must never become refresh tasks: the tree does not track them and, since expected
-		// outputs come from the vendored reference solutions, there is no suite to judge them with.
-		if (!PROBLEM_BY_SLUG.has(slug)) continue;
-		if (s.solveCount === 0 || !isDue(s, now)) continue;
-		out.push({ slug, overdueMs: now.getTime() - s.dueAt!.getTime() });
+	for (const id of NODE_ORDER) {
+		for (const p of problemsForNode(id)) {
+			const s = progress.get(p.slug);
+			if (!s || s.solveCount === 0 || !isDue(s, now)) continue;
+			out.push({ slug: p.slug, overdueMs: now.getTime() - s.dueAt!.getTime() });
+		}
 	}
-	return out.sort((a, b) => b.overdueMs - a.overdueMs);
+	return out;
 }

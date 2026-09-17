@@ -86,7 +86,7 @@ export const REFRESH_BACKLOG_TAKEOVER = 3;
 
 /** The two problem slots, chosen from the tree, the SRS schedule and the day's daily challenge.
  *
- *  Slot 1 is the most overdue refresh, else a new problem. Slot 2 is the daily challenge when it
+ *  Slot 1 is the earliest due refresh in curriculum order, else a new problem. Slot 2 is the daily challenge when it
  *  sits in a node the tree has actually opened, else a new problem, else another refresh. The daily
  *  is gated on the node because otherwise LeetCode's pick decides the difficulty: one day's was
  *  distinct-subsequences, a 2-D DP problem, offered while 1-D DP was still locked.

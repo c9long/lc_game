@@ -77,7 +77,7 @@ describe('tree', () => {
 		const full = computeTree({ progress: progressFor(root), research: new Map(), now: t0 });
 		expect(full.get('arrays-hashing')!.status).toBe('complete');
 	});
-	it('computes freshness, rusting and refresh ordering', () => {
+	it('computes freshness, rusting and refresh ordering by curriculum', () => {
 		const root = problemsForNode('arrays-hashing').map((p) => p.slug);
 		const overdue = new Date(t0.getTime() - 2 * DAY);
 		const progress = new Map<string, ProblemProgress>();
@@ -90,8 +90,9 @@ describe('tree', () => {
 		expect(v.due).toBe(3);
 		expect(v.freshness).toBeCloseTo(0.25);
 		expect(v.rusting).toBe(true);
+		// root[2] is the most overdue, yet order follows the curriculum, not the wait.
 		const refreshes = dueRefreshes(progress, t0);
-		expect(refreshes.map((r) => r.slug)).toEqual([root[2], root[1], root[0]]);
+		expect(refreshes.map((r) => r.slug)).toEqual([root[0], root[1], root[2]]);
 		const next = nextNewProblems(tree, progress, 2);
 		expect(next.map((p) => p.slug)).toEqual(root.slice(4, 6));
 	});
