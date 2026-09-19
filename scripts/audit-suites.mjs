@@ -2446,7 +2446,189 @@ class Solution:
                 for ch in "abcdefghijklmnopqrstuvwxyz":
                     nw = w[:i] + ch + w[i+1:]
                     if nw in words and nw not in seen: seen.add(nw); q.append((nw, d + 1))
-        return 0`]
+        return 0`],
+
+	// ---- batch 12: Advanced Graphs ----
+	// A node reached cheaply by a long route and dearly by a short one, where only the short one
+	// leaves stops to spare. A per-node visited set settles it on the cheap route and drops the
+	// later arrival; this scored 43/43 before the shape was built on purpose.
+	['cheapest-flights-within-k-stops', 'NEAR-MISS Dijkstra with a per-node visited set', false, `import heapq
+class Solution:
+    def findCheapestPrice(self, n, flights, src, dst, k):
+        adj = {}
+        for u, v, w in flights: adj.setdefault(u, []).append((v, w))
+        h = [(0, src, 0)]; seen = set()
+        while h:
+            d, u, stops = heapq.heappop(h)
+            if u == dst: return d
+            if u in seen: continue
+            seen.add(u)
+            if stops > k: continue
+            for v, w in adj.get(u, []): heapq.heappush(h, (d + w, v, stops + 1))
+        return -1`],
+	['cheapest-flights-within-k-stops', 'NEAR-MISS plain Dijkstra ignores the stop limit', false, `import heapq
+class Solution:
+    def findCheapestPrice(self, n, flights, src, dst, k):
+        adj = {}
+        for u, v, w in flights: adj.setdefault(u, []).append((v, w))
+        dist = {src: 0}; h = [(0, src)]
+        while h:
+            d, u = heapq.heappop(h)
+            if u == dst: return d
+            if d > dist.get(u, float("inf")): continue
+            for v, w in adj.get(u, []):
+                if d + w < dist.get(v, float("inf")):
+                    dist[v] = d + w; heapq.heappush(h, (d + w, v))
+        return -1`],
+	['cheapest-flights-within-k-stops', 'NEAR-MISS Bellman-Ford reading same-round distances', false, `class Solution:
+    def findCheapestPrice(self, n, flights, src, dst, k):
+        INF = float("inf"); d = [INF] * n; d[src] = 0
+        for _ in range(k + 1):
+            for u, v, w in flights:
+                if d[u] + w < d[v]: d[v] = d[u] + w
+        return -1 if d[dst] == INF else d[dst]`],
+	['cheapest-flights-within-k-stops', 'correct Bellman-Ford with a snapshot', true, `class Solution:
+    def findCheapestPrice(self, n, flights, src, dst, k):
+        INF = float("inf"); d = [INF] * n; d[src] = 0
+        for _ in range(k + 1):
+            nd = d[:]
+            for u, v, w in flights:
+                if d[u] + w < nd[v]: nd[v] = d[u] + w
+            d = nd
+        return -1 if d[dst] == INF else d[dst]`],
+
+	// Weights make breadth-first order meaningless.
+	['network-delay-time', 'NEAR-MISS BFS fixes each node on first discovery', false, `from collections import deque
+class Solution:
+    def networkDelayTime(self, times, n, k):
+        adj = {}
+        for u, v, w in times: adj.setdefault(u, []).append((v, w))
+        dist = {k: 0}; q = deque([k])
+        while q:
+            u = q.popleft()
+            for v, w in adj.get(u, []):
+                if v not in dist: dist[v] = dist[u] + w; q.append(v)
+        return max(dist.values()) if len(dist) == n else -1`],
+	['network-delay-time', 'NEAR-MISS sums the delays instead of taking the largest', false, `import heapq
+class Solution:
+    def networkDelayTime(self, times, n, k):
+        adj = {}
+        for u, v, w in times: adj.setdefault(u, []).append((v, w))
+        dist = {}; h = [(0, k)]
+        while h:
+            d, u = heapq.heappop(h)
+            if u in dist: continue
+            dist[u] = d
+            for v, w in adj.get(u, []):
+                if v not in dist: heapq.heappush(h, (d + w, v))
+        return sum(dist.values()) if len(dist) == n else -1`],
+	['network-delay-time', 'correct Dijkstra', true, `import heapq
+class Solution:
+    def networkDelayTime(self, times, n, k):
+        adj = {}
+        for u, v, w in times: adj.setdefault(u, []).append((v, w))
+        dist = {}; h = [(0, k)]
+        while h:
+            d, u = heapq.heappop(h)
+            if u in dist: continue
+            dist[u] = d
+            for v, w in adj.get(u, []):
+                if v not in dist: heapq.heappush(h, (d + w, v))
+        return max(dist.values()) if len(dist) == n else -1`],
+
+	// The best route may have to double back; a down-and-right DP never can.
+	['swim-in-rising-water', 'NEAR-MISS moves only down and right', false, `class Solution:
+    def swimInWater(self, grid):
+        n = len(grid); INF = float("inf")
+        dp = [[INF]*n for _ in range(n)]; dp[0][0] = grid[0][0]
+        for r in range(n):
+            for c in range(n):
+                if r: dp[r][c] = min(dp[r][c], max(dp[r-1][c], grid[r][c]))
+                if c: dp[r][c] = min(dp[r][c], max(dp[r][c-1], grid[r][c]))
+        return dp[n-1][n-1]`],
+	['swim-in-rising-water', 'NEAR-MISS minimises the sum rather than the maximum', false, `import heapq
+class Solution:
+    def swimInWater(self, grid):
+        n = len(grid); h = [(grid[0][0], 0, 0)]; seen = set()
+        while h:
+            d, r, c = heapq.heappop(h)
+            if (r, c) in seen: continue
+            seen.add((r, c))
+            if (r, c) == (n-1, n-1): return d
+            for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)):
+                nr, nc = r+dr, c+dc
+                if 0 <= nr < n and 0 <= nc < n and (nr, nc) not in seen:
+                    heapq.heappush(h, (d + grid[nr][nc], nr, nc))`],
+	['swim-in-rising-water', 'correct Dijkstra on the maximum', true, `import heapq
+class Solution:
+    def swimInWater(self, grid):
+        n = len(grid); h = [(grid[0][0], 0, 0)]; seen = set()
+        while h:
+            d, r, c = heapq.heappop(h)
+            if (r, c) in seen: continue
+            seen.add((r, c))
+            if (r, c) == (n-1, n-1): return d
+            for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)):
+                nr, nc = r+dr, c+dc
+                if 0 <= nr < n and 0 <= nc < n and (nr, nc) not in seen:
+                    heapq.heappush(h, (max(d, grid[nr][nc]), nr, nc))`],
+
+	// Must use every ticket and return the SMALLEST such itinerary, not merely a valid one.
+	['reconstruct-itinerary', 'NEAR-MISS Hierholzer without sorting destinations', false, `class Solution:
+    def findItinerary(self, tickets):
+        adj = {}
+        for a, b in tickets: adj.setdefault(a, []).append(b)
+        out = []
+        def go(u):
+            while adj.get(u): go(adj[u].pop())
+            out.append(u)
+        go("JFK"); return out[::-1]`],
+	['reconstruct-itinerary', 'NEAR-MISS greedy smallest next stop, no backtracking', false, `class Solution:
+    def findItinerary(self, tickets):
+        adj = {}
+        for a, b in tickets: adj.setdefault(a, []).append(b)
+        for k in adj: adj[k].sort()
+        out = ["JFK"]; u = "JFK"
+        while adj.get(u):
+            u = adj[u].pop(0); out.append(u)
+        return out`],
+	['reconstruct-itinerary', 'correct Hierholzer', true, `class Solution:
+    def findItinerary(self, tickets):
+        adj = {}
+        for a, b in sorted(tickets, reverse=True): adj.setdefault(a, []).append(b)
+        out = []
+        def go(u):
+            while adj.get(u): go(adj[u].pop())
+            out.append(u)
+        go("JFK"); return out[::-1]`],
+
+	['min-cost-to-connect-all-points', 'NEAR-MISS nearest-neighbour chain', false, `class Solution:
+    def minCostConnectPoints(self, points):
+        n = len(points); seen = {0}; cur = 0; total = 0
+        while len(seen) < n:
+            best = None
+            for j in range(n):
+                if j in seen: continue
+                d = abs(points[cur][0]-points[j][0]) + abs(points[cur][1]-points[j][1])
+                if best is None or d < best[0]: best = (d, j)
+            total += best[0]; seen.add(best[1]); cur = best[1]
+        return total`],
+	['min-cost-to-connect-all-points', 'NEAR-MISS cheapest n-1 edges with no cycle check', false, `class Solution:
+    def minCostConnectPoints(self, points):
+        n = len(points)
+        es = sorted(abs(points[i][0]-points[j][0]) + abs(points[i][1]-points[j][1]) for i in range(n) for j in range(i+1, n))
+        return sum(es[:n-1])`],
+	['min-cost-to-connect-all-points', 'correct Prim', true, `class Solution:
+    def minCostConnectPoints(self, points):
+        n = len(points); INF = float("inf"); best = [INF] * n; best[0] = 0; used = [False] * n; total = 0
+        for _ in range(n):
+            u = min((i for i in range(n) if not used[i]), key=lambda i: best[i])
+            used[u] = True; total += best[u]
+            for v in range(n):
+                if not used[v]:
+                    d = abs(points[u][0]-points[v][0]) + abs(points[u][1]-points[v][1])
+                    if d < best[v]: best[v] = d
+        return total`]
 ];
 
 let bad = 0;

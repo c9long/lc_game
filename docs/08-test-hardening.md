@@ -364,9 +364,21 @@ the sorted list, which the old comparison rule accepted.
 | `cheapest-flights-within-k-stops` | k stops is k+1 flights, and the cheapest route may break that. Plain Dijkstra and a Bellman-Ford reading same-round distances both failed mostly on LeetCode's own example | a cheap chain and a dear direct flight, with `k` chosen to cut the chain |
 | `surrounded-regions` | regions connect only orthogonally; treating a corner touch as safe scored **39/42** | diagonal chains laid in from a border cell. Now 33/42 |
 
+### What batch 12 found
+
+| problem | the gap | after |
+|---|---|---|
+| `cheapest-flights-within-k-stops` | Dijkstra with a **per-node visited set** scored **43/43**. It settles a node on the first, cheapest arrival and drops a later, dearer one that still has stops to spare, and nothing in the suite needed that later arrival | the shape is built outright: a node reached cheaply by a long route and dearly by a short one, where only the short one reaches the destination within `k`. Now 33/43 |
+| `swim-in-rising-water` | a DP that only moves down and right is wrong whenever the best route doubles back, and random permutations almost never force that: it failed only LeetCode's own example | for n = 5 the smallest values run along a zigzag with a leftward row, or its transpose with an upward column. Now 26/42 |
+| `network-delay-time` | weights make breadth-first order meaningless, but a BFS fixing each node on first discovery failed a single case in 43 | a dear direct edge beaten by a cheap detour. Now 36/43 |
+
+`reconstruct-itinerary` and `min-cost-to-connect-all-points` already failed their near-misses — an
+unsorted Hierholzer, a greedy walk, a nearest-neighbour chain, and the cheapest `n-1` edges taken
+without a cycle check. `alien-dictionary` was audited in batch 1.
+
 ## Status
 
-94 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
+99 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
 
 ### Batch 1: Arrays & Hashing (9/9 audited)
 - [x] `contains-duplicate` — Easy
@@ -471,13 +483,13 @@ the sorted list, which the old comparison rule accepted.
 - [x] `number-of-connected-components-in-an-undirected-graph` — Medium
 - [x] `graph-valid-tree` — Medium
 - [x] `word-ladder` — Hard
-### Batch 12: Advanced Graphs (1/6 audited)
-- [ ] `reconstruct-itinerary` — Hard
-- [ ] `min-cost-to-connect-all-points` — Medium
-- [ ] `network-delay-time` — Medium
-- [ ] `swim-in-rising-water` — Hard
+### Batch 12: Advanced Graphs (6/6 audited)
+- [x] `reconstruct-itinerary` — Hard
+- [x] `min-cost-to-connect-all-points` — Medium
+- [x] `network-delay-time` — Medium
+- [x] `swim-in-rising-water` — Hard
 - [x] `alien-dictionary` — Hard
-- [ ] `cheapest-flights-within-k-stops` — Medium
+- [x] `cheapest-flights-within-k-stops` — Medium
 ### Batch 13: 1-D Dynamic Programming (0/12 audited)
 - [ ] `climbing-stairs` — Easy
 - [ ] `min-cost-climbing-stairs` — Easy

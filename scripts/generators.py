@@ -1048,7 +1048,33 @@ def _longest_increasing_path(rng):
 
 @generator("swim-in-rising-water")
 def _swim(rng):
-    # The grid must be an n x n permutation of 0..n*n-1.
+    """An n x n permutation of 0..n*n-1, sometimes one whose best path has to double back.
+
+    A DP that only moves down and right is wrong whenever the cheapest route turns up or left,
+    and random permutations rarely force that: it failed only LeetCode's own example. For n = 5,
+    placing the smallest values along a zigzag -- right along row 0, down, LEFT along row 2, down,
+    right along row 4 -- and the largest everywhere else makes every down-and-right path cross a
+    large cell. Transposing gives the same trap with an upward step.
+    """
+    if rng.random() < 0.3:
+        n = 5
+        path = [(0, c) for c in range(5)] + [(1, 4)] + [(2, c) for c in range(4, -1, -1)] \
+            + [(3, 0)] + [(4, c) for c in range(5)]
+        if rng.random() < 0.5:
+            path = [(c, r) for r, c in path]
+        on = set(path)
+        low = list(range(len(path)))
+        high = list(range(len(path), n * n))
+        rng.shuffle(low)
+        rng.shuffle(high)
+        g = [[0] * n for _ in range(n)]
+        for (r, c), v in zip(path, low):
+            g[r][c] = v
+        rest = [(r, c) for r in range(n) for c in range(n) if (r, c) not in on]
+        for (r, c), v in zip(rest, high):
+            g[r][c] = v
+        # The start and end cells are on the path, so the zigzag's maximum is len(path) - 1.
+        return [g]
     n = rng.randint(1, 5)
     vals = list(range(n * n))
     rng.shuffle(vals)
@@ -1184,6 +1210,21 @@ def _redundant_connection(rng):
 
 @generator("network-delay-time")
 def _network_delay(rng):
+    # Edge weights make breadth-first order meaningless: a node first reached by one dear direct
+    # edge may be reachable far more cheaply through a detour found later. A BFS that fixes each
+    # node's time on first discovery failed a single case in 43. Some graphs now contain exactly
+    # that detour, with the labels permuted.
+    if rng.random() < 0.25:
+        n = rng.randint(3, 6)
+        k, mid, far = rng.sample(range(1, n + 1), 3)
+        direct = rng.randint(15, 40)
+        a, b = rng.randint(1, 5), rng.randint(1, 5)
+        times = [[k, far, direct], [k, mid, a], [mid, far, b]]
+        for u in range(1, n + 1):                   # reach everything else so the answer is not -1
+            if u not in (k, mid, far):
+                times.append([k, u, rng.randint(1, 10)])
+        rng.shuffle(times)
+        return [times, n, k]
     n = rng.randint(1, 7)
     times = [[u + 1, v + 1, rng.randint(0, 20)] for u, v in _distinct_edges(rng, n, rng.randint(0, n + 3), directed=True)]
     return [times, n, rng.randint(1, n)]
@@ -1199,7 +1240,19 @@ def _cheapest_flights(rng):
     round failed only a few cases, mostly LeetCode's own example. Here a cheap chain of hops and a
     dear direct route are built on purpose, with k chosen to cut the chain.
     """
-    if rng.random() < 0.45:
+    roll = rng.random()
+    if roll < 0.2:
+        # A node reached CHEAPLY by a longer route and dearly by a shorter one, where the
+        # destination is only in budget from the shorter one. Dijkstra with a per-node visited set
+        # settles the node on the cheap long route, then discards the later arrival that still has
+        # stops to spare -- and scored 43/43, because nothing here needed that later arrival.
+        # Labels are permuted so the shape is not always the same five nodes.
+        base = [[0, 1, 5], [1, 2, 5], [0, 3, 2], [3, 1, 2], [1, 4, 1], [4, 2, 1]]
+        labels = rng.sample(range(5), 5)
+        flights = [[labels[u], labels[v], w] for u, v, w in base]
+        rng.shuffle(flights)
+        return [5, flights, labels[0], labels[2], 2]
+    if roll < 0.55:
         hops = rng.randint(2, 4)
         n = hops + 1 + rng.randint(0, 2)
         chain = list(range(hops + 1))                # 0 -> 1 -> ... -> hops, cheap per leg
