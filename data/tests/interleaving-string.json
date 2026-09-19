@@ -26,321 +26,321 @@
     },
     {
       "args": [
-        "bba",
-        "ab",
-        "baaab"
+        "bbabab",
+        "bbaaab",
+        "babbaaabaabb"
       ],
       "expected": false
     },
     {
       "args": [
-        "babba",
-        "a",
-        "aabbaa"
+        "aabaab",
+        "",
+        "aabaaa"
       ],
       "expected": false
     },
     {
       "args": [
-        "aab",
-        "",
-        "aab"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "",
-        "",
-        ""
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "",
         "bb",
-        "ab"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "aaab",
-        "a",
-        "aaaab"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "bba",
-        "b",
-        "baaa"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "babbaa",
-        "ababaa",
-        "abbbbaabbabb"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "babb",
-        "bbbbaa",
-        "bbbabbbbaa"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "bba",
-        "ababa",
-        "abbbabaa"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "babb",
-        "babb",
-        "ababbabb"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "baab",
-        "aabbb",
-        "abaababbb"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "ba",
-        "ba",
-        "bbaa"
+        "baba",
+        "bababb"
       ],
       "expected": true
     },
     {
       "args": [
         "baaab",
-        "baa",
-        "bbaaaaab"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "bbbbab",
-        "abaaa",
-        "bbbabbaaaaa"
+        "bbaa",
+        "bbabaaaa"
       ],
       "expected": false
     },
     {
       "args": [
-        "baa",
-        "bbbabb",
-        "aabaaabbb"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "baaaba",
-        "ab",
-        "bbbababb"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "abaa",
-        "ababab",
-        "bbaaaabbba"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "abab",
-        "baba",
-        "bbabbaab"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "bb",
-        "b",
-        "baa"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "aa",
-        "aaabaa",
-        "aaaabaaa"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "abb",
         "a",
-        "bbbb"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "abab",
-        "baa",
-        "abbaaab"
+        "aba",
+        "abaa"
       ],
       "expected": true
     },
     {
       "args": [
-        "abbaa",
+        "ab",
+        "abbb",
+        "abbbab"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
         "aa",
-        "bbababa"
+        "aabb",
+        "aabbaa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "",
+        "bbbb",
+        "baaa"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "b",
+        "baabb",
+        "bbaabb"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "a",
+        "aba",
+        "abaa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aabb",
+        "babb",
+        "abbaabab"
       ],
       "expected": false
     },
     {
       "args": [
         "",
-        "b",
-        "b"
+        "bba",
+        "aba"
       ],
-      "expected": true
-    },
-    {
-      "args": [
-        "bbab",
-        "aaa",
-        "aaabbab"
-      ],
-      "expected": true
+      "expected": false
     },
     {
       "args": [
         "ba",
-        "abbb",
-        "babbba"
+        "baaa",
+        "baaaba"
       ],
       "expected": true
     },
     {
       "args": [
-        "bbb",
-        "abab",
-        "abbabbb"
+        "a",
+        "abb",
+        "abba"
       ],
       "expected": true
     },
     {
       "args": [
         "abb",
-        "bbabbb",
-        "abbaabbbb"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "bb",
-        "a",
+        "",
         "abb"
       ],
       "expected": true
     },
     {
       "args": [
-        "aab",
-        "",
+        "aaa",
+        "bba",
+        "babaaa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bbbab",
+        "abaaa",
+        "bbbabbaaaa"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "abbaab",
+        "bab",
+        "baabaaabb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "ba",
+        "a",
         "bab"
       ],
       "expected": false
     },
     {
       "args": [
-        "bb",
-        "aa",
-        "bbba"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "b",
         "ab",
-        "abb"
+        "abb",
+        "abbab"
       ],
       "expected": true
     },
     {
       "args": [
-        "",
+        "b",
+        "babaaa",
+        "bbabaaa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
         "bbba",
+        "",
         "bbba"
       ],
       "expected": true
     },
     {
       "args": [
-        "bbaba",
-        "",
-        "bbaab"
+        "baaba",
+        "bbab",
+        "bbabaab"
       ],
       "expected": false
     },
     {
       "args": [
-        "bb",
-        "babbaa",
-        "babbbbaa"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "bbaabb",
-        "b",
-        "bbbaabb"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "abbb",
-        "",
-        "baba"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "aba",
         "aab",
-        "aaaaab"
+        "aaaaab",
+        "aaabbbbab"
       ],
       "expected": false
     },
     {
       "args": [
-        "abaaa",
+        "bbaa",
+        "abbbba",
+        "abbabbabba"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aab",
+        "baab",
+        "aaabbab"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "abaa",
         "b",
-        "babaaa"
+        "babaa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aaa",
+        "bbb",
+        "bbaabb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "aa",
+        "bbbb",
+        "ababbb"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aa",
+        "abba",
+        "abbaaa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aabbaa",
+        "bbbbb",
+        "aabbbbbbaba"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bbb",
+        "aa",
+        "bbbaa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "",
+        "bbbb",
+        "bbbb"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bbab",
+        "bba",
+        "bbabb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "babb",
+        "",
+        "baab"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "ab",
+        "bbaabb",
+        "bbaaba"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "",
+        "ababa",
+        "ababa"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "babaa",
+        "bbaaa",
+        "ababaaaabb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "ba",
+        "ba",
+        "aabb"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "a",
+        "ab",
+        "aba"
       ],
       "expected": true
     }

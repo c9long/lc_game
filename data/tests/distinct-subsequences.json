@@ -16,283 +16,283 @@
     },
     {
       "args": [
-        "baabbbabab",
-        "a"
+        "baabbbababa",
+        "b"
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        "babbaab",
+        "aba"
       ],
       "expected": 4
     },
     {
       "args": [
-        "bbbabbaab",
-        "ab"
-      ],
-      "expected": 5
-    },
-    {
-      "args": [
-        "aabaaabaaba",
-        "aa"
-      ],
-      "expected": 28
-    },
-    {
-      "args": [
-        "bab",
-        "b"
-      ],
-      "expected": 2
-    },
-    {
-      "args": [
-        "abba",
-        "bbb"
-      ],
-      "expected": 0
-    },
-    {
-      "args": [
-        "aabaabbaaaba",
-        "abba"
-      ],
-      "expected": 42
-    },
-    {
-      "args": [
-        "ababbaa",
-        "ab"
-      ],
-      "expected": 5
-    },
-    {
-      "args": [
-        "bbbb",
-        "baa"
-      ],
-      "expected": 0
-    },
-    {
-      "args": [
-        "aaabaaa",
-        "abab"
-      ],
-      "expected": 0
-    },
-    {
-      "args": [
-        "baabba",
-        "ba"
-      ],
-      "expected": 5
-    },
-    {
-      "args": [
-        "bbbaaaa",
-        "bbaa"
-      ],
-      "expected": 18
-    },
-    {
-      "args": [
-        "aaaaabb",
-        "b"
-      ],
-      "expected": 2
-    },
-    {
-      "args": [
-        "a",
+        "baaa",
         "aab"
       ],
       "expected": 0
     },
     {
       "args": [
-        "abbabaaa",
-        "aba"
-      ],
-      "expected": 14
-    },
-    {
-      "args": [
-        "ababb",
+        "baa",
         "ba"
       ],
-      "expected": 1
+      "expected": 2
     },
     {
       "args": [
-        "a",
-        "aa"
+        "abbabba",
+        "bbba"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "baab",
+        "aaab"
       ],
       "expected": 0
     },
     {
       "args": [
-        "babab",
+        "aabbababa",
+        "baa"
+      ],
+      "expected": 7
+    },
+    {
+      "args": [
+        "abbbbb",
+        "bba"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "abaaabaaaa",
+        "abbb"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "ab",
+        "abba"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "bbbaaaab",
+        "aab"
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        "aa",
+        "ab"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "abaabaab",
         "bb"
       ],
       "expected": 3
     },
     {
       "args": [
-        "bbabbbbab",
-        "bbab"
-      ],
-      "expected": 20
-    },
-    {
-      "args": [
-        "",
-        ""
-      ],
-      "expected": 1
-    },
-    {
-      "args": [
-        "babbaabaaba",
-        "b"
-      ],
-      "expected": 5
-    },
-    {
-      "args": [
-        "bbaaab",
-        "b"
-      ],
-      "expected": 3
-    },
-    {
-      "args": [
-        "baaaa",
-        "bbaa"
+        "b",
+        "aa"
       ],
       "expected": 0
     },
     {
       "args": [
-        "bbabbbb",
-        "aaba"
+        "abababab",
+        "bba"
       ],
-      "expected": 0
+      "expected": 4
     },
     {
       "args": [
-        "bbbabbabab",
-        "aaab"
+        "ab",
+        "ab"
       ],
       "expected": 1
     },
     {
       "args": [
-        "bbbaaabbaa",
-        "baaa"
+        "ababbbbb",
+        "abb"
       ],
-      "expected": 30
+      "expected": 25
     },
     {
       "args": [
-        "bbbbabbbbb",
-        "b"
+        "bbabbbabaa",
+        "abba"
       ],
-      "expected": 9
+      "expected": 15
     },
     {
       "args": [
-        "abb",
+        "abaabaabb",
+        "baa"
+      ],
+      "expected": 7
+    },
+    {
+      "args": [
+        "bab",
         "baa"
       ],
       "expected": 0
     },
     {
       "args": [
-        "aabaababaaba",
-        "aaa"
-      ],
-      "expected": 56
-    },
-    {
-      "args": [
-        "aababaabbbba",
-        ""
-      ],
-      "expected": 1
-    },
-    {
-      "args": [
-        "abbaab",
-        ""
-      ],
-      "expected": 1
-    },
-    {
-      "args": [
-        "bbababbaabbb",
-        "ba"
-      ],
-      "expected": 15
-    },
-    {
-      "args": [
-        "aabaabbbaaa",
-        "abbb"
-      ],
-      "expected": 10
-    },
-    {
-      "args": [
-        "",
-        ""
-      ],
-      "expected": 1
-    },
-    {
-      "args": [
-        "baabaaab",
-        ""
-      ],
-      "expected": 1
-    },
-    {
-      "args": [
-        "baabaaabbbba",
-        "aa"
-      ],
-      "expected": 15
-    },
-    {
-      "args": [
-        "",
-        "aab"
+        "ab",
+        "aabb"
       ],
       "expected": 0
     },
     {
       "args": [
-        "",
+        "abbbbaa",
+        "abbb"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "abbababaaabb",
+        "baaa"
+      ],
+      "expected": 25
+    },
+    {
+      "args": [
+        "bbaabaaabbbb",
+        "bb"
+      ],
+      "expected": 21
+    },
+    {
+      "args": [
+        "bbabaab",
+        "bba"
+      ],
+      "expected": 7
+    },
+    {
+      "args": [
+        "a",
         "b"
       ],
       "expected": 0
     },
     {
       "args": [
-        "abaabaaaaa",
-        "ba"
+        "aababaababa",
+        "a"
       ],
-      "expected": 12
+      "expected": 7
     },
     {
       "args": [
-        "baa",
-        "aa"
+        "a",
+        "abaa"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "bbbaa",
+        "abba"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "ababbababba",
+        "b"
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        "bbbaaa",
+        "aab"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "bbaaaabbbaa",
+        "aab"
+      ],
+      "expected": 18
+    },
+    {
+      "args": [
+        "aaba",
+        "aaba"
       ],
       "expected": 1
     },
     {
       "args": [
-        "bbbaabbbbabb",
-        "bbb"
+        "aabbbbabaa",
+        "b"
       ],
-      "expected": 84
+      "expected": 5
+    },
+    {
+      "args": [
+        "abaa",
+        "abaa"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "aaaaab",
+        "aaba"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "abaabbbaa",
+        "bbba"
+      ],
+      "expected": 8
+    },
+    {
+      "args": [
+        "bbbbbbb",
+        "aab"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "bab",
+        "bba"
+      ],
+      "expected": 0
+    },
+    {
+      "args": [
+        "bbbaabbab",
+        "bbab"
+      ],
+      "expected": 28
     }
   ],
   "compare": "exact",

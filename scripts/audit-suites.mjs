@@ -2851,7 +2851,257 @@ class Solution:
         words = set(wordDict); dp = [True] + [False] * len(s)
         for i in range(1, len(s) + 1):
             dp[i] = any(dp[j] and s[j:i] in words for j in range(i))
-        return dp[-1]`]
+        return dp[-1]`],
+
+	// ---- batch 14: 2-D Dynamic Programming ----
+	// Two lengths the generators never broke: s3 always had exactly len(s1) + len(s2) characters,
+	// and the target-sum target never left the reachable range. Both near-misses scored a clean sweep.
+	['target-sum', 'NEAR-MISS subset-sum reduction with no parity check', false, `class Solution:
+    def findTargetSumWays(self, nums, target):
+        s = sum(nums)
+        if abs(target) > s: return 0
+        t = (s + target) // 2; dp = [1] + [0] * t
+        for x in nums:
+            for a in range(t, x - 1, -1): dp[a] += dp[a - x]
+        return dp[t]`],
+	['target-sum', 'NEAR-MISS no range check on the target', false, `class Solution:
+    def findTargetSumWays(self, nums, target):
+        s = sum(nums)
+        if (s + target) % 2: return 0
+        t = (s + target) // 2; dp = [1] + [0] * max(t, 0)
+        for x in nums:
+            for a in range(t, x - 1, -1): dp[a] += dp[a - x]
+        return dp[t] if t >= 0 else dp[t]`],
+	['target-sum', 'NEAR-MISS tracks reachability, not counts', false, `class Solution:
+    def findTargetSumWays(self, nums, target):
+        reach = {0}
+        for x in nums: reach = {r + x for r in reach} | {r - x for r in reach}
+        return 1 if target in reach else 0`],
+	['target-sum', 'correct', true, `class Solution:
+    def findTargetSumWays(self, nums, target):
+        from collections import Counter
+        ways = Counter({0: 1})
+        for x in nums:
+            nxt = Counter()
+            for r, c in ways.items(): nxt[r + x] += c; nxt[r - x] += c
+            ways = nxt
+        return ways[target]`],
+	['coin-change-ii', 'NEAR-MISS amount outside, coins inside (counts orderings)', false, `class Solution:
+    def change(self, amount, coins):
+        dp = [1] + [0] * amount
+        for a in range(1, amount + 1):
+            for c in coins:
+                if c <= a: dp[a] += dp[a - c]
+        return dp[amount]`],
+	['coin-change-ii', 'NEAR-MISS each coin used at most once', false, `class Solution:
+    def change(self, amount, coins):
+        dp = [1] + [0] * amount
+        for c in coins:
+            for a in range(amount, c - 1, -1): dp[a] += dp[a - c]
+        return dp[amount]`],
+	['coin-change-ii', 'correct', true, `class Solution:
+    def change(self, amount, coins):
+        dp = [1] + [0] * amount
+        for c in coins:
+            for a in range(c, amount + 1): dp[a] += dp[a - c]
+        return dp[amount]`],
+	['interleaving-string', 'NEAR-MISS no length check', false, `class Solution:
+    def isInterleave(self, s1, s2, s3):
+        from functools import lru_cache
+        @lru_cache(None)
+        def go(i, j):
+            k = i + j
+            if k == len(s3): return True
+            return (i < len(s1) and k < len(s3) and s1[i] == s3[k] and go(i + 1, j)) or \\
+                   (j < len(s2) and k < len(s3) and s2[j] == s3[k] and go(i, j + 1))
+        return go(0, 0)`],
+	['interleaving-string', 'NEAR-MISS greedy, prefers s1 on a tie', false, `class Solution:
+    def isInterleave(self, s1, s2, s3):
+        if len(s1) + len(s2) != len(s3): return False
+        i = j = 0
+        for ch in s3:
+            if i < len(s1) and s1[i] == ch: i += 1
+            elif j < len(s2) and s2[j] == ch: j += 1
+            else: return False
+        return True`],
+	['interleaving-string', 'correct', true, `class Solution:
+    def isInterleave(self, s1, s2, s3):
+        if len(s1) + len(s2) != len(s3): return False
+        from functools import lru_cache
+        @lru_cache(None)
+        def go(i, j):
+            if i + j == len(s3): return True
+            k = i + j
+            return (i < len(s1) and s1[i] == s3[k] and go(i + 1, j)) or \\
+                   (j < len(s2) and s2[j] == s3[k] and go(i, j + 1))
+        return go(0, 0)`],
+	['edit-distance', 'NEAR-MISS base row and column left at 0', false, `class Solution:
+    def minDistance(self, word1, word2):
+        m, n = len(word1), len(word2)
+        dp = [[0] * (n + 1) for _ in range(m + 1)]
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                dp[i][j] = dp[i-1][j-1] if word1[i-1] == word2[j-1] else 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])
+        return dp[m][n]`],
+	['edit-distance', 'NEAR-MISS no replace operation', false, `class Solution:
+    def minDistance(self, word1, word2):
+        m, n = len(word1), len(word2)
+        dp = [[0] * (n + 1) for _ in range(m + 1)]
+        for i in range(m + 1): dp[i][0] = i
+        for j in range(n + 1): dp[0][j] = j
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                dp[i][j] = dp[i-1][j-1] if word1[i-1] == word2[j-1] else 1 + min(dp[i-1][j], dp[i][j-1])
+        return dp[m][n]`],
+	['edit-distance', 'correct', true, `class Solution:
+    def minDistance(self, word1, word2):
+        m, n = len(word1), len(word2)
+        dp = [[0] * (n + 1) for _ in range(m + 1)]
+        for i in range(m + 1): dp[i][0] = i
+        for j in range(n + 1): dp[0][j] = j
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                dp[i][j] = dp[i-1][j-1] if word1[i-1] == word2[j-1] else 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])
+        return dp[m][n]`],
+	['distinct-subsequences', 'NEAR-MISS on a match takes only the diagonal', false, `class Solution:
+    def numDistinct(self, s, t):
+        m, n = len(s), len(t)
+        dp = [[0] * (n + 1) for _ in range(m + 1)]
+        for i in range(m + 1): dp[i][0] = 1
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                dp[i][j] = dp[i-1][j-1] if s[i-1] == t[j-1] else dp[i-1][j]
+        return dp[m][n]`],
+	['distinct-subsequences', 'NEAR-MISS seeds only dp[0][0]', false, `class Solution:
+    def numDistinct(self, s, t):
+        m, n = len(s), len(t)
+        dp = [[0] * (n + 1) for _ in range(m + 1)]; dp[0][0] = 1
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                dp[i][j] = dp[i-1][j] + (dp[i-1][j-1] if s[i-1] == t[j-1] else 0)
+        return dp[m][n]`],
+	['distinct-subsequences', 'correct', true, `class Solution:
+    def numDistinct(self, s, t):
+        m, n = len(s), len(t)
+        dp = [[0] * (n + 1) for _ in range(m + 1)]
+        for i in range(m + 1): dp[i][0] = 1
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                dp[i][j] = dp[i-1][j] + (dp[i-1][j-1] if s[i-1] == t[j-1] else 0)
+        return dp[m][n]`],
+	['regular-expression-matching', 'NEAR-MISS star means one or more', false, `class Solution:
+    def isMatch(self, s, p):
+        from functools import lru_cache
+        @lru_cache(None)
+        def go(i, j):
+            if j == len(p): return i == len(s)
+            first = i < len(s) and p[j] in (s[i], ".")
+            if j + 1 < len(p) and p[j+1] == "*":
+                return first and (go(i + 1, j) or go(i + 1, j + 2))
+            return first and go(i + 1, j + 1)
+        return go(0, 0)`],
+	['regular-expression-matching', 'NEAR-MISS prefix match, not the whole string', false, `class Solution:
+    def isMatch(self, s, p):
+        from functools import lru_cache
+        @lru_cache(None)
+        def go(i, j):
+            if j == len(p): return True
+            first = i < len(s) and p[j] in (s[i], ".")
+            if j + 1 < len(p) and p[j+1] == "*":
+                return go(i, j + 2) or (first and go(i + 1, j))
+            return first and go(i + 1, j + 1)
+        return go(0, 0)`],
+	['regular-expression-matching', 'correct', true, `class Solution:
+    def isMatch(self, s, p):
+        import re
+        return re.fullmatch(p, s) is not None`],
+	['burst-balloons', 'NEAR-MISS scores against original neighbours', false, `class Solution:
+    def maxCoins(self, nums):
+        a = [1] + nums + [1]; n = len(a)
+        dp = [[0] * n for _ in range(n)]
+        for length in range(2, n):
+            for l in range(0, n - length):
+                r = l + length
+                dp[l][r] = max(dp[l][k] + a[k-1] * a[k] * a[k+1] + dp[k][r] for k in range(l + 1, r))
+        return dp[0][n-1]`],
+	['burst-balloons', 'correct', true, `class Solution:
+    def maxCoins(self, nums):
+        a = [1] + nums + [1]; n = len(a)
+        dp = [[0] * n for _ in range(n)]
+        for length in range(2, n):
+            for l in range(0, n - length):
+                r = l + length
+                dp[l][r] = max(dp[l][k] + a[l] * a[k] * a[r] + dp[k][r] for k in range(l + 1, r))
+        return dp[0][n-1]`],
+	['longest-increasing-path-in-a-matrix', 'NEAR-MISS non-strict, equal neighbours extend', false, `class Solution:
+    def longestIncreasingPath(self, matrix):
+        from functools import lru_cache
+        rows, cols = len(matrix), len(matrix[0])
+        @lru_cache(None)
+        def go(r, c, seen=frozenset()):
+            best = 1
+            for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)):
+                nr, nc = r+dr, c+dc
+                if 0 <= nr < rows and 0 <= nc < cols and (nr,nc) not in seen and matrix[nr][nc] >= matrix[r][c]:
+                    best = max(best, 1 + go(nr, nc, seen | {(r, c)}))
+            return best
+        return max(go(r, c) for r in range(rows) for c in range(cols))`],
+	['longest-increasing-path-in-a-matrix', 'NEAR-MISS moves only right and down', false, `class Solution:
+    def longestIncreasingPath(self, matrix):
+        rows, cols = len(matrix), len(matrix[0]); dp = [[1] * cols for _ in range(rows)]
+        for r in range(rows):
+            for c in range(cols):
+                if r and matrix[r-1][c] < matrix[r][c]: dp[r][c] = max(dp[r][c], dp[r-1][c] + 1)
+                if c and matrix[r][c-1] < matrix[r][c]: dp[r][c] = max(dp[r][c], dp[r][c-1] + 1)
+        return max(max(row) for row in dp)`],
+	['longest-increasing-path-in-a-matrix', 'correct', true, `class Solution:
+    def longestIncreasingPath(self, matrix):
+        from functools import lru_cache
+        rows, cols = len(matrix), len(matrix[0])
+        @lru_cache(None)
+        def go(r, c):
+            best = 1
+            for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)):
+                nr, nc = r+dr, c+dc
+                if 0 <= nr < rows and 0 <= nc < cols and matrix[nr][nc] > matrix[r][c]:
+                    best = max(best, 1 + go(nr, nc))
+            return best
+        return max(go(r, c) for r in range(rows) for c in range(cols))`],
+	['best-time-to-buy-and-sell-stock-with-cooldown', 'NEAR-MISS ignores the cooldown', false, `class Solution:
+    def maxProfit(self, prices):
+        return sum(max(0, prices[i] - prices[i-1]) for i in range(1, len(prices)))`],
+	['best-time-to-buy-and-sell-stock-with-cooldown', 'correct', true, `class Solution:
+    def maxProfit(self, prices):
+        hold, sold, rest = float("-inf"), 0, 0
+        for p in prices:
+            hold, sold, rest = max(hold, rest - p), hold + p, max(rest, sold)
+        return max(sold, rest)`],
+	['longest-common-subsequence', 'NEAR-MISS longest common substring', false, `class Solution:
+    def longestCommonSubsequence(self, text1, text2):
+        best = 0; m, n = len(text1), len(text2)
+        dp = [[0] * (n + 1) for _ in range(m + 1)]
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                if text1[i-1] == text2[j-1]: dp[i][j] = dp[i-1][j-1] + 1; best = max(best, dp[i][j])
+        return best`],
+	['longest-common-subsequence', 'correct', true, `class Solution:
+    def longestCommonSubsequence(self, text1, text2):
+        m, n = len(text1), len(text2)
+        dp = [[0] * (n + 1) for _ in range(m + 1)]
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                dp[i][j] = dp[i-1][j-1] + 1 if text1[i-1] == text2[j-1] else max(dp[i-1][j], dp[i][j-1])
+        return dp[m][n]`],
+	['unique-paths', 'NEAR-MISS first row and column never set to 1', false, `class Solution:
+    def uniquePaths(self, m, n):
+        dp = [[0] * n for _ in range(m)]; dp[0][0] = 1
+        for r in range(1, m):
+            for c in range(1, n): dp[r][c] = dp[r-1][c] + dp[r][c-1]
+        return dp[m-1][n-1]`],
+	['unique-paths', 'correct', true, `class Solution:
+    def uniquePaths(self, m, n):
+        import math
+        return math.comb(m + n - 2, m - 1)`]
 ];
 
 let bad = 0;

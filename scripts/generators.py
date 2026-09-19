@@ -1398,7 +1398,8 @@ def _unique_paths(rng):
 
 @generator("longest-common-subsequence")
 def _lcs(rng):
-    return [word(rng, rng.randint(0, 12), "abc"), word(rng, rng.randint(0, 12), "abc")]
+    # 1 <= text1.length, text2.length: an empty string is not a legal input.
+    return [word(rng, rng.randint(1, 12), "abc"), word(rng, rng.randint(1, 12), "abc")]
 
 
 @generator("best-time-to-buy-and-sell-stock-with-cooldown")
@@ -1414,11 +1415,29 @@ def _coin_change_ii(rng):
 @generator("target-sum")
 def _target_sum(rng):
     nums = ints(rng, rng.randint(1, 10), 0, 8)
-    return [nums, rng.randint(-sum(nums), sum(nums)) if sum(nums) else 0]
+    total = sum(nums)
+    # The target ranges over -1000..1000 whatever the numbers add up to, so it can lie beyond
+    # anything reachable. Drawing it from [-sum, sum] never did, and a solution that indexes
+    # (sum + target) // 2 with no range check scored 42/42.
+    if rng.random() < 0.25:
+        # Beyond the reachable range by an EVEN amount, so (sum + target) is even and a solution
+        # gets past the parity test to the index. Negative mostly: in Python a negative index into
+        # the dp table does not raise, it quietly reads the other end.
+        beyond = total + 2 * rng.randint(1, 3)
+        return [nums, -beyond if rng.random() < 0.75 else beyond]
+    return [nums, rng.randint(-total, total) if total else 0]
 
 
 @generator("interleaving-string")
 def _interleaving(rng):
+    if rng.random() < 0.15:
+        # s1 = p, s2 = p + q with q starting differently from p, s3 = p + q + p. The only way
+        # through is s2 first; a greedy walk that prefers s1 whenever it matches takes p from
+        # s1, then meets q with s1 exhausted and s2 still starting with p. ("a", "ab", "aba".)
+        a, b = rng.sample("ab", 2)
+        pre = a + word(rng, rng.randint(0, 1), "ab")
+        q = b + word(rng, rng.randint(0, 1), "ab")
+        return [pre, pre + q, pre + q + pre]
     s1 = word(rng, rng.randint(0, 6), "ab")
     s2 = word(rng, rng.randint(0, 6), "ab")
     if rng.random() < 0.5:                          # a genuine interleaving
@@ -1426,13 +1445,21 @@ def _interleaving(rng):
         while a or b:
             take_a = a and (not b or rng.random() < 0.5)
             out.append(a.pop(0) if take_a else b.pop(0))
-        return [s1, s2, "".join(out)]
+        s3 = "".join(out)
+        # s3 always had exactly len(s1) + len(s2) characters, so a solution that never checks the
+        # lengths could not be caught, and scored 43/43. A genuine interleaving with its last
+        # character or two dropped is the case that matters: every character still matches, the
+        # walk simply runs out of s3 first and a missing check reports success.
+        if s3 and rng.random() < 0.3:
+            s3 = s3[:-rng.randint(1, min(2, len(s3)))]
+        return [s1, s2, s3]
     return [s1, s2, word(rng, len(s1) + len(s2), "ab")]
 
 
 @generator("distinct-subsequences")
 def _distinct_subseq(rng):
-    return [word(rng, rng.randint(0, 12), "ab"), word(rng, rng.randint(0, 4), "ab")]
+    # 1 <= s.length, t.length. An empty t would answer 1, which is not a case the problem poses.
+    return [word(rng, rng.randint(1, 12), "ab"), word(rng, rng.randint(1, 4), "ab")]
 
 
 @generator("edit-distance")
@@ -1447,14 +1474,35 @@ def _burst_balloons(rng):
 
 @generator("regular-expression-matching")
 def _regex_match(rng):
-    s = word(rng, rng.randint(0, 6), "ab")
+    """A pattern, and a string that often matches it with some starred element used ZERO times.
+
+    '*' is zero or more, and zero is the case people get wrong -- "a*b" matches "b". Random strings
+    against random patterns rarely hit it, so reading '*' as one-or-more failed two cases in 43.
+    Here the string is often built from the pattern itself, each x* expanded to 0, 1 or 2 copies
+    with 0 the likeliest. The constraints also require 1 <= s.length, which the old draw from
+    0..6 did not respect.
+    """
     p = ""
     while len(p) < rng.randint(1, 6):
         ch = rng.choice("ab.")
         p += ch
         if rng.random() < 0.35:
             p += "*"                                # only ever after a real character
-    return [s, p]
+    if rng.random() < 0.55:
+        out, i = [], 0
+        while i < len(p):
+            ch = p[i]
+            starred = i + 1 < len(p) and p[i + 1] == "*"
+            reps = rng.choice([0, 0, 1, 2]) if starred else 1
+            out += [rng.choice("ab") if ch == "." else ch for _ in range(reps)]
+            i += 2 if starred else 1
+        s = "".join(out)
+        if s and rng.random() < 0.25:               # nudge it off the pattern for some false ones
+            j = rng.randrange(len(s))
+            s = s[:j] + ("b" if s[j] == "a" else "a") + s[j + 1:]
+        if s:
+            return [s, p]
+    return [word(rng, rng.randint(1, 6), "ab"), p]
 
 
 # ---------- Backtracking ----------

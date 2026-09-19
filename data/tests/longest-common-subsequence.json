@@ -23,283 +23,283 @@
     },
     {
       "args": [
-        "bbaaabcac",
-        "bbaacca"
-      ],
-      "expected": 6
-    },
-    {
-      "args": [
-        "babccaabb",
-        "aaaacba"
-      ],
-      "expected": 4
-    },
-    {
-      "args": [
-        "a",
-        "aaccacaa"
-      ],
-      "expected": 1
-    },
-    {
-      "args": [
-        "c",
-        "baab"
-      ],
-      "expected": 0
-    },
-    {
-      "args": [
-        "bbbbbcbbbaca",
-        "acbcabbbab"
-      ],
-      "expected": 6
-    },
-    {
-      "args": [
-        "cbccacbab",
-        "cbb"
-      ],
-      "expected": 3
-    },
-    {
-      "args": [
-        "abbcbbc",
-        "bacaacabbcab"
+        "bbaaabcacb",
+        "baacc"
       ],
       "expected": 5
     },
     {
       "args": [
-        "abbcc",
-        "cbbac"
-      ],
-      "expected": 3
-    },
-    {
-      "args": [
-        "cab",
-        "abbcbabbcaba"
-      ],
-      "expected": 3
-    },
-    {
-      "args": [
-        "bacbaba",
-        "ccaabccbcca"
-      ],
-      "expected": 4
-    },
-    {
-      "args": [
-        "bccacac",
-        "bbbabac"
-      ],
-      "expected": 4
-    },
-    {
-      "args": [
-        "aaba",
-        "babbba"
-      ],
-      "expected": 3
-    },
-    {
-      "args": [
-        "ccca",
-        "cbabbbabbaba"
+        "cba",
+        "ccaab"
       ],
       "expected": 2
     },
     {
       "args": [
-        "",
-        "acab"
-      ],
-      "expected": 0
-    },
-    {
-      "args": [
-        "babcccaccbb",
-        "acccbcacbbba"
-      ],
-      "expected": 8
-    },
-    {
-      "args": [
-        "acba",
-        "baaabcb"
-      ],
-      "expected": 3
-    },
-    {
-      "args": [
-        "",
-        "abcbc"
-      ],
-      "expected": 0
-    },
-    {
-      "args": [
-        "abaaaaccc",
-        "cccaccb"
-      ],
-      "expected": 3
-    },
-    {
-      "args": [
-        "",
-        "aaccaaaa"
-      ],
-      "expected": 0
-    },
-    {
-      "args": [
-        "cbbcbababc",
-        ""
-      ],
-      "expected": 0
-    },
-    {
-      "args": [
-        "",
-        "aaccb"
-      ],
-      "expected": 0
-    },
-    {
-      "args": [
-        "ccabcccccba",
-        "bacac"
-      ],
-      "expected": 3
-    },
-    {
-      "args": [
-        "",
-        "acabbaaaa"
-      ],
-      "expected": 0
-    },
-    {
-      "args": [
-        "bbc",
-        "baccacccbca"
-      ],
-      "expected": 3
-    },
-    {
-      "args": [
-        "bcababb",
-        "ccbac"
-      ],
-      "expected": 3
-    },
-    {
-      "args": [
-        "cbabbbbcabc",
-        "bbba"
-      ],
-      "expected": 4
-    },
-    {
-      "args": [
-        "cca",
-        "cacbcbbc"
+        "baaaacb",
+        "aa"
       ],
       "expected": 2
     },
     {
       "args": [
-        "bc",
-        "baacccacaba"
-      ],
-      "expected": 2
-    },
-    {
-      "args": [
-        "cacbac",
-        ""
-      ],
-      "expected": 0
-    },
-    {
-      "args": [
-        "cbcab",
-        "abcaccbb"
-      ],
-      "expected": 4
-    },
-    {
-      "args": [
-        "bcbcb",
-        "ababbb"
+        "aaccacaaa",
+        "bbaabbbbbbcb"
       ],
       "expected": 3
     },
     {
       "args": [
-        "a",
-        "bcabbbabbc"
+        "bacac",
+        "cb"
       ],
       "expected": 1
     },
     {
       "args": [
-        "cc",
-        ""
+        "abbbabccbcc",
+        "c"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "abacb",
+        "babbcbb"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "bacaacabbc",
+        "bba"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "bccbcbba",
+        "acababbcbab"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "cabab",
+        "acbabacc"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "aabccbccab",
+        "ccacacb"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "bbabacb",
+        "abab"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "abbbabc",
+        "cacbabbbabb"
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        "baa",
+        "acabc"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "abccca",
+        "cbbacccbcac"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "bbabac",
+        "abbaaabc"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "ababcbcc",
+        "baa"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "acc",
+        "bcccaccba"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "aaccaaaac",
+        "bbcbababcaa"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "aaccbc",
+        "cabcccccbab"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "acacaca",
+        "abbaaaaabb"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "cbaccacccb",
+        "abbcababb"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "ccbacc",
+        "babbbbcabc"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "bbbaa",
+        "caccacbcbb"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "abccbaacccac",
+        "b"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "bcac",
+        "acabcb"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "abcabcacc",
+        "bbbcbc"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "bababbb",
+        "ac"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "cabbbabb",
+        "accaaccbc"
+      ],
+      "expected": 4
+    },
+    {
+      "args": [
+        "ba",
+        "aabccacb"
+      ],
+      "expected": 2
+    },
+    {
+      "args": [
+        "ca",
+        "c"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "a",
+        "bbcaabaaac"
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        "aababacbb",
+        "abbcbcacbc"
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        "cccccccabb",
+        "abbbccaac"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "bacc",
+        "aacbcc"
+      ],
+      "expected": 3
+    },
+    {
+      "args": [
+        "acbccbacb",
+        "bcaacbb"
+      ],
+      "expected": 5
+    },
+    {
+      "args": [
+        "cbccaa",
+        "ccbcbbcbcaaa"
+      ],
+      "expected": 6
+    },
+    {
+      "args": [
+        "bcbb",
+        "a"
       ],
       "expected": 0
     },
     {
       "args": [
-        "ccb",
-        "ababaabcc"
-      ],
-      "expected": 2
-    },
-    {
-      "args": [
-        "cba",
-        "aacaacbb"
-      ],
-      "expected": 2
-    },
-    {
-      "args": [
-        "aabaaaccaa",
-        "abacb"
-      ],
-      "expected": 4
-    },
-    {
-      "args": [
-        "cabbc",
-        "cacbcc"
-      ],
-      "expected": 4
-    },
-    {
-      "args": [
-        "ccccccabbc",
-        "bbb"
-      ],
-      "expected": 2
-    },
-    {
-      "args": [
-        "caacabaccba",
-        "cbc"
+        "cbccabb",
+        "abbcaa"
       ],
       "expected": 3
     },
     {
       "args": [
-        "cacbccbac",
-        "bbcaa"
+        "aaccbbbaacc",
+        "ab"
       ],
-      "expected": 3
+      "expected": 2
     }
   ],
   "compare": "exact",

@@ -23,283 +23,283 @@
     },
     {
       "args": [
-        "aabbaa",
+        "a",
+        "aa*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "abb",
+        "a.*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "a",
         "a*"
       ],
-      "expected": false
-    },
-    {
-      "args": [
-        "bbaa",
-        ".*b.*"
-      ],
       "expected": true
     },
     {
       "args": [
-        "",
-        "b*a*"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "aababa",
-        "a..*"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "abbaab",
-        "b.*a*"
+        "abab",
+        "..*a"
       ],
       "expected": false
     },
     {
       "args": [
-        "baaa",
-        "ab"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "ba",
-        "..a*"
+        "bb",
+        "b*"
       ],
       "expected": true
     },
     {
       "args": [
-        "",
+        "bbab",
+        ".*a*.a*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "a",
+        "a*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bb",
+        "bba*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "b",
+        "b"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aaaaa",
+        "aa.*a"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "babbbb",
         "..*"
       ],
-      "expected": false
+      "expected": true
     },
     {
       "args": [
-        "",
-        "b"
+        "bb",
+        "bb"
       ],
-      "expected": false
+      "expected": true
     },
     {
       "args": [
-        "",
-        "b"
+        "aaaab",
+        ".a*"
       ],
       "expected": false
     },
     {
       "args": [
         "a",
-        "aa.*a"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "b",
-        "a."
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "aaba",
-        "b.*b*"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "bba",
-        "b.a*"
+        "..*"
       ],
       "expected": true
     },
     {
       "args": [
-        "aaaaba",
-        ".*"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "",
-        ".*.b"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "aaaa",
-        "a.b*"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "babaa",
-        "a..*"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "",
-        "ab*"
+        "aaaba",
+        "b.*"
       ],
       "expected": false
     },
     {
       "args": [
         "ba",
-        ".a*"
+        "bb*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bbbb",
+        "b*b.b*"
       ],
       "expected": true
     },
     {
       "args": [
-        "bbaa",
+        "bb",
         ".*."
       ],
       "expected": true
     },
     {
       "args": [
-        "bbaaba",
-        "a*a.*"
+        "baa",
+        "bab"
       ],
       "expected": false
     },
     {
       "args": [
-        "abbba",
-        "bb*"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "babb",
-        "b"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "",
-        "a"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "bbaa",
-        "bba"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "ba",
+        "ab",
         ".*"
       ],
       "expected": true
     },
     {
       "args": [
-        "bbbb",
-        ".a*"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "baabb",
-        "a*ab"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "baabb",
-        "b..b*."
+        "bab",
+        ".*."
       ],
       "expected": true
     },
     {
       "args": [
-        "abaa",
-        "ab"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "bbb",
-        ".ab"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "bbbab",
-        "a."
-      ],
-      "expected": false
-    },
-    {
-      "args": [
         "abb",
-        ".*aa"
+        "ba"
       ],
       "expected": false
     },
     {
       "args": [
-        "aabab",
-        "aa*"
+        "a",
+        "b"
       ],
       "expected": false
     },
     {
       "args": [
-        "aaabbb",
-        "bb*"
+        "bb",
+        "b*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "ba",
+        "ba"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bbbba",
+        "."
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "aa",
+        "aab*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bbbb",
+        ".b..*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aba",
+        "b*."
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "babb",
+        ".a*b."
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "a",
+        ".*.*."
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "abaab",
+        ".b*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "b",
+        "b*."
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aba",
+        "bbb*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "ba",
+        ".."
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "aa",
+        ".a*b"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bbab",
+        ".a*b"
       ],
       "expected": false
     },
     {
       "args": [
         "bbaba",
-        ".."
+        ".bbb."
       ],
       "expected": false
     },
     {
       "args": [
-        "abab",
-        ".a.."
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "abaab",
-        "b.b*.b"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "bbb",
-        "..b*"
+        "aa",
+        "a*.a"
       ],
       "expected": true
+    },
+    {
+      "args": [
+        "aaab",
+        "b*b"
+      ],
+      "expected": false
     }
   ],
   "compare": "exact",

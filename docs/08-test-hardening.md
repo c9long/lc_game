@@ -387,9 +387,20 @@ including the circular `house-robber-ii` run as a line, `decode-ways` treating `
 |---|---|---|
 | `word-break` | the generator built `s` by joining dictionary words, so taking the longest match almost never walked into a dead end, and greedy longest-match scored **43/43** | two traps built outright: words `x`, `xy`, `yz` with `s = xyz`, where the longest first match strands `z` (LeetCode's `"aab"` shape), and a word that is a proper prefix of `s` where `s` is itself a word, which defeats greedy *shortest* match. Now 37/43 and 38/43 |
 
+### What batch 14 found
+
+Two generators never broke a length the problem depends on:
+
+| problem | the gap | after |
+|---|---|---|
+| `interleaving-string` | `s3` always had exactly `len(s1) + len(s2)` characters, so a solution that never checks the lengths scored **43/43** | a genuine interleaving with its last character or two dropped: every character still matches, the walk just runs out first. Now 39/43. Greedy-prefers-`s1` is built outright too (`"a"`, `"ab"`, `"aba"`), 32/43 |
+| `target-sum` | the target ranges over -1000..1000 whatever the numbers sum to, but was drawn from `[-sum, sum]`, so a solution indexing `(sum + target) // 2` with no range check scored **42/42** | targets beyond the reachable range by an even amount, mostly negative — in Python a negative index into the table reads the other end instead of raising. Now 34/42 |
+| `regular-expression-matching` | `*` is zero **or** more, and zero is the case people miss (`"a*b"` matches `"b"`); reading it as one-or-more failed 2 cases | strings built from the pattern with each `x*` expanded to 0, 1 or 2 copies, 0 likeliest. Now 35/43 |
+| `longest-common-subsequence`, `distinct-subsequences`, `regular-expression-matching` | all three drew empty strings, which their constraints forbid; an empty `t` in `distinct-subsequences` answers 1, a case the problem never poses | none |
+
 ## Status
 
-111 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
+122 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
 
 ### Batch 1: Arrays & Hashing (9/9 audited)
 - [x] `contains-duplicate` — Easy
@@ -514,18 +525,18 @@ including the circular `house-robber-ii` run as a line, `decode-ways` treating `
 - [x] `word-break` — Medium
 - [x] `longest-increasing-subsequence` — Medium
 - [x] `partition-equal-subset-sum` — Medium
-### Batch 14: 2-D Dynamic Programming (0/11 audited)
-- [ ] `unique-paths` — Medium
-- [ ] `longest-common-subsequence` — Medium
-- [ ] `best-time-to-buy-and-sell-stock-with-cooldown` — Medium
-- [ ] `coin-change-ii` — Medium
-- [ ] `target-sum` — Medium
-- [ ] `interleaving-string` — Medium
-- [ ] `longest-increasing-path-in-a-matrix` — Hard
-- [ ] `distinct-subsequences` — Hard
-- [ ] `edit-distance` — Medium
-- [ ] `burst-balloons` — Hard
-- [ ] `regular-expression-matching` — Hard
+### Batch 14: 2-D Dynamic Programming (11/11 audited)
+- [x] `unique-paths` — Medium
+- [x] `longest-common-subsequence` — Medium
+- [x] `best-time-to-buy-and-sell-stock-with-cooldown` — Medium
+- [x] `coin-change-ii` — Medium
+- [x] `target-sum` — Medium
+- [x] `interleaving-string` — Medium
+- [x] `longest-increasing-path-in-a-matrix` — Hard
+- [x] `distinct-subsequences` — Hard
+- [x] `edit-distance` — Medium
+- [x] `burst-balloons` — Hard
+- [x] `regular-expression-matching` — Hard
 ### Batch 15: Greedy (1/8 audited)
 - [ ] `maximum-subarray` — Medium
 - [ ] `jump-game` — Medium
