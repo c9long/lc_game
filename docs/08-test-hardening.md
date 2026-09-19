@@ -302,9 +302,23 @@ solution that enumerates in a different order still passes; the two wrong ones n
 `unordered-nested`, but it is judged by a validator, which takes precedence over the comparison
 rule, so it was never affected.
 
+### What batch 8 found
+
+The thinnest batch so far: all six trie near-misses already failed, because the generator was
+built around the right idea — searching strict prefixes of inserted words is what separates
+`search` from `startsWith`, and it did that deliberately. What it got wrong was the opposite
+problem, generating inputs the constraints forbid:
+
+| problem | the gap | after |
+|---|---|---|
+| `design-add-and-search-words-data-structure` | "there will be at most 2 dots in word for search queries", and the generator dotted every character independently, so all-dot patterns of any length were common. A solution leaning on that guarantee would have been failed for being right | every pattern now carries at most 2 dots; a hand-written extra using `"..."` became `"ab."`, which tests the same thing (a pattern longer than every stored word) within the rules |
+
+Worth recording because it is the mirror of the usual finding. A generator can be too permissive
+as well as too narrow, and both produce a suite that disagrees with LeetCode.
+
 ## Status
 
-64 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
+67 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
 
 ### Batch 1: Arrays & Hashing (9/9 audited)
 - [x] `contains-duplicate` — Easy
@@ -373,10 +387,10 @@ rule, so it was never affected.
 - [x] `construct-binary-tree-from-preorder-and-inorder-traversal` — Medium
 - [x] `binary-tree-maximum-path-sum` — Hard
 - [x] `serialize-and-deserialize-binary-tree` — Hard
-### Batch 8: Tries (0/3 audited)
-- [ ] `implement-trie-prefix-tree` — Medium
-- [ ] `design-add-and-search-words-data-structure` — Medium
-- [ ] `word-search-ii` — Hard
+### Batch 8: Tries (3/3 audited)
+- [x] `implement-trie-prefix-tree` — Medium
+- [x] `design-add-and-search-words-data-structure` — Medium
+- [x] `word-search-ii` — Hard
 ### Batch 9: Heap / Priority Queue (1/7 audited)
 - [ ] `kth-largest-element-in-a-stream` — Easy
 - [ ] `last-stone-weight` — Easy

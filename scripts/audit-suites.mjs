@@ -1529,7 +1529,158 @@ class LRUCache:
                 if n.left: q.append(n.left)
                 if n.right: q.append(n.right)
             out.append(level)
-        return out`]
+        return out`],
+
+	// ---- batch 8: Tries ----
+	['implement-trie-prefix-tree', 'NEAR-MISS no end-of-word marker', false, `class Trie:
+    def __init__(self): self.root = {}
+    def insert(self, word):
+        n = self.root
+        for c in word: n = n.setdefault(c, {})
+    def search(self, word):
+        n = self.root
+        for c in word:
+            if c not in n: return False
+            n = n[c]
+        return True
+    def startsWith(self, prefix):
+        n = self.root
+        for c in prefix:
+            if c not in n: return False
+            n = n[c]
+        return True`],
+	['implement-trie-prefix-tree', 'NEAR-MISS startsWith requires a whole word', false, `class Trie:
+    def __init__(self): self.root = {}
+    def insert(self, word):
+        n = self.root
+        for c in word: n = n.setdefault(c, {})
+        n["#"] = True
+    def search(self, word):
+        n = self.root
+        for c in word:
+            if c not in n: return False
+            n = n[c]
+        return "#" in n
+    def startsWith(self, prefix):
+        n = self.root
+        for c in prefix:
+            if c not in n: return False
+            n = n[c]
+        return "#" in n`],
+	['implement-trie-prefix-tree', 'correct', true, `class Trie:
+    def __init__(self): self.root = {}
+    def insert(self, word):
+        n = self.root
+        for c in word: n = n.setdefault(c, {})
+        n["#"] = True
+    def search(self, word):
+        n = self.root
+        for c in word:
+            if c not in n: return False
+            n = n[c]
+        return "#" in n
+    def startsWith(self, prefix):
+        n = self.root
+        for c in prefix:
+            if c not in n: return False
+            n = n[c]
+        return True`],
+
+	// A wildcard must try every branch, and a pattern that runs out is not a match unless a word
+	// ends exactly there.
+	['design-add-and-search-words-data-structure', 'NEAR-MISS wildcard takes only the first child', false, `class WordDictionary:
+    def __init__(self): self.root = {}
+    def addWord(self, word):
+        n = self.root
+        for c in word: n = n.setdefault(c, {})
+        n["#"] = True
+    def search(self, word):
+        def go(n, i):
+            if i == len(word): return "#" in n
+            c = word[i]
+            if c == ".":
+                for k, v in n.items():
+                    if k == "#": continue
+                    return go(v, i + 1)
+                return False
+            return go(n[c], i + 1) if c in n else False
+        return go(self.root, 0)`],
+	['design-add-and-search-words-data-structure', 'NEAR-MISS no end-of-word check at the pattern end', false, `class WordDictionary:
+    def __init__(self): self.root = {}
+    def addWord(self, word):
+        n = self.root
+        for c in word: n = n.setdefault(c, {})
+        n["#"] = True
+    def search(self, word):
+        def go(n, i):
+            if i == len(word): return True
+            c = word[i]
+            if c == ".":
+                return any(go(v, i + 1) for k, v in n.items() if k != "#")
+            return go(n[c], i + 1) if c in n else False
+        return go(self.root, 0)`],
+	['design-add-and-search-words-data-structure', 'correct', true, `class WordDictionary:
+    def __init__(self): self.root = {}
+    def addWord(self, word):
+        n = self.root
+        for c in word: n = n.setdefault(c, {})
+        n["#"] = True
+    def search(self, word):
+        def go(n, i):
+            if i == len(word): return "#" in n
+            c = word[i]
+            if c == ".":
+                return any(go(v, i + 1) for k, v in n.items() if k != "#")
+            return go(n[c], i + 1) if c in n else False
+        return go(self.root, 0)`],
+
+	// The unordered comparison sorts rather than de-duplicating, so a repeated word still fails.
+	['word-search-ii', 'NEAR-MISS never un-marks a cell on backtrack', false, `class Solution:
+    def findWords(self, board, words):
+        rows, cols = len(board), len(board[0])
+        out = set()
+        def go(r, c, w, i):
+            if i == len(w): return True
+            if r < 0 or c < 0 or r >= rows or c >= cols or board[r][c] != w[i]: return False
+            board[r][c] = "#"
+            ok = any(go(r+dr, c+dc, w, i+1) for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)))
+            if ok: board[r][c] = w[i]
+            return ok
+        for w in words:
+            for r in range(rows):
+                for c in range(cols):
+                    if go(r, c, w, 0): out.add(w)
+        return list(out)`],
+	['word-search-ii', 'NEAR-MISS emits a word once per successful path', false, `class Solution:
+    def findWords(self, board, words):
+        rows, cols = len(board), len(board[0])
+        out = []
+        def go(r, c, w, i):
+            if i == len(w): return True
+            if r < 0 or c < 0 or r >= rows or c >= cols or board[r][c] != w[i]: return False
+            t = board[r][c]; board[r][c] = "#"
+            ok = any(go(r+dr, c+dc, w, i+1) for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)))
+            board[r][c] = t
+            return ok
+        for w in words:
+            for r in range(rows):
+                for c in range(cols):
+                    if go(r, c, w, 0): out.append(w)
+        return out`],
+	['word-search-ii', 'correct', true, `class Solution:
+    def findWords(self, board, words):
+        rows, cols = len(board), len(board[0])
+        out = set()
+        def go(r, c, w, i):
+            if i == len(w): return True
+            if r < 0 or c < 0 or r >= rows or c >= cols or board[r][c] != w[i]: return False
+            t = board[r][c]; board[r][c] = "#"
+            ok = any(go(r+dr, c+dc, w, i+1) for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)))
+            board[r][c] = t
+            return ok
+        for w in words:
+            if any(go(r, c, w, 0) for r in range(rows) for c in range(cols)): out.add(w)
+        return list(out)`]
 ];
 
 let bad = 0;

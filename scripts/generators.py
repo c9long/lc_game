@@ -1866,8 +1866,14 @@ def _word_dictionary_gen(rng):
         if rng.random() < 0.4:
             steps.append(("addWord", [rng.choice(pool)]))
         else:
-            pattern = "".join(rng.choice([c, "."]) for c in rng.choice(pool))
-            steps.append(("search", [pattern]))
+            # "There will be at most 2 dots in word for search queries." The old version dotted
+            # each character independently, so all-dot patterns of any length were common -- inputs
+            # the problem promises never occur, which would wrongly fail a solution that leans on
+            # the guarantee.
+            base = list(rng.choice(pool))
+            for i in rng.sample(range(len(base)), min(len(base), rng.randint(0, 2))):
+                base[i] = "."
+            steps.append(("search", ["".join(base)]))
     return _design("WordDictionary", [], steps)
 
 

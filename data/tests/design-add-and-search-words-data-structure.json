@@ -73,7 +73,7 @@
             "a."
           ],
           [
-            "..."
+            "ab."
           ]
         ]
       ],
@@ -93,15 +93,15 @@
           "addWord",
           "search",
           "search",
-          "addWord",
-          "addWord",
           "search",
           "search",
           "addWord",
           "search",
           "search",
+          "search",
           "addWord",
-          "search"
+          "search",
+          "addWord"
         ],
         [
           [],
@@ -109,19 +109,13 @@
             "aaa"
           ],
           [
-            "a.a"
-          ],
-          [
-            "aa."
-          ],
-          [
             "aaa"
           ],
           [
-            "aa"
+            ".a."
           ],
           [
-            "a.."
+            ".a."
           ],
           [
             "a.a"
@@ -133,10 +127,16 @@
             "..a"
           ],
           [
-            "a."
+            ".aa"
           ],
           [
             "aaa"
+          ],
+          [
+            "aa"
+          ],
+          [
+            "a.a"
           ],
           [
             "aa"
@@ -148,120 +148,14 @@
         null,
         true,
         true,
-        null,
-        null,
         true,
         true,
         null,
         true,
         true,
-        null,
-        true
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "addWord",
-          "search",
-          "addWord",
-          "addWord",
-          "search",
-          "addWord",
-          "addWord",
-          "addWord",
-          "search",
-          "addWord",
-          "search"
-        ],
-        [
-          [],
-          [
-            "b"
-          ],
-          [
-            ".."
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ],
-          [
-            ".a"
-          ],
-          [
-            "ba"
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ],
-          [
-            ".a"
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        false,
-        null,
-        null,
-        false,
-        null,
-        null,
-        null,
         true,
         null,
-        true
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "search",
-          "addWord",
-          "search",
-          "search",
-          "addWord"
-        ],
-        [
-          [],
-          [
-            ".a.b"
-          ],
-          [
-            "babb"
-          ],
-          [
-            "..ba"
-          ],
-          [
-            "a.b."
-          ],
-          [
-            "aabb"
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        false,
-        null,
-        false,
-        false,
+        true,
         null
       ]
     },
@@ -271,11 +165,1183 @@
           "WordDictionary",
           "search",
           "search",
+          "addWord",
+          "search",
+          "addWord",
+          "search",
+          "search",
+          "search",
+          "search",
+          "search",
+          "addWord",
+          "search"
+        ],
+        [
+          [],
+          [
+            "."
+          ],
+          [
+            ".b"
+          ],
+          [
+            "b"
+          ],
+          [
+            "aa"
+          ],
+          [
+            "ab"
+          ],
+          [
+            "."
+          ],
+          [
+            "ab"
+          ],
+          [
+            "a."
+          ],
+          [
+            "aa"
+          ],
+          [
+            ".a"
+          ],
+          [
+            "b"
+          ],
+          [
+            "aa"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        false,
+        false,
+        null,
+        false,
+        null,
+        true,
+        true,
+        true,
+        false,
+        false,
+        null,
+        false
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "addWord",
+          "addWord",
+          "addWord",
+          "addWord",
+          "addWord",
+          "search",
           "search",
           "search"
         ],
         [
           [],
+          [
+            "bbab"
+          ],
+          [
+            "bbab"
+          ],
+          [
+            "bbab"
+          ],
+          [
+            "bbab"
+          ],
+          [
+            "bbab"
+          ],
+          [
+            "bbab"
+          ],
+          [
+            "b.ab"
+          ],
+          [
+            "..ab"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "search",
+          "addWord",
+          "search",
+          "addWord",
+          "search",
+          "search",
+          "addWord",
+          "search",
+          "addWord",
+          "search",
+          "search",
+          "addWord",
+          "search"
+        ],
+        [
+          [],
+          [
+            "."
+          ],
+          [
+            "bab"
+          ],
+          [
+            "b.b"
+          ],
+          [
+            "bbb"
+          ],
+          [
+            "."
+          ],
+          [
+            ".ba."
+          ],
+          [
+            "bab"
+          ],
+          [
+            "."
+          ],
+          [
+            "b"
+          ],
+          [
+            "b.b"
+          ],
+          [
+            "b.aa"
+          ],
+          [
+            "b"
+          ],
+          [
+            "bbb"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        false,
+        null,
+        true,
+        null,
+        false,
+        false,
+        null,
+        false,
+        null,
+        true,
+        false,
+        null,
+        true
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "addWord",
+          "search",
+          "search",
+          "search",
+          "addWord",
+          "addWord",
+          "search",
+          "search",
+          "addWord",
+          "search",
+          "addWord",
+          "addWord",
+          "search",
+          "addWord",
+          "search",
+          "search"
+        ],
+        [
+          [],
+          [
+            "ab"
+          ],
+          [
+            ".b"
+          ],
+          [
+            ".b"
+          ],
+          [
+            "ab"
+          ],
+          [
+            "ab"
+          ],
+          [
+            "ab"
+          ],
+          [
+            ".."
+          ],
+          [
+            ".."
+          ],
+          [
+            "ab"
+          ],
+          [
+            "a."
+          ],
+          [
+            "ab"
+          ],
+          [
+            "ab"
+          ],
+          [
+            ".b"
+          ],
+          [
+            "ab"
+          ],
+          [
+            ".."
+          ],
+          [
+            ".."
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        true,
+        true,
+        true,
+        null,
+        null,
+        true,
+        true,
+        null,
+        true,
+        null,
+        null,
+        true,
+        null,
+        true,
+        true
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "search",
+          "addWord",
+          "search",
+          "addWord",
+          "addWord",
+          "search",
+          "addWord",
+          "search",
+          "search",
+          "addWord"
+        ],
+        [
+          [],
+          [
+            ".."
+          ],
+          [
+            "a"
+          ],
+          [
+            "."
+          ],
+          [
+            "aab"
+          ],
+          [
+            "aab"
+          ],
+          [
+            "aa"
+          ],
+          [
+            "a"
+          ],
+          [
+            "."
+          ],
+          [
+            "."
+          ],
+          [
+            "a"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        false,
+        null,
+        true,
+        null,
+        null,
+        false,
+        null,
+        true,
+        true,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "addWord",
+          "search",
+          "search",
+          "search",
+          "search",
+          "addWord"
+        ],
+        [
+          [],
+          [
+            "bab"
+          ],
+          [
+            "b.b"
+          ],
+          [
+            ".ab"
+          ],
+          [
+            "b.."
+          ],
+          [
+            "b.b"
+          ],
+          [
+            "bab"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        true,
+        true,
+        true,
+        true,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "addWord",
+          "search",
+          "search",
+          "search",
+          "search",
+          "search",
+          "addWord",
+          "search",
+          "search",
+          "addWord",
+          "search",
+          "search",
+          "addWord"
+        ],
+        [
+          [],
+          [
+            "baba"
+          ],
+          [
+            "b..a"
+          ],
+          [
+            "ba.."
+          ],
+          [
+            "baba"
+          ],
+          [
+            "ba.a"
+          ],
+          [
+            "b.ba"
+          ],
+          [
+            "baba"
+          ],
+          [
+            "baba"
+          ],
+          [
+            "..ba"
+          ],
+          [
+            "baba"
+          ],
+          [
+            "baba"
+          ],
+          [
+            ".a.a"
+          ],
+          [
+            "baba"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        true,
+        true,
+        true,
+        true,
+        true,
+        null,
+        true,
+        true,
+        null,
+        true,
+        true,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "addWord",
+          "search",
+          "search",
+          "search",
+          "search",
+          "addWord",
+          "addWord",
+          "search"
+        ],
+        [
+          [],
+          [
+            "b"
+          ],
+          [
+            "."
+          ],
+          [
+            "a.b"
+          ],
+          [
+            "."
+          ],
+          [
+            "a.b"
+          ],
+          [
+            "abb"
+          ],
+          [
+            "a"
+          ],
+          [
+            "."
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        true,
+        false,
+        true,
+        false,
+        null,
+        null,
+        true
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "addWord",
+          "addWord",
+          "search",
+          "addWord",
+          "search",
+          "addWord",
+          "search",
+          "search"
+        ],
+        [
+          [],
+          [
+            "a"
+          ],
+          [
+            "bb"
+          ],
+          [
+            "."
+          ],
+          [
+            "bb"
+          ],
+          [
+            "."
+          ],
+          [
+            "bb"
+          ],
+          [
+            "a"
+          ],
+          [
+            "."
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        true,
+        null,
+        true,
+        null,
+        true,
+        true
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "addWord",
+          "search",
+          "search",
+          "addWord",
+          "search",
+          "search",
+          "search",
+          "addWord",
+          "addWord",
+          "addWord",
+          "search",
+          "search"
+        ],
+        [
+          [],
+          [
+            "b"
+          ],
+          [
+            "bbb"
+          ],
+          [
+            "b"
+          ],
+          [
+            "b"
+          ],
+          [
+            "."
+          ],
+          [
+            "aaa"
+          ],
+          [
+            "."
+          ],
+          [
+            "b"
+          ],
+          [
+            "b"
+          ],
+          [
+            "bbb"
+          ],
+          [
+            "."
+          ],
+          [
+            "bbb"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        false,
+        true,
+        null,
+        true,
+        false,
+        true,
+        null,
+        null,
+        null,
+        true,
+        true
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "search",
+          "addWord",
+          "addWord",
+          "addWord",
+          "search",
+          "search",
+          "addWord",
+          "addWord",
+          "addWord",
+          "addWord",
+          "search",
+          "search"
+        ],
+        [
+          [],
+          [
+            "b"
+          ],
+          [
+            "aab"
+          ],
+          [
+            "aab"
+          ],
+          [
+            "bba"
+          ],
+          [
+            "bab."
+          ],
+          [
+            "bba"
+          ],
+          [
+            "bba"
+          ],
+          [
+            "aa"
+          ],
+          [
+            "b"
+          ],
+          [
+            "baba"
+          ],
+          [
+            "baba"
+          ],
+          [
+            ".b."
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        false,
+        null,
+        null,
+        null,
+        false,
+        true,
+        null,
+        null,
+        null,
+        null,
+        true,
+        true
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "search",
+          "addWord",
+          "search",
+          "search",
+          "search",
+          "search"
+        ],
+        [
+          [],
+          [
+            "."
+          ],
+          [
+            "a"
+          ],
+          [
+            "a"
+          ],
+          [
+            "a..b"
+          ],
+          [
+            "a"
+          ],
+          [
+            "."
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        false,
+        null,
+        true,
+        false,
+        true,
+        true
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "search",
+          "search",
+          "addWord",
+          "addWord",
+          "addWord",
+          "addWord",
+          "search",
+          "search",
+          "search"
+        ],
+        [
+          [],
+          [
+            "."
+          ],
+          [
+            "aba."
+          ],
+          [
+            "b"
+          ],
+          [
+            "a"
+          ],
+          [
+            "babb"
+          ],
+          [
+            "babb"
+          ],
+          [
+            "b"
+          ],
+          [
+            ".ba."
+          ],
+          [
+            "a"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        false,
+        false,
+        null,
+        null,
+        null,
+        null,
+        true,
+        false,
+        true
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "addWord",
+          "addWord",
+          "addWord",
+          "addWord",
+          "addWord",
+          "addWord",
+          "search",
+          "addWord",
+          "search",
+          "addWord",
+          "addWord",
+          "addWord"
+        ],
+        [
+          [],
+          [
+            "b"
+          ],
+          [
+            "b"
+          ],
+          [
+            "b"
+          ],
+          [
+            "b"
+          ],
+          [
+            "b"
+          ],
+          [
+            "b"
+          ],
+          [
+            "."
+          ],
+          [
+            "b"
+          ],
+          [
+            "."
+          ],
+          [
+            "b"
+          ],
+          [
+            "b"
+          ],
+          [
+            "b"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        true,
+        null,
+        true,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "search",
+          "addWord",
+          "search",
+          "search"
+        ],
+        [
+          [],
+          [
+            ".a.b"
+          ],
+          [
+            "b"
+          ],
+          [
+            "."
+          ],
+          [
+            "."
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        false,
+        null,
+        true,
+        true
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "search",
+          "search",
+          "search",
+          "addWord",
+          "search",
+          "search"
+        ],
+        [
+          [],
+          [
+            "."
+          ],
+          [
+            "bbaa"
+          ],
+          [
+            "."
+          ],
+          [
+            "b"
+          ],
+          [
+            "bbaa"
+          ],
+          [
+            "bb.."
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        false,
+        false,
+        false,
+        null,
+        false,
+        false
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "search",
+          "search",
+          "addWord",
+          "addWord",
+          "search",
+          "search",
+          "search",
+          "addWord",
+          "addWord",
+          "addWord",
+          "search",
+          "search",
+          "search",
+          "addWord"
+        ],
+        [
+          [],
+          [
+            "."
+          ],
+          [
+            "."
+          ],
+          [
+            "ba"
+          ],
+          [
+            "a"
+          ],
+          [
+            ".."
+          ],
+          [
+            ".."
+          ],
+          [
+            ".a"
+          ],
+          [
+            "a"
+          ],
+          [
+            "ba"
+          ],
+          [
+            "ba"
+          ],
+          [
+            ".a"
+          ],
+          [
+            ".."
+          ],
+          [
+            "ba"
+          ],
+          [
+            "a"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        false,
+        false,
+        null,
+        null,
+        true,
+        true,
+        true,
+        null,
+        null,
+        null,
+        true,
+        true,
+        true,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "addWord",
+          "addWord",
+          "search",
+          "search",
+          "search",
+          "addWord",
+          "addWord",
+          "search",
+          "search",
+          "search",
+          "search",
+          "search",
+          "addWord",
+          "search"
+        ],
+        [
+          [],
+          [
+            "bbbb"
+          ],
+          [
+            "bbbb"
+          ],
+          [
+            "bbb."
+          ],
+          [
+            "b.bb"
+          ],
+          [
+            "bbbb"
+          ],
+          [
+            "bbbb"
+          ],
+          [
+            "bbbb"
+          ],
+          [
+            "bbbb"
+          ],
+          [
+            "bb.b"
+          ],
+          [
+            "bbb."
+          ],
+          [
+            ".b.b"
+          ],
+          [
+            "bbbb"
+          ],
+          [
+            "bbbb"
+          ],
+          [
+            "bbbb"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        true,
+        true,
+        true,
+        null,
+        null,
+        true,
+        true,
+        true,
+        true,
+        true,
+        null,
+        true
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "addWord",
+          "addWord",
+          "search",
+          "addWord",
+          "addWord",
+          "search",
+          "search",
+          "addWord",
+          "addWord",
+          "search",
+          "addWord",
+          "search"
+        ],
+        [
+          [],
+          [
+            "ba"
+          ],
+          [
+            "ba"
+          ],
+          [
+            "aab."
+          ],
+          [
+            "aa"
+          ],
+          [
+            "aa"
+          ],
           [
             "bba."
           ],
@@ -283,85 +1349,75 @@
             ".."
           ],
           [
-            "ab"
-          ],
-          [
-            "b.."
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        false,
-        false,
-        false,
-        false
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "search",
-          "search",
-          "search",
-          "search"
-        ],
-        [
-          [],
-          [
-            "b."
+            "bbab"
           ],
           [
             "ba"
           ],
           [
-            "..b"
+            "b.ab"
           ],
           [
-            "a.a"
+            "aabb"
+          ],
+          [
+            "b."
           ]
         ]
       ],
       "expected": [
         null,
+        null,
+        null,
         false,
+        null,
+        null,
         false,
-        false,
-        false
+        true,
+        null,
+        null,
+        true,
+        null,
+        true
       ]
     },
     {
       "args": [
         [
           "WordDictionary",
+          "search",
+          "addWord",
+          "addWord",
+          "addWord",
+          "search",
+          "addWord",
+          "search",
           "addWord",
           "search",
           "search",
           "search",
-          "addWord",
-          "addWord",
           "search",
-          "addWord",
-          "search",
-          "addWord",
-          "addWord",
-          "search",
-          "search",
-          "search",
-          "addWord",
-          "search"
+          "addWord"
         ],
         [
           [],
           [
-            "abbb"
+            "a.b"
           ],
           [
-            "b."
+            "aab"
           ],
           [
-            "a.."
+            "aab"
+          ],
+          [
+            "aab"
+          ],
+          [
+            "aab"
+          ],
+          [
+            "aab"
           ],
           [
             "aa."
@@ -370,58 +1426,95 @@
             "aab"
           ],
           [
+            "aa."
+          ],
+          [
+            "aa."
+          ],
+          [
+            ".a."
+          ],
+          [
+            "a.."
+          ],
+          [
             "aab"
-          ],
-          [
-            ".bb."
-          ],
-          [
-            "a"
-          ],
-          [
-            "."
-          ],
-          [
-            "abbb"
-          ],
-          [
-            "a"
-          ],
-          [
-            "abb."
-          ],
-          [
-            "."
-          ],
-          [
-            "."
-          ],
-          [
-            "abbb"
-          ],
-          [
-            ".b"
           ]
         ]
       ],
       "expected": [
         null,
-        null,
-        false,
-        false,
         false,
         null,
         null,
-        true,
         null,
         true,
         null,
-        null,
-        true,
-        true,
         true,
         null,
-        false
+        true,
+        true,
+        true,
+        true,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "search",
+          "search",
+          "addWord",
+          "search",
+          "addWord",
+          "search",
+          "addWord",
+          "addWord",
+          "search"
+        ],
+        [
+          [],
+          [
+            ".a.b"
+          ],
+          [
+            "baab"
+          ],
+          [
+            "baab"
+          ],
+          [
+            "..ab"
+          ],
+          [
+            "baab"
+          ],
+          [
+            "baab"
+          ],
+          [
+            "baab"
+          ],
+          [
+            "baab"
+          ],
+          [
+            "baab"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        false,
+        false,
+        null,
+        true,
+        null,
+        true,
+        null,
+        null,
+        true
       ]
     },
     {
@@ -429,65 +1522,70 @@
         [
           "WordDictionary",
           "addWord",
-          "search",
           "addWord",
           "search",
           "addWord",
+          "addWord",
+          "search",
           "search",
           "search",
           "addWord",
-          "search",
+          "addWord",
           "addWord",
           "search"
         ],
         [
           [],
           [
-            "b"
+            "aab"
           ],
           [
-            ".."
+            "aab"
           ],
           [
-            "b"
+            "aab"
           ],
           [
-            ".b"
+            "aab"
           ],
           [
-            "bbb"
+            "aab"
           ],
           [
-            "..."
+            "ba"
           ],
           [
-            "b"
+            ".a"
           ],
           [
-            "ab"
+            "ba"
           ],
           [
-            "..b"
+            "aab"
           ],
           [
-            "ab"
+            "aab"
           ],
           [
-            "b"
+            "aab"
+          ],
+          [
+            "aab"
           ]
         ]
       ],
       "expected": [
         null,
         null,
-        false,
+        null,
+        true,
+        null,
         null,
         false,
+        false,
+        false,
         null,
-        true,
-        true,
         null,
-        true,
         null,
         true
       ]
@@ -500,48 +1598,111 @@
           "addWord",
           "addWord",
           "addWord",
-          "addWord",
+          "search",
+          "search",
           "search",
           "addWord",
           "search",
-          "addWord",
-          "addWord",
-          "search"
+          "addWord"
         ],
         [
           [],
           [
-            "abab"
+            "ba"
+          ],
+          [
+            "ba"
+          ],
+          [
+            "bbba"
+          ],
+          [
+            "ba"
+          ],
+          [
+            ".a"
+          ],
+          [
+            "abb"
           ],
           [
             "aa"
           ],
           [
-            "abab"
+            "abb"
           ],
           [
-            "abab"
+            "aa"
           ],
           [
-            "ab"
+            "bbba"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        false,
+        null,
+        null,
+        null,
+        true,
+        false,
+        false,
+        null,
+        false,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "search",
+          "addWord",
+          "addWord",
+          "addWord",
+          "addWord",
+          "addWord",
+          "search",
+          "addWord",
+          "search",
+          "search",
+          "addWord"
+        ],
+        [
+          [],
+          [
+            "baa"
           ],
           [
-            "a..."
+            "baa"
           ],
           [
-            "abab"
+            "baa"
           ],
           [
-            "...."
+            "baa"
           ],
           [
-            "a"
+            "baa"
           ],
           [
-            "abaa"
+            "baa"
           ],
           [
-            "..aa"
+            "ba."
+          ],
+          [
+            "baa"
+          ],
+          [
+            "ba."
+          ],
+          [
+            ".aa"
+          ],
+          [
+            "baa"
           ]
         ]
       ],
@@ -552,12 +1713,12 @@
         null,
         null,
         null,
-        true,
         null,
         true,
         null,
-        null,
-        true
+        true,
+        true,
+        null
       ]
     },
     {
@@ -565,6 +1726,12 @@
         [
           "WordDictionary",
           "search",
+          "search",
+          "addWord",
+          "search",
+          "search",
+          "search",
+          "addWord",
           "addWord",
           "search",
           "search",
@@ -574,32 +1741,182 @@
         [
           [],
           [
-            "b"
-          ],
-          [
-            "bb"
-          ],
-          [
-            "bb"
+            "bab"
           ],
           [
             "."
           ],
           [
+            "bab"
+          ],
+          [
             "a"
           ],
           [
-            "b"
+            "a"
+          ],
+          [
+            "a"
+          ],
+          [
+            "bab"
+          ],
+          [
+            "a"
+          ],
+          [
+            "."
+          ],
+          [
+            "..b"
+          ],
+          [
+            "a"
+          ],
+          [
+            "bab"
           ]
         ]
       ],
       "expected": [
         null,
         false,
-        null,
-        true,
         false,
         null,
+        false,
+        false,
+        false,
+        null,
+        null,
+        true,
+        true,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "addWord",
+          "search",
+          "addWord",
+          "search"
+        ],
+        [
+          [],
+          [
+            "bab"
+          ],
+          [
+            "a"
+          ],
+          [
+            "bab"
+          ],
+          [
+            "."
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        false,
+        null,
+        false
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "search",
+          "search",
+          "addWord",
+          "search",
+          "addWord",
+          "search",
+          "search",
+          "search",
+          "search",
+          "search",
+          "search",
+          "search",
+          "search",
+          "search",
+          "search",
+          "addWord"
+        ],
+        [
+          [],
+          [
+            ".a."
+          ],
+          [
+            "..b"
+          ],
+          [
+            "bab"
+          ],
+          [
+            "bab"
+          ],
+          [
+            "bab"
+          ],
+          [
+            "ba."
+          ],
+          [
+            "b.."
+          ],
+          [
+            "b.."
+          ],
+          [
+            "ba."
+          ],
+          [
+            "bab"
+          ],
+          [
+            "bab"
+          ],
+          [
+            "bab"
+          ],
+          [
+            "bab"
+          ],
+          [
+            "..b"
+          ],
+          [
+            "b.b"
+          ],
+          [
+            "bab"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        false,
+        false,
+        null,
+        true,
+        null,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
         null
       ]
     },
@@ -612,51 +1929,27 @@
           "addWord",
           "search",
           "search",
-          "search",
-          "search",
-          "addWord",
-          "search",
-          "search",
-          "search",
           "search"
         ],
         [
           [],
           [
-            "a"
+            "b"
           ],
           [
-            "."
+            "b"
           ],
           [
-            "bbb"
+            "bab"
           ],
           [
-            "."
+            "..b"
           ],
           [
-            ".bb"
+            "bab"
           ],
           [
-            "."
-          ],
-          [
-            "a"
-          ],
-          [
-            "bbb"
-          ],
-          [
-            ".b."
-          ],
-          [
-            ".bb"
-          ],
-          [
-            "a"
-          ],
-          [
-            ".b."
+            "b.."
           ]
         ]
       ],
@@ -667,11 +1960,383 @@
         null,
         true,
         true,
+        true
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "addWord",
+          "addWord",
+          "search",
+          "addWord",
+          "addWord",
+          "search"
+        ],
+        [
+          [],
+          [
+            "aaab"
+          ],
+          [
+            "b"
+          ],
+          [
+            "b"
+          ],
+          [
+            "b"
+          ],
+          [
+            "b"
+          ],
+          [
+            ".."
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
         true,
+        null,
+        null,
+        false
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "search",
+          "addWord",
+          "search",
+          "search",
+          "search"
+        ],
+        [
+          [],
+          [
+            ".b"
+          ],
+          [
+            "ba"
+          ],
+          [
+            "bab"
+          ],
+          [
+            ".a."
+          ],
+          [
+            ".."
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        false,
+        null,
+        false,
+        false,
+        true
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "addWord",
+          "addWord",
+          "search",
+          "search",
+          "search",
+          "search",
+          "search",
+          "search"
+        ],
+        [
+          [],
+          [
+            "bbb"
+          ],
+          [
+            "aab"
+          ],
+          [
+            "a.."
+          ],
+          [
+            "aaab"
+          ],
+          [
+            ".aab"
+          ],
+          [
+            "bb."
+          ],
+          [
+            "b.."
+          ],
+          [
+            ".a.b"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "search",
+          "search",
+          "search",
+          "addWord",
+          "addWord",
+          "addWord",
+          "addWord",
+          "search",
+          "addWord",
+          "search",
+          "addWord",
+          "addWord",
+          "addWord",
+          "search"
+        ],
+        [
+          [],
+          [
+            "."
+          ],
+          [
+            "b"
+          ],
+          [
+            "a.ab"
+          ],
+          [
+            "b"
+          ],
+          [
+            "b"
+          ],
+          [
+            "ab"
+          ],
+          [
+            "aaab"
+          ],
+          [
+            "a.ab"
+          ],
+          [
+            "aaab"
+          ],
+          [
+            "aaab"
+          ],
+          [
+            "b"
+          ],
+          [
+            "ab"
+          ],
+          [
+            "ab"
+          ],
+          [
+            "b"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        false,
+        false,
+        false,
+        null,
+        null,
+        null,
+        null,
         true,
         null,
         true,
+        null,
+        null,
+        null,
+        true
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "search",
+          "addWord",
+          "addWord",
+          "addWord",
+          "search",
+          "search",
+          "addWord",
+          "addWord",
+          "search",
+          "addWord",
+          "addWord",
+          "search",
+          "search"
+        ],
+        [
+          [],
+          [
+            "a."
+          ],
+          [
+            "b"
+          ],
+          [
+            "bbbb"
+          ],
+          [
+            "ab"
+          ],
+          [
+            ".b."
+          ],
+          [
+            ".."
+          ],
+          [
+            "ab"
+          ],
+          [
+            "ab"
+          ],
+          [
+            ".."
+          ],
+          [
+            "ab"
+          ],
+          [
+            "b"
+          ],
+          [
+            "."
+          ],
+          [
+            ".."
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        false,
+        null,
+        null,
+        null,
+        false,
         true,
+        null,
+        null,
+        true,
+        null,
+        null,
+        true,
+        true
+      ]
+    },
+    {
+      "args": [
+        [
+          "WordDictionary",
+          "search",
+          "search",
+          "search",
+          "search",
+          "addWord",
+          "search",
+          "search",
+          "addWord",
+          "addWord",
+          "addWord",
+          "search",
+          "addWord",
+          "search",
+          "search"
+        ],
+        [
+          [],
+          [
+            ".."
+          ],
+          [
+            "ba"
+          ],
+          [
+            "ba"
+          ],
+          [
+            "ba"
+          ],
+          [
+            "ba"
+          ],
+          [
+            ".."
+          ],
+          [
+            ".."
+          ],
+          [
+            "bb"
+          ],
+          [
+            "ba"
+          ],
+          [
+            "bb"
+          ],
+          [
+            ".."
+          ],
+          [
+            "bb"
+          ],
+          [
+            "b."
+          ],
+          [
+            ".b"
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        false,
+        false,
+        false,
+        false,
+        null,
+        true,
+        true,
+        null,
+        null,
+        null,
+        true,
+        null,
         true,
         true
       ]
@@ -685,557 +2350,34 @@
           "search",
           "addWord",
           "search",
-          "addWord",
-          "addWord",
           "search",
           "search",
           "addWord",
-          "addWord",
           "search",
-          "search",
-          "search",
-          "search",
-          "search"
+          "addWord"
         ],
         [
           [],
           [
-            "b"
-          ],
-          [
-            "."
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ],
-          [
-            "."
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        false,
-        false,
-        false,
-        null,
-        true,
-        null,
-        null,
-        true,
-        true,
-        null,
-        null,
-        true,
-        true,
-        true,
-        true,
-        true
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "search",
-          "search",
-          "search",
-          "search",
-          "search",
-          "search"
-        ],
-        [
-          [],
-          [
-            "..b."
-          ],
-          [
-            ".ab."
-          ],
-          [
-            "aab."
-          ],
-          [
-            "aa.b"
+            "baa."
           ],
           [
             ".a.b"
           ],
           [
-            "..b."
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "addWord",
-          "search",
-          "search",
-          "search",
-          "search",
-          "addWord",
-          "addWord",
-          "addWord"
-        ],
-        [
-          [],
-          [
-            "bbaa"
-          ],
-          [
-            "bbaa"
-          ],
-          [
-            "b"
-          ],
-          [
-            "bbaa"
-          ],
-          [
-            ".bb"
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        true,
-        false,
-        true,
-        false,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "addWord",
-          "search",
-          "search",
-          "addWord",
-          "search",
-          "search",
-          "search",
-          "addWord",
-          "addWord",
-          "addWord",
-          "search",
-          "addWord"
-        ],
-        [
-          [],
-          [
-            "aa"
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ],
-          [
-            "."
-          ],
-          [
-            "."
-          ],
-          [
-            "a."
-          ],
-          [
-            "b"
-          ],
-          [
-            "aa"
-          ],
-          [
-            "b"
-          ],
-          [
-            ".a"
-          ],
-          [
-            "b"
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        false,
-        false,
-        null,
-        true,
-        true,
-        true,
-        null,
-        null,
-        null,
-        true,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "addWord",
-          "addWord",
-          "search",
-          "search",
-          "search",
-          "addWord",
-          "addWord",
-          "addWord",
-          "search",
-          "addWord",
-          "search"
-        ],
-        [
-          [],
-          [
-            "a"
-          ],
-          [
-            "bb"
-          ],
-          [
-            ".b"
-          ],
-          [
-            "."
-          ],
-          [
-            "."
-          ],
-          [
-            "abbb"
-          ],
-          [
-            "bb"
-          ],
-          [
-            "a"
-          ],
-          [
-            "a"
-          ],
-          [
-            "abbb"
-          ],
-          [
-            "a"
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        true,
-        true,
-        true,
-        null,
-        null,
-        null,
-        true,
-        null,
-        true
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "search",
-          "search",
-          "search",
-          "addWord",
-          "search",
-          "addWord"
-        ],
-        [
-          [],
-          [
-            "babb"
-          ],
-          [
-            "a"
-          ],
-          [
-            "."
-          ],
-          [
-            "a"
-          ],
-          [
-            "."
-          ],
-          [
-            "babb"
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        false,
-        false,
-        false,
-        null,
-        true,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "addWord",
-          "search",
-          "search",
-          "search",
-          "search",
-          "search"
-        ],
-        [
-          [],
-          [
-            "ba"
-          ],
-          [
-            ".a"
-          ],
-          [
-            "."
-          ],
-          [
-            "ba"
-          ],
-          [
-            "bbb"
-          ],
-          [
-            ".."
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        true,
-        false,
-        true,
-        false,
-        true
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "addWord",
-          "addWord",
-          "search",
-          "search",
-          "search",
-          "search"
-        ],
-        [
-          [],
-          [
-            "ab"
+            "ba.."
           ],
           [
             "ab"
-          ],
-          [
-            "aa"
-          ],
-          [
-            ".."
           ],
           [
             ".."
           ],
           [
             "a."
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        false,
-        true,
-        true,
-        true
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "addWord",
-          "search",
-          "addWord",
-          "search",
-          "search",
-          "addWord",
-          "search",
-          "search",
-          "search",
-          "search"
-        ],
-        [
-          [],
-          [
-            "b"
           ],
           [
-            "b"
-          ],
-          [
-            "ba"
-          ],
-          [
-            "b."
-          ],
-          [
-            "b."
-          ],
-          [
-            "b"
-          ],
-          [
-            "b."
-          ],
-          [
-            "ba"
-          ],
-          [
-            "."
-          ],
-          [
-            ".."
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        true,
-        null,
-        true,
-        true,
-        null,
-        true,
-        true,
-        true,
-        true
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "search",
-          "addWord",
-          "addWord",
-          "addWord",
-          "addWord",
-          "search",
-          "search",
-          "addWord",
-          "search",
-          "addWord",
-          "search",
-          "search",
-          "addWord",
-          "addWord"
-        ],
-        [
-          [],
-          [
-            "b.b"
-          ],
-          [
-            "abb"
-          ],
-          [
-            "ab"
-          ],
-          [
-            "baa"
-          ],
-          [
-            "ab"
-          ],
-          [
-            "bb."
+            ".aa."
           ],
           [
             "ab"
@@ -1244,40 +2386,21 @@
             "ab"
           ],
           [
-            "b.."
-          ],
-          [
-            "bab"
-          ],
-          [
-            "b.."
-          ],
-          [
-            "a."
-          ],
-          [
             "ab"
-          ],
-          [
-            "bab"
           ]
         ]
       ],
       "expected": [
         null,
         false,
-        null,
-        null,
-        null,
-        null,
         false,
-        true,
+        false,
         null,
         true,
+        true,
+        false,
         null,
         true,
-        true,
-        null,
         null
       ]
     },
@@ -1287,98 +2410,42 @@
           "WordDictionary",
           "search",
           "search",
-          "addWord",
           "search",
           "addWord",
           "search",
           "search",
-          "search",
-          "search",
-          "search",
+          "addWord",
+          "addWord",
           "search"
         ],
         [
           [],
           [
-            ".b"
+            "."
           ],
           [
-            "bb"
-          ],
-          [
-            "bb"
-          ],
-          [
-            "bb"
-          ],
-          [
-            "bb"
-          ],
-          [
-            "b."
-          ],
-          [
-            "bb"
-          ],
-          [
-            "bb"
-          ],
-          [
-            "b."
-          ],
-          [
-            ".b"
-          ],
-          [
-            "b."
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        false,
-        false,
-        null,
-        true,
-        null,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "search",
-          "search",
-          "search",
-          "addWord",
-          "search",
-          "search"
-        ],
-        [
-          [],
-          [
-            ".ab"
-          ],
-          [
-            ".ab"
-          ],
-          [
-            "..."
-          ],
-          [
-            "aab"
+            "b"
           ],
           [
             "a.."
           ],
           [
-            "..b"
+            "ba"
+          ],
+          [
+            "b."
+          ],
+          [
+            "b"
+          ],
+          [
+            "b"
+          ],
+          [
+            "b"
+          ],
+          [
+            "b."
           ]
         ]
       ],
@@ -1389,6 +2456,9 @@
         false,
         null,
         true,
+        false,
+        null,
+        null,
         true
       ]
     },
@@ -1398,247 +2468,58 @@
           "WordDictionary",
           "search",
           "search",
+          "addWord",
           "search",
+          "addWord",
+          "addWord",
+          "search",
+          "addWord",
+          "addWord",
           "search"
         ],
         [
           [],
-          [
-            "a."
-          ],
-          [
-            ".a"
-          ],
-          [
-            "aa"
-          ],
-          [
-            ".a"
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        false,
-        false,
-        false,
-        false
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "search",
-          "addWord",
-          "addWord",
-          "addWord",
-          "search",
-          "search",
-          "search",
-          "search",
-          "addWord",
-          "search",
-          "addWord",
-          "search",
-          "search"
-        ],
-        [
-          [],
-          [
-            "aaab"
-          ],
-          [
-            "ba"
-          ],
-          [
-            "ba"
-          ],
-          [
-            "aab"
-          ],
-          [
-            "..."
-          ],
-          [
-            "a.a."
-          ],
-          [
-            "..b"
-          ],
-          [
-            "ba"
-          ],
-          [
-            "ba"
-          ],
-          [
-            ".a"
-          ],
-          [
-            "aaab"
-          ],
           [
             ".."
           ],
           [
             ".a"
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        false,
-        null,
-        null,
-        null,
-        true,
-        false,
-        true,
-        true,
-        null,
-        true,
-        null,
-        true,
-        true
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "addWord",
-          "addWord",
-          "search",
-          "search",
-          "search",
-          "search",
-          "addWord",
-          "search",
-          "addWord",
-          "search",
-          "addWord",
-          "search",
-          "addWord",
-          "addWord",
-          "search"
-        ],
-        [
-          [],
-          [
-            "b"
           ],
           [
-            "b"
-          ],
-          [
-            "..a"
-          ],
-          [
-            "b"
-          ],
-          [
-            "aa"
-          ],
-          [
-            "aa"
-          ],
-          [
-            "baa"
-          ],
-          [
-            ".a"
-          ],
-          [
-            "aa"
-          ],
-          [
-            ".."
-          ],
-          [
-            "baa"
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ],
-          [
-            "aa"
+            "bbb"
           ],
           [
             "b.a"
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        false,
-        true,
-        false,
-        false,
-        null,
-        false,
-        null,
-        true,
-        null,
-        true,
-        null,
-        null,
-        true
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "search",
-          "addWord",
-          "search",
-          "search",
-          "search",
-          "addWord",
-          "addWord",
-          "search"
-        ],
-        [
-          [],
-          [
-            ".ab"
           ],
           [
-            "bab"
+            "b"
+          ],
+          [
+            "b"
+          ],
+          [
+            ".."
+          ],
+          [
+            "baa"
+          ],
+          [
+            "bbb"
           ],
           [
             "."
-          ],
-          [
-            "a"
-          ],
-          [
-            ".a."
-          ],
-          [
-            "bab"
-          ],
-          [
-            "bab"
-          ],
-          [
-            "..b"
           ]
         ]
       ],
       "expected": [
         null,
         false,
+        false,
         null,
         false,
+        null,
+        null,
         false,
-        true,
         null,
         null,
         true
@@ -1648,9 +2529,6 @@
       "args": [
         [
           "WordDictionary",
-          "addWord",
-          "search",
-          "addWord",
           "search",
           "search",
           "search",
@@ -1658,7 +2536,6 @@
           "search",
           "search",
           "search",
-          "addWord",
           "search",
           "search",
           "search"
@@ -1666,410 +2543,46 @@
         [
           [],
           [
-            "bba"
-          ],
-          [
-            ".b"
-          ],
-          [
-            "abaa"
-          ],
-          [
-            ".b"
-          ],
-          [
-            "..a"
-          ],
-          [
-            "a."
-          ],
-          [
-            ".baa"
-          ],
-          [
-            "ab.a"
-          ],
-          [
-            "a..a"
+            "."
           ],
           [
             ".b."
           ],
           [
-            "aa"
-          ],
-          [
-            ".a"
-          ],
-          [
-            ".ba"
-          ],
-          [
-            ".ba."
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        false,
-        null,
-        false,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        null,
-        true,
-        true,
-        true
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "search",
-          "search",
-          "search",
-          "search",
-          "search",
-          "search",
-          "search",
-          "addWord",
-          "search"
-        ],
-        [
-          [],
-          [
-            "..b"
-          ],
-          [
-            "b..."
-          ],
-          [
-            "a.a"
-          ],
-          [
-            ".a."
-          ],
-          [
-            "a."
-          ],
-          [
-            "...b"
-          ],
-          [
-            "ab"
-          ],
-          [
-            "babb"
-          ],
-          [
-            "aab"
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        null,
-        false
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "search",
-          "addWord",
-          "addWord",
-          "addWord",
-          "addWord",
-          "search",
-          "search"
-        ],
-        [
-          [],
-          [
-            "a"
-          ],
-          [
-            "baba"
-          ],
-          [
-            "bb"
-          ],
-          [
-            "baab"
-          ],
-          [
-            "baba"
-          ],
-          [
-            "a"
-          ],
-          [
-            "..b."
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        false,
-        null,
-        null,
-        null,
-        null,
-        false,
-        true
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "search",
-          "search",
-          "addWord",
-          "addWord",
-          "search",
-          "addWord",
-          "search",
-          "search",
-          "search",
-          "search",
-          "search",
-          "search",
-          "search",
-          "search",
-          "search"
-        ],
-        [
-          [],
-          [
-            "bb."
-          ],
-          [
-            ".a"
-          ],
-          [
-            "bbaa"
-          ],
-          [
-            "bbaa"
-          ],
-          [
-            "bb.."
-          ],
-          [
-            "bbb"
-          ],
-          [
-            "..."
-          ],
-          [
-            ".ab"
-          ],
-          [
-            "bb.."
-          ],
-          [
-            "a.."
-          ],
-          [
-            "b.a"
-          ],
-          [
-            "b.."
-          ],
-          [
-            ".bb"
-          ],
-          [
-            "aab"
-          ],
-          [
-            "..aa"
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        false,
-        false,
-        null,
-        null,
-        true,
-        null,
-        true,
-        false,
-        true,
-        false,
-        false,
-        true,
-        true,
-        false,
-        true
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "search",
-          "addWord",
-          "search",
-          "search",
-          "search"
-        ],
-        [
-          [],
-          [
-            "bb.."
-          ],
-          [
-            "bbab"
-          ],
-          [
-            "bb.."
-          ],
-          [
-            "...b"
-          ],
-          [
-            "b.ab"
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        false,
-        null,
-        true,
-        true,
-        true
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "search",
-          "search",
-          "addWord",
-          "addWord",
-          "addWord",
-          "search",
-          "addWord",
-          "search",
-          "search"
-        ],
-        [
-          [],
-          [
-            ".bba"
-          ],
-          [
-            "a"
-          ],
-          [
-            "a"
-          ],
-          [
-            "bbba"
-          ],
-          [
-            "bbba"
-          ],
-          [
             "."
-          ],
-          [
-            "bbba"
-          ],
-          [
-            ".b.."
-          ],
-          [
-            "."
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        false,
-        false,
-        null,
-        null,
-        null,
-        true,
-        null,
-        true,
-        true
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "search",
-          "addWord",
-          "search",
-          "search",
-          "addWord",
-          "addWord",
-          "search",
-          "search",
-          "search"
-        ],
-        [
-          [],
-          [
-            "b.a."
-          ],
-          [
-            "bba"
-          ],
-          [
-            "b.a"
           ],
           [
             "b"
           ],
           [
-            "bba"
+            "aba"
           ],
           [
-            "bba"
+            "aba"
           ],
           [
             "."
           ],
           [
-            "ba.."
+            "."
           ],
           [
-            "b.a."
+            "."
+          ],
+          [
+            "b"
           ]
         ]
       ],
       "expected": [
         null,
         false,
-        null,
-        true,
         false,
-        null,
-        null,
+        false,
+        false,
+        false,
+        false,
+        false,
         false,
         false,
         false
@@ -2079,250 +2592,57 @@
       "args": [
         [
           "WordDictionary",
+          "search",
+          "search",
+          "addWord",
+          "addWord",
           "addWord",
           "search",
           "addWord",
-          "search",
-          "search"
-        ],
-        [
-          [],
-          [
-            "aa"
-          ],
-          [
-            "b.a"
-          ],
-          [
-            "aa"
-          ],
-          [
-            "."
-          ],
-          [
-            "b.."
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        false,
-        null,
-        false,
-        false
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "addWord",
-          "search",
-          "search",
-          "search"
-        ],
-        [
-          [],
-          [
-            "aaaa"
-          ],
-          [
-            "..."
-          ],
-          [
-            "."
-          ],
-          [
-            "bab"
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        false,
-        false,
-        false
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "addWord",
-          "search",
           "addWord",
           "search",
           "search",
           "addWord",
           "search",
           "search",
-          "addWord",
+          "search",
           "addWord",
           "addWord"
         ],
         [
           [],
           [
-            "b"
+            "a"
           ],
           [
-            "b"
+            "a"
           ],
           [
-            "abb"
+            "a"
           ],
           [
-            "b"
+            "a"
           ],
           [
-            "bb"
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ],
-          [
-            ".."
-          ],
-          [
-            "b"
-          ],
-          [
-            "b"
-          ],
-          [
-            "ba"
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        true,
-        null,
-        true,
-        false,
-        null,
-        true,
-        false,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "search",
-          "addWord",
-          "search",
-          "search",
-          "addWord",
-          "search",
-          "addWord",
-          "search",
-          "search",
-          "search",
-          "search",
-          "addWord",
-          "search",
-          "search"
-        ],
-        [
-          [],
-          [
-            "..a"
-          ],
-          [
-            "aaa"
-          ],
-          [
-            "aaa"
-          ],
-          [
-            "a.a"
-          ],
-          [
-            "aaa"
-          ],
-          [
-            "..a"
-          ],
-          [
-            "aaa"
-          ],
-          [
-            "..."
-          ],
-          [
-            "..a"
-          ],
-          [
-            "a.a"
-          ],
-          [
-            ".a."
-          ],
-          [
-            "aaa"
-          ],
-          [
-            "a.."
-          ],
-          [
-            ".a."
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        false,
-        null,
-        true,
-        true,
-        null,
-        true,
-        null,
-        true,
-        true,
-        true,
-        true,
-        null,
-        true,
-        true
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "search",
-          "addWord",
-          "addWord",
-          "search",
-          "search",
-          "search",
-          "search",
-          "search"
-        ],
-        [
-          [],
-          [
-            "."
-          ],
-          [
-            "b"
-          ],
-          [
-            "aaa"
+            "a"
           ],
           [
             "."
+          ],
+          [
+            "a"
+          ],
+          [
+            "a"
+          ],
+          [
+            "a"
+          ],
+          [
+            "a"
+          ],
+          [
+            "a"
           ],
           [
             "."
@@ -2335,164 +2655,29 @@
           ],
           [
             "a"
+          ],
+          [
+            "a"
           ]
         ]
       ],
       "expected": [
         null,
         false,
-        null,
-        null,
-        true,
-        true,
-        true,
-        true,
-        false
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "search",
-          "addWord",
-          "search",
-          "addWord",
-          "search",
-          "search",
-          "search",
-          "search",
-          "addWord",
-          "search",
-          "search",
-          "search",
-          "search",
-          "addWord",
-          "search",
-          "search"
-        ],
-        [
-          [],
-          [
-            "a.."
-          ],
-          [
-            "aaa"
-          ],
-          [
-            "a.a"
-          ],
-          [
-            "aaa"
-          ],
-          [
-            "a.."
-          ],
-          [
-            "aa."
-          ],
-          [
-            "aaa"
-          ],
-          [
-            "..."
-          ],
-          [
-            "aaa"
-          ],
-          [
-            "a.."
-          ],
-          [
-            "a.a"
-          ],
-          [
-            "..a"
-          ],
-          [
-            "a.."
-          ],
-          [
-            "aaa"
-          ],
-          [
-            "..."
-          ],
-          [
-            "..."
-          ]
-        ]
-      ],
-      "expected": [
-        null,
         false,
         null,
+        null,
+        null,
+        true,
+        null,
+        null,
+        true,
         true,
         null,
         true,
         true,
         true,
-        true,
         null,
-        true,
-        true,
-        true,
-        true,
-        null,
-        true,
-        true
-      ]
-    },
-    {
-      "args": [
-        [
-          "WordDictionary",
-          "search",
-          "addWord",
-          "search",
-          "addWord",
-          "search",
-          "search",
-          "search",
-          "addWord"
-        ],
-        [
-          [],
-          [
-            ".aa."
-          ],
-          [
-            "bab"
-          ],
-          [
-            "...b"
-          ],
-          [
-            "baab"
-          ],
-          [
-            "..b"
-          ],
-          [
-            "b..b"
-          ],
-          [
-            "...b"
-          ],
-          [
-            "bab"
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        false,
-        null,
-        false,
-        null,
-        true,
-        true,
-        true,
         null
       ]
     }
