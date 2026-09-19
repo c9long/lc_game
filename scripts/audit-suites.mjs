@@ -1830,7 +1830,250 @@ class MedianFinder:
         if len(self.hi) > len(self.lo): heapq.heappush(self.lo, -heapq.heappop(self.hi))
     def findMedian(self):
         if len(self.lo) > len(self.hi): return float(-self.lo[0])
-        return (-self.lo[0] + self.hi[0]) / 2`]
+        return (-self.lo[0] + self.hi[0]) / 2`],
+
+	// ---- batch 10: Backtracking ----
+	// A false negative: a dead-ended attempt leaves letters blanked, so a later start that would
+	// succeed cannot see them. It needs a word that really is on the board, reachable by a path
+	// other than the first one tried, and random words over random boards almost never are.
+	['word-search', 'NEAR-MISS never restores a cell it marked', false, `class Solution:
+    def exist(self, board, word):
+        rows, cols = len(board), len(board[0])
+        def go(r, c, i):
+            if i == len(word): return True
+            if r < 0 or c < 0 or r >= rows or c >= cols or board[r][c] != word[i]: return False
+            board[r][c] = "#"
+            ok = any(go(r+dr, c+dc, i+1) for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)))
+            if ok: board[r][c] = word[i]
+            return ok
+        return any(go(r, c, 0) for r in range(rows) for c in range(cols))`],
+	['word-search', 'NEAR-MISS case-insensitive', false, `class Solution:
+    def exist(self, board, word):
+        rows, cols = len(board), len(board[0])
+        w = word.lower()
+        def go(r, c, i):
+            if i == len(w): return True
+            if r < 0 or c < 0 or r >= rows or c >= cols or board[r][c].lower() != w[i]: return False
+            t = board[r][c]; board[r][c] = "#"
+            ok = any(go(r+dr, c+dc, i+1) for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)))
+            board[r][c] = t
+            return ok
+        return any(go(r, c, 0) for r in range(rows) for c in range(cols))`],
+	['word-search', 'NEAR-MISS allows diagonal steps', false, `class Solution:
+    def exist(self, board, word):
+        rows, cols = len(board), len(board[0])
+        def go(r, c, i, seen):
+            if i == len(word): return True
+            if r < 0 or c < 0 or r >= rows or c >= cols or (r,c) in seen or board[r][c] != word[i]: return False
+            seen.add((r,c))
+            for dr in (-1,0,1):
+                for dc in (-1,0,1):
+                    if (dr or dc) and go(r+dr, c+dc, i+1, seen): return True
+            seen.discard((r,c)); return False
+        return any(go(r, c, 0, set()) for r in range(rows) for c in range(cols))`],
+	['word-search', 'correct', true, `class Solution:
+    def exist(self, board, word):
+        rows, cols = len(board), len(board[0])
+        def go(r, c, i):
+            if i == len(word): return True
+            if r < 0 or c < 0 or r >= rows or c >= cols or board[r][c] != word[i]: return False
+            t = board[r][c]; board[r][c] = "#"
+            ok = any(go(r+dr, c+dc, i+1) for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)))
+            board[r][c] = t
+            return ok
+        return any(go(r, c, 0) for r in range(rows) for c in range(cols))`],
+
+	// Both diagonals need their own bookkeeping; one set for both over-prunes to nothing.
+	['n-queens', 'NEAR-MISS tracks one diagonal only', false, `class Solution:
+    def solveNQueens(self, n):
+        out = []; cols = set(); diag = set(); board = [["."]*n for _ in range(n)]
+        def go(r):
+            if r == n: out.append(["".join(x) for x in board]); return
+            for c in range(n):
+                if c in cols or (r - c) in diag: continue
+                cols.add(c); diag.add(r - c); board[r][c] = "Q"
+                go(r + 1)
+                cols.discard(c); diag.discard(r - c); board[r][c] = "."
+        go(0); return out`],
+	['n-queens', 'NEAR-MISS one shared set for both diagonals', false, `class Solution:
+    def solveNQueens(self, n):
+        out = []; cols = set(); diag = set(); board = [["."]*n for _ in range(n)]
+        def go(r):
+            if r == n: out.append(["".join(x) for x in board]); return
+            for c in range(n):
+                if c in cols or (r - c) in diag or (r + c) in diag: continue
+                cols.add(c); diag.add(r - c); diag.add(r + c); board[r][c] = "Q"
+                go(r + 1)
+                cols.discard(c); diag.discard(r - c); diag.discard(r + c); board[r][c] = "."
+        go(0); return out`],
+	['n-queens', 'correct', true, `class Solution:
+    def solveNQueens(self, n):
+        out = []; cols = set(); d1 = set(); d2 = set(); board = [["."]*n for _ in range(n)]
+        def go(r):
+            if r == n: out.append(["".join(x) for x in board]); return
+            for c in range(n):
+                if c in cols or (r - c) in d1 or (r + c) in d2: continue
+                cols.add(c); d1.add(r - c); d2.add(r + c); board[r][c] = "Q"
+                go(r + 1)
+                cols.discard(c); d1.discard(r - c); d2.discard(r + c); board[r][c] = "."
+        go(0); return out`],
+
+	// The duplicate skip belongs at THIS level of the recursion, not the whole array.
+	['subsets-ii', 'NEAR-MISS skip test i > 0 instead of i > start', false, `class Solution:
+    def subsetsWithDup(self, nums):
+        nums.sort(); out = []
+        def go(start, cur):
+            out.append(cur[:])
+            for i in range(start, len(nums)):
+                if i > 0 and nums[i] == nums[i-1]: continue
+                cur.append(nums[i]); go(i + 1, cur); cur.pop()
+        go(0, []); return out`],
+	['subsets-ii', 'NEAR-MISS no duplicate skip', false, `class Solution:
+    def subsetsWithDup(self, nums):
+        nums.sort(); out = []
+        def go(start, cur):
+            out.append(cur[:])
+            for i in range(start, len(nums)):
+                cur.append(nums[i]); go(i + 1, cur); cur.pop()
+        go(0, []); return out`],
+	['subsets-ii', 'correct', true, `class Solution:
+    def subsetsWithDup(self, nums):
+        nums.sort(); out = []
+        def go(start, cur):
+            out.append(cur[:])
+            for i in range(start, len(nums)):
+                if i > start and nums[i] == nums[i-1]: continue
+                cur.append(nums[i]); go(i + 1, cur); cur.pop()
+        go(0, []); return out`],
+
+	['combination-sum-ii', 'NEAR-MISS skip test i > 0 instead of i > start', false, `class Solution:
+    def combinationSum2(self, candidates, target):
+        candidates.sort(); out = []
+        def go(start, cur, total):
+            if total == target: out.append(cur[:]); return
+            if total > target: return
+            for i in range(start, len(candidates)):
+                if i > 0 and candidates[i] == candidates[i-1]: continue
+                cur.append(candidates[i]); go(i + 1, cur, total + candidates[i]); cur.pop()
+        go(0, [], 0); return out`],
+	['combination-sum-ii', 'NEAR-MISS no duplicate skip', false, `class Solution:
+    def combinationSum2(self, candidates, target):
+        candidates.sort(); out = []
+        def go(start, cur, total):
+            if total == target: out.append(cur[:]); return
+            if total > target: return
+            for i in range(start, len(candidates)):
+                cur.append(candidates[i]); go(i + 1, cur, total + candidates[i]); cur.pop()
+        go(0, [], 0); return out`],
+	['combination-sum-ii', 'correct', true, `class Solution:
+    def combinationSum2(self, candidates, target):
+        candidates.sort(); out = []
+        def go(start, cur, total):
+            if total == target: out.append(cur[:]); return
+            if total > target: return
+            for i in range(start, len(candidates)):
+                if i > start and candidates[i] == candidates[i-1]: continue
+                cur.append(candidates[i]); go(i + 1, cur, total + candidates[i]); cur.pop()
+        go(0, [], 0); return out`],
+
+	['combination-sum', 'NEAR-MISS recurses past the candidate, forbidding reuse', false, `class Solution:
+    def combinationSum(self, candidates, target):
+        out = []
+        def go(start, cur, total):
+            if total == target: out.append(cur[:]); return
+            if total > target: return
+            for i in range(start, len(candidates)):
+                cur.append(candidates[i]); go(i + 1, cur, total + candidates[i]); cur.pop()
+        go(0, [], 0); return out`],
+	['combination-sum', 'correct', true, `class Solution:
+    def combinationSum(self, candidates, target):
+        out = []
+        def go(start, cur, total):
+            if total == target: out.append(cur[:]); return
+            if total > target: return
+            for i in range(start, len(candidates)):
+                cur.append(candidates[i]); go(i, cur, total + candidates[i]); cur.pop()
+        go(0, [], 0); return out`],
+
+	['subsets', 'NEAR-MISS appends the live list instead of a copy', false, `class Solution:
+    def subsets(self, nums):
+        out = []
+        def go(start, cur):
+            out.append(cur)
+            for i in range(start, len(nums)):
+                cur.append(nums[i]); go(i + 1, cur); cur.pop()
+        go(0, []); return out`],
+	['subsets', 'correct', true, `class Solution:
+    def subsets(self, nums):
+        out = []
+        def go(start, cur):
+            out.append(cur[:])
+            for i in range(start, len(nums)):
+                cur.append(nums[i]); go(i + 1, cur); cur.pop()
+        go(0, []); return out`],
+
+	// The inner order of a permutation is the answer, so this pair also guards the comparison rule.
+	['permutations', 'NEAR-MISS never unmarks on backtrack', false, `class Solution:
+    def permute(self, nums):
+        out = []; used = set()
+        def go(cur):
+            if len(cur) == len(nums): out.append(cur[:]); return
+            for n in nums:
+                if n in used: continue
+                used.add(n); cur.append(n); go(cur); cur.pop()
+        go([]); return out`],
+	['permutations', 'NEAR-MISS n! copies of the sorted list', false, `import math
+class Solution:
+    def permute(self, nums):
+        return [sorted(nums) for _ in range(math.factorial(len(nums)))]`],
+	['permutations', 'correct, enumerated in a different order', true, `class Solution:
+    def permute(self, nums):
+        out = []
+        def go(cur, rest):
+            if not rest: out.append(cur); return
+            for i in range(len(rest) - 1, -1, -1):
+                go(cur + [rest[i]], rest[:i] + rest[i+1:])
+        go([], nums); return out`],
+
+	// Every single character is a palindrome, so the all-singletons partition is always an answer.
+	['palindrome-partitioning', 'NEAR-MISS requires palindromes of length 2 or more', false, `class Solution:
+    def partition(self, s):
+        out = []
+        def go(start, cur):
+            if start == len(s): out.append(cur[:]); return
+            for end in range(start + 1, len(s) + 1):
+                part = s[start:end]
+                if len(part) >= 2 and part == part[::-1]:
+                    cur.append(part); go(end, cur); cur.pop()
+        go(0, []); return out`],
+	['palindrome-partitioning', 'correct', true, `class Solution:
+    def partition(self, s):
+        out = []
+        def go(start, cur):
+            if start == len(s): out.append(cur[:]); return
+            for end in range(start + 1, len(s) + 1):
+                part = s[start:end]
+                if part == part[::-1]:
+                    cur.append(part); go(end, cur); cur.pop()
+        go(0, []); return out`],
+
+	['letter-combinations-of-a-phone-number', 'NEAR-MISS no empty-input guard', false, `class Solution:
+    def letterCombinations(self, digits):
+        m = {"2":"abc","3":"def","4":"ghi","5":"jkl","6":"mno","7":"pqrs","8":"tuv","9":"wxyz"}
+        out = []
+        def go(i, cur):
+            if i == len(digits): out.append(cur); return
+            for ch in m[digits[i]]: go(i + 1, cur + ch)
+        go(0, ""); return out`],
+	['letter-combinations-of-a-phone-number', 'correct', true, `class Solution:
+    def letterCombinations(self, digits):
+        if not digits: return []
+        m = {"2":"abc","3":"def","4":"ghi","5":"jkl","6":"mno","7":"pqrs","8":"tuv","9":"wxyz"}
+        out = []
+        def go(i, cur):
+            if i == len(digits): out.append(cur); return
+            for ch in m[digits[i]]: go(i + 1, cur + ch)
+        go(0, ""); return out`]
 ];
 
 let bad = 0;

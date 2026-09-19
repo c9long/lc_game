@@ -1305,7 +1305,8 @@ def _subsets(rng):
 
 @generator("subsets-ii", count=25)
 def _subsets_ii(rng):
-    return [ints(rng, rng.randint(0, 7), -3, 3)]
+    # 1 <= nums.length, so an empty array is not a legal input.
+    return [ints(rng, rng.randint(1, 7), -3, 3)]
 
 
 @generator("permutations", count=20)
@@ -1333,15 +1334,81 @@ def _letter_combinations(rng):
     return ["".join(rng.choice("23456789") for _ in range(rng.randint(0, 3)))]
 
 
-@generator("n-queens", count=8)
+@generator("n-queens", count=12)
 def _n_queens(rng):
-    return [rng.randint(1, 7)]
+    # 1 <= n <= 9. n = 2 and n = 3 have no solutions at all, and the largest boards are where a
+    # diagonal bookkeeping mistake shows up as a count that is merely wrong rather than empty.
+    # Drawn uniformly, twelve cases left several sizes out, so every legal n is listed.
+    return [rng.choice([1, 2, 3, 4, 5, 6, 7, 8, 9, 4, 6, 8])]
+
+
+def _walk_word(rng, board, length, steps=((1, 0), (-1, 0), (0, 1), (0, -1))):
+    """Read a word off a self-avoiding walk, so it is genuinely present on the board.
+
+    With diagonal steps the word is usually NOT present, because the problem allows only
+    horizontal and vertical neighbours -- which is what catches a search that steps diagonally.
+    """
+    rows, cols = len(board), len(board[0])
+    r, c = rng.randrange(rows), rng.randrange(cols)
+    seen, out = {(r, c)}, [board[r][c]]
+    while len(out) < length:
+        moves = [(r + dr, c + dc) for dr, dc in steps
+                 if 0 <= r + dr < rows and 0 <= c + dc < cols and (r + dr, c + dc) not in seen]
+        if not moves:
+            break
+        r, c = rng.choice(moves)
+        seen.add((r, c))
+        out.append(board[r][c])
+    return "".join(out)
 
 
 @generator("word-search")
 def _word_search(rng):
+    """A board and a word chosen to separate the three ways this is usually got wrong.
+
+    A random word over a random board is almost never present -- 17 of 43 cases answered true --
+    and none of them had the shape that catches a search which never restores a cell it marked.
+    Each branch below targets one bug:
+
+      walk        the word is read off a self-avoiding orthogonal walk, so it IS on the board,
+                  and reversing it means the row-major scan tries the wrong end first, dead-ends,
+                  and only succeeds if the cells it blanked were released
+      diagonal    the word is laid out on a diagonal, so under the real adjacency rule it is
+                  usually absent and a search that steps diagonally says true
+      case flip   one letter's case is flipped, so a case-insensitive search says true
+
+    The alphabet matters as much as the shapes. Over three letters the board is dense enough that
+    almost every sequence has SOME orthogonal path, which made the diagonal words reachable the
+    proper way too and the answer true either way.
+    """
+    letters = rng.choice(["abc", "abcd", "abcde", "aAbB", "aAbBcC"])
+    roll = rng.random()
+
+    if roll < 0.3:                                   # diagonal: needs room to turn
+        r = c = rng.randint(3, 4)
+        board = grid(rng, r, c, list(letters))
+        # Longer is better here: the more letters a diagonal word has, the less likely the board
+        # happens to offer an orthogonal path for the same sequence.
+        w = _walk_word(rng, board, rng.randint(4, 6),
+                       steps=((1, 1), (1, -1), (-1, 1), (-1, -1)))
+        return [board, w] if len(w) >= 4 else None
+
     r, c = rng.randint(1, 4), rng.randint(1, 4)
-    return [grid(rng, r, c, ["a", "b", "c"]), word(rng, rng.randint(1, 5), "abc")]
+    board = grid(rng, r, c, list(letters))
+
+    if roll < 0.4 and any(ch.isupper() for ch in letters):
+        w = _walk_word(rng, board, rng.randint(2, 5))
+        if len(w) >= 2:
+            i = rng.randrange(len(w))
+            flipped = w[:i] + (w[i].lower() if w[i].isupper() else w[i].upper()) + w[i + 1:]
+            return [board, flipped]
+
+    if roll < 0.72:
+        w = _walk_word(rng, board, rng.randint(1, 6))
+        if w:
+            return [board, w[::-1] if rng.random() < 0.5 else w]
+
+    return [board, word(rng, rng.randint(1, 5), letters)]
 
 
 @generator("word-search-ii")

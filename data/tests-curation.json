@@ -36,7 +36,7 @@
     "reversed scored 42/42. Both are now unordered: the outer list is order-insensitive, the inner is not.",
     "powx-n returns a float, and correct algorithms disagree in the last bits; LeetCode accepts a",
     "tolerance rather than exact equality, so 'approx' does too.",
-    "longest-palindromic-substring has ties \u2014 several palindromes of the maximum length \u2014 and any",
+    "longest-palindromic-substring has ties — several palindromes of the maximum length — and any",
     "of them is correct, so only the length is compared."
   ],
   "_skip_comment": [
@@ -61,11 +61,12 @@
   },
   "_extra_comment": [
     "Hand-written extra INPUTS (phase D). Expected outputs are still produced by the oracle, so",
-    "these only have to describe a case the examples miss \u2014 no answers are written by hand.",
+    "these only have to describe a case the examples miss — no answers are written by hand.",
     "Mostly design problems, whose single published example exercises almost nothing: LeetCode's",
     "LRUCache example never forces an eviction that is later read back, and the Trie example never",
     "searches a strict prefix, so `search == startsWith` passes it.",
-    "Format matches the problem's params: for design problems that is [ops, argsPerOp]."
+    "Format matches the problem's params: for design problems that is [ops, argsPerOp].",
+    "n-queens is drawn at random from 1..9, so some sizes were absent from any given run; n = 2 and n = 3 matter most because they are the only ones with NO solutions, and an empty answer is what a wrong diagonal check turns into. Pinned here rather than left to the draw."
   ],
   "extra": {
     "lru-cache": [
@@ -455,6 +456,23 @@
             2
           ]
         ]
+      ]
+    ],
+    "n-queens": [
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        5
+      ],
+      [
+        7
+      ],
+      [
+        9
       ]
     ]
   },

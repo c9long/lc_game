@@ -329,9 +329,34 @@ both 215 and 703, the unclamped `task-scheduler` frame formula, the missing empt
 `last-stone-weight`, and integer division in `find-median-from-data-stream`. `k-closest-points-to-
 origin` was audited back in batch 1.
 
+### What batch 10 found
+
+| problem | the gap | after |
+|---|---|---|
+| `word-search` | a random word over a random board is almost never present — **17** of 43 answered true — so the search that never restores a cell it marked scored **43/43**. That bug is a false *negative*: a dead-ended attempt blanks letters a later, successful start needs. It can only show when the word really is on the board | words are read off self-avoiding walks, half of them reversed so the row-major scan tries the wrong end first. Now 39/43 |
+| `word-search` | the board is upper **and** lower case; the generator used `abc` | mixed-case boards, and words with one letter's case flipped. Case-insensitive now 38/43 |
+| `n-queens` | `n` was drawn from 1..7, so 8 and 9 were impossible, and 2 and 3 — the only sizes with **no** solutions — were left to chance | every `n` from 1 to 9 present; 2, 3, 5, 7 and 9 pinned as extras |
+| `subsets-ii` | 2 empty arrays, which `1 <= nums.length` forbids | none |
+
+#### A generator fix that broke a different near-miss
+
+Making `word-search` words findable raised the true-answer rate from 17 to 39 of 43. That fixed the
+restore bug and **silently broke** the diagonal one, which went from failing to scoring **43/43**:
+a search that steps diagonally is caught only by a *false* answer that a diagonal path would make
+true, and there were hardly any false answers left.
+
+The audit caught it on the next run, which is the whole argument for keeping every pair in CI
+rather than checking each fix once. The generator now has an explicit branch per bug —
+orthogonal walks, diagonal walks, case flips — instead of one knob trading them against each
+other. The alphabet mattered as much as the shapes: over three letters the board is dense enough
+that a diagonal word usually has an orthogonal path too.
+
+The earlier `permutations` fix is exercised here as well: its audit pairs include n! copies of
+the sorted list, which the old comparison rule accepted.
+
 ## Status
 
-74 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
+83 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
 
 ### Batch 1: Arrays & Hashing (9/9 audited)
 - [x] `contains-duplicate` — Easy
@@ -412,16 +437,16 @@ origin` was audited back in batch 1.
 - [x] `task-scheduler` — Medium
 - [x] `design-twitter` — Medium
 - [x] `find-median-from-data-stream` — Hard
-### Batch 10: Backtracking (0/9 audited)
-- [ ] `subsets` — Medium
-- [ ] `combination-sum` — Medium
-- [ ] `permutations` — Medium
-- [ ] `subsets-ii` — Medium
-- [ ] `combination-sum-ii` — Medium
-- [ ] `word-search` — Medium
-- [ ] `palindrome-partitioning` — Medium
-- [ ] `letter-combinations-of-a-phone-number` — Medium
-- [ ] `n-queens` — Hard
+### Batch 10: Backtracking (9/9 audited)
+- [x] `subsets` — Medium
+- [x] `combination-sum` — Medium
+- [x] `permutations` — Medium
+- [x] `subsets-ii` — Medium
+- [x] `combination-sum-ii` — Medium
+- [x] `word-search` — Medium
+- [x] `palindrome-partitioning` — Medium
+- [x] `letter-combinations-of-a-phone-number` — Medium
+- [x] `n-queens` — Hard
 ### Batch 11: Graphs (1/13 audited)
 - [ ] `number-of-islands` — Medium
 - [ ] `clone-graph` — Medium
