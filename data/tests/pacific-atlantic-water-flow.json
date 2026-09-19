@@ -1933,7 +1933,7 @@
       ]
     }
   ],
-  "compare": "unordered-nested",
+  "compare": "unordered",
   "entry": "pacificAtlantic",
   "exampleCount": 2,
   "mode": "plain",

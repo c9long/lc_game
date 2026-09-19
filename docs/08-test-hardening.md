@@ -279,6 +279,29 @@ What was missing is the tree that is only *subtly* wrong:
 | `count-good-nodes-in-binary-tree` | same shape: values may be negative, and **3** cases in 43 were entirely so | now 16/43 |
 | `same-tree` | `[1,2]` and `[1,null,2]` have identical value sequences and mirrored shapes, which is what defeats comparing preorder without null markers | one node's children are swapped on purpose |
 
+### A comparison rule that accepted anything (2026-09-19)
+
+Found while reading the curation file rather than by auditing a batch, and worth its own note
+because it is a different failure from a thin generator: the **comparison rule itself** was wrong,
+so two suites accepted answers that are not merely imprecise but meaningless.
+
+`unordered-nested` sorts the inner lists as well as the outer one. That is right when an inner
+list is a *set* of things — the groups in `group-anagrams`, the triplets in `3sum`, the multisets
+in `combination-sum`. It is wrong when the inner order carries meaning:
+
+| problem | what an inner list is | what the rule did |
+|---|---|---|
+| `permutations` | the answer itself — a permutation | normalised every permutation of `[1,2,3]` to `[1,2,3]`, so returning **n! copies of the sorted list scored 23/23** |
+| `pacific-atlantic-water-flow` | a `[row, col]` coordinate | made `[1,2]` and `[2,1]` equal, so returning **every coordinate reversed scored 42/42** |
+
+Both are now `unordered`: the outer list stays order-insensitive, the inner does not. A correct
+solution that enumerates in a different order still passes; the two wrong ones now score 5/23 and
+3/42.
+
+`k-closest-points-to-origin` has the same `[x, y]` inner shape and was also marked
+`unordered-nested`, but it is judged by a validator, which takes precedence over the comparison
+rule, so it was never affected.
+
 ## Status
 
 64 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.

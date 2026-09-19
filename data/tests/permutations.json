@@ -37097,7 +37097,7 @@
       ]
     }
   ],
-  "compare": "unordered-nested",
+  "compare": "unordered",
   "entry": "permute",
   "exampleCount": 3,
   "mode": "plain",
