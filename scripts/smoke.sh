@@ -157,11 +157,34 @@ curl -s -o /dev/null -H "cookie: lc_session=$TOKEN" "$B/"   # a reload must not 
 COINS_AGAIN=$($W execute lc-game --local --persist-to "$STATE" --json --command "SELECT amount FROM resources WHERE kind='coins'" 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s)[0].results;console.log(r.length?r[0].amount:0)})')
 if [ "$COINS_AGAIN" = "2" ]; then echo "ok   reloading does not pay production twice"; else echo "FAIL production paid again on reload: $COINS_AGAIN"; fail=1; fi
 
-# "Last accepted" must leave the same record as opening the reference drawer, so a refresh cleared
-# by reloading the old answer counts as assisted. two-sum is solved by now, so this is a refresh.
+# A look at a solution only counts against a refresh taken while the problem is DUE. two-sum was
+# solved above, so it is not due: "Last accepted" (kind=own) must be free and write nothing, which
+# is the case of comparing a fresh answer with the old one straight after a clean refresh.
+q() { $W execute lc-game --local --persist-to "$STATE" --json --command "$1" 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s)[0].results;console.log(r.length?Object.values(r[0])[0]:"")})'; }
 check 200 -H "cookie: lc_session=$TOKEN" "$B/api/solve/two-sum/solutions?kind=own"
-VIEWS=$($W execute lc-game --local --persist-to "$STATE" --json --command "SELECT count(*) AS n FROM solution_views WHERE slug='two-sum'" 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>console.log(JSON.parse(s)[0].results[0].n))')
-if [ "$VIEWS" = "1" ]; then echo "ok   loading the last accepted solution records a solution view"; else echo "FAIL last accepted left $VIEWS solution_views rows (want 1)"; fail=1; fi
+VIEWS=$(q "SELECT count(*) AS n FROM solution_views WHERE slug='two-sum'")
+if [ "$VIEWS" = "0" ]; then echo "ok   a look at a problem that is not due is free"; else echo "FAIL a not-due look left $VIEWS solution_views rows (want 0)"; fail=1; fi
+# Once it falls due, the same look is recorded.
+$W execute lc-game --local --persist-to "$STATE" --command "UPDATE problem_state SET due_at = $((NOW - 1000)) WHERE slug='two-sum';" >/dev/null
+check 200 -H "cookie: lc_session=$TOKEN" "$B/api/solve/two-sum/solutions?kind=own"
+VIEWS=$(q "SELECT count(*) AS n FROM solution_views WHERE slug='two-sum'")
+if [ "$VIEWS" = "1" ]; then echo "ok   a look at a due problem is recorded"; else echo "FAIL a due look left $VIEWS solution_views rows (want 1)"; fail=1; fi
+
+# End to end through the award: two refreshes, each with one recorded look, differing only in
+# whether the look came before or after the due date. The early look is a row the old rule left
+# behind -- the case that charged a comparison made after one refresh to the next one.
+DAY=86400000
+for spec in "contains-duplicate:$((NOW - 5 * DAY)):1:a look before the due date leaves the refresh clean" \
+            "valid-anagram:$((NOW - DAY / 2)):0:a look after the due date marks the refresh assisted"; do
+  IFS=: read -r SLUG VIEW_AT WANT_STEP LABEL <<<"$spec"
+  $W execute lc-game --local --persist-to "$STATE" --command \
+    "INSERT INTO problem_state (slug, first_solved_at, last_solved_at, solve_count, last_lang, srs_step, due_at) VALUES ('$SLUG', $((NOW - 10 * DAY)), $((NOW - 10 * DAY)), 1, 'python3', 0, $((NOW - DAY)));
+     INSERT INTO solution_views (slug, date, created_at) VALUES ('$SLUG', '2000-01-01', $VIEW_AT);" >/dev/null
+  curl -s -o /dev/null -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" \
+    -d '{"lang":"python3","code":"x","kind":"submit","verdict":"Accepted","passed":3,"total":3}' "$B/api/solve/$SLUG/verdict"
+  STEP=$(q "SELECT srs_step FROM problem_state WHERE slug='$SLUG'")
+  if [ "$STEP" = "$WANT_STEP" ]; then echo "ok   $LABEL"; else echo "FAIL $LABEL: srs_step $STEP (want $WANT_STEP)"; fail=1; fi
+done
 
 
 # Destroy refunds the level 1 base cost and removes the building. The huts above cost 5 timber each.

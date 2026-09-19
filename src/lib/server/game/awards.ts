@@ -1,4 +1,4 @@
-import { and, eq, gt } from 'drizzle-orm';
+import { and, eq, gte } from 'drizzle-orm';
 import type { Db } from '../db';
 import { awards, buildings, ledger, planItems, problemState, solutionViews, type User } from '../db/schema';
 import { randomId } from '../crypto';
@@ -69,17 +69,25 @@ export async function applyAccepted(db: Db, user: User, input: AcceptedInput): P
 		return { duplicate: false, counted: false, date, nodeId: cur?.nodeId, title };
 	}
 
-	// Assistance is measured from the last solve rather than from midnight. A refresh worked across
-	// two days -- peek in the evening, finish in the morning -- fell outside a same-day window and
-	// was recorded as clean, advancing the ladder for a repetition that had needed the answer.
-	const since = prev?.lastSolvedAt ?? null;
+	// A look counts as assistance only if it was taken while the problem was DUE -- from the moment
+	// the previous interval ran out, not from the previous solve.
+	//
+	// Measuring from the last solve (as this did until 2026-09-19) charged a look taken just after a
+	// clean refresh -- comparing the new answer with the old one, say -- against the NEXT refresh,
+	// days later, however cleanly that one was then done. Nothing about the look had helped with
+	// it. The window still spans days rather than a calendar date, so a refresh worked across two
+	// days -- peek in the evening, finish in the morning -- is still caught.
+	//
+	// This is also what makes rows recorded under the old rule harmless without touching them:
+	// a look taken before the problem fell due sits before prev.dueAt and is simply not counted.
+	const dueFrom = prev?.dueAt ?? prev?.lastSolvedAt ?? null;
 	const viewed = await db
 		.select({ slug: solutionViews.slug })
 		.from(solutionViews)
 		.where(
 			and(
 				eq(solutionViews.slug, input.slug),
-				since ? gt(solutionViews.createdAt, since) : eq(solutionViews.date, date)
+				dueFrom ? gte(solutionViews.createdAt, dueFrom) : eq(solutionViews.date, date)
 			)
 		)
 		.get();

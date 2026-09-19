@@ -2,13 +2,13 @@ import { error } from '@sveltejs/kit';
 import { and, desc, eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { getDb, getEnv } from '$lib/server/db';
-import { attempts, problemState, solutionViews } from '$lib/server/db/schema';
+import { attempts, problemState } from '$lib/server/db/schema';
 import { requireUser } from '$lib/server/guard';
 import { getProblem } from '$lib/server/problems';
 import { getLcAuth, getLcStatus } from '$lib/server/leetcode/auth';
 import { LANGS } from '$lib/langs';
 import { PROBLEM_BY_SLUG } from '$lib/game/curriculum';
-import { localDate } from '$lib/game/dates';
+import { isDue } from '$lib/game/srs';
 import ownDescriptions from '../../../../data/premium-descriptions.json';
 
 const OWN_DESCRIPTIONS = ownDescriptions as Record<string, { title: string; html: string; starterPython?: string }>;
@@ -23,7 +23,6 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 	const problem = await getProblem(db, slug);
 	if (!problem) error(404, 'problem not found on LeetCode (or LeetCode is unreachable)');
 	const cur = PROBLEM_BY_SLUG.get(slug) ?? null;
-	const today = localDate(new Date(), user.timezone);
 
 	const state = await db.select().from(problemState).where(eq(problemState.slug, slug)).get();
 	const draftRows = await db
@@ -58,11 +57,6 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 		acceptedCode.has(`${r.lang}\u0000${r.code}`) ||
 		(solvedAt !== null && r.createdAt.getTime() <= solvedAt.getTime());
 	const drafts = Object.fromEntries(draftRows.filter((r) => !isStale(r)).map((r) => [r.lang, r.code]));
-	const viewed = await db
-		.select({ slug: solutionViews.slug })
-		.from(solutionViews)
-		.where(and(eq(solutionViews.slug, slug), eq(solutionViews.date, today)))
-		.get();
 
 	const status = await getLcStatus(db);
 	const snippets: Record<string, string> = {};
@@ -92,7 +86,9 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 		solveCount: state?.solveCount ?? 0,
 		lastLang: state?.lastLang ?? null,
 		dueAt: state?.dueAt ?? null,
-		viewedToday: Boolean(viewed),
+		// Whether a look at any solution right now would mark the next accepted submit as assisted.
+		// Only a solved problem that has fallen due: before that a look is free (awards.ts).
+		due: Boolean(state && state.solveCount > 0 && isDue(state, new Date())),
 		cur: cur
 			? { code: cur.code, nodeId: cur.nodeId, pattern: cur.pattern, premium: cur.premium, solutions: cur.solutions }
 			: null,

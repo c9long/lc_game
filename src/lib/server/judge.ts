@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import type { Db } from './db';
-import { attempts, solutionViews } from './db/schema';
+import { attempts, problemState, solutionViews } from './db/schema';
 import { randomId } from './crypto';
 import { LeetCodeError } from './leetcode/client';
 import { markLcStatus } from './leetcode/auth';
@@ -47,21 +47,46 @@ export async function upsertDraft(db: Db, slug: string, lang: string, code: stri
 	else await db.insert(attempts).values({ id: randomId(), slug, lang, kind: 'draft', code, createdAt: now });
 }
 
-/** Records that solutions were viewed today, once per problem per day.
+/** Records that solutions were looked at, once per problem per day -- but only when it matters.
  *
  *  Viewing is free. It used to cost 2 essence of the problem's topics, which was meant to make
  *  peeking a decision rather than a reflex — but for someone learning the material the first time,
  *  a solution is the teaching, and taxing it discourages exactly the thing that helps. The record
- *  is still kept: a REFRESH solved after peeking still counts as assisted, since a repetition you
- *  needed help with genuinely has not stuck. First solves carry no penalty either way.
+ *  is kept for one purpose: a REFRESH solved after peeking counts as assisted, since a repetition
+ *  you needed help with genuinely has not stuck.
+ *
+ *  So a solved problem that is not due yet is looked at freely and nothing is written. That is the
+ *  case of comparing a fresh solution with the previous one straight after a clean refresh, which
+ *  used to be charged to the next refresh. Awards apply the same rule (a look counts only from
+ *  the due date on); skipping the write here as well is what closes the same-day gap, since the
+ *  table keeps one row per problem per day.
  */
 export async function recordSolutionView(db: Db, slug: string, date: string): Promise<void> {
+	const now = new Date();
+	const state = await db
+		.select({ solveCount: problemState.solveCount, dueAt: problemState.dueAt })
+		.from(problemState)
+		.where(eq(problemState.slug, slug))
+		.get();
+	const dueAt = state && state.solveCount > 0 ? state.dueAt : null;
+	if (dueAt && dueAt.getTime() > now.getTime()) return; // solved and not due: a free look
+
 	const existing = await db
-		.select({ slug: solutionViews.slug })
+		.select({ createdAt: solutionViews.createdAt })
 		.from(solutionViews)
 		.where(and(eq(solutionViews.slug, slug), eq(solutionViews.date, date)))
 		.get();
-	if (existing) return;
-	await db.insert(solutionViews).values({ slug, date, createdAt: new Date() });
+	if (!existing) {
+		await db.insert(solutionViews).values({ slug, date, createdAt: now });
+		return;
+	}
+	// One row per day: a row left from earlier today, before the problem fell due (only possible
+	// for rows written under the old rule), must not stand in for a look taken now that it is due.
+	if (dueAt && existing.createdAt.getTime() < dueAt.getTime()) {
+		await db
+			.update(solutionViews)
+			.set({ createdAt: now })
+			.where(and(eq(solutionViews.slug, slug), eq(solutionViews.date, date)));
+	}
 }
 

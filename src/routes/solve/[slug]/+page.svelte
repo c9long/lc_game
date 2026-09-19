@@ -73,12 +73,14 @@
 		if (confirm('Replace the editor contents with the starter code?')) code = data.snippets[lang] ?? '';
 	}
 
-	/** Loads the previous accepted solution -- and records it as a solution view first, so on a
-	 *  refresh it is penalised exactly like opening the NeetCode reference. Without the record the
-	 *  button was a free pass: a refresh could be cleared by loading the old answer and submitting. */
+	/** Loads the previous accepted solution, recording the look first so that a problem which is
+	 *  DUE is penalised exactly as opening the NeetCode reference would be. Otherwise loading the
+	 *  old answer and submitting it would clear a refresh for free. When the problem is not due --
+	 *  including straight after a clean refresh, to compare the new answer with the old -- the look
+	 *  is free, the server records nothing, and there is nothing to confirm. */
 	async function loadLastAccepted() {
 		if (!lastAcceptedFor) return;
-		if (data.solved && !confirm('Loading your last accepted solution counts as assistance on a refresh: the award is halved and the refresh timer resets to 3 days. Continue?')) return;
+		if (data.due && !confirm('This problem is due for a refresh. Loading your last accepted solution now marks the refresh as assisted: the award is halved and the timer resets to 3 days. Continue?')) return;
 		await fetch(`/api/solve/${data.slug}/solutions?kind=own`).catch(() => {});
 		code = lastAcceptedFor;
 	}
@@ -314,7 +316,7 @@
 		<div class="card">
 			<div class="row">
 				<strong>Solutions</strong>
-				{#if !data.solved && !data.viewedToday}<span class="muted">Free to open. On a refresh it marks the solve as assisted, so it comes back sooner. Loading "Last accepted" counts the same way.</span>{/if}
+				{#if data.due}<span class="muted">Due for a refresh: opening a solution or loading "Last accepted" now marks this refresh as assisted, so it comes back in 3 days.</span>{:else}<span class="muted">Free to open.</span>{/if}
 				<button onclick={() => openDrawer('reference')} disabled={drawerBusy}>NeetCode reference</button>
 				<button onclick={() => openDrawer('community')} disabled={drawerBusy}>Community ({langMeta.name})</button>
 				<button onclick={() => openDrawer('editorial')} disabled={drawerBusy}>Editorial</button>
