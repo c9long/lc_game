@@ -3405,7 +3405,200 @@ class Solution:
         out = []
         for q in queries:
             out.append(min((r - l + 1 for l, r in intervals if l <= q <= r), default=-1))
-        return out`]
+        return out`],
+
+	// ---- batch 17: Math & Geometry ----
+	// set-matrix-zeroes values span all of int32, so no marker value is safe; happy-number needs the
+	// two single-digit happy numbers, 1 and 7, which a uniform draw almost never produced.
+	['rotate-image', 'NEAR-MISS transposes the whole matrix, swapping every pair twice', false, `class Solution:
+    def rotate(self, matrix):
+        n = len(matrix)
+        for i in range(n):
+            for j in range(n): matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+        for row in matrix: row.reverse()`],
+	['rotate-image', 'NEAR-MISS rotates counter-clockwise', false, `class Solution:
+    def rotate(self, matrix):
+        n = len(matrix)
+        for i in range(n):
+            for j in range(i + 1, n): matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+        matrix.reverse()`],
+	['rotate-image', 'NEAR-MISS builds a new matrix and rebinds the local name', false, `class Solution:
+    def rotate(self, matrix):
+        matrix = [list(r) for r in zip(*matrix[::-1])]`],
+	['rotate-image', 'correct', true, `class Solution:
+    def rotate(self, matrix):
+        n = len(matrix)
+        for i in range(n):
+            for j in range(i + 1, n): matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+        for row in matrix: row.reverse()`],
+	['spiral-matrix', 'NEAR-MISS no guard on the last row and column', false, `class Solution:
+    def spiralOrder(self, matrix):
+        out = []; top, bottom, left, right = 0, len(matrix) - 1, 0, len(matrix[0]) - 1
+        while top <= bottom and left <= right:
+            for c in range(left, right + 1): out.append(matrix[top][c])
+            top += 1
+            for r in range(top, bottom + 1): out.append(matrix[r][right])
+            right -= 1
+            for c in range(right, left - 1, -1): out.append(matrix[bottom][c])
+            bottom -= 1
+            for r in range(bottom, top - 1, -1): out.append(matrix[r][left])
+            left += 1
+        return out`],
+	['spiral-matrix', 'correct', true, `class Solution:
+    def spiralOrder(self, matrix):
+        out = []; top, bottom, left, right = 0, len(matrix) - 1, 0, len(matrix[0]) - 1
+        while top <= bottom and left <= right:
+            for c in range(left, right + 1): out.append(matrix[top][c])
+            top += 1
+            for r in range(top, bottom + 1): out.append(matrix[r][right])
+            right -= 1
+            if top <= bottom:
+                for c in range(right, left - 1, -1): out.append(matrix[bottom][c])
+                bottom -= 1
+            if left <= right:
+                for r in range(bottom, top - 1, -1): out.append(matrix[r][left])
+                left += 1
+        return out`],
+	['set-matrix-zeroes', 'NEAR-MISS zeroes while scanning, so zeros cascade', false, `class Solution:
+    def setZeroes(self, matrix):
+        rows, cols = len(matrix), len(matrix[0])
+        for r in range(rows):
+            for c in range(cols):
+                if matrix[r][c] == 0:
+                    for k in range(cols): matrix[r][k] = 0
+                    for k in range(rows): matrix[k][c] = 0`],
+	['set-matrix-zeroes', 'NEAR-MISS marks with -1, a value the data can hold', false, `class Solution:
+    def setZeroes(self, matrix):
+        rows, cols = len(matrix), len(matrix[0])
+        for r in range(rows):
+            for c in range(cols):
+                if matrix[r][c] == 0:
+                    for k in range(cols):
+                        if matrix[r][k] != 0: matrix[r][k] = -1
+                    for k in range(rows):
+                        if matrix[k][c] != 0: matrix[k][c] = -1
+        for r in range(rows):
+            for c in range(cols):
+                if matrix[r][c] == -1: matrix[r][c] = 0`],
+	['set-matrix-zeroes', 'correct', true, `class Solution:
+    def setZeroes(self, matrix):
+        rows, cols = len(matrix), len(matrix[0])
+        zr = {r for r in range(rows) for c in range(cols) if matrix[r][c] == 0}
+        zc = {c for r in range(rows) for c in range(cols) if matrix[r][c] == 0}
+        for r in range(rows):
+            for c in range(cols):
+                if r in zr or c in zc: matrix[r][c] = 0`],
+	['happy-number', 'NEAR-MISS seeds seen with n and checks it before 1', false, `class Solution:
+    def isHappy(self, n):
+        seen = {n}
+        while True:
+            n = sum(int(d) ** 2 for d in str(n))
+            if n in seen: return False
+            if n == 1: return True
+            seen.add(n)`],
+	['happy-number', 'NEAR-MISS stops at a single digit', false, `class Solution:
+    def isHappy(self, n):
+        while n >= 10: n = sum(int(d) ** 2 for d in str(n))
+        return n == 1`],
+	['happy-number', 'correct', true, `class Solution:
+    def isHappy(self, n):
+        seen = set()
+        while n != 1 and n not in seen:
+            seen.add(n); n = sum(int(d) ** 2 for d in str(n))
+        return n == 1`],
+	['plus-one', 'NEAR-MISS increments the last digit only', false, `class Solution:
+    def plusOne(self, digits):
+        return digits[:-1] + [digits[-1] + 1]`],
+	['plus-one', 'NEAR-MISS loses the final carry', false, `class Solution:
+    def plusOne(self, digits):
+        d = digits[:]
+        for i in range(len(d) - 1, -1, -1):
+            if d[i] < 9: d[i] += 1; return d
+            d[i] = 0
+        return d`],
+	['plus-one', 'correct', true, `class Solution:
+    def plusOne(self, digits):
+        d = digits[:]
+        for i in range(len(d) - 1, -1, -1):
+            if d[i] < 9: d[i] += 1; return d
+            d[i] = 0
+        return [1] + d`],
+	['powx-n', 'NEAR-MISS drops the sign of x', false, `class Solution:
+    def myPow(self, x, n):
+        x = abs(x)
+        if n < 0: x, n = 1 / x, -n
+        r = 1.0
+        while n:
+            if n & 1: r *= x
+            x *= x; n >>= 1
+        return r`],
+	['powx-n', 'NEAR-MISS multiplies by x instead of 1/x for odd negative n', false, `class Solution:
+    def myPow(self, x, n):
+        if n == 0: return 1.0
+        h = self.myPow(x, int(n / 2))
+        return h * h * (x if n % 2 else 1)`],
+	['powx-n', 'correct', true, `class Solution:
+    def myPow(self, x, n):
+        if n < 0: x, n = 1 / x, -n
+        r = 1.0
+        while n:
+            if n & 1: r *= x
+            x *= x; n >>= 1
+        return r`],
+	['multiply-strings', 'NEAR-MISS never strips leading zeros', false, `class Solution:
+    def multiply(self, num1, num2):
+        res = [0] * (len(num1) + len(num2))
+        for i in range(len(num1) - 1, -1, -1):
+            for j in range(len(num2) - 1, -1, -1):
+                p = int(num1[i]) * int(num2[j]) + res[i + j + 1]
+                res[i + j + 1] = p % 10; res[i + j] += p // 10
+        return "".join(map(str, res))`],
+	['multiply-strings', 'NEAR-MISS strips zeros with no fallback for zero', false, `class Solution:
+    def multiply(self, num1, num2):
+        res = [0] * (len(num1) + len(num2))
+        for i in range(len(num1) - 1, -1, -1):
+            for j in range(len(num2) - 1, -1, -1):
+                p = int(num1[i]) * int(num2[j]) + res[i + j + 1]
+                res[i + j + 1] = p % 10; res[i + j] += p // 10
+        return "".join(map(str, res)).lstrip("0")`],
+	['multiply-strings', 'correct', true, `class Solution:
+    def multiply(self, num1, num2):
+        res = [0] * (len(num1) + len(num2))
+        for i in range(len(num1) - 1, -1, -1):
+            for j in range(len(num2) - 1, -1, -1):
+                p = int(num1[i]) * int(num2[j]) + res[i + j + 1]
+                res[i + j + 1] = p % 10; res[i + j] += p // 10
+        return "".join(map(str, res)).lstrip("0") or "0"`],
+	['detect-squares', 'NEAR-MISS de-duplicates points', false, `class DetectSquares:
+    def __init__(self): self.pts = set()
+    def add(self, point): self.pts.add(tuple(point))
+    def count(self, point):
+        x, y = point; n = 0
+        for a, b in self.pts:
+            if abs(a - x) == abs(b - y) and a != x and (a, y) in self.pts and (x, b) in self.pts: n += 1
+        return n`],
+	['detect-squares', 'NEAR-MISS allows zero area', false, `class DetectSquares:
+    def __init__(self):
+        from collections import Counter
+        self.c = Counter()
+    def add(self, point): self.c[tuple(point)] += 1
+    def count(self, point):
+        x, y = point; n = 0
+        for (a, b), k in list(self.c.items()):
+            if abs(a - x) == abs(b - y):
+                n += k * self.c[(a, y)] * self.c[(x, b)]
+        return n`],
+	['detect-squares', 'correct', true, `class DetectSquares:
+    def __init__(self):
+        from collections import Counter
+        self.c = Counter()
+    def add(self, point): self.c[tuple(point)] += 1
+    def count(self, point):
+        x, y = point; n = 0
+        for (a, b), k in list(self.c.items()):
+            if abs(a - x) == abs(b - y) and a != x:
+                n += k * self.c[(a, y)] * self.c[(x, b)]
+        return n`]
 ];
 
 let bad = 0;

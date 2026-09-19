@@ -2006,13 +2006,24 @@ def _spiral(rng):
 
 @generator("set-matrix-zeroes")
 def _set_zeroes(rng):
+    # Values span the whole int32 range, so no marker value is safe -- but a -1 marker only shows
+    # when a real -1 survives in a row and column that are NOT zeroed. With half of all cells
+    # zero, every row and column was wiped and the marker bug scored 42/42. Zeros are sparse here,
+    # and -1 is common among the rest.
     r, c = rng.randint(1, 5), rng.randint(1, 5)
-    return [[[rng.choice([0, rng.randint(-9, 9)]) for _ in range(c)] for _ in range(r)]]
+    zero_rate = rng.choice([0.08, 0.15, 0.3])
+    return [[[0 if rng.random() < zero_rate else rng.choice([-1, -1, rng.randint(-9, 9)])
+              for _ in range(c)] for _ in range(r)]]
 
 
 @generator("happy-number")
 def _happy_number(rng):
-    return [rng.randint(1, 500)]
+    # 1 and 7 are the only single-digit happy numbers. 1 catches a loop that records n as seen
+    # before testing for 1; 7 -- reached directly or from numbers like 1112 whose digit squares
+    # sum to 7 -- catches one that stops at the first single digit and asks whether it is 1.
+    # Drawn uniformly from 1..500 they almost never came up, so both bugs scored 42/42.
+    return [rng.choice([1, 7, 1112, 2111, 70, rng.randint(1, 500), rng.randint(1, 500),
+                        rng.randint(1, 500), rng.randint(1, 10 ** 6)])]
 
 
 @generator("plus-one")
