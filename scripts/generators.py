@@ -997,13 +997,33 @@ def _max_area_island(rng):
 
 @generator("rotting-oranges")
 def _rotting(rng):
+    # With no fresh orange the answer is 0 whether or not anything is rotten -- nothing needs to
+    # happen. A solution that bails out with -1 as soon as it sees no rotten orange gets that
+    # wrong, and it was invisible: only 2 of 43 grids had no fresh orange, and both had a rotten
+    # one. So some grids draw from {empty, rotten} or are empty outright.
     r, c = rng.randint(1, 5), rng.randint(1, 5)
-    return [grid(rng, r, c, [0, 1, 1, 2])]
+    cells = rng.choice([[0, 1, 1, 2], [0, 1, 1, 2], [0, 1, 1, 2], [0, 2], [0], [0, 0, 1]])
+    return [grid(rng, r, c, cells)]
 
 
 @generator("surrounded-regions")
 def _surrounded(rng):
+    # Regions connect only horizontally and vertically, so an interior O that touches a border O
+    # only at a CORNER is still captured. Random boards rarely line O's up diagonally with nothing
+    # orthogonal between them, so treating a diagonal touch as safe failed three cases in 42. Some
+    # boards lay a diagonal chain of O's in from a border cell on purpose.
     r, c = rng.randint(1, 5), rng.randint(1, 5)
+    if rng.random() < 0.3 and r >= 3 and c >= 3:
+        board = [["X"] * c for _ in range(r)]
+        sr, sc = rng.choice([(0, 0), (0, c - 1), (r - 1, 0), (r - 1, c - 1)])
+        dr = 1 if sr == 0 else -1
+        dc = 1 if sc == 0 else -1
+        rr, cc = sr, sc
+        while 0 <= rr < r and 0 <= cc < c:
+            board[rr][cc] = "O"
+            rr += dr
+            cc += dc
+        return [board]
     return [grid(rng, r, c, ["X", "O"])]
 
 
@@ -1072,7 +1092,37 @@ def _distinct_edges(rng, n, count, directed=False):
 
 @generator("course-schedule")
 def _course_schedule(rng):
+    """Prerequisite graphs, with the two kinds of cycle the random ones missed.
+
+    207, unlike 210, has no `ai != bi` clause, so a self-loop [a, a] is legal and makes the
+    schedule impossible; _distinct_edges never produced one. And random sparse graphs close
+    mostly two-node cycles, so a check that looks only for [a, b] alongside [b, a] failed just two
+    cases in 42. A longer ring is built outright.
+    """
     n = rng.randint(1, 8)
+    roll = rng.random()
+    if roll < 0.18:
+        # Otherwise ACYCLIC, so the self-loop is the only thing making the answer false: edges run
+        # from a lower to a higher position in a random ordering, which cannot form a cycle.
+        order = rng.sample(range(n), n)
+        edges = []
+        for _ in range(rng.randint(0, n)):
+            i, j = sorted(rng.sample(range(n), 2)) if n >= 2 else (0, 0)
+            if i != j and [order[j], order[i]] not in edges:
+                edges.append([order[j], order[i]])
+        a = rng.randrange(n)
+        edges.append([a, a])
+        rng.shuffle(edges)
+        return [n, edges]
+    if roll < 0.35 and n >= 3:
+        ring = rng.sample(range(n), rng.randint(3, n))
+        edges = [[ring[i], ring[(i + 1) % len(ring)]] for i in range(len(ring))]
+        present = {tuple(e) for e in edges}
+        for u, v in _distinct_edges(rng, n, rng.randint(0, 3), directed=True):
+            if (u, v) not in present and (v, u) not in present:
+                edges.append([u, v])
+        rng.shuffle(edges)
+        return [n, edges]
     return [n, _distinct_edges(rng, n, rng.randint(0, n + 2), directed=True)]
 
 
@@ -1092,9 +1142,28 @@ def _connected_components(rng):
 
 @generator("graph-valid-tree")
 def _graph_valid_tree(rng):
+    """A tree needs BOTH n-1 edges AND connectivity, and each alone is a plausible shortcut.
+
+    The input that separates them is n-1 edges that contain a cycle: the edge count is exactly
+    right, but the cycle uses up an edge that should have reached the last node, so it is left
+    isolated. There were none, so `return len(edges) == n - 1` scored 42/42.
+    """
     n = rng.randint(1, 8)
-    if rng.random() < 0.5:                          # a genuine tree
+    roll = rng.random()
+    if roll < 0.4:                                  # a genuine tree
         return [n, [[rng.randint(0, v - 1), v] for v in range(1, n)]]
+    if roll < 0.65 and n >= 4:
+        # A tree over nodes 0..n-2 plus one extra edge among them: n-1 edges, a cycle, and node
+        # n-1 disconnected.
+        m = n - 1
+        edges = [[rng.randint(0, v - 1), v] for v in range(1, m)]
+        present = {tuple(sorted(e)) for e in edges}
+        extra = [(u, v) for u in range(m) for v in range(u + 1, m) if (u, v) not in present]
+        if not extra:
+            return None
+        edges.append(list(rng.choice(extra)))
+        rng.shuffle(edges)
+        return [n, edges]
     return [n, _distinct_edges(rng, n, rng.randint(0, n + 1))]
 
 
@@ -1122,6 +1191,26 @@ def _network_delay(rng):
 
 @generator("cheapest-flights-within-k-stops")
 def _cheapest_flights(rng):
+    """k STOPS is k+1 flights, and the cheapest route overall may break that limit.
+
+    That is exactly what plain Dijkstra gets wrong: it finds the globally cheapest route and never
+    asks how many stops it used. Random sparse graphs rarely have a cheap long route competing with
+    a dear short one, so both Dijkstra and a Bellman-Ford that reads distances updated in the same
+    round failed only a few cases, mostly LeetCode's own example. Here a cheap chain of hops and a
+    dear direct route are built on purpose, with k chosen to cut the chain.
+    """
+    if rng.random() < 0.45:
+        hops = rng.randint(2, 4)
+        n = hops + 1 + rng.randint(0, 2)
+        chain = list(range(hops + 1))                # 0 -> 1 -> ... -> hops, cheap per leg
+        flights = [[chain[i], chain[i + 1], rng.randint(1, 10)] for i in range(hops)]
+        flights.append([0, hops, rng.randint(40, 90)])   # the dear direct flight
+        for _ in range(rng.randint(0, 2)):
+            u, v = rng.sample(range(n), 2)
+            if not any(f[0] == u and f[1] == v for f in flights):
+                flights.append([u, v, rng.randint(5, 60)])
+        rng.shuffle(flights)
+        return [n, flights, 0, hops, rng.randint(0, hops - 1)]
     n = rng.randint(2, 7)
     flights = [[u, v, rng.randint(1, 50)] for u, v in _distinct_edges(rng, n, rng.randint(1, n + 3), directed=True)]
     src, dst = rng.sample(range(n), 2)

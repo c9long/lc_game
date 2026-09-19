@@ -354,9 +354,19 @@ that a diagonal word usually has an orthogonal path too.
 The earlier `permutations` fix is exercised here as well: its audit pairs include n! copies of
 the sorted list, which the old comparison rule accepted.
 
+### What batch 11 found
+
+| problem | the gap | after |
+|---|---|---|
+| `graph-valid-tree` | a tree needs `n-1` edges **and** connectivity. The input separating them is `n-1` edges that contain a cycle, which leaves a node isolated; there were **none**, so `return len(edges) == n - 1` scored **42/42** | 5 built outright: a tree over `n-1` nodes plus one extra edge. Now 37/42 |
+| `course-schedule` | 207, unlike 210, has no `ai != bi` clause, so a self-loop is legal and makes the schedule impossible — **0** cases had one. Random sparse graphs also closed mostly two-node cycles, so looking only for `[a,b]` beside `[b,a]` scored **40/42** | 9 self-loops in otherwise acyclic graphs; longer rings built on purpose. Now 33/42 and 30/42 |
+| `rotting-oranges` | with no fresh orange the answer is 0 even if nothing is rotten. **2** of 43 grids had no fresh orange and both had a rotten one, so bailing out with -1 on "nothing rotten" scored **43/43** | 15 with no fresh orange, 6 with neither. Now 37/43 |
+| `cheapest-flights-within-k-stops` | k stops is k+1 flights, and the cheapest route may break that. Plain Dijkstra and a Bellman-Ford reading same-round distances both failed mostly on LeetCode's own example | a cheap chain and a dear direct flight, with `k` chosen to cut the chain |
+| `surrounded-regions` | regions connect only orthogonally; treating a corner touch as safe scored **39/42** | diagonal chains laid in from a border cell. Now 33/42 |
+
 ## Status
 
-83 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
+94 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
 
 ### Batch 1: Arrays & Hashing (9/9 audited)
 - [x] `contains-duplicate` — Easy
@@ -447,20 +457,20 @@ the sorted list, which the old comparison rule accepted.
 - [x] `palindrome-partitioning` — Medium
 - [x] `letter-combinations-of-a-phone-number` — Medium
 - [x] `n-queens` — Hard
-### Batch 11: Graphs (1/13 audited)
-- [ ] `number-of-islands` — Medium
-- [ ] `clone-graph` — Medium
-- [ ] `max-area-of-island` — Medium
-- [ ] `pacific-atlantic-water-flow` — Medium
-- [ ] `surrounded-regions` — Medium
-- [ ] `rotting-oranges` — Medium
-- [ ] `walls-and-gates` — Medium
-- [ ] `course-schedule` — Medium
+### Batch 11: Graphs (13/13 audited)
+- [x] `number-of-islands` — Medium
+- [x] `clone-graph` — Medium
+- [x] `max-area-of-island` — Medium
+- [x] `pacific-atlantic-water-flow` — Medium
+- [x] `surrounded-regions` — Medium
+- [x] `rotting-oranges` — Medium
+- [x] `walls-and-gates` — Medium
+- [x] `course-schedule` — Medium
 - [x] `course-schedule-ii` — Medium
-- [ ] `redundant-connection` — Medium
-- [ ] `number-of-connected-components-in-an-undirected-graph` — Medium
-- [ ] `graph-valid-tree` — Medium
-- [ ] `word-ladder` — Hard
+- [x] `redundant-connection` — Medium
+- [x] `number-of-connected-components-in-an-undirected-graph` — Medium
+- [x] `graph-valid-tree` — Medium
+- [x] `word-ladder` — Hard
 ### Batch 12: Advanced Graphs (1/6 audited)
 - [ ] `reconstruct-itinerary` — Hard
 - [ ] `min-cost-to-connect-all-points` — Medium

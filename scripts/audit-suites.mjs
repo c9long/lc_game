@@ -2073,7 +2073,380 @@ class Solution:
         def go(i, cur):
             if i == len(digits): out.append(cur); return
             for ch in m[digits[i]]: go(i + 1, cur + ch)
-        go(0, ""); return out`]
+        go(0, ""); return out`],
+
+	// ---- batch 11: Graphs ----
+	// A tree needs n-1 edges AND connectivity. n-1 edges containing a cycle leaves a node isolated;
+	// there were none, so counting edges alone scored 42/42.
+	['graph-valid-tree', 'NEAR-MISS only counts edges', false, `class Solution:
+    def validTree(self, n, edges): return len(edges) == n - 1`],
+	['graph-valid-tree', 'NEAR-MISS acyclic but never checks connectivity', false, `class Solution:
+    def validTree(self, n, edges):
+        p = list(range(n))
+        def f(x):
+            while p[x] != x: p[x] = p[p[x]]; x = p[x]
+            return x
+        for a, b in edges:
+            ra, rb = f(a), f(b)
+            if ra == rb: return False
+            p[ra] = rb
+        return True`],
+	['graph-valid-tree', 'correct', true, `class Solution:
+    def validTree(self, n, edges):
+        if len(edges) != n - 1: return False
+        p = list(range(n))
+        def f(x):
+            while p[x] != x: p[x] = p[p[x]]; x = p[x]
+            return x
+        for a, b in edges:
+            ra, rb = f(a), f(b)
+            if ra == rb: return False
+            p[ra] = rb
+        return True`],
+
+	// No fresh orange means 0 minutes, whether or not anything is rotten.
+	['rotting-oranges', 'NEAR-MISS answers -1 when nothing is rotten', false, `from collections import deque
+class Solution:
+    def orangesRotting(self, grid):
+        rows, cols = len(grid), len(grid[0])
+        q = deque((r, c) for r in range(rows) for c in range(cols) if grid[r][c] == 2)
+        if not q: return -1
+        fresh = sum(row.count(1) for row in grid); t = 0
+        while q and fresh:
+            for _ in range(len(q)):
+                r, c = q.popleft()
+                for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)):
+                    nr, nc = r+dr, c+dc
+                    if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 1:
+                        grid[nr][nc] = 2; fresh -= 1; q.append((nr, nc))
+            t += 1
+        return t if fresh == 0 else -1`],
+	['rotting-oranges', 'NEAR-MISS counts the final round that rots nothing', false, `from collections import deque
+class Solution:
+    def orangesRotting(self, grid):
+        rows, cols = len(grid), len(grid[0])
+        q = deque((r, c) for r in range(rows) for c in range(cols) if grid[r][c] == 2)
+        fresh = sum(row.count(1) for row in grid); t = 0
+        while q:
+            for _ in range(len(q)):
+                r, c = q.popleft()
+                for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)):
+                    nr, nc = r+dr, c+dc
+                    if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 1:
+                        grid[nr][nc] = 2; fresh -= 1; q.append((nr, nc))
+            t += 1
+        return t if fresh == 0 else -1`],
+	['rotting-oranges', 'correct', true, `from collections import deque
+class Solution:
+    def orangesRotting(self, grid):
+        rows, cols = len(grid), len(grid[0])
+        q = deque((r, c) for r in range(rows) for c in range(cols) if grid[r][c] == 2)
+        fresh = sum(row.count(1) for row in grid); t = 0
+        while q and fresh:
+            for _ in range(len(q)):
+                r, c = q.popleft()
+                for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)):
+                    nr, nc = r+dr, c+dc
+                    if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 1:
+                        grid[nr][nc] = 2; fresh -= 1; q.append((nr, nc))
+            t += 1
+        return t if fresh == 0 else -1`],
+
+	// 207 has no ai != bi clause: a self-loop is legal and makes the schedule impossible.
+	['course-schedule', 'NEAR-MISS drops self-loops', false, `from collections import deque
+class Solution:
+    def canFinish(self, numCourses, prerequisites):
+        adj = {i: [] for i in range(numCourses)}; indeg = [0] * numCourses
+        for a, b in prerequisites:
+            if a == b: continue
+            adj[b].append(a); indeg[a] += 1
+        q = deque(i for i in range(numCourses) if indeg[i] == 0); done = 0
+        while q:
+            u = q.popleft(); done += 1
+            for v in adj[u]:
+                indeg[v] -= 1
+                if indeg[v] == 0: q.append(v)
+        return done == numCourses`],
+	['course-schedule', 'NEAR-MISS looks only for two-node cycles', false, `class Solution:
+    def canFinish(self, numCourses, prerequisites):
+        s = {(a, b) for a, b in prerequisites}
+        return not any((b, a) in s for a, b in prerequisites)`],
+	['course-schedule', 'NEAR-MISS one global seen set as the cycle flag', false, `class Solution:
+    def canFinish(self, numCourses, prerequisites):
+        adj = {i: [] for i in range(numCourses)}
+        for a, b in prerequisites: adj[b].append(a)
+        seen = set()
+        def dfs(u):
+            if u in seen: return False
+            seen.add(u)
+            return all(dfs(v) for v in adj[u])
+        return all(dfs(i) for i in range(numCourses) if i not in seen)`],
+	['course-schedule', 'correct', true, `from collections import deque
+class Solution:
+    def canFinish(self, numCourses, prerequisites):
+        adj = {i: [] for i in range(numCourses)}; indeg = [0] * numCourses
+        for a, b in prerequisites: adj[b].append(a); indeg[a] += 1
+        q = deque(i for i in range(numCourses) if indeg[i] == 0); done = 0
+        while q:
+            u = q.popleft(); done += 1
+            for v in adj[u]:
+                indeg[v] -= 1
+                if indeg[v] == 0: q.append(v)
+        return done == numCourses`],
+
+	['surrounded-regions', 'NEAR-MISS a diagonal touch reaches the border', false, `class Solution:
+    def solve(self, board):
+        rows, cols = len(board), len(board[0])
+        def mark(r, c):
+            if r < 0 or c < 0 or r >= rows or c >= cols or board[r][c] != "O": return
+            board[r][c] = "T"
+            for dr in (-1,0,1):
+                for dc in (-1,0,1):
+                    if dr or dc: mark(r+dr, c+dc)
+        for r in range(rows):
+            for c in range(cols):
+                if (r in (0, rows-1) or c in (0, cols-1)): mark(r, c)
+        for r in range(rows):
+            for c in range(cols):
+                board[r][c] = "O" if board[r][c] == "T" else "X"`],
+	['surrounded-regions', 'correct', true, `class Solution:
+    def solve(self, board):
+        rows, cols = len(board), len(board[0])
+        def mark(r, c):
+            if r < 0 or c < 0 or r >= rows or c >= cols or board[r][c] != "O": return
+            board[r][c] = "T"
+            for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)): mark(r+dr, c+dc)
+        for r in range(rows):
+            for c in range(cols):
+                if (r in (0, rows-1) or c in (0, cols-1)): mark(r, c)
+        for r in range(rows):
+            for c in range(cols):
+                board[r][c] = "O" if board[r][c] == "T" else "X"`],
+
+	// "If there are multiple answers, return the answer that occurs last in the input."
+	['redundant-connection', 'NEAR-MISS returns the first cycle edge in input order', false, `class Solution:
+    def findRedundantConnection(self, edges):
+        n = len(edges); adj = {i: [] for i in range(1, n + 1)}
+        for a, b in edges: adj[a].append(b); adj[b].append(a)
+        parent = {}; cycle = set()
+        def dfs(u, p):
+            parent[u] = p
+            for v in adj[u]:
+                if v == p: continue
+                if v in parent:
+                    x = u; cycle.add(v)
+                    while x != v: cycle.add(x); x = parent[x]
+                    return True
+                if dfs(v, u): return True
+            return False
+        dfs(1, 0)
+        for a, b in edges:
+            if a in cycle and b in cycle: return [a, b]`],
+	['redundant-connection', 'correct union-find', true, `class Solution:
+    def findRedundantConnection(self, edges):
+        p = list(range(len(edges) + 1))
+        def f(x):
+            while p[x] != x: p[x] = p[p[x]]; x = p[x]
+            return x
+        for a, b in edges:
+            ra, rb = f(a), f(b)
+            if ra == rb: return [a, b]
+            p[ra] = rb`],
+
+	['number-of-connected-components-in-an-undirected-graph', 'NEAR-MISS n minus the edge count', false, `class Solution:
+    def countComponents(self, n, edges): return n - len(edges)`],
+	['number-of-connected-components-in-an-undirected-graph', 'NEAR-MISS union without find', false, `class Solution:
+    def countComponents(self, n, edges):
+        p = list(range(n))
+        for a, b in edges: p[a] = p[b]
+        return sum(1 for i in range(n) if p[i] == i)`],
+	['number-of-connected-components-in-an-undirected-graph', 'correct', true, `class Solution:
+    def countComponents(self, n, edges):
+        p = list(range(n))
+        def f(x):
+            while p[x] != x: p[x] = p[p[x]]; x = p[x]
+            return x
+        c = n
+        for a, b in edges:
+            ra, rb = f(a), f(b)
+            if ra != rb: p[ra] = rb; c -= 1
+        return c`],
+
+	['number-of-islands', 'NEAR-MISS counts diagonal neighbours as connected', false, `class Solution:
+    def numIslands(self, grid):
+        rows, cols = len(grid), len(grid[0]); n = 0
+        def sink(r, c):
+            if r < 0 or c < 0 or r >= rows or c >= cols or grid[r][c] != "1": return
+            grid[r][c] = "0"
+            for dr in (-1,0,1):
+                for dc in (-1,0,1):
+                    if dr or dc: sink(r+dr, c+dc)
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == "1": n += 1; sink(r, c)
+        return n`],
+	['number-of-islands', 'correct', true, `class Solution:
+    def numIslands(self, grid):
+        rows, cols = len(grid), len(grid[0]); n = 0
+        def sink(r, c):
+            if r < 0 or c < 0 or r >= rows or c >= cols or grid[r][c] != "1": return
+            grid[r][c] = "0"
+            for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)): sink(r+dr, c+dc)
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == "1": n += 1; sink(r, c)
+        return n`],
+
+	['max-area-of-island', 'NEAR-MISS counts islands instead of measuring them', false, `class Solution:
+    def maxAreaOfIsland(self, grid):
+        rows, cols = len(grid), len(grid[0]); n = 0
+        def sink(r, c):
+            if r < 0 or c < 0 or r >= rows or c >= cols or grid[r][c] != 1: return
+            grid[r][c] = 0
+            for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)): sink(r+dr, c+dc)
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == 1: n += 1; sink(r, c)
+        return n`],
+	['max-area-of-island', 'correct', true, `class Solution:
+    def maxAreaOfIsland(self, grid):
+        rows, cols = len(grid), len(grid[0]); best = 0
+        def sink(r, c):
+            if r < 0 or c < 0 or r >= rows or c >= cols or grid[r][c] != 1: return 0
+            grid[r][c] = 0
+            return 1 + sum(sink(r+dr, c+dc) for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)))
+        for r in range(rows):
+            for c in range(cols):
+                best = max(best, sink(r, c))
+        return best`],
+
+	// Water flows to EQUAL or lower ground, so the climb from the ocean must accept equal heights.
+	['pacific-atlantic-water-flow', 'NEAR-MISS strict climb from the ocean', false, `class Solution:
+    def pacificAtlantic(self, heights):
+        rows, cols = len(heights), len(heights[0])
+        pac, atl = set(), set()
+        def dfs(r, c, seen, prev):
+            if (r, c) in seen or r < 0 or c < 0 or r >= rows or c >= cols or heights[r][c] <= prev: return
+            seen.add((r, c))
+            for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)): dfs(r+dr, c+dc, seen, heights[r][c])
+        for c in range(cols):
+            dfs(0, c, pac, -1); dfs(rows-1, c, atl, -1)
+        for r in range(rows):
+            dfs(r, 0, pac, -1); dfs(r, cols-1, atl, -1)
+        return [[r, c] for (r, c) in pac & atl]`],
+	['pacific-atlantic-water-flow', 'NEAR-MISS every coordinate reversed', false, `class Solution:
+    def pacificAtlantic(self, heights):
+        rows, cols = len(heights), len(heights[0])
+        pac, atl = set(), set()
+        def dfs(r, c, seen, prev):
+            if (r, c) in seen or r < 0 or c < 0 or r >= rows or c >= cols or heights[r][c] < prev: return
+            seen.add((r, c))
+            for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)): dfs(r+dr, c+dc, seen, heights[r][c])
+        for c in range(cols):
+            dfs(0, c, pac, heights[0][c]); dfs(rows-1, c, atl, heights[rows-1][c])
+        for r in range(rows):
+            dfs(r, 0, pac, heights[r][0]); dfs(r, cols-1, atl, heights[r][cols-1])
+        return [[c, r] for (r, c) in pac & atl]`],
+	['pacific-atlantic-water-flow', 'correct, in a different order', true, `class Solution:
+    def pacificAtlantic(self, heights):
+        rows, cols = len(heights), len(heights[0])
+        pac, atl = set(), set()
+        def dfs(r, c, seen, prev):
+            if (r, c) in seen or r < 0 or c < 0 or r >= rows or c >= cols or heights[r][c] < prev: return
+            seen.add((r, c))
+            for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)): dfs(r+dr, c+dc, seen, heights[r][c])
+        for c in range(cols):
+            dfs(0, c, pac, heights[0][c]); dfs(rows-1, c, atl, heights[rows-1][c])
+        for r in range(rows):
+            dfs(r, 0, pac, heights[r][0]); dfs(r, cols-1, atl, heights[r][cols-1])
+        return [[r, c] for (r, c) in sorted(pac & atl, reverse=True)]`],
+
+	// Unreachable rooms keep INF; they are not walls.
+	['walls-and-gates', 'NEAR-MISS writes -1 into unreachable rooms', false, `from collections import deque
+class Solution:
+    def wallsAndGates(self, rooms):
+        rows, cols = len(rooms), len(rooms[0]); INF = 2147483647
+        q = deque((r, c) for r in range(rows) for c in range(cols) if rooms[r][c] == 0)
+        while q:
+            r, c = q.popleft()
+            for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)):
+                nr, nc = r+dr, c+dc
+                if 0 <= nr < rows and 0 <= nc < cols and rooms[nr][nc] == INF:
+                    rooms[nr][nc] = rooms[r][c] + 1; q.append((nr, nc))
+        for r in range(rows):
+            for c in range(cols):
+                if rooms[r][c] == INF: rooms[r][c] = -1`],
+	['walls-and-gates', 'correct multi-source BFS', true, `from collections import deque
+class Solution:
+    def wallsAndGates(self, rooms):
+        rows, cols = len(rooms), len(rooms[0]); INF = 2147483647
+        q = deque((r, c) for r in range(rows) for c in range(cols) if rooms[r][c] == 0)
+        while q:
+            r, c = q.popleft()
+            for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)):
+                nr, nc = r+dr, c+dc
+                if 0 <= nr < rows and 0 <= nc < cols and rooms[nr][nc] == INF:
+                    rooms[nr][nc] = rooms[r][c] + 1; q.append((nr, nc))`],
+
+	// The adapter checks node identity, so handing back the original graph is caught.
+	['clone-graph', 'NEAR-MISS returns the input node', false, `class Solution:
+    def cloneGraph(self, node): return node`],
+	['clone-graph', 'correct', true, `class Solution:
+    def cloneGraph(self, node):
+        if not node: return None
+        m = {}
+        def go(n):
+            if n in m: return m[n]
+            c = Node(n.val); m[n] = c
+            c.neighbors = [go(x) for x in n.neighbors]
+            return c
+        return go(node)`],
+
+	// The length counts words, both ends included, and BFS finds the shortest where DFS may not.
+	['word-ladder', 'NEAR-MISS counts transformations, not words', false, `from collections import deque
+class Solution:
+    def ladderLength(self, beginWord, endWord, wordList):
+        words = set(wordList)
+        if endWord not in words: return 0
+        q = deque([(beginWord, 0)]); seen = {beginWord}
+        while q:
+            w, d = q.popleft()
+            if w == endWord: return d
+            for i in range(len(w)):
+                for ch in "abcdefghijklmnopqrstuvwxyz":
+                    nw = w[:i] + ch + w[i+1:]
+                    if nw in words and nw not in seen: seen.add(nw); q.append((nw, d + 1))
+        return 0`],
+	['word-ladder', 'NEAR-MISS depth-first, takes the first path found', false, `class Solution:
+    def ladderLength(self, beginWord, endWord, wordList):
+        words = set(wordList)
+        if endWord not in words: return 0
+        seen = {beginWord}
+        def dfs(w, d):
+            if w == endWord: return d
+            for i in range(len(w)):
+                for ch in "abcdefghijklmnopqrstuvwxyz":
+                    nw = w[:i] + ch + w[i+1:]
+                    if nw in words and nw not in seen:
+                        seen.add(nw)
+                        r = dfs(nw, d + 1)
+                        if r: return r
+            return 0
+        return dfs(beginWord, 1)`],
+	['word-ladder', 'correct BFS', true, `from collections import deque
+class Solution:
+    def ladderLength(self, beginWord, endWord, wordList):
+        words = set(wordList)
+        if endWord not in words: return 0
+        q = deque([(beginWord, 1)]); seen = {beginWord}
+        while q:
+            w, d = q.popleft()
+            if w == endWord: return d
+            for i in range(len(w)):
+                for ch in "abcdefghijklmnopqrstuvwxyz":
+                    nw = w[:i] + ch + w[i+1:]
+                    if nw in words and nw not in seen: seen.add(nw); q.append((nw, d + 1))
+        return 0`]
 ];
 
 let bad = 0;
