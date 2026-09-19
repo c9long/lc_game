@@ -662,7 +662,10 @@ def _house_robber(rng):
 
 @generator("maximum-subarray")
 def _max_subarray(rng):
-    return [ints(rng, rng.randint(1, 18), -20, 20)]
+    # The subarray must be non-empty, so an all-negative array answers with its largest element.
+    # That is what catches a running sum floored at 0, and there were two such arrays in 43.
+    lo, hi = rng.choice([(-20, 20), (-20, 20), (-20, -1), (-10000, -1)])
+    return [ints(rng, rng.randint(1, 18), lo, hi)]
 
 
 # ---------- Trees ----------
@@ -1693,12 +1696,54 @@ def _gas_station(rng):
 
 @generator("hand-of-straights")
 def _hand_of_straights(rng):
+    """Hands that genuinely split into straights, often with repeated cards, and near-misses of them.
+
+    A random hand almost never splits, so the answer was nearly always false, and false is what
+    the wrong solutions also say. Treating the hand as a set of distinct values, or cutting the
+    sorted hand into consecutive chunks, both need a splittable hand WITH duplicates to be caught;
+    each failed one or two cases in 42. Overlapping runs produce exactly that.
+    """
+    if rng.random() < 0.6:
+        k = rng.randint(1, 4)
+        hand = []
+        for _ in range(rng.randint(1, 4)):
+            start = rng.randint(0, 6)
+            hand += list(range(start, start + k))
+        if rng.random() < 0.3:                          # knock one card off: usually unsplittable
+            hand[rng.randrange(len(hand))] += rng.choice([-1, 1])
+        rng.shuffle(hand)
+        return [hand, k]
     n = rng.randint(1, 12)
     return [ints(rng, n, 1, 12), rng.randint(1, max(1, n))]
 
 
 @generator("merge-triplets-to-form-target-triplet")
 def _merge_triplets(rng):
+    """Targets that can be formed, plus a POISON triplet that matches one coordinate but overshoots.
+
+    A triplet with any coordinate above the target can never be used, because merging only takes
+    maxima. Random targets are rarely formable, so a solution that skips that filter was caught by
+    a single case in 43. Here the good triplets cover the target and a poison triplet sits among
+    them: taking it without the filter overshoots, and counting its matching coordinate lets a
+    target look formable when it is not.
+    """
+    if rng.random() < 0.6:
+        target = ints(rng, 3, 2, 8)
+        trips = []
+        for i in range(3):                              # one good triplet per coordinate
+            t = [rng.randint(1, target[j]) for j in range(3)]
+            t[i] = target[i]
+            trips.append(t)
+        poison = [rng.randint(1, target[j]) for j in range(3)]
+        hit = rng.randrange(3)
+        poison[hit] = target[hit]
+        over = rng.choice([j for j in range(3) if j != hit])
+        poison[over] = target[over] + rng.randint(1, 3)
+        if rng.random() < 0.4:
+            trips = [t for t in trips if t[hit] != target[hit]] or trips[:1]   # poison alone covers `hit`
+        trips.append(poison)
+        rng.shuffle(trips)
+        return [trips, target]
     return [[ints(rng, 3, 1, 8) for _ in range(rng.randint(1, 6))], ints(rng, 3, 1, 8)]
 
 

@@ -3101,7 +3101,155 @@ class Solution:
 	['unique-paths', 'correct', true, `class Solution:
     def uniquePaths(self, m, n):
         import math
-        return math.comb(m + n - 2, m - 1)`]
+        return math.comb(m + n - 2, m - 1)`],
+
+	// ---- batch 15: Greedy ----
+	// Every near-miss here must terminate on every case. The CI audit runs under Pyodide with no
+	// timeout, and the first draft of the jump-game-ii one spun forever on LeetCode's own
+	// [2,3,0,1,4], stalling the whole audit run.
+	// Random inputs were almost never answerable -- hands that split, targets that form -- and false
+	// is what the wrong solutions say too, so each was caught by one or two cases.
+	['maximum-subarray', 'NEAR-MISS running sum floored at 0, best starts at 0', false, `class Solution:
+    def maxSubArray(self, nums):
+        best = cur = 0
+        for x in nums:
+            cur = max(0, cur + x); best = max(best, cur)
+        return best`],
+	['maximum-subarray', 'NEAR-MISS largest prefix minus smallest prefix, ignoring order', false, `class Solution:
+    def maxSubArray(self, nums):
+        p = [0]
+        for x in nums: p.append(p[-1] + x)
+        return max(p[1:]) - min(p[:-1])`],
+	['maximum-subarray', 'correct Kadane', true, `class Solution:
+    def maxSubArray(self, nums):
+        best = cur = nums[0]
+        for x in nums[1:]:
+            cur = max(x, cur + x); best = max(best, cur)
+        return best`],
+	['jump-game', 'NEAR-MISS any zero means stuck', false, `class Solution:
+    def canJump(self, nums): return 0 not in nums`],
+	['jump-game', 'NEAR-MISS any zero before the last cell means stuck', false, `class Solution:
+    def canJump(self, nums): return 0 not in nums[:-1]`],
+	['jump-game', 'NEAR-MISS never checks the index is still reachable', false, `class Solution:
+    def canJump(self, nums):
+        reach = 0
+        for i, x in enumerate(nums): reach = max(reach, i + x)
+        return reach >= len(nums) - 1`],
+	['jump-game', 'correct', true, `class Solution:
+    def canJump(self, nums):
+        reach = 0
+        for i, x in enumerate(nums):
+            if i > reach: return False
+            reach = max(reach, i + x)
+        return True`],
+	['jump-game-ii', 'NEAR-MISS loops over every index, counting one jump too many', false, `class Solution:
+    def jump(self, nums):
+        jumps = end = far = 0
+        for i in range(len(nums)):
+            far = max(far, i + nums[i])
+            if i == end: jumps += 1; end = far
+        return jumps`],
+	['jump-game-ii', 'NEAR-MISS always jumps as far as possible', false, `class Solution:
+    def jump(self, nums):
+        i = jumps = 0
+        while i < len(nums) - 1:
+            if nums[i] == 0: return -1              # the greedy choice landed on a dead end
+            i += nums[i]; jumps += 1
+        return jumps`],
+	['jump-game-ii', 'correct', true, `class Solution:
+    def jump(self, nums):
+        jumps = end = far = 0
+        for i in range(len(nums) - 1):
+            far = max(far, i + nums[i])
+            if i == end: jumps += 1; end = far
+        return jumps`],
+	['hand-of-straights', 'NEAR-MISS groups built from distinct values only', false, `class Solution:
+    def isNStraightHand(self, hand, groupSize):
+        if len(hand) % groupSize: return False
+        v = sorted(set(hand))
+        return all(v[i + j] == v[i] + j for i in range(0, len(v) - groupSize + 1, groupSize) for j in range(groupSize)) and len(v) % groupSize == 0`],
+	['hand-of-straights', 'NEAR-MISS consecutive chunks of the sorted hand', false, `class Solution:
+    def isNStraightHand(self, hand, groupSize):
+        if len(hand) % groupSize: return False
+        h = sorted(hand)
+        return all(h[i + j] == h[i] + j for i in range(0, len(h), groupSize) for j in range(groupSize))`],
+	['hand-of-straights', 'correct', true, `class Solution:
+    def isNStraightHand(self, hand, groupSize):
+        from collections import Counter
+        if len(hand) % groupSize: return False
+        c = Counter(hand)
+        for x in sorted(c):
+            n = c[x]
+            if n:
+                for k in range(x, x + groupSize):
+                    if c[k] < n: return False
+                    c[k] -= n
+        return True`],
+	['merge-triplets-to-form-target-triplet', 'NEAR-MISS takes every triplet, no filter', false, `class Solution:
+    def mergeTriplets(self, triplets, target):
+        return [max(t[i] for t in triplets) for i in range(3)] == target`],
+	['merge-triplets-to-form-target-triplet', 'NEAR-MISS each coordinate matched somewhere, no filter', false, `class Solution:
+    def mergeTriplets(self, triplets, target):
+        return all(any(t[i] == target[i] for t in triplets) for i in range(3))`],
+	['merge-triplets-to-form-target-triplet', 'correct', true, `class Solution:
+    def mergeTriplets(self, triplets, target):
+        good = set()
+        for t in triplets:
+            if all(t[i] <= target[i] for i in range(3)):
+                good |= {i for i in range(3) if t[i] == target[i]}
+        return len(good) == 3`],
+	['partition-labels', 'NEAR-MISS partition end not extended with max', false, `class Solution:
+    def partitionLabels(self, s):
+        last = {c: i for i, c in enumerate(s)}; out = []; start = end = 0
+        for i, c in enumerate(s):
+            if i > end: out.append(end - start + 1); start = i
+            end = last[c] if i == start else end
+        out.append(end - start + 1)
+        return out`],
+	['partition-labels', 'NEAR-MISS first occurrence instead of last', false, `class Solution:
+    def partitionLabels(self, s):
+        first = {}
+        for i, c in enumerate(s): first.setdefault(c, i)
+        out = []; start = end = 0
+        for i, c in enumerate(s):
+            end = max(end, first[c])
+            if i == end: out.append(end - start + 1); start = i + 1
+        return out`],
+	['partition-labels', 'correct', true, `class Solution:
+    def partitionLabels(self, s):
+        last = {c: i for i, c in enumerate(s)}; out = []; start = end = 0
+        for i, c in enumerate(s):
+            end = max(end, last[c])
+            if i == end: out.append(end - start + 1); start = i + 1
+        return out`],
+	['valid-parenthesis-string', 'NEAR-MISS lo not clamped at zero', false, `class Solution:
+    def checkValidString(self, s):
+        lo = hi = 0
+        for c in s:
+            lo += 1 if c == "(" else -1
+            hi += 1 if c != ")" else -1
+            if hi < 0: return False
+        return lo == 0`],
+	['valid-parenthesis-string', 'NEAR-MISS counts only, order ignored', false, `class Solution:
+    def checkValidString(self, s):
+        return abs(s.count("(") - s.count(")")) <= s.count("*")`],
+	['valid-parenthesis-string', 'NEAR-MISS never rejects when hi goes negative', false, `class Solution:
+    def checkValidString(self, s):
+        lo = hi = 0
+        for c in s:
+            lo += 1 if c == "(" else -1
+            hi += 1 if c != ")" else -1
+            lo = max(lo, 0)
+        return lo == 0`],
+	['valid-parenthesis-string', 'correct', true, `class Solution:
+    def checkValidString(self, s):
+        lo = hi = 0
+        for c in s:
+            lo += 1 if c == "(" else -1
+            hi += 1 if c != ")" else -1
+            if hi < 0: return False
+            lo = max(lo, 0)
+        return lo == 0`]
 ];
 
 let bad = 0;

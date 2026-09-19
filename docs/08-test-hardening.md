@@ -398,9 +398,34 @@ Two generators never broke a length the problem depends on:
 | `regular-expression-matching` | `*` is zero **or** more, and zero is the case people miss (`"a*b"` matches `"b"`); reading it as one-or-more failed 2 cases | strings built from the pattern with each `x*` expanded to 0, 1 or 2 copies, 0 likeliest. Now 35/43 |
 | `longest-common-subsequence`, `distinct-subsequences`, `regular-expression-matching` | all three drew empty strings, which their constraints forbid; an empty `t` in `distinct-subsequences` answers 1, a case the problem never poses | none |
 
+### What batch 15 found
+
+Every near-miss already failed, but several on one or two cases, for a reason worth naming: **a
+random input was almost never answerable**, and "no" is what the wrong solutions say too.
+
+| problem | the gap | after |
+|---|---|---|
+| `hand-of-straights` | a random hand almost never splits into straights. Treating the hand as distinct values, or cutting the sorted hand into consecutive chunks, needs a splittable hand *with repeated cards*; they failed 2 and 1 cases in 42 | hands built from overlapping runs, some knocked off by one card. 24 now answer true; the two bugs fail 9 and 6 |
+| `merge-triplets-to-form-target-triplet` | a random target is rarely formable, so skipping the "no coordinate above the target" filter failed a single case | good triplets that cover the target plus a poison triplet that matches one coordinate and overshoots another. Now 24/43 |
+| `maximum-subarray` | the subarray is non-empty, so an all-negative array answers with its largest element — the only thing catching a sum floored at 0. There were **2** | now 26/43 |
+
+#### A near-miss that would have hung CI
+
+The first draft of the `jump-game-ii` near-miss — always jump as far as possible — **never
+terminates** on LeetCode's own example `[2,3,0,1,4]`: it lands on the `0` and adds zero forever.
+The CI audit runs under Pyodide with no timeout, so that one case stalled the whole audit run;
+it was caught only because the run took four times as long as usual, and stopped before it was
+committed.
+
+The native runner used to write these pairs had hidden it. It wrapped each candidate in a single
+alarm, and a hang surfaced as one ordinary failed case, which for a near-miss looks like success.
+It now times every case separately and reports a hang as its own verdict. The near-miss is
+rewritten to give up on a dead end instead of spinning — still wrong, now finite. **Every
+near-miss in the audit must terminate on every case.**
+
 ## Status
 
-122 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
+129 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
 
 ### Batch 1: Arrays & Hashing (9/9 audited)
 - [x] `contains-duplicate` — Easy
@@ -537,15 +562,15 @@ Two generators never broke a length the problem depends on:
 - [x] `edit-distance` — Medium
 - [x] `burst-balloons` — Hard
 - [x] `regular-expression-matching` — Hard
-### Batch 15: Greedy (1/8 audited)
-- [ ] `maximum-subarray` — Medium
-- [ ] `jump-game` — Medium
-- [ ] `jump-game-ii` — Medium
+### Batch 15: Greedy (8/8 audited)
+- [x] `maximum-subarray` — Medium
+- [x] `jump-game` — Medium
+- [x] `jump-game-ii` — Medium
 - [x] `gas-station` — Medium
-- [ ] `hand-of-straights` — Medium
-- [ ] `merge-triplets-to-form-target-triplet` — Medium
-- [ ] `partition-labels` — Medium
-- [ ] `valid-parenthesis-string` — Medium
+- [x] `hand-of-straights` — Medium
+- [x] `merge-triplets-to-form-target-triplet` — Medium
+- [x] `partition-labels` — Medium
+- [x] `valid-parenthesis-string` — Medium
 ### Batch 16: Intervals (0/6 audited)
 - [ ] `insert-interval` — Medium
 - [ ] `merge-intervals` — Medium
