@@ -735,7 +735,9 @@ def _merge_two(rng):
 
 @generator("reorder-list")
 def _reorder(rng):
-    return [linked(rng, rng.randint(1, 12))]
+    # A single node is a fixed point, and the shortest legal input: it is where a split that
+    # assumes at least two nodes crashes. There were none.
+    return [linked(rng, rng.choice([1, 1, 2, 2, 3, 4, 5, 7, 9, 12]))]
 
 
 @generator("remove-nth-node-from-end-of-list")
@@ -746,8 +748,12 @@ def _remove_nth(rng):
 
 @generator("copy-list-with-random-pointer")
 def _copy_random(rng):
+    # Values are not unique, and a list whose values are ALL the same is what catches a map keyed
+    # by value rather than by node -- LeetCode's example 3 is exactly that. Drawing from a 61-wide
+    # range made it near-impossible: two cases in 43 had every value equal.
     n = rng.randint(0, 8)
-    return [[[rng.randint(-30, 30), rng.choice([None] + list(range(n)))] for _ in range(n)]]
+    pool = rng.choice([range(-30, 31), range(-30, 31), range(0, 3), range(3, 4)])
+    return [[[rng.choice(pool), rng.choice([None] + list(range(n)))] for _ in range(n)]]
 
 
 @generator("add-two-numbers")
@@ -762,17 +768,32 @@ def _add_two(rng):
 
 @generator("linked-list-cycle")
 def _has_cycle(rng):
+    # Node values span -10^5..10^5, so no value is a safe "visited" marker; -1 and 0 are what
+    # people reach for, and an acyclic list containing one must still answer false.
     n = rng.randint(0, 10)
     pos = -1 if (n == 0 or rng.random() < 0.5) else rng.randrange(n)
-    return [linked(rng, n), pos]
+    vals = linked(rng, n)
+    if vals and rng.random() < 0.4:
+        vals[rng.randrange(len(vals))] = rng.choice([-1, 0])
+    return [vals, pos]
 
 
 @generator("find-the-duplicate-number")
 def _find_duplicate(rng):
-    # n+1 values drawn from 1..n with exactly one value repeated, as the problem guarantees.
+    """n+1 values from 1..n where exactly one value repeats -- possibly many times.
+
+    The constraint is "appears two or more times", and the old generator always placed exactly two
+    copies. That is precisely the assumption the sum-formula solution makes, so subtracting
+    n(n+1)/2 scored 42/43, failing only LeetCode's own example 3 ([3,3,3,3,3]). Floyd's cycle
+    detection and the count-based binary search are indifferent to the repeat count; the
+    arithmetic tricks are not.
+    """
     n = rng.randint(1, 12)
     dup = rng.randint(1, n)
-    nums = list(range(1, n + 1)) + [dup]
+    others = [v for v in range(1, n + 1) if v != dup]
+    k = 2 if rng.random() < 0.55 else rng.randint(2, n + 1)   # how many copies of dup
+    k = min(k, n + 1)
+    nums = [dup] * k + rng.sample(others, n + 1 - k)
     rng.shuffle(nums)
     return [nums]
 
@@ -1586,13 +1607,37 @@ def _design(classname, ctor_args, steps):
 
 @generator("lru-cache")
 def _lru_cache_gen(rng):
-    steps = []
-    for _ in range(rng.randint(4, 16)):
-        if rng.random() < 0.55:
-            steps.append(("put", [rng.randint(1, 6), rng.randint(1, 20)]))
+    """Operations over a key pool barely larger than the capacity.
+
+    Three separate bugs live here and no single sequence catches all of them: `put` on an existing
+    key failing to refresh recency, `get` failing to refresh it, and evicting before checking
+    membership so a pure update throws something out. All three need the cache to be FULL and the
+    same keys to recur. Keys drawn from 1..6 against a capacity of 1..4 left the interesting
+    collisions to chance -- the put-refresh bug scored 42/43.
+    """
+    cap = rng.randint(1, 3)
+    if rng.random() < 0.3:
+        # Constructed: fill to capacity, touch the least-recently-used key, then force one
+        # eviction and read everything back. Which key survives is the whole question, and random
+        # traffic produced the deciding order rarely enough that the put-refresh bug scored 42/43.
+        keys = list(range(1, cap + 1))
+        steps = [("put", [k, 10 + k]) for k in keys]
+        touch = keys[0]                                  # the current LRU
+        if rng.random() < 0.5:
+            steps.append(("put", [touch, 99]))           # an update must count as a use
         else:
-            steps.append(("get", [rng.randint(1, 6)]))
-    return _design("LRUCache", [rng.randint(1, 4)], steps)
+            steps.append(("get", [touch]))               # and so must a read
+        steps.append(("put", [cap + 1, 77]))             # evicts whichever is now the LRU
+        steps += [("get", [k]) for k in keys + [cap + 1]]
+        return _design("LRUCache", [cap], steps)
+    keys = list(range(1, cap + rng.randint(1, 2) + 1))
+    steps = []
+    for _ in range(rng.randint(8, 20)):
+        if rng.random() < 0.55:
+            steps.append(("put", [rng.choice(keys), rng.randint(1, 20)]))
+        else:
+            steps.append(("get", [rng.choice(keys)]))
+    return _design("LRUCache", [cap], steps)
 
 
 @generator("min-stack")

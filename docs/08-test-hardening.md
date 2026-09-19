@@ -230,9 +230,35 @@ stays correctly unequal.
 This is the second time a change made for the suites turned up a defect in the judge, after the RPN
 malformed-expression finding in batch 4.
 
+### What batch 6 found
+
+The judge was calling two textbook wrong answers correct.
+
+| problem | the gap | after |
+|---|---|---|
+| `reverse-linked-list` | `prev = head` instead of `None` leaves the tail pointing at itself. Scored **43/43** | now **4/43** |
+| `reorder-list` | forgetting `slow.next = None` before reversing leaves the list circular. Scored **42/42**, and there were no single-node cases at all | now **5/42**; 7 single-node cases |
+| `find-the-duplicate-number` | the constraint is "appears **two or more** times", and the generator always placed exactly two copies — the assumption the sum formula makes. It scored **42/43**, failing only LeetCode's example 3 | 16 cases repeat the duplicate more than twice |
+| `copy-list-with-random-pointer` | values are not unique, and an all-identical list is what collapses a map keyed by value. **2** of 43 had one | 8 |
+| `lru-cache` | three separate recency bugs, none caught by one sequence. Keys 1..6 against capacity 1..4 left the deciding order to chance, so the put-refresh bug scored **42/43** | a constructed sequence: fill, touch the LRU, force one eviction, read everything back. Now 36/43 |
+| `linked-list-cycle` | node values span the whole range, so `-1` is not a safe visited marker; few cases contained one | 21 |
+
+#### Why two wrong answers looked right
+
+`from_linked` broke out of a cycle to keep the worker from hanging, and returned what it had walked
+so far. For both bugs above, that prefix is **exactly the correct answer** — the corruption is in
+the final `next` pointer, past every value. A real judge would hang or reject; this one accepted.
+
+It now appends a `<cycle>` marker instead, which keeps the walk finite, makes the result unequal to
+any valid list, and says why in the failure detail.
+
+That is the third judge defect surfaced by this audit, after the RPN malformed expressions in
+batch 4 and non-finite floats in batch 5. The pattern is consistent: a guard added so the harness
+could not crash was also swallowing the evidence.
+
 ## Status
 
-38 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
+49 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
 
 ### Batch 1: Arrays & Hashing (9/9 audited)
 - [x] `contains-duplicate` — Easy
@@ -273,18 +299,18 @@ malformed-expression finding in batch 4.
 - [x] `search-in-rotated-sorted-array` — Medium
 - [x] `time-based-key-value-store` — Medium
 - [x] `median-of-two-sorted-arrays` — Hard
-### Batch 6: Linked List (0/11 audited)
-- [ ] `reverse-linked-list` — Easy
-- [ ] `merge-two-sorted-lists` — Easy
-- [ ] `reorder-list` — Medium
-- [ ] `remove-nth-node-from-end-of-list` — Medium
-- [ ] `copy-list-with-random-pointer` — Medium
-- [ ] `add-two-numbers` — Medium
-- [ ] `linked-list-cycle` — Easy
-- [ ] `find-the-duplicate-number` — Medium
-- [ ] `lru-cache` — Medium
-- [ ] `merge-k-sorted-lists` — Hard
-- [ ] `reverse-nodes-in-k-group` — Hard
+### Batch 6: Linked List (11/11 audited)
+- [x] `reverse-linked-list` — Easy
+- [x] `merge-two-sorted-lists` — Easy
+- [x] `reorder-list` — Medium
+- [x] `remove-nth-node-from-end-of-list` — Medium
+- [x] `copy-list-with-random-pointer` — Medium
+- [x] `add-two-numbers` — Medium
+- [x] `linked-list-cycle` — Easy
+- [x] `find-the-duplicate-number` — Medium
+- [x] `lru-cache` — Medium
+- [x] `merge-k-sorted-lists` — Hard
+- [x] `reverse-nodes-in-k-group` — Hard
 ### Batch 7: Trees (0/15 audited)
 - [ ] `invert-binary-tree` — Easy
 - [ ] `maximum-depth-of-binary-tree` — Easy

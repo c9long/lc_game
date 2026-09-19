@@ -976,7 +976,249 @@ class TimeMap:
 	['median-of-two-sorted-arrays', 'correct merge', true, `class Solution:
     def findMedianSortedArrays(self, nums1, nums2):
         m = sorted(nums1 + nums2); n = len(m)
-        return float(m[n//2]) if n % 2 else (m[n//2 - 1] + m[n//2]) / 2`]
+        return float(m[n//2]) if n % 2 else (m[n//2 - 1] + m[n//2]) / 2`],
+
+	// ---- batch 6: Linked List ----
+	// Both of these return a CIRCULAR list. from_linked used to break out of the cycle silently,
+	// which left exactly the values a correct answer has, so both scored 100%. It now marks the
+	// cycle, and these pairs are what keep that honest.
+	['reverse-linked-list', 'NEAR-MISS prev starts at head, so the tail self-links', false, `class Solution:
+    def reverseList(self, head):
+        prev, cur = head, head
+        while cur:
+            nxt = cur.next; cur.next = prev; prev = cur; cur = nxt
+        return prev`],
+	['reverse-linked-list', 'correct', true, `class Solution:
+    def reverseList(self, head):
+        prev = None
+        while head:
+            nxt = head.next; head.next = prev; prev = head; head = nxt
+        return prev`],
+	['reorder-list', 'NEAR-MISS never cuts the list at the midpoint', false, `class Solution:
+    def reorderList(self, head):
+        slow = fast = head
+        while fast and fast.next:
+            slow = slow.next; fast = fast.next.next
+        second = slow.next
+        prev = None
+        while second:
+            nxt = second.next; second.next = prev; prev = second; second = nxt
+        first, second = head, prev
+        while second:
+            t1, t2 = first.next, second.next
+            first.next = second; second.next = t1
+            first, second = t1, t2`],
+	['reorder-list', 'correct', true, `class Solution:
+    def reorderList(self, head):
+        vals = []
+        cur = head
+        while cur: vals.append(cur.val); cur = cur.next
+        out = []
+        i, j = 0, len(vals) - 1
+        while i <= j:
+            out.append(vals[i])
+            if i != j: out.append(vals[j])
+            i += 1; j -= 1
+        cur = head
+        for v in out: cur.val = v; cur = cur.next
+        return head`],
+
+	// "Appears two or more times", not exactly twice -- which is the assumption the arithmetic
+	// tricks make. The generator used to place exactly two copies always.
+	['find-the-duplicate-number', 'NEAR-MISS sum formula assumes exactly two copies', false, `class Solution:
+    def findDuplicate(self, nums):
+        n = len(nums) - 1
+        return sum(nums) - n * (n + 1) // 2`],
+	['find-the-duplicate-number', 'correct Floyd', true, `class Solution:
+    def findDuplicate(self, nums):
+        slow = fast = 0
+        while True:
+            slow = nums[slow]; fast = nums[nums[fast]]
+            if slow == fast: break
+        slow2 = 0
+        while slow != slow2:
+            slow = nums[slow]; slow2 = nums[slow2]
+        return slow`],
+
+	// Values are not unique, so a map keyed by value collapses the list.
+	['copy-list-with-random-pointer', 'NEAR-MISS map keyed by value', false, `class Solution:
+    def copyRandomList(self, head):
+        if not head: return None
+        m = {}
+        cur = head
+        while cur: m[cur.val] = Node(cur.val); cur = cur.next
+        cur = head
+        while cur:
+            m[cur.val].next = m[cur.next.val] if cur.next else None
+            m[cur.val].random = m[cur.random.val] if cur.random else None
+            cur = cur.next
+        return m[head.val]`],
+	['copy-list-with-random-pointer', 'correct, keyed by node', true, `class Solution:
+    def copyRandomList(self, head):
+        m = {None: None}
+        cur = head
+        while cur: m[cur] = Node(cur.val); cur = cur.next
+        cur = head
+        while cur:
+            m[cur].next = m[cur.next]; m[cur].random = m[cur.random]; cur = cur.next
+        return m[head]`],
+
+	['remove-nth-node-from-end-of-list', 'NEAR-MISS no dummy, cannot remove the head', false, `class Solution:
+    def removeNthFromEnd(self, head, n):
+        fast = head
+        for _ in range(n): fast = fast.next
+        slow = head
+        while fast.next: fast = fast.next; slow = slow.next
+        slow.next = slow.next.next
+        return head`],
+	['remove-nth-node-from-end-of-list', 'correct with a dummy', true, `class Solution:
+    def removeNthFromEnd(self, head, n):
+        dummy = ListNode(0, head)
+        fast = slow = dummy
+        for _ in range(n): fast = fast.next
+        while fast.next: fast = fast.next; slow = slow.next
+        slow.next = slow.next.next
+        return dummy.next`],
+
+	['reverse-nodes-in-k-group', 'NEAR-MISS reverses the trailing short group', false, `class Solution:
+    def reverseKGroup(self, head, k):
+        vals = []
+        cur = head
+        while cur: vals.append(cur.val); cur = cur.next
+        out = []
+        for i in range(0, len(vals), k): out += vals[i:i+k][::-1]
+        cur = head
+        for v in out: cur.val = v; cur = cur.next
+        return head`],
+	['reverse-nodes-in-k-group', 'correct', true, `class Solution:
+    def reverseKGroup(self, head, k):
+        vals = []
+        cur = head
+        while cur: vals.append(cur.val); cur = cur.next
+        out = []
+        for i in range(0, len(vals), k):
+            g = vals[i:i+k]
+            out += g[::-1] if len(g) == k else g
+        cur = head
+        for v in out: cur.val = v; cur = cur.next
+        return head`],
+
+	['add-two-numbers', 'NEAR-MISS drops the final carry', false, `class Solution:
+    def addTwoNumbers(self, l1, l2):
+        dummy = ListNode(); cur = dummy; carry = 0
+        while l1 or l2:
+            a = l1.val if l1 else 0; b = l2.val if l2 else 0
+            s = a + b + carry; carry = s // 10
+            cur.next = ListNode(s % 10); cur = cur.next
+            l1 = l1.next if l1 else None; l2 = l2.next if l2 else None
+        return dummy.next`],
+	['add-two-numbers', 'correct', true, `class Solution:
+    def addTwoNumbers(self, l1, l2):
+        dummy = ListNode(); cur = dummy; carry = 0
+        while l1 or l2 or carry:
+            a = l1.val if l1 else 0; b = l2.val if l2 else 0
+            s = a + b + carry; carry = s // 10
+            cur.next = ListNode(s % 10); cur = cur.next
+            l1 = l1.next if l1 else None; l2 = l2.next if l2 else None
+        return dummy.next`],
+
+	['merge-two-sorted-lists', 'NEAR-MISS never attaches the remainder', false, `class Solution:
+    def mergeTwoLists(self, list1, list2):
+        dummy = ListNode(); cur = dummy
+        while list1 and list2:
+            if list1.val <= list2.val: cur.next = list1; list1 = list1.next
+            else: cur.next = list2; list2 = list2.next
+            cur = cur.next
+        return dummy.next`],
+	['merge-two-sorted-lists', 'correct', true, `class Solution:
+    def mergeTwoLists(self, list1, list2):
+        dummy = ListNode(); cur = dummy
+        while list1 and list2:
+            if list1.val <= list2.val: cur.next = list1; list1 = list1.next
+            else: cur.next = list2; list2 = list2.next
+            cur = cur.next
+        cur.next = list1 or list2
+        return dummy.next`],
+
+	// Two lists starting on the same value make Python fall through to comparing ListNodes.
+	['merge-k-sorted-lists', 'NEAR-MISS heap tuple with no tiebreaker', false, `import heapq
+class Solution:
+    def mergeKLists(self, lists):
+        h = []
+        for node in lists:
+            if node: heapq.heappush(h, (node.val, node))
+        dummy = ListNode(); cur = dummy
+        while h:
+            _, node = heapq.heappop(h)
+            cur.next = node; cur = node
+            if node.next: heapq.heappush(h, (node.next.val, node.next))
+        cur.next = None
+        return dummy.next`],
+	['merge-k-sorted-lists', 'correct with an index tiebreaker', true, `import heapq
+class Solution:
+    def mergeKLists(self, lists):
+        h = []
+        for i, node in enumerate(lists):
+            if node: heapq.heappush(h, (node.val, i, node))
+        dummy = ListNode(); cur = dummy
+        while h:
+            _, i, node = heapq.heappop(h)
+            cur.next = node; cur = node
+            if node.next: heapq.heappush(h, (node.next.val, i, node.next))
+        cur.next = None
+        return dummy.next`],
+
+	// Node values span the full range, so no value is a safe "visited" marker.
+	['linked-list-cycle', 'NEAR-MISS marks visited nodes with -1', false, `class Solution:
+    def hasCycle(self, head):
+        while head:
+            if head.val == -1: return True
+            head.val = -1
+            head = head.next
+        return False`],
+	['linked-list-cycle', 'correct Floyd', true, `class Solution:
+    def hasCycle(self, head):
+        slow = fast = head
+        while fast and fast.next:
+            slow = slow.next; fast = fast.next.next
+            if slow is fast: return True
+        return False`],
+
+	// Three separate recency bugs, none of which one sequence catches.
+	['lru-cache', 'NEAR-MISS put on an existing key does not refresh recency', false, `class LRUCache:
+    def __init__(self, capacity):
+        self.cap = capacity; self.d = {}; self.order = []
+    def get(self, key):
+        if key not in self.d: return -1
+        self.order.remove(key); self.order.append(key)
+        return self.d[key]
+    def put(self, key, value):
+        if key in self.d:
+            self.d[key] = value
+            return
+        if len(self.d) >= self.cap:
+            old = self.order.pop(0); del self.d[old]
+        self.d[key] = value; self.order.append(key)`],
+	['lru-cache', 'NEAR-MISS get does not refresh recency', false, `class LRUCache:
+    def __init__(self, capacity):
+        self.cap = capacity; self.d = {}; self.order = []
+    def get(self, key): return self.d.get(key, -1)
+    def put(self, key, value):
+        if key in self.d: self.order.remove(key)
+        elif len(self.d) >= self.cap:
+            old = self.order.pop(0); del self.d[old]
+        self.d[key] = value; self.order.append(key)`],
+	['lru-cache', 'correct', true, `from collections import OrderedDict
+class LRUCache:
+    def __init__(self, capacity):
+        self.cap = capacity; self.d = OrderedDict()
+    def get(self, key):
+        if key not in self.d: return -1
+        self.d.move_to_end(key); return self.d[key]
+    def put(self, key, value):
+        if key in self.d: self.d.move_to_end(key)
+        self.d[key] = value
+        if len(self.d) > self.cap: self.d.popitem(last=False)`]
 ];
 
 let bad = 0;

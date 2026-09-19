@@ -80,11 +80,24 @@ def to_linked(vals, ns):
     return head
 
 
+CYCLE_MARK = "<cycle>"
+
+
 def from_linked(head):
+    """A returned list as plain values, with a cycle reported rather than hidden.
+
+    Breaking out of a cycle silently is not enough: truncating at the repeat often leaves exactly
+    the values a correct answer would have, so the classic reorder-list bug (forgetting
+    `slow.next = None` before reversing) and the classic reverse-linked-list bug (`prev = head`
+    instead of `None`) both scored a clean 100%. The list they return is circular and would hang a
+    real judge; here it looked right. Appending a marker keeps the worker safe from the infinite
+    walk while making the answer unequal to any valid list, and says why in the failure detail.
+    """
     out = []
     seen = set()
     while head is not None:
-        if id(head) in seen:  # a cycle would otherwise hang the worker
+        if id(head) in seen:
+            out.append(CYCLE_MARK)
             break
         seen.add(id(head))
         out.append(head.val)
