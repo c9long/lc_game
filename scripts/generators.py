@@ -201,11 +201,18 @@ def _balanced_brackets(rng, pairs):
     return out
 
 
-def intervals(rng, n, lo=0, hi=40):
+def intervals(rng, n, lo=0, hi=40, strict=False):
+    """n random intervals. strict=True keeps every start below its end.
+
+    Several interval problems require start < end (435, 252, 253) while others allow a point
+    interval start == end (56, 57, 1851). A point interval where it is forbidden is a meeting that
+    starts and ends at once, which correct solutions resolve differently: one correct
+    meeting-rooms-ii solution scored 40/42 on [9, 9].
+    """
     out = []
     for _ in range(n):
         a = rng.randint(lo, hi)
-        out.append([a, a + rng.randint(0, 10)])
+        out.append([a, a + rng.randint(1 if strict else 0, 10)])
     return out
 
 
@@ -1793,17 +1800,21 @@ def _merge_intervals(rng):
 
 @generator("non-overlapping-intervals")
 def _non_overlapping(rng):
-    return [intervals(rng, rng.randint(1, 8))]
+    # -5*10^4 <= start < end: negative starts are legal, and they are what catches a running end
+    # seeded at 0 rather than -infinity. There were none, so that scored 43/43.
+    lo, hi = rng.choice([(0, 40), (0, 40), (-40, 0), (-40, 40)])
+    return [intervals(rng, rng.randint(1, 8), lo, hi, strict=True)]
 
 
 @generator("meeting-rooms")
 def _meeting_rooms(rng):
-    return [intervals(rng, rng.randint(0, 8))]
+    return [intervals(rng, rng.randint(0, 8), strict=True)]
 
 
 @generator("meeting-rooms-ii")
 def _meeting_rooms_ii(rng):
-    return [intervals(rng, rng.randint(0, 8))]
+    # 1 <= intervals.length, and start < end.
+    return [intervals(rng, rng.randint(1, 8), strict=True)]
 
 
 @generator("minimum-interval-to-include-each-query")

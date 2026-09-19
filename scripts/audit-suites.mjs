@@ -3249,7 +3249,163 @@ class Solution:
             hi += 1 if c != ")" else -1
             if hi < 0: return False
             lo = max(lo, 0)
-        return lo == 0`]
+        return lo == 0`],
+
+	// ---- batch 16: Intervals ----
+	// Whether touching intervals overlap differs by problem: 56 and 57 merge them, 435, 252 and 253
+	// treat them as separate. A point interval, start == end, is legal only in 56, 57 and 1851.
+	['merge-intervals', 'NEAR-MISS strict comparison, touching intervals kept apart', false, `class Solution:
+    def merge(self, intervals):
+        out = []
+        for s, e in sorted(intervals):
+            if out and s < out[-1][1]: out[-1][1] = max(out[-1][1], e)
+            else: out.append([s, e])
+        return out`],
+	['merge-intervals', 'NEAR-MISS no sort', false, `class Solution:
+    def merge(self, intervals):
+        out = []
+        for s, e in intervals:
+            if out and s <= out[-1][1]: out[-1][1] = max(out[-1][1], e)
+            else: out.append([s, e])
+        return out`],
+	['merge-intervals', 'NEAR-MISS end not taken as a max, so containment shrinks', false, `class Solution:
+    def merge(self, intervals):
+        out = []
+        for s, e in sorted(intervals):
+            if out and s <= out[-1][1]: out[-1][1] = e
+            else: out.append([s, e])
+        return out`],
+	['merge-intervals', 'correct', true, `class Solution:
+    def merge(self, intervals):
+        out = []
+        for s, e in sorted(intervals):
+            if out and s <= out[-1][1]: out[-1][1] = max(out[-1][1], e)
+            else: out.append([s, e])
+        return out`],
+	['insert-interval', 'NEAR-MISS strict comparisons, touching intervals kept apart', false, `class Solution:
+    def insert(self, intervals, newInterval):
+        out = []; s, e = newInterval; placed = False
+        for a, b in intervals:
+            if b < s: out.append([a, b])
+            elif a > e:
+                if not placed: out.append([s, e]); placed = True
+                out.append([a, b])
+            elif b == s or a == e:
+                out.append([a, b])
+            else: s, e = min(s, a), max(e, b)
+        if not placed: out.append([s, e])
+        return sorted(out)`],
+	['insert-interval', 'NEAR-MISS never takes the min of the starts', false, `class Solution:
+    def insert(self, intervals, newInterval):
+        out = []; s, e = newInterval; placed = False
+        for a, b in intervals:
+            if b < s: out.append([a, b])
+            elif a > e:
+                if not placed: out.append([s, e]); placed = True
+                out.append([a, b])
+            else: e = max(e, b)
+        if not placed: out.append([s, e])
+        return out`],
+	['insert-interval', 'correct', true, `class Solution:
+    def insert(self, intervals, newInterval):
+        out = []; s, e = newInterval; placed = False
+        for a, b in intervals:
+            if b < s: out.append([a, b])
+            elif a > e:
+                if not placed: out.append([s, e]); placed = True
+                out.append([a, b])
+            else: s, e = min(s, a), max(e, b)
+        if not placed: out.append([s, e])
+        return out`],
+	['non-overlapping-intervals', 'NEAR-MISS touching counted as overlap', false, `class Solution:
+    def eraseOverlapIntervals(self, intervals):
+        n = 0; end = float("-inf")
+        for s, e in sorted(intervals, key=lambda x: x[1]):
+            if s > end: end = e
+            else: n += 1
+        return n`],
+	['non-overlapping-intervals', 'NEAR-MISS sorts by start and keeps the earlier interval', false, `class Solution:
+    def eraseOverlapIntervals(self, intervals):
+        n = 0; end = float("-inf")
+        for s, e in sorted(intervals):
+            if s >= end: end = e
+            else: n += 1
+        return n`],
+	['non-overlapping-intervals', 'NEAR-MISS end seeded at 0, wrong for negative starts', false, `class Solution:
+    def eraseOverlapIntervals(self, intervals):
+        n = 0; end = 0
+        for s, e in sorted(intervals, key=lambda x: x[1]):
+            if s >= end: end = e
+            else: n += 1
+        return n`],
+	['non-overlapping-intervals', 'correct', true, `class Solution:
+    def eraseOverlapIntervals(self, intervals):
+        n = 0; end = float("-inf")
+        for s, e in sorted(intervals, key=lambda x: x[1]):
+            if s >= end: end = e
+            else: n += 1
+        return n`],
+	['meeting-rooms', 'NEAR-MISS a meeting ending when another starts is a clash', false, `class Solution:
+    def canAttendMeetings(self, intervals):
+        iv = sorted(intervals)
+        return all(iv[i][0] > iv[i-1][1] for i in range(1, len(iv)))`],
+	['meeting-rooms', 'NEAR-MISS no sort', false, `class Solution:
+    def canAttendMeetings(self, intervals):
+        return all(intervals[i][0] >= intervals[i-1][1] for i in range(1, len(intervals)))`],
+	['meeting-rooms', 'correct', true, `class Solution:
+    def canAttendMeetings(self, intervals):
+        iv = sorted(intervals)
+        return all(iv[i][0] >= iv[i-1][1] for i in range(1, len(iv)))`],
+	['meeting-rooms-ii', 'NEAR-MISS frees a room only strictly before the start', false, `class Solution:
+    def minMeetingRooms(self, intervals):
+        import heapq
+        h = []
+        for s, e in sorted(intervals):
+            if h and h[0] < s: heapq.heapreplace(h, e)
+            else: heapq.heappush(h, e)
+        return len(h)`],
+	['meeting-rooms-ii', 'NEAR-MISS overlaps counted against the previous meeting only', false, `class Solution:
+    def minMeetingRooms(self, intervals):
+        iv = sorted(intervals); rooms = best = 1 if iv else 0
+        for i in range(1, len(iv)):
+            rooms = rooms + 1 if iv[i][0] < iv[i-1][1] else 1
+            best = max(best, rooms)
+        return best`],
+	['meeting-rooms-ii', 'correct', true, `class Solution:
+    def minMeetingRooms(self, intervals):
+        import heapq
+        h = []
+        for s, e in sorted(intervals):
+            if h and h[0] <= s: heapq.heapreplace(h, e)
+            else: heapq.heappush(h, e)
+        return len(h)`],
+	['minimum-interval-to-include-each-query', 'NEAR-MISS size as right minus left, exclusive', false, `class Solution:
+    def minInterval(self, intervals, queries):
+        out = []
+        for q in queries:
+            best = min((r - l for l, r in intervals if l <= q <= r), default=None)
+            out.append(-1 if best is None else best)
+        return out`],
+	['minimum-interval-to-include-each-query', 'NEAR-MISS answers in sorted-query order', false, `class Solution:
+    def minInterval(self, intervals, queries):
+        out = []
+        for q in sorted(queries):
+            best = min((r - l + 1 for l, r in intervals if l <= q <= r), default=-1)
+            out.append(best)
+        return out`],
+	['minimum-interval-to-include-each-query', 'NEAR-MISS right end treated as exclusive', false, `class Solution:
+    def minInterval(self, intervals, queries):
+        out = []
+        for q in queries:
+            best = min((r - l + 1 for l, r in intervals if l <= q < r), default=-1)
+            out.append(best)
+        return out`],
+	['minimum-interval-to-include-each-query', 'correct', true, `class Solution:
+    def minInterval(self, intervals, queries):
+        out = []
+        for q in queries:
+            out.append(min((r - l + 1 for l, r in intervals if l <= q <= r), default=-1))
+        return out`]
 ];
 
 let bad = 0;
