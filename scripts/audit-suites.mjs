@@ -536,7 +536,216 @@ const cases = [
         lo, best = float("inf"), 0
         for p in prices:
             lo = min(lo, p); best = max(best, p - lo)
-        return best`]
+        return best`],
+
+	// ---- batch 4: Stack ----
+	// Two suites were caught by a PUBLISHED EXAMPLE and by nothing else, which is the same as not
+	// being tested: car-fleet's tie rule and min-stack's duplicate minimum each failed one case.
+	['car-fleet', 'NEAR-MISS a tie starts a new fleet', false, `class Solution:
+    def carFleet(self, target, position, speed):
+        st = []
+        for p, s in sorted(zip(position, speed), reverse=True):
+            t = (target - p) / s
+            if not st or t >= st[-1]: st.append(t)
+        return len(st)`],
+	['car-fleet', 'NEAR-MISS walks the cars away from the target first', false, `class Solution:
+    def carFleet(self, target, position, speed):
+        st = []
+        for p, s in sorted(zip(position, speed)):
+            t = (target - p) / s
+            if st and t <= st[-1]: continue
+            st.append(t)
+        return len(st)`],
+	['car-fleet', 'NEAR-MISS sorts positions and speeds apart', false, `class Solution:
+    def carFleet(self, target, position, speed):
+        st = []
+        for p, s in zip(sorted(position, reverse=True), sorted(speed, reverse=True)):
+            t = (target - p) / s
+            if not st or t > st[-1]: st.append(t)
+        return len(st)`],
+	['car-fleet', 'correct monotonic stack', true, `class Solution:
+    def carFleet(self, target, position, speed):
+        st = []
+        for p, s in sorted(zip(position, speed), reverse=True):
+            t = (target - p) / s
+            if not st or t > st[-1]: st.append(t)
+        return len(st)`],
+
+	['min-stack', 'NEAR-MISS records only strict improvements to the minimum', false, `class MinStack:
+    def __init__(self): self.st = []; self.mn = []
+    def push(self, val):
+        self.st.append(val)
+        if not self.mn or val < self.mn[-1]: self.mn.append(val)
+    def pop(self):
+        v = self.st.pop()
+        if self.mn and v == self.mn[-1]: self.mn.pop()
+    def top(self): return self.st[-1]
+    def getMin(self): return self.mn[-1]`],
+	['min-stack', 'NEAR-MISS single minimum, never restored on pop', false, `class MinStack:
+    def __init__(self): self.st = []; self.mn = None
+    def push(self, val):
+        self.st.append(val)
+        self.mn = val if self.mn is None else min(self.mn, val)
+    def pop(self): self.st.pop()
+    def top(self): return self.st[-1]
+    def getMin(self): return self.mn`],
+	['min-stack', 'correct value/min pair stack', true, `class MinStack:
+    def __init__(self): self.st = []
+    def push(self, val):
+        m = val if not self.st else min(val, self.st[-1][1])
+        self.st.append((val, m))
+    def pop(self): self.st.pop()
+    def top(self): return self.st[-1][0]
+    def getMin(self): return self.st[-1][1]`],
+
+	// Division truncates toward ZERO, so -7 / 2 is -3 where Python's // gives -4. Only a division
+	// with a negative quotient and a non-zero remainder can tell them apart.
+	['evaluate-reverse-polish-notation', 'NEAR-MISS floor division', false, `class Solution:
+    def evalRPN(self, tokens):
+        st = []
+        for t in tokens:
+            if len(t) == 1 and t in "+-*/":
+                b = st.pop(); a = st.pop()
+                st.append(a + b if t == "+" else a - b if t == "-" else a * b if t == "*" else a // b)
+            else: st.append(int(t))
+        return st[-1]`],
+	['evaluate-reverse-polish-notation', 'NEAR-MISS isdigit() misreads a negative literal', false, `class Solution:
+    def evalRPN(self, tokens):
+        st = []
+        for t in tokens:
+            if t.isdigit(): st.append(int(t))
+            else:
+                b = st.pop(); a = st.pop()
+                st.append(a + b if t == "+" else a - b if t == "-" else a * b if t == "*" else int(a / b))
+        return st[-1]`],
+	['evaluate-reverse-polish-notation', 'NEAR-MISS swapped operand order', false, `class Solution:
+    def evalRPN(self, tokens):
+        st = []
+        for t in tokens:
+            if len(t) == 1 and t in "+-*/":
+                a = st.pop(); b = st.pop()
+                st.append(a + b if t == "+" else a - b if t == "-" else a * b if t == "*" else int(a / b))
+            else: st.append(int(t))
+        return st[-1]`],
+	// Reads stack[-1] where the vendored reference reads stack[0]. The two agree only while every
+	// expression is well formed, which is why this pair is here: two generated cases were not, and
+	// the reference answered the first token rather than raising.
+	['evaluate-reverse-polish-notation', 'correct, truncating toward zero', true, `import math
+class Solution:
+    def evalRPN(self, tokens):
+        st = []
+        for t in tokens:
+            if len(t) == 1 and t in "+-*/":
+                b = st.pop(); a = st.pop()
+                st.append(a + b if t == "+" else a - b if t == "-" else a * b if t == "*" else math.trunc(a / b))
+            else: st.append(int(t))
+        return st[-1]`],
+
+	['valid-parentheses', 'NEAR-MISS never checks the stack is empty at the end', false, `class Solution:
+    def isValid(self, s):
+        m = {")": "(", "]": "[", "}": "{"}; st = []
+        for c in s:
+            if c in m:
+                if not st or st.pop() != m[c]: return False
+            else: st.append(c)
+        return True`],
+	['valid-parentheses', 'NEAR-MISS counts brackets instead of matching them', false, `class Solution:
+    def isValid(self, s):
+        return all(s.count(o) == s.count(c) for o, c in (("(", ")"), ("[", "]"), ("{", "}")))`],
+	['valid-parentheses', 'NEAR-MISS tracks depth, ignoring bracket type', false, `class Solution:
+    def isValid(self, s):
+        d = 0
+        for c in s:
+            d += 1 if c in "([{" else -1
+            if d < 0: return False
+        return d == 0`],
+	['valid-parentheses', 'correct', true, `class Solution:
+    def isValid(self, s):
+        m = {")": "(", "]": "[", "}": "{"}; st = []
+        for c in s:
+            if c in m:
+                if not st or st.pop() != m[c]: return False
+            else: st.append(c)
+        return not st`],
+
+	['daily-temperatures', 'NEAR-MISS treats an equal temperature as warmer', false, `class Solution:
+    def dailyTemperatures(self, temperatures):
+        res = [0] * len(temperatures); st = []
+        for i, t in enumerate(temperatures):
+            while st and t >= temperatures[st[-1]]:
+                j = st.pop(); res[j] = i - j
+            st.append(i)
+        return res`],
+	['daily-temperatures', 'correct monotonic stack', true, `class Solution:
+    def dailyTemperatures(self, temperatures):
+        res = [0] * len(temperatures); st = []
+        for i, t in enumerate(temperatures):
+            while st and t > temperatures[st[-1]]:
+                j = st.pop(); res[j] = i - j
+            st.append(i)
+        return res`],
+
+	['largest-rectangle-in-histogram', 'NEAR-MISS never drains the stack at the end', false, `class Solution:
+    def largestRectangleArea(self, heights):
+        st = []; best = 0
+        for i, h in enumerate(heights):
+            start = i
+            while st and st[-1][1] > h:
+                idx, ht = st.pop(); best = max(best, ht * (i - idx)); start = idx
+            st.append((start, h))
+        return best`],
+	// Strict on both sides makes every bar in a plateau a rectangle of width 1.
+	['largest-rectangle-in-histogram', 'NEAR-MISS strict on both sides of a plateau', false, `class Solution:
+    def largestRectangleArea(self, heights):
+        n = len(heights); best = 0
+        for i, h in enumerate(heights):
+            l = i
+            while l > 0 and heights[l-1] > h: l -= 1
+            r = i
+            while r < n - 1 and heights[r+1] > h: r += 1
+            best = max(best, h * (r - l + 1))
+        return best`],
+	['largest-rectangle-in-histogram', 'correct with a zero sentinel', true, `class Solution:
+    def largestRectangleArea(self, heights):
+        hs = heights + [0]; st = []; best = 0
+        for i, h in enumerate(hs):
+            while st and hs[st[-1]] > h:
+                ht = hs[st.pop()]
+                w = i if not st else i - st[-1] - 1
+                best = max(best, ht * w)
+            st.append(i)
+        return best`],
+
+	// The unordered comparison sorts rather than de-duplicating, so a list with repeats still fails.
+	['generate-parentheses', 'NEAR-MISS insertion, producing duplicates', false, `class Solution:
+    def generateParenthesis(self, n):
+        out = ["()"]
+        for _ in range(n - 1):
+            nxt = []
+            for s in out:
+                for i in range(len(s) + 1): nxt.append(s[:i] + "()" + s[i:])
+            out = nxt
+        return out`],
+	['generate-parentheses', 'NEAR-MISS closes whenever close < n', false, `class Solution:
+    def generateParenthesis(self, n):
+        res = []
+        def go(cur, o, c):
+            if len(cur) == 2 * n:
+                res.append(cur); return
+            if o < n: go(cur + "(", o + 1, c)
+            if c < n: go(cur + ")", o, c + 1)
+        go("", 0, 0)
+        return res`],
+	['generate-parentheses', 'correct backtracking', true, `class Solution:
+    def generateParenthesis(self, n):
+        res = []
+        def go(cur, o, c):
+            if len(cur) == 2 * n:
+                res.append(cur); return
+            if o < n: go(cur + "(", o + 1, c)
+            if c < o: go(cur + ")", o, c + 1)
+        go("", 0, 0)
+        return res`]
 ];
 
 let bad = 0;

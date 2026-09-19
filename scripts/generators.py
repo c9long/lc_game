@@ -131,6 +131,19 @@ def grid(rng, rows, cols, choices):
     return [[rng.choice(choices) for _ in range(cols)] for _ in range(rows)]
 
 
+def _balanced_brackets(rng, pairs):
+    """A properly nested bracket string, built so balanced inputs are common rather than lucky."""
+    out = ""
+    for _ in range(pairs):
+        o, c = rng.choice([("(", ")"), ("[", "]"), ("{", "}")])
+        if out and rng.random() < 0.5:               # nest inside what we have
+            i = rng.randrange(len(out) + 1)
+            out = out[:i] + o + c + out[i:]
+        else:
+            out = out + o + c
+    return out
+
+
 def intervals(rng, n, lo=0, hi=40):
     out = []
     for _ in range(n):
@@ -406,7 +419,28 @@ def _char_replacement(rng):
 
 @generator("valid-parentheses")
 def _valid_parens(rng):
-    return [word(rng, rng.randint(0, 10), "()[]{}")]
+    # The constraint is 1 <= s.length, so an empty string is not a legal input; three of the
+    # generated cases used to be empty. Purely random strings are also almost never balanced --
+    # only 6 of 45 cases had answer true -- which lets "return False" score most of the suite and
+    # leaves the interesting failures (right counts, wrong nesting, like "([)]") to chance.
+    roll = rng.random()
+    if roll < 0.55:
+        s = _balanced_brackets(rng, rng.randint(1, 5))
+        if not s:
+            return None
+        kind = rng.random()
+        if kind < 0.3:                               # swap two brackets: counts stay right, the
+            i, j = rng.sample(range(len(s)), 2)      # nesting does not, as in "([)]"
+            chars = list(s)
+            chars[i], chars[j] = chars[j], chars[i]
+            s = "".join(chars)
+        elif kind < 0.55:                            # substitute one, breaking the match
+            i = rng.randrange(len(s))
+            s = s[:i] + rng.choice("()[]{}") + s[i + 1:]
+        elif kind < 0.7:                             # truncate, leaving an opener unclosed
+            s = s[:rng.randrange(1, len(s) + 1)]
+        return [s]
+    return [word(rng, rng.randint(1, 10), "()[]{}")]
 
 
 @generator("valid-parenthesis-string")
@@ -416,19 +450,58 @@ def _valid_paren_string(rng):
 
 @generator("evaluate-reverse-polish-notation")
 def _rpn(rng):
-    # Build a provably well-formed expression by construction rather than by rejection.
+    """A well-formed expression, built and evaluated together.
+
+    Evaluating as we build is what makes two guarantees possible. First, "there will not be any
+    division by zero": the old version drew operands from -9..9 and emitted / blindly, so a zero
+    divisor was pure luck. Second, and the point of the rewrite: division truncates toward ZERO,
+    so -7 / 2 is -3, while Python's // gives -4. Only a division with a negative quotient AND a
+    non-zero remainder tells the two apart, and there were 8 divisions in 43 cases, none of them
+    of that shape -- the floor-division bug was caught by LeetCode's own example and nothing else.
+    So when a division is placed, prefer operands that disagree.
+    """
+    def apply(op, a, b):
+        if op == "+":
+            return a + b
+        if op == "-":
+            return a - b
+        if op == "*":
+            return a * b
+        return int(a / b)                            # truncates toward zero, as the problem says
+
+    def reduce_once():
+        op = rng.choice(["+", "-", "*", "/"])
+        if op == "/" and vals[-1] == 0:              # "there will not be any division by zero"
+            op = rng.choice(["+", "-", "*"])
+        tokens.append(op)
+        vals[-2:] = [apply(op, vals[-2], vals[-1])]
+
     tokens = [str(rng.randint(-9, 9))]
-    depth = 1
-    for _ in range(rng.randint(0, 5)):
-        if depth >= 2 and rng.random() < 0.5:
-            tokens.append(rng.choice(["+", "-", "*", "/"]))
-            depth -= 1
+    vals = [int(tokens[0])]
+    for _ in range(rng.randint(0, 6)):
+        roll = rng.random()
+        # Append a divisor chosen so that floor and truncation disagree, then divide by it. This
+        # appends rather than rewriting: an earlier version replaced tokens[-1], which silently
+        # overwrote an operator and left two expressions malformed. The reference returns
+        # stack[0], so a leftover stack does not raise -- it quietly answers the first token, and
+        # a genuinely correct solution reading stack[-1] was failed by those cases.
+        if roll < 0.3 and vals[-1] != 0:
+            a = vals[-1]
+            choices = [b for b in range(-9, 10) if b != 0 and (a < 0) != (b < 0) and a % b != 0]
+            if choices:
+                b = rng.choice(choices)
+                tokens.append(str(b))
+                tokens.append("/")
+                vals[-1] = apply("/", a, b)
+                continue
+        if len(vals) >= 2 and roll < 0.65:
+            reduce_once()
         else:
-            tokens.append(str(rng.randint(-9, 9)))
-            depth += 1
-    while depth > 1:
-        tokens.append(rng.choice(["+", "-", "*"]))
-        depth -= 1
+            n = rng.randint(-9, 9)
+            tokens.append(str(n))
+            vals.append(n)
+    while len(vals) > 1:
+        reduce_once()
     return [tokens]
 
 
@@ -1200,27 +1273,63 @@ def _min_interval(rng):
 
 # ---------- Stack / Sliding Window / Binary Search ----------
 
-@generator("generate-parentheses", count=8)
+@generator("generate-parentheses", count=16)
 def _generate_parens(rng):
-    return [rng.randint(1, 7)]
+    # 1 <= n <= 8. n = 8 is the only case big enough (1430 strings) to catch a solution that is
+    # right for small n by luck, and it was missing entirely; drawn uniformly it stayed missing,
+    # so it is weighted.
+    return [rng.choice([1, 2, 3, 4, 5, 6, 7, 8, 8, 8])]
 
 
 @generator("daily-temperatures")
 def _daily_temps(rng):
-    return [ints(rng, rng.randint(1, 15), 30, 100)]
+    # A later day at the SAME temperature is not warmer, which is what separates > from >=. Over
+    # the full 30..100 range ties are uncommon, so draw from a narrow band much of the time.
+    lo, hi = rng.choice([(30, 100), (30, 100), (70, 73), (40, 42), (50, 50)])
+    return [ints(rng, rng.randint(1, 15), lo, hi)]
 
 
 @generator("car-fleet")
 def _car_fleet(rng):
-    n = rng.randint(1, 9)
-    pos = rng.sample(range(0, 60), n)               # positions are distinct
-    target = max(pos) + rng.randint(1, 20)
+    # "If a car catches up to a fleet AT the mile target, it is still part of that fleet", so a
+    # tie in arrival time must merge. Random positions and speeds essentially never tie: exactly
+    # one case in 43 did, and it was LeetCode's own example. The bug that counts a tie as a new
+    # fleet therefore scored 42/43 -- it was caught by the published example and nothing else.
+    # So build ties outright: fix a whole-number arrival time T and place cars at target - T * s.
+    target = rng.randint(10, 80)
+    if rng.random() < 0.55:
+        T = rng.randint(1, 8)
+        speeds = rng.sample(range(1, 11), rng.randint(2, 4))
+        tied = [(target - T * sp, sp) for sp in speeds]
+        cars = [(p, sp) for p, sp in tied if 0 <= p < target]
+        if len(cars) < 2:
+            return None
+        used = {p for p, _ in cars}
+        for _ in range(rng.randint(0, 5)):          # plus ordinary cars around them
+            p = rng.randrange(0, target)
+            if p not in used:
+                used.add(p)
+                cars.append((p, rng.randint(1, 10)))
+        rng.shuffle(cars)
+        return [target, [p for p, _ in cars], [sp for _, sp in cars]]
+    n = rng.choice([1, 1, 2, 3, 4, 5, 6, 7, 8, 9])  # n == 1 always answers 1, and must appear
+    pos = rng.sample(range(0, target), n)           # positions are distinct, and below target
     return [target, pos, [rng.randint(1, 10) for _ in range(n)]]
 
 
 @generator("largest-rectangle-in-histogram")
 def _largest_rectangle(rng):
-    return [ints(rng, rng.randint(1, 14), 0, 20)]
+    n = rng.randint(1, 14)
+    shape = rng.random()
+    if shape < 0.2:                                  # plateaus: the prev/next-smaller strictness bug
+        out = []
+        while len(out) < n:
+            out += [rng.randint(0, 20)] * rng.randint(2, 4)
+        return [out[:n]]
+    if shape < 0.3:                                  # monotonic: everything comes from the final flush
+        vals = sorted(ints(rng, n, 0, 20), reverse=rng.random() < 0.5)
+        return [vals]
+    return [ints(rng, n, 0, 20)]
 
 
 @generator("permutation-in-string")
@@ -1447,15 +1556,26 @@ def _lru_cache_gen(rng):
 
 @generator("min-stack")
 def _min_stack_gen(rng):
-    steps, size = [], 0
+    # Pushing the CURRENT MINIMUM a second time and then popping once is the classic failure:
+    # a min-stack that only records strict improvements pops its single copy and then reports the
+    # wrong minimum, or empties itself. Values drawn independently from a 41-wide range almost
+    # never repeat, so that sequence never appeared and the bug scored 42/43 -- caught only by a
+    # hand-written extra case. Push from a narrow pool, and sometimes re-push the minimum
+    # outright, so duplicate minima are ordinary rather than lucky.
+    pool = rng.choice([range(-20, 21), range(-3, 4), range(0, 3)])
+    steps, live = [], []
     for _ in range(rng.randint(4, 18)):
         roll = rng.random()
-        if size == 0 or roll < 0.45:               # top/pop/getMin need a non-empty stack
-            steps.append(("push", [rng.randint(-20, 20)]))
-            size += 1
+        if not live or roll < 0.45:                # top/pop/getMin need a non-empty stack
+            if live and rng.random() < 0.35:
+                val = min(live)                    # duplicate the minimum on purpose
+            else:
+                val = rng.choice(pool)
+            steps.append(("push", [val]))
+            live.append(val)
         elif roll < 0.6:
             steps.append(("pop", []))
-            size -= 1
+            live.pop()
         elif roll < 0.8:
             steps.append(("top", []))
         else:

@@ -120,818 +120,59 @@
         [
           "MinStack",
           "push",
+          "push",
           "getMin",
           "push",
-          "push",
+          "pop",
           "top",
-          "push",
+          "getMin",
           "getMin",
           "pop",
           "push",
           "push",
-          "pop"
-        ],
-        [
-          [],
-          [
-            -12
-          ],
-          [],
-          [
-            7
-          ],
-          [
-            -4
-          ],
-          [],
-          [
-            -8
-          ],
-          [],
-          [],
-          [
-            7
-          ],
-          [
-            -18
-          ],
-          []
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        -12,
-        null,
-        null,
-        -4,
-        null,
-        -12,
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
           "push",
           "getMin",
-          "getMin",
-          "push",
-          "push",
-          "getMin",
-          "top",
-          "pop",
-          "top",
-          "top",
-          "top",
-          "push",
-          "getMin",
-          "push",
-          "push",
-          "push"
-        ],
-        [
-          [],
-          [
-            17
-          ],
-          [],
-          [],
-          [
-            -17
-          ],
-          [
-            -5
-          ],
-          [],
-          [],
-          [],
-          [],
-          [],
-          [],
-          [
-            3
-          ],
-          [],
-          [
-            -14
-          ],
-          [
-            -2
-          ],
-          [
-            -20
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        17,
-        17,
-        null,
-        null,
-        -17,
-        -5,
-        null,
-        -17,
-        -17,
-        -17,
-        null,
-        -17,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "push",
-          "getMin",
-          "getMin",
-          "getMin",
-          "getMin",
-          "push",
-          "getMin",
-          "push"
-        ],
-        [
-          [],
-          [
-            0
-          ],
-          [
-            20
-          ],
-          [],
-          [],
-          [],
-          [],
-          [
-            -4
-          ],
-          [],
-          [
-            0
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        0,
-        0,
-        0,
-        0,
-        null,
-        -4,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "push",
-          "push",
-          "push",
-          "push",
-          "push",
-          "push",
-          "push",
-          "pop"
-        ],
-        [
-          [],
-          [
-            -9
-          ],
-          [
-            -15
-          ],
-          [
-            -4
-          ],
-          [
-            -4
-          ],
-          [
-            -20
-          ],
-          [
-            5
-          ],
-          [
-            8
-          ],
-          [
-            19
-          ],
-          []
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "top",
-          "pop",
           "push",
           "push",
           "push",
           "top",
-          "pop",
-          "push",
           "top"
         ],
         [
           [],
           [
-            12
-          ],
-          [],
-          [],
-          [
-            -17
-          ],
-          [
-            4
-          ],
-          [
-            -8
-          ],
-          [],
-          [],
-          [
-            6
-          ],
-          []
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        12,
-        null,
-        null,
-        null,
-        null,
-        -8,
-        null,
-        null,
-        6
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "pop",
-          "push",
-          "pop",
-          "push",
-          "push",
-          "push",
-          "pop",
-          "top",
-          "getMin",
-          "push"
-        ],
-        [
-          [],
-          [
-            4
-          ],
-          [],
-          [
-            0
-          ],
-          [],
-          [
-            -13
-          ],
-          [
-            -16
+            3
           ],
           [
             3
           ],
           [],
-          [],
-          [],
-          [
-            -5
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        -16,
-        -16,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "push",
-          "push",
-          "push",
-          "push",
-          "pop",
-          "push",
-          "push",
-          "push"
-        ],
-        [
-          [],
-          [
-            14
-          ],
-          [
-            12
-          ],
-          [
-            -19
-          ],
-          [
-            -8
-          ],
-          [
-            -18
-          ],
-          [],
-          [
-            -18
-          ],
-          [
-            18
-          ],
-          [
-            -1
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "push",
-          "getMin",
-          "pop",
-          "getMin",
-          "push",
-          "getMin",
-          "push",
-          "getMin",
-          "pop",
-          "pop",
-          "top",
-          "pop",
-          "push",
-          "push"
-        ],
-        [
-          [],
-          [
-            12
-          ],
-          [
-            11
-          ],
-          [],
-          [],
-          [],
-          [
-            4
-          ],
-          [],
-          [
-            9
-          ],
-          [],
-          [],
-          [],
-          [],
-          [],
-          [
-            14
-          ],
-          [
-            14
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        11,
-        null,
-        12,
-        null,
-        4,
-        null,
-        4,
-        null,
-        null,
-        12,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "getMin",
-          "push",
-          "top",
-          "top",
-          "push",
-          "top",
-          "pop",
-          "top",
-          "pop",
-          "top",
-          "push",
-          "top",
-          "push",
-          "push",
-          "push",
-          "push",
-          "push"
-        ],
-        [
-          [],
-          [
-            12
-          ],
-          [],
-          [
-            -8
-          ],
-          [],
-          [],
-          [
-            -11
-          ],
-          [],
-          [],
-          [],
-          [],
-          [],
           [
             2
           ],
           [],
+          [],
+          [],
+          [],
+          [],
           [
-            -18
+            -3
+          ],
+          [
+            3
           ],
           [
             -2
-          ],
-          [
-            2
-          ],
-          [
-            -13
-          ],
-          [
-            11
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        12,
-        null,
-        -8,
-        -8,
-        null,
-        -11,
-        null,
-        -8,
-        null,
-        12,
-        null,
-        2,
-        null,
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "pop",
-          "push",
-          "push",
-          "getMin",
-          "push",
-          "getMin",
-          "getMin",
-          "pop",
-          "push",
-          "getMin",
-          "getMin",
-          "top",
-          "getMin",
-          "top",
-          "push",
-          "top",
-          "push"
-        ],
-        [
-          [],
-          [
-            -12
-          ],
-          [],
-          [
-            16
-          ],
-          [
-            3
           ],
           [],
           [
             -3
           ],
-          [],
-          [],
-          [],
           [
-            6
-          ],
-          [],
-          [],
-          [],
-          [],
-          [],
-          [
-            4
-          ],
-          [],
-          [
-            12
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        3,
-        null,
-        -3,
-        -3,
-        null,
-        null,
-        3,
-        3,
-        6,
-        3,
-        6,
-        null,
-        4,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "push",
-          "push",
-          "push",
-          "push",
-          "push",
-          "push",
-          "pop",
-          "getMin",
-          "getMin",
-          "top",
-          "push",
-          "pop"
-        ],
-        [
-          [],
-          [
-            20
+            2
           ],
           [
-            -14
-          ],
-          [
-            5
-          ],
-          [
-            5
-          ],
-          [
-            0
-          ],
-          [
-            4
-          ],
-          [
-            8
-          ],
-          [],
-          [],
-          [],
-          [],
-          [
-            3
-          ],
-          []
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        -14,
-        -14,
-        4,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "push",
-          "getMin",
-          "push",
-          "getMin",
-          "push",
-          "pop",
-          "push",
-          "push",
-          "pop",
-          "top",
-          "pop",
-          "push",
-          "pop",
-          "pop",
-          "top",
-          "push",
-          "push"
-        ],
-        [
-          [],
-          [
-            -14
-          ],
-          [
-            10
-          ],
-          [],
-          [
-            4
-          ],
-          [],
-          [
-            -17
-          ],
-          [],
-          [
-            9
-          ],
-          [
-            -11
-          ],
-          [],
-          [],
-          [],
-          [
-            9
-          ],
-          [],
-          [],
-          [],
-          [
-            -15
-          ],
-          [
-            1
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        -14,
-        null,
-        -14,
-        null,
-        null,
-        null,
-        null,
-        null,
-        9,
-        null,
-        null,
-        null,
-        null,
-        10,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "push",
-          "top",
-          "getMin",
-          "push",
-          "getMin",
-          "top"
-        ],
-        [
-          [],
-          [
-            5
-          ],
-          [
-            -13
-          ],
-          [],
-          [],
-          [
-            -10
+            -1
           ],
           [],
           []
@@ -941,11 +182,22 @@
         null,
         null,
         null,
-        -13,
-        -13,
+        3,
         null,
-        -13,
-        -10
+        null,
+        3,
+        3,
+        3,
+        null,
+        null,
+        null,
+        null,
+        -3,
+        null,
+        null,
+        null,
+        -1,
+        -1
       ]
     },
     {
@@ -954,86 +206,32 @@
           "MinStack",
           "push",
           "push",
-          "push",
-          "push",
-          "top",
           "pop",
           "push",
+          "push",
+          "push",
           "getMin",
-          "getMin",
-          "push",
-          "push"
-        ],
-        [
-          [],
-          [
-            -19
-          ],
-          [
-            20
-          ],
-          [
-            -19
-          ],
-          [
-            1
-          ],
-          [],
-          [],
-          [
-            -5
-          ],
-          [],
-          [],
-          [
-            -14
-          ],
-          [
-            0
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        1,
-        null,
-        null,
-        -19,
-        -19,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "push",
-          "push",
-          "top",
-          "push",
           "getMin"
         ],
         [
           [],
           [
-            10
+            -18
           ],
           [
-            -1
-          ],
-          [
-            -3
+            -18
           ],
           [],
           [
-            11
+            -18
           ],
+          [
+            -18
+          ],
+          [
+            10
+          ],
+          [],
           []
         ]
       ],
@@ -1042,9 +240,11 @@
         null,
         null,
         null,
-        -3,
         null,
-        -3
+        null,
+        null,
+        -18,
+        -18
       ]
     },
     {
@@ -1052,133 +252,75 @@
         [
           "MinStack",
           "push",
+          "getMin",
           "push",
           "top",
+          "top",
+          "push",
           "push",
           "getMin",
+          "push",
           "getMin",
+          "push",
           "pop",
           "push",
           "pop",
           "top",
           "getMin",
-          "push"
+          "pop"
         ],
         [
           [],
           [
-            -17
-          ],
-          [
-            7
+            -4
           ],
           [],
           [
-            18
+            -4
           ],
           [],
           [],
-          [],
-          [
-            15
-          ],
-          [],
-          [],
-          [],
-          [
-            9
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        7,
-        null,
-        -17,
-        -17,
-        null,
-        null,
-        null,
-        7,
-        -17,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "push",
-          "top",
-          "getMin",
-          "getMin",
-          "push",
-          "push",
-          "push",
-          "top",
-          "push",
-          "push",
-          "top",
-          "getMin",
-          "top",
-          "getMin",
-          "push"
-        ],
-        [
-          [],
-          [
-            -11
-          ],
-          [
-            15
-          ],
-          [],
-          [],
-          [],
-          [
-            -6
-          ],
           [
             -15
           ],
           [
-            -7
+            -15
           ],
           [],
           [
-            7
-          ],
-          [
-            9
+            -15
           ],
           [],
-          [],
-          [],
+          [
+            19
+          ],
           [],
           [
-            -16
-          ]
+            -15
+          ],
+          [],
+          [],
+          [],
+          []
         ]
       ],
       "expected": [
         null,
         null,
+        -4,
         null,
-        15,
-        -11,
-        -11,
-        null,
-        null,
-        null,
-        -7,
+        -4,
+        -4,
         null,
         null,
-        9,
         -15,
-        9,
+        null,
+        -15,
+        null,
+        null,
+        null,
+        null,
+        -15,
         -15,
         null
       ]
@@ -1189,640 +331,57 @@
           "MinStack",
           "push",
           "push",
+          "top",
+          "getMin",
+          "push",
           "push",
           "pop",
-          "pop",
           "push",
+          "push",
+          "getMin",
           "push",
           "top",
           "push",
           "getMin",
-          "pop",
-          "top",
-          "top",
-          "push",
-          "pop",
-          "top",
-          "top",
-          "push"
-        ],
-        [
-          [],
-          [
-            14
-          ],
-          [
-            5
-          ],
-          [
-            -10
-          ],
-          [],
-          [],
-          [
-            3
-          ],
-          [
-            -20
-          ],
-          [],
-          [
-            -18
-          ],
-          [],
-          [],
-          [],
-          [],
-          [
-            -20
-          ],
-          [],
-          [],
-          [],
-          [
-            -9
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        -20,
-        null,
-        -20,
-        null,
-        -20,
-        -20,
-        null,
-        null,
-        -20,
-        -20,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "top",
           "push",
           "getMin",
-          "top",
-          "top",
-          "push",
-          "getMin",
-          "push",
-          "push",
-          "push",
-          "push",
-          "push",
-          "push",
-          "top",
-          "pop",
           "getMin"
         ],
         [
           [],
           [
-            -14
+            0
           ],
-          [],
           [
             1
           ],
           [],
           [],
-          [],
           [
-            10
-          ],
-          [],
-          [
-            6
+            2
           ],
           [
-            -19
+            2
           ],
-          [
-            8
-          ],
-          [
-            -7
-          ],
-          [
-            8
-          ],
-          [
-            14
-          ],
-          [],
-          [],
-          []
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        -14,
-        null,
-        -14,
-        1,
-        1,
-        null,
-        -14,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        14,
-        null,
-        -19
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "push",
-          "push",
-          "getMin",
-          "pop",
-          "getMin",
-          "pop",
-          "getMin",
-          "pop"
-        ],
-        [
           [],
           [
             1
           ],
           [
-            6
+            0
           ],
-          [
-            20
-          ],
-          [],
-          [],
-          [],
-          [],
-          [],
-          []
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        1,
-        null,
-        1,
-        null,
-        1,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "top",
-          "top",
-          "push",
-          "push",
-          "push",
-          "push",
-          "push"
-        ],
-        [
-          [],
-          [
-            -1
-          ],
-          [],
-          [],
-          [
-            -17
-          ],
-          [
-            2
-          ],
-          [
-            -2
-          ],
-          [
-            -13
-          ],
-          [
-            2
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        -1,
-        -1,
-        null,
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "push",
-          "push",
-          "top",
-          "getMin",
-          "top",
-          "getMin",
-          "top",
-          "push",
-          "push"
-        ],
-        [
-          [],
-          [
-            -18
-          ],
-          [
-            -14
-          ],
-          [
-            -6
-          ],
-          [],
-          [],
-          [],
-          [],
-          [],
-          [
-            15
-          ],
-          [
-            16
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        -6,
-        -18,
-        -6,
-        -18,
-        -6,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "pop",
-          "push",
-          "pop",
-          "push",
-          "push",
-          "push",
-          "getMin",
-          "top"
-        ],
-        [
-          [],
-          [
-            -2
-          ],
-          [],
-          [
-            4
-          ],
-          [],
-          [
-            -13
-          ],
-          [
-            3
-          ],
-          [
-            -3
-          ],
-          [],
-          []
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        -13,
-        -3
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "top",
-          "top",
-          "getMin",
-          "push",
-          "top",
-          "pop",
-          "push",
-          "push"
-        ],
-        [
-          [],
-          [
-            -18
-          ],
-          [],
-          [],
-          [],
-          [
-            -10
-          ],
-          [],
-          [],
-          [
-            -6
-          ],
-          [
-            19
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        -18,
-        -18,
-        -18,
-        null,
-        -10,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "getMin",
-          "top",
-          "getMin",
-          "push",
-          "push",
-          "getMin",
-          "push",
-          "push",
-          "top",
-          "push",
-          "top",
-          "pop",
-          "push"
-        ],
-        [
-          [],
-          [
-            -6
-          ],
-          [],
-          [],
-          [],
-          [
-            -10
-          ],
-          [
-            2
-          ],
-          [],
-          [
-            -2
-          ],
-          [
-            9
-          ],
-          [],
-          [
-            -14
-          ],
-          [],
-          [],
-          [
-            20
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        -6,
-        -6,
-        -6,
-        null,
-        null,
-        -10,
-        null,
-        null,
-        9,
-        null,
-        -14,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "push",
-          "push",
-          "top"
-        ],
-        [
-          [],
-          [
-            9
-          ],
-          [
-            -11
-          ],
-          [
-            -7
-          ],
-          []
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        -7
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "top",
-          "push",
-          "pop",
-          "push",
-          "push",
-          "getMin",
-          "push",
-          "push",
-          "push",
-          "pop"
-        ],
-        [
-          [],
-          [
-            -7
-          ],
-          [],
-          [
-            20
-          ],
-          [],
-          [
-            -16
-          ],
-          [
-            8
-          ],
-          [],
-          [
-            -1
-          ],
-          [
-            -4
-          ],
-          [
-            -14
-          ],
-          []
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        -7,
-        null,
-        null,
-        null,
-        null,
-        -16,
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "pop",
-          "push",
-          "pop",
-          "push"
-        ],
-        [
-          [],
-          [
-            -15
-          ],
-          [],
-          [
-            20
-          ],
-          [],
-          [
-            11
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "push",
-          "push",
-          "top",
-          "pop",
-          "push",
-          "getMin",
-          "getMin",
-          "getMin",
-          "top",
-          "top"
-        ],
-        [
-          [],
-          [
-            -4
-          ],
-          [
-            -8
-          ],
-          [
-            -10
-          ],
-          [],
           [],
           [
             0
           ],
           [],
+          [
+            0
+          ],
           [],
-          [],
+          [
+            0
+          ],
           [],
           []
         ]
@@ -1831,13 +390,19 @@
         null,
         null,
         null,
+        1,
+        0,
         null,
-        -10,
         null,
         null,
-        -8,
-        -8,
-        -8,
+        null,
+        null,
+        0,
+        null,
+        0,
+        null,
+        0,
+        null,
         0,
         0
       ]
@@ -1848,42 +413,129 @@
           "MinStack",
           "push",
           "push",
-          "top",
-          "top",
+          "push",
+          "pop"
+        ],
+        [
+          [],
+          [
+            -7
+          ],
+          [
+            4
+          ],
+          [
+            5
+          ],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "push",
           "pop",
-          "top",
+          "pop",
           "push",
           "push",
           "top",
-          "push",
-          "push",
           "top",
+          "getMin",
+          "push",
           "getMin"
         ],
         [
           [],
           [
-            6
+            -11
           ],
           [
-            -6
+            10
+          ],
+          [],
+          [],
+          [
+            13
+          ],
+          [
+            13
+          ],
+          [],
+          [],
+          [],
+          [
+            9
+          ],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        13,
+        13,
+        13,
+        null,
+        9
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "push",
+          "getMin",
+          "push",
+          "push",
+          "top",
+          "getMin",
+          "top",
+          "top",
+          "push",
+          "push",
+          "pop",
+          "top"
+        ],
+        [
+          [],
+          [
+            2
+          ],
+          [
+            2
+          ],
+          [],
+          [
+            1
+          ],
+          [
+            0
           ],
           [],
           [],
           [],
           [],
           [
-            16
+            2
           ],
           [
-            -18
-          ],
-          [],
-          [
-            -5
-          ],
-          [
-            7
+            2
           ],
           [],
           []
@@ -1893,17 +545,256 @@
         null,
         null,
         null,
-        -6,
-        -6,
-        null,
-        6,
+        2,
         null,
         null,
-        -18,
+        0,
+        0,
+        0,
+        0,
         null,
         null,
-        7,
-        -18
+        null,
+        2
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "push",
+          "push",
+          "push"
+        ],
+        [
+          [],
+          [
+            -6
+          ],
+          [
+            -6
+          ],
+          [
+            -6
+          ],
+          [
+            -13
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "top",
+          "pop",
+          "push",
+          "push",
+          "push",
+          "push",
+          "push",
+          "top",
+          "getMin",
+          "top",
+          "push",
+          "top",
+          "pop",
+          "top",
+          "push",
+          "push",
+          "push"
+        ],
+        [
+          [],
+          [
+            9
+          ],
+          [],
+          [],
+          [
+            16
+          ],
+          [
+            -14
+          ],
+          [
+            -14
+          ],
+          [
+            4
+          ],
+          [
+            -4
+          ],
+          [],
+          [],
+          [],
+          [
+            -13
+          ],
+          [],
+          [],
+          [],
+          [
+            -9
+          ],
+          [
+            -14
+          ],
+          [
+            0
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        9,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        -4,
+        -14,
+        -4,
+        null,
+        -13,
+        null,
+        -4,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "push",
+          "getMin",
+          "top",
+          "push",
+          "getMin"
+        ],
+        [
+          [],
+          [
+            1
+          ],
+          [
+            -2
+          ],
+          [],
+          [],
+          [
+            -3
+          ],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        -2,
+        -2,
+        null,
+        -3
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "getMin",
+          "push",
+          "getMin",
+          "push"
+        ],
+        [
+          [],
+          [
+            10
+          ],
+          [],
+          [
+            4
+          ],
+          [],
+          [
+            4
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        10,
+        null,
+        4,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "top",
+          "push",
+          "getMin",
+          "getMin",
+          "pop",
+          "pop",
+          "push",
+          "push"
+        ],
+        [
+          [],
+          [
+            1
+          ],
+          [],
+          [
+            1
+          ],
+          [],
+          [],
+          [],
+          [],
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        1,
+        null,
+        1,
+        1,
+        null,
+        null,
+        null,
+        null
       ]
     },
     {
@@ -1914,42 +805,50 @@
           "pop",
           "push",
           "top",
+          "getMin",
+          "push",
+          "push",
+          "push",
+          "top",
+          "push",
+          "top",
           "pop",
-          "push",
-          "push",
           "push",
           "getMin",
-          "pop",
-          "push",
           "push"
         ],
         [
           [],
           [
-            13
+            0
           ],
           [],
           [
-            -10
-          ],
-          [],
-          [],
-          [
-            19
-          ],
-          [
-            -1
-          ],
-          [
-            14
+            0
           ],
           [],
           [],
           [
-            -2
+            2
           ],
           [
-            14
+            0
+          ],
+          [
+            0
+          ],
+          [],
+          [
+            1
+          ],
+          [],
+          [],
+          [
+            0
+          ],
+          [],
+          [
+            0
           ]
         ]
       ],
@@ -1958,14 +857,17 @@
         null,
         null,
         null,
-        -10,
+        0,
+        0,
         null,
         null,
         null,
+        0,
         null,
-        -1,
+        1,
         null,
         null,
+        0,
         null
       ]
     },
@@ -1978,15 +880,86 @@
           "pop",
           "push",
           "push",
+          "push",
           "pop",
           "push",
+          "getMin",
           "top",
+          "push",
+          "getMin",
+          "getMin",
+          "pop"
+        ],
+        [
+          [],
+          [
+            0
+          ],
+          [],
+          [],
+          [
+            1
+          ],
+          [
+            1
+          ],
+          [
+            0
+          ],
+          [],
+          [
+            1
+          ],
+          [],
+          [],
+          [
+            2
+          ],
+          [],
+          [],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        0,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        1,
+        1,
+        null,
+        1,
+        1,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "top",
+          "getMin",
+          "push",
+          "push",
+          "getMin",
+          "getMin",
+          "push",
+          "top",
+          "push",
+          "top",
+          "push",
           "top"
         ],
         [
           [],
           [
-            -13
+            15
           ],
           [],
           [],
@@ -1994,168 +967,74 @@
             -11
           ],
           [
-            8
-          ],
-          [],
-          [
-            17
-          ],
-          [],
-          []
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        -13,
-        null,
-        null,
-        null,
-        null,
-        null,
-        17,
-        17
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "push",
-          "getMin",
-          "push",
-          "top",
-          "push",
-          "top",
-          "push",
-          "getMin",
-          "push",
-          "getMin",
-          "top"
-        ],
-        [
-          [],
-          [
-            4
-          ],
-          [
-            -5
-          ],
-          [],
-          [
-            12
-          ],
-          [],
-          [
-            4
-          ],
-          [],
-          [
-            -8
-          ],
-          [],
-          [
-            -19
-          ],
-          [],
-          []
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        -5,
-        null,
-        12,
-        null,
-        4,
-        null,
-        -8,
-        null,
-        -19,
-        -19
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "top",
-          "top",
-          "push",
-          "top",
-          "pop",
-          "top",
-          "top",
-          "getMin",
-          "push",
-          "top",
-          "pop",
-          "push",
-          "push",
-          "pop",
-          "push",
-          "getMin",
-          "push"
-        ],
-        [
-          [],
-          [
             -20
           ],
           [],
           [],
           [
-            3
-          ],
-          [],
-          [],
-          [],
-          [],
-          [],
-          [
-            -6
-          ],
-          [],
-          [],
-          [
-            19
-          ],
-          [
-            13
+            -20
           ],
           [],
           [
-            -8
+            -20
           ],
           [],
           [
-            -15
+            2
+          ],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        15,
+        15,
+        null,
+        null,
+        -20,
+        -20,
+        null,
+        -20,
+        null,
+        -20,
+        null,
+        2
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "push",
+          "getMin",
+          "push",
+          "push"
+        ],
+        [
+          [],
+          [
+            2
+          ],
+          [
+            0
+          ],
+          [],
+          [
+            0
+          ],
+          [
+            2
           ]
         ]
       ],
       "expected": [
         null,
         null,
-        -20,
-        -20,
         null,
-        3,
+        0,
         null,
-        -20,
-        -20,
-        -20,
-        null,
-        -6,
-        null,
-        null,
-        null,
-        null,
-        null,
-        -20,
         null
       ]
     },
@@ -2164,12 +1043,15 @@
         [
           "MinStack",
           "push",
-          "pop",
           "push",
           "push",
-          "getMin",
           "pop",
-          "pop",
+          "top",
+          "top",
+          "push",
+          "push",
+          "push",
+          "top",
           "push"
         ],
         [
@@ -2177,189 +1059,27 @@
           [
             -17
           ],
-          [],
-          [
-            9
-          ],
-          [
-            -10
-          ],
-          [],
-          [],
-          [],
-          [
-            20
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        -10,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "pop",
-          "push",
-          "push",
-          "push",
-          "pop"
-        ],
-        [
-          [],
-          [
-            13
-          ],
-          [],
-          [
-            -4
-          ],
           [
             -3
           ],
           [
-            -15
-          ],
-          []
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "push",
-          "pop",
-          "top",
-          "getMin",
-          "top",
-          "push",
-          "top",
-          "top",
-          "top",
-          "top",
-          "pop",
-          "top",
-          "push",
-          "pop",
-          "getMin",
-          "getMin",
-          "top"
-        ],
-        [
-          [],
-          [
-            6
-          ],
-          [
-            -4
+            11
           ],
           [],
           [],
           [],
-          [],
           [
-            20
-          ],
-          [],
-          [],
-          [],
-          [],
-          [],
-          [],
-          [
-            -4
-          ],
-          [],
-          [],
-          [],
-          []
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        6,
-        6,
-        6,
-        null,
-        20,
-        20,
-        20,
-        20,
-        null,
-        6,
-        null,
-        null,
-        6,
-        6,
-        6
-      ]
-    },
-    {
-      "args": [
-        [
-          "MinStack",
-          "push",
-          "push",
-          "push",
-          "push",
-          "top",
-          "push",
-          "push",
-          "push",
-          "top",
-          "push"
-        ],
-        [
-          [],
-          [
-            -18
+            -17
           ],
           [
-            4
-          ],
-          [
-            20
-          ],
-          [
-            14
-          ],
-          [],
-          [
-            16
-          ],
-          [
-            9
+            -20
           ],
           [
             16
           ],
           [],
           [
-            1
+            -20
           ]
         ]
       ],
@@ -2369,7 +1089,8 @@
         null,
         null,
         null,
-        14,
+        -3,
+        -3,
         null,
         null,
         null,
@@ -2382,35 +1103,278 @@
         [
           "MinStack",
           "push",
-          "pop",
-          "push",
           "top",
           "push",
+          "pop",
+          "push",
+          "push",
           "push",
           "getMin",
-          "getMin",
-          "pop",
           "push"
         ],
         [
           [],
           [
+            2
+          ],
+          [],
+          [
+            3
+          ],
+          [],
+          [
             0
           ],
-          [],
           [
-            -16
+            -2
+          ],
+          [
+            -2
           ],
           [],
           [
-            6
+            -1
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        2,
+        null,
+        null,
+        null,
+        null,
+        null,
+        -2,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "top",
+          "pop",
+          "push",
+          "pop",
+          "push",
+          "push",
+          "top",
+          "push",
+          "push",
+          "push",
+          "top",
+          "top",
+          "push",
+          "push",
+          "push",
+          "push"
+        ],
+        [
+          [],
+          [
+            2
           ],
+          [],
+          [],
+          [
+            1
+          ],
+          [],
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [],
+          [
+            1
+          ],
+          [
+            0
+          ],
+          [
+            1
+          ],
+          [],
+          [],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            1
+          ],
+          [
+            0
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        2,
+        null,
+        null,
+        null,
+        null,
+        null,
+        2,
+        null,
+        null,
+        null,
+        1,
+        1,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "push",
+          "push",
+          "getMin",
+          "top",
+          "push"
+        ],
+        [
+          [],
+          [
+            -14
+          ],
+          [
+            -14
+          ],
+          [
+            1
+          ],
+          [],
+          [],
           [
             -20
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        -14,
+        1,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "pop",
+          "push",
+          "push",
+          "push",
+          "push",
+          "getMin",
+          "top",
+          "push"
+        ],
+        [
+          [],
+          [
+            1
+          ],
+          [],
+          [
+            2
+          ],
+          [
+            1
+          ],
+          [
+            1
+          ],
+          [
+            1
           ],
           [],
           [],
+          [
+            2
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        1,
+        1,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "push",
+          "push",
+          "push",
+          "top",
+          "top",
+          "push",
+          "getMin",
+          "top",
+          "push",
+          "push",
+          "push",
+          "push"
+        ],
+        [
           [],
+          [
+            3
+          ],
+          [
+            3
+          ],
+          [
+            3
+          ],
+          [
+            3
+          ],
+          [],
+          [],
+          [
+            3
+          ],
+          [],
+          [],
+          [
+            3
+          ],
+          [
+            3
+          ],
+          [
+            3
+          ],
           [
             3
           ]
@@ -2421,11 +1385,408 @@
         null,
         null,
         null,
-        -16,
+        null,
+        3,
+        3,
+        null,
+        3,
+        3,
         null,
         null,
-        -20,
-        -20,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "getMin",
+          "push",
+          "getMin",
+          "push",
+          "top",
+          "top",
+          "pop",
+          "push",
+          "push",
+          "push",
+          "getMin",
+          "push"
+        ],
+        [
+          [],
+          [
+            15
+          ],
+          [],
+          [
+            15
+          ],
+          [],
+          [
+            15
+          ],
+          [],
+          [],
+          [],
+          [
+            -6
+          ],
+          [
+            -14
+          ],
+          [
+            -14
+          ],
+          [],
+          [
+            -2
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        15,
+        null,
+        15,
+        null,
+        15,
+        15,
+        null,
+        null,
+        null,
+        null,
+        -14,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "top",
+          "pop",
+          "push",
+          "getMin",
+          "getMin",
+          "push"
+        ],
+        [
+          [],
+          [
+            -1
+          ],
+          [],
+          [],
+          [
+            -3
+          ],
+          [],
+          [],
+          [
+            1
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        -1,
+        null,
+        null,
+        -3,
+        -3,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "pop",
+          "push",
+          "top",
+          "push",
+          "getMin",
+          "top",
+          "push",
+          "getMin",
+          "top",
+          "top"
+        ],
+        [
+          [],
+          [
+            1
+          ],
+          [],
+          [
+            0
+          ],
+          [],
+          [
+            0
+          ],
+          [],
+          [],
+          [
+            0
+          ],
+          [],
+          [],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        0,
+        null,
+        0,
+        0,
+        null,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "push",
+          "push",
+          "top",
+          "push",
+          "top",
+          "push",
+          "push",
+          "getMin",
+          "pop",
+          "top",
+          "pop",
+          "push",
+          "push",
+          "push",
+          "push",
+          "getMin",
+          "pop"
+        ],
+        [
+          [],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [],
+          [
+            0
+          ],
+          [],
+          [
+            0
+          ],
+          [
+            2
+          ],
+          [],
+          [],
+          [],
+          [],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            2
+          ],
+          [],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        0,
+        null,
+        0,
+        null,
+        null,
+        0,
+        null,
+        0,
+        null,
+        null,
+        null,
+        null,
+        null,
+        0,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "pop",
+          "push",
+          "getMin"
+        ],
+        [
+          [],
+          [
+            -2
+          ],
+          [],
+          [
+            -3
+          ],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        -3
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "push",
+          "pop",
+          "push",
+          "top",
+          "getMin",
+          "push",
+          "push",
+          "getMin",
+          "top",
+          "push",
+          "top"
+        ],
+        [
+          [],
+          [
+            3
+          ],
+          [
+            3
+          ],
+          [],
+          [
+            0
+          ],
+          [],
+          [],
+          [
+            3
+          ],
+          [
+            -2
+          ],
+          [],
+          [],
+          [
+            0
+          ],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        0,
+        0,
+        null,
+        null,
+        -2,
+        -2,
+        null,
+        0
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "push",
+          "push",
+          "pop",
+          "push",
+          "push",
+          "top",
+          "pop",
+          "push",
+          "push"
+        ],
+        [
+          [],
+          [
+            -3
+          ],
+          [
+            -3
+          ],
+          [
+            0
+          ],
+          [],
+          [
+            -1
+          ],
+          [
+            2
+          ],
+          [],
+          [],
+          [
+            0
+          ],
+          [
+            2
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        2,
+        null,
         null,
         null
       ]
@@ -2436,15 +1797,529 @@
           "MinStack",
           "push",
           "top",
+          "push",
+          "push",
+          "top",
+          "top",
+          "push",
+          "pop",
+          "push",
+          "push",
+          "pop",
+          "pop"
+        ],
+        [
+          [],
+          [
+            -3
+          ],
+          [],
+          [
+            -3
+          ],
+          [
+            -3
+          ],
+          [],
+          [],
+          [
+            -3
+          ],
+          [],
+          [
+            -2
+          ],
+          [
+            -3
+          ],
+          [],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        -3,
+        null,
+        null,
+        -3,
+        -3,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "pop",
+          "push",
+          "getMin",
+          "push",
+          "push"
+        ],
+        [
+          [],
+          [
+            2
+          ],
+          [],
+          [
+            2
+          ],
+          [],
+          [
+            2
+          ],
+          [
+            2
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        2,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "getMin",
+          "getMin",
+          "push",
+          "getMin",
           "getMin",
           "pop",
+          "top",
+          "getMin",
+          "top",
+          "push",
+          "top",
+          "top",
+          "top"
+        ],
+        [
+          [],
+          [
+            -1
+          ],
+          [],
+          [],
+          [
+            2
+          ],
+          [],
+          [],
+          [],
+          [],
+          [],
+          [],
+          [
+            -2
+          ],
+          [],
+          [],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        -1,
+        -1,
+        null,
+        -1,
+        -1,
+        null,
+        -1,
+        -1,
+        -1,
+        null,
+        -2,
+        -2,
+        -2
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
           "push",
           "getMin",
           "top",
           "getMin",
+          "getMin",
+          "top",
+          "push",
           "push",
           "pop",
+          "getMin"
+        ],
+        [
+          [],
+          [
+            -2
+          ],
+          [
+            -2
+          ],
+          [],
+          [],
+          [],
+          [],
+          [],
+          [
+            -2
+          ],
+          [
+            -2
+          ],
+          [],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        -2,
+        -2,
+        -2,
+        -2,
+        -2,
+        null,
+        null,
+        null,
+        -2
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "push",
+          "push",
+          "top",
+          "push",
+          "push",
+          "getMin"
+        ],
+        [
+          [],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [],
+          [
+            1
+          ],
+          [
+            1
+          ],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        0,
+        null,
+        null,
+        0
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
           "getMin",
+          "getMin",
+          "pop",
+          "push",
+          "getMin",
+          "getMin",
+          "top",
+          "top",
+          "getMin",
+          "pop"
+        ],
+        [
+          [],
+          [
+            -3
+          ],
+          [],
+          [],
+          [],
+          [
+            -1
+          ],
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        -3,
+        -3,
+        null,
+        null,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "top",
+          "getMin",
+          "push",
+          "getMin",
+          "push",
+          "push",
+          "push",
+          "getMin",
+          "push",
+          "pop",
+          "top"
+        ],
+        [
+          [],
+          [
+            1
+          ],
+          [],
+          [],
+          [
+            0
+          ],
+          [],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [],
+          [
+            0
+          ],
+          [],
+          []
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        1,
+        1,
+        null,
+        0,
+        null,
+        null,
+        null,
+        0,
+        null,
+        null,
+        0
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "push",
+          "push",
+          "pop",
+          "push",
+          "push",
+          "push",
+          "push",
+          "push",
+          "push",
+          "push",
+          "pop",
+          "top",
+          "pop",
+          "push"
+        ],
+        [
+          [],
+          [
+            2
+          ],
+          [
+            2
+          ],
+          [
+            2
+          ],
+          [],
+          [
+            2
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            2
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [],
+          [],
+          [],
+          [
+            0
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        0,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "push",
+          "pop",
+          "pop",
+          "push",
+          "pop",
+          "push",
+          "getMin",
+          "push",
+          "getMin",
+          "push",
+          "push"
+        ],
+        [
+          [],
+          [
+            -2
+          ],
+          [
+            1
+          ],
+          [],
+          [],
+          [
+            -3
+          ],
+          [],
+          [
+            2
+          ],
+          [],
+          [
+            1
+          ],
+          [],
+          [
+            -3
+          ],
+          [
+            -3
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        2,
+        null,
+        1,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "top",
+          "push",
+          "push",
+          "push",
+          "push",
+          "top",
+          "pop",
+          "pop",
+          "top",
+          "push",
+          "push",
           "push",
           "top",
           "push",
@@ -2455,55 +2330,153 @@
         [
           [],
           [
-            7
+            1
+          ],
+          [],
+          [
+            1
+          ],
+          [
+            0
+          ],
+          [
+            -2
+          ],
+          [
+            2
           ],
           [],
           [],
           [],
+          [],
+          [
+            -2
+          ],
           [
             -3
           ],
-          [],
-          [],
-          [],
           [
-            4
+            0
           ],
           [],
-          [],
           [
-            -15
+            -2
           ],
-          [],
+          [
+            -1
+          ],
           [
             -3
           ],
           [
-            -20
-          ],
-          [
-            19
-          ],
-          [
-            19
+            1
           ]
         ]
       ],
       "expected": [
         null,
         null,
-        7,
-        7,
+        1,
         null,
         null,
-        -3,
-        -3,
-        -3,
         null,
         null,
-        -3,
+        2,
         null,
-        -15,
+        null,
+        0,
+        null,
+        null,
+        null,
+        0,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "MinStack",
+          "push",
+          "getMin",
+          "push",
+          "pop",
+          "push",
+          "push",
+          "pop",
+          "push",
+          "pop",
+          "push",
+          "push",
+          "pop",
+          "push",
+          "push",
+          "push",
+          "push",
+          "push"
+        ],
+        [
+          [],
+          [
+            1
+          ],
+          [],
+          [
+            1
+          ],
+          [],
+          [
+            2
+          ],
+          [
+            2
+          ],
+          [],
+          [
+            2
+          ],
+          [],
+          [
+            0
+          ],
+          [
+            1
+          ],
+          [],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        1,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
         null,
         null,
         null,

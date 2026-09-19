@@ -163,9 +163,46 @@ cannot start rejecting them:
 
 Both were verified exhaustively against brute force over small alphabets.
 
+### What batch 4 found
+
+Two suites were caught by a **published example and by nothing else**, which is the same as not
+being tested. Remove the example and each near-miss scores a clean sweep:
+
+| problem | the gap | after |
+|---|---|---|
+| `car-fleet` | a car arriving at the same time as the fleet ahead joins it, so a tie must merge. **1** of 43 cases had an exact arrival-time tie, and it was LeetCode's own example 1. Treating a tie as a new fleet scored **42/43** | 21, built by fixing a whole-number arrival time and placing cars at `target - T * speed` |
+| `min-stack` | re-pushing the current minimum and popping once is the documented bug. Values drawn from a 41-wide range never repeated, so a min-stack recording only strict improvements scored **42/43**, failing one hand-written extra | 35 |
+| `evaluate-reverse-polish-notation` | division truncates toward **zero**, so `-7 / 2` is `-3` where Python's `//` gives `-4`. Only a division with a negative quotient and a non-zero remainder tells them apart, and there were none | 24 |
+| `valid-parentheses` | random bracket strings are almost never balanced: **6** of 45 answered true, and **3** cases were empty, which the constraint `1 <= s.length` forbids | 13 true, 0 empty |
+| `daily-temperatures` | an equal later temperature is not warmer; over the full 30..100 range ties were uncommon | 26 |
+| `generate-parentheses` | 8 generated cases over `n` in 1..7. `n = 8` — 1430 strings, the only size big enough to catch a solution that is right for small `n` by luck — never appeared | 16 cases, `n = 8` weighted |
+| `largest-rectangle-in-histogram` | no deliberate plateaus, the shape that defeats a prev/next-smaller pass that is strict on both sides | 15 with adjacent equal heights |
+
+#### A generator that was quietly emitting invalid inputs
+
+Rewriting the RPN generator to seek floor-versus-truncate divisions exposed something worse in the
+old one. It sometimes overwrote an operator token with an operand, leaving **2 of 43 expressions
+malformed** — the stack did not reduce to a single value. That broke the problem's "the input
+represents a valid arithmetic expression" guarantee, and it was invisible because the vendored
+reference returns `stack[0]` rather than `stack[-1]`: a leftover stack does not raise, it quietly
+answers the first token. A correct solution reading `stack[-1]` was failed by those two cases.
+
+The audit pins a `stack[-1]` solution as CORRECT, so a malformed expression cannot creep back
+unnoticed.
+
+#### Corrected while researching
+
+Two things assumed going in turned out to be wrong, both checked by running the code:
+
+- `koko-eating-bananas` with `hi = max(piles)` is **correct**, not a too-small bound: at that
+  speed every pile takes one hour, and `piles.length <= h` is guaranteed. The real bugs are bounds
+  smaller than that.
+- Comparing against `nums[0]` is a genuine bug in `find-minimum-in-rotated-sorted-array` but is
+  **benign** in `search-in-rotated-sorted-array`. The same-looking hint is wrong for one of them.
+
 ## Status
 
-24 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
+31 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
 
 ### Batch 1: Arrays & Hashing (9/9 audited)
 - [x] `contains-duplicate` — Easy
@@ -190,14 +227,14 @@ Both were verified exhaustively against brute force over small alphabets.
 - [x] `permutation-in-string` — Medium
 - [x] `minimum-window-substring` — Hard
 - [x] `sliding-window-maximum` — Hard
-### Batch 4: Stack (0/7 audited)
-- [ ] `valid-parentheses` — Easy
-- [ ] `min-stack` — Medium
-- [ ] `evaluate-reverse-polish-notation` — Medium
-- [ ] `generate-parentheses` — Medium
-- [ ] `daily-temperatures` — Medium
-- [ ] `car-fleet` — Medium
-- [ ] `largest-rectangle-in-histogram` — Hard
+### Batch 4: Stack (7/7 audited)
+- [x] `valid-parentheses` — Easy
+- [x] `min-stack` — Medium
+- [x] `evaluate-reverse-polish-notation` — Medium
+- [x] `generate-parentheses` — Medium
+- [x] `daily-temperatures` — Medium
+- [x] `car-fleet` — Medium
+- [x] `largest-rectangle-in-histogram` — Hard
 ### Batch 5: Binary Search (0/7 audited)
 - [ ] `binary-search` — Easy
 - [ ] `search-a-2d-matrix` — Medium
