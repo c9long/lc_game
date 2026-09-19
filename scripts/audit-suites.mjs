@@ -1218,7 +1218,318 @@ class LRUCache:
     def put(self, key, value):
         if key in self.d: self.d.move_to_end(key)
         self.d[key] = value
-        if len(self.d) > self.cap: self.d.popitem(last=False)`]
+        if len(self.d) > self.cap: self.d.popitem(last=False)`],
+
+	// ---- batch 7: Trees ----
+	// Trees that were either valid BSTs or random jumbles tested neither classic bug: both scored
+	// 42/42. The generator now also builds trees that are only subtly wrong.
+	['validate-binary-search-tree', 'NEAR-MISS compares a node only with its own children', false, `class Solution:
+    def isValidBST(self, root):
+        def go(n):
+            if not n: return True
+            if n.left and n.left.val >= n.val: return False
+            if n.right and n.right.val <= n.val: return False
+            return go(n.left) and go(n.right)
+        return go(root)`],
+	['validate-binary-search-tree', 'NEAR-MISS in-order accepts equal neighbours', false, `class Solution:
+    def isValidBST(self, root):
+        out = []
+        def go(n):
+            if not n: return
+            go(n.left); out.append(n.val); go(n.right)
+        go(root)
+        return all(out[i] <= out[i+1] for i in range(len(out)-1))`],
+	['validate-binary-search-tree', 'correct, bounds carried down', true, `class Solution:
+    def isValidBST(self, root):
+        def go(n, lo, hi):
+            if not n: return True
+            if not (lo < n.val < hi): return False
+            return go(n.left, lo, n.val) and go(n.right, n.val, hi)
+        return go(root, float("-inf"), float("inf"))`],
+
+	// A randomly drawn subRoot is never a subtree, so one case in 42 answered true.
+	['subtree-of-another-tree', 'NEAR-MISS always false', false, `class Solution:
+    def isSubtree(self, root, subRoot): return False`],
+	['subtree-of-another-tree', 'NEAR-MISS stops when subRoot runs out', false, `class Solution:
+    def isSubtree(self, root, subRoot):
+        def same(a, b):
+            if not b: return True
+            if not a: return False
+            return a.val == b.val and same(a.left, b.left) and same(a.right, b.right)
+        def go(a):
+            if not a: return False
+            return same(a, subRoot) or go(a.left) or go(a.right)
+        return go(root)`],
+	['subtree-of-another-tree', 'correct', true, `class Solution:
+    def isSubtree(self, root, subRoot):
+        def same(a, b):
+            if not a and not b: return True
+            if not a or not b: return False
+            return a.val == b.val and same(a.left, b.left) and same(a.right, b.right)
+        def go(a):
+            if not a: return False
+            return same(a, subRoot) or go(a.left) or go(a.right)
+        return go(root)`],
+
+	// The answer is in EDGES, and the interesting shape is a diameter the root cannot see.
+	['diameter-of-binary-tree', 'NEAR-MISS measures only through the root', false, `class Solution:
+    def diameterOfBinaryTree(self, root):
+        def h(n): return 0 if not n else 1 + max(h(n.left), h(n.right))
+        return h(root.left) + h(root.right) if root else 0`],
+	['diameter-of-binary-tree', 'NEAR-MISS counts nodes, not edges', false, `class Solution:
+    def diameterOfBinaryTree(self, root):
+        best = 0
+        def h(n):
+            nonlocal best
+            if not n: return 0
+            l, r = h(n.left), h(n.right); best = max(best, l + r + 1); return 1 + max(l, r)
+        h(root); return best`],
+	['diameter-of-binary-tree', 'correct', true, `class Solution:
+    def diameterOfBinaryTree(self, root):
+        best = 0
+        def h(n):
+            nonlocal best
+            if not n: return 0
+            l, r = h(n.left), h(n.right); best = max(best, l + r); return 1 + max(l, r)
+        h(root); return best`],
+
+	// The path is non-empty, so an all-negative tree answers with its largest single node.
+	['binary-tree-maximum-path-sum', 'NEAR-MISS best initialised to 0', false, `class Solution:
+    def maxPathSum(self, root):
+        best = 0
+        def go(n):
+            nonlocal best
+            if not n: return 0
+            l = max(go(n.left), 0); r = max(go(n.right), 0)
+            best = max(best, n.val + l + r)
+            return n.val + max(l, r)
+        go(root); return best`],
+	['binary-tree-maximum-path-sum', 'NEAR-MISS child contributions not clamped', false, `class Solution:
+    def maxPathSum(self, root):
+        best = float("-inf")
+        def go(n):
+            nonlocal best
+            if not n: return 0
+            l, r = go(n.left), go(n.right)
+            best = max(best, n.val + l + r)
+            return n.val + max(l, r)
+        go(root); return int(best)`],
+	['binary-tree-maximum-path-sum', 'correct', true, `class Solution:
+    def maxPathSum(self, root):
+        best = float("-inf")
+        def go(n):
+            nonlocal best
+            if not n: return 0
+            l = max(go(n.left), 0); r = max(go(n.right), 0)
+            best = max(best, n.val + l + r)
+            return n.val + max(l, r)
+        go(root); return int(best)`],
+
+	['count-good-nodes-in-binary-tree', 'NEAR-MISS running maximum seeded at 0', false, `class Solution:
+    def goodNodes(self, root):
+        def go(n, mx):
+            if not n: return 0
+            good = 1 if n.val >= mx else 0
+            m = max(mx, n.val)
+            return good + go(n.left, m) + go(n.right, m)
+        return go(root, 0)`],
+	// Ties count as good, so a strict comparison undercounts.
+	['count-good-nodes-in-binary-tree', 'NEAR-MISS strict greater-than', false, `class Solution:
+    def goodNodes(self, root):
+        def go(n, mx):
+            if not n: return 0
+            good = 1 if n.val > mx else 0
+            m = max(mx, n.val)
+            return good + go(n.left, m) + go(n.right, m)
+        return go(root, float("-inf"))`],
+	['count-good-nodes-in-binary-tree', 'correct', true, `class Solution:
+    def goodNodes(self, root):
+        def go(n, mx):
+            if not n: return 0
+            good = 1 if n.val >= mx else 0
+            m = max(mx, n.val)
+            return good + go(n.left, m) + go(n.right, m)
+        return go(root, float("-inf"))`],
+
+	// [1,2] and [1,null,2] have identical value sequences and mirrored shapes.
+	['same-tree', 'NEAR-MISS compares preorder values with no null markers', false, `class Solution:
+    def isSameTree(self, p, q):
+        def enc(n):
+            return [] if not n else [n.val] + enc(n.left) + enc(n.right)
+        return enc(p) == enc(q)`],
+	['same-tree', 'correct', true, `class Solution:
+    def isSameTree(self, p, q):
+        if not p and not q: return True
+        if not p or not q: return False
+        return p.val == q.val and self.isSameTree(p.left, q.left) and self.isSameTree(p.right, q.right)`],
+
+	['binary-tree-right-side-view', 'NEAR-MISS walks the right-child chain', false, `class Solution:
+    def rightSideView(self, root):
+        out = []
+        while root: out.append(root.val); root = root.right
+        return out`],
+	['binary-tree-right-side-view', 'NEAR-MISS depth-first, left before right', false, `class Solution:
+    def rightSideView(self, root):
+        out = []
+        def go(n, d):
+            if not n: return
+            if d == len(out): out.append(n.val)
+            go(n.left, d + 1); go(n.right, d + 1)
+        go(root, 0); return out`],
+	['binary-tree-right-side-view', 'correct', true, `class Solution:
+    def rightSideView(self, root):
+        out = []
+        def go(n, d):
+            if not n: return
+            if d == len(out): out.append(n.val)
+            go(n.right, d + 1); go(n.left, d + 1)
+        go(root, 0); return out`],
+
+	['invert-binary-tree', 'NEAR-MISS second assignment reads the first', false, `class Solution:
+    def invertTree(self, root):
+        if not root: return None
+        root.left = self.invertTree(root.right)
+        root.right = self.invertTree(root.left)
+        return root`],
+	['invert-binary-tree', 'correct', true, `class Solution:
+    def invertTree(self, root):
+        if not root: return None
+        root.left, root.right = self.invertTree(root.right), self.invertTree(root.left)
+        return root`],
+
+	// p may be an ancestor of q, and nothing says p.val < q.val.
+	['lowest-common-ancestor-of-a-binary-search-tree', 'NEAR-MISS assumes p.val < q.val', false, `class Solution:
+    def lowestCommonAncestor(self, root, p, q):
+        node = root
+        while node:
+            if q.val < node.val: node = node.left
+            elif p.val > node.val: node = node.right
+            else: return node
+        return None`],
+	['lowest-common-ancestor-of-a-binary-search-tree', 'correct', true, `class Solution:
+    def lowestCommonAncestor(self, root, p, q):
+        node = root
+        while node:
+            if p.val < node.val and q.val < node.val: node = node.left
+            elif p.val > node.val and q.val > node.val: node = node.right
+            else: return node
+        return None`],
+
+	['kth-smallest-element-in-a-bst', 'NEAR-MISS treats k as zero-indexed', false, `class Solution:
+    def kthSmallest(self, root, k):
+        out = []
+        def go(n):
+            if not n: return
+            go(n.left); out.append(n.val); go(n.right)
+        go(root); return out[k]`],
+	['kth-smallest-element-in-a-bst', 'correct', true, `class Solution:
+    def kthSmallest(self, root, k):
+        out = []
+        def go(n):
+            if not n: return
+            go(n.left); out.append(n.val); go(n.right)
+        go(root); return out[k - 1]`],
+
+	['construct-binary-tree-from-preorder-and-inorder-traversal', 'NEAR-MISS global in-order index used as the left size', false, `class Solution:
+    def buildTree(self, preorder, inorder):
+        idx = {v: i for i, v in enumerate(inorder)}
+        def go(pl, pr, il, ir):
+            if pl > pr: return None
+            root = TreeNode(preorder[pl])
+            m = idx[preorder[pl]]
+            root.left = go(pl + 1, pl + m, il, m - 1)
+            root.right = go(pl + m + 1, pr, m + 1, ir)
+            return root
+        return go(0, len(preorder) - 1, 0, len(inorder) - 1)`],
+	['construct-binary-tree-from-preorder-and-inorder-traversal', 'correct', true, `class Solution:
+    def buildTree(self, preorder, inorder):
+        idx = {v: i for i, v in enumerate(inorder)}
+        def go(pl, pr, il, ir):
+            if pl > pr: return None
+            root = TreeNode(preorder[pl])
+            m = idx[preorder[pl]]
+            left = m - il
+            root.left = go(pl + 1, pl + left, il, m - 1)
+            root.right = go(pl + left + 1, pr, m + 1, ir)
+            return root
+        return go(0, len(preorder) - 1, 0, len(inorder) - 1)`],
+
+	// Values are negative and multi-digit, so one character per node cannot round-trip.
+	['serialize-and-deserialize-binary-tree', 'NEAR-MISS one character per node', false, `class Codec:
+    def serialize(self, root):
+        out = []
+        def go(n):
+            if not n: out.append("#"); return
+            out.append(str(n.val)); go(n.left); go(n.right)
+        go(root); return "".join(out)
+    def deserialize(self, data):
+        it = iter(data)
+        def go():
+            c = next(it, None)
+            if c is None or c == "#": return None
+            n = TreeNode(int(c)); n.left = go(); n.right = go(); return n
+        return go()`],
+	['serialize-and-deserialize-binary-tree', 'correct, comma separated', true, `class Codec:
+    def serialize(self, root):
+        out = []
+        def go(n):
+            if not n: out.append("#"); return
+            out.append(str(n.val)); go(n.left); go(n.right)
+        go(root); return ",".join(out)
+    def deserialize(self, data):
+        it = iter(data.split(","))
+        def go():
+            c = next(it, None)
+            if c is None or c == "#": return None
+            n = TreeNode(int(c)); n.left = go(); n.right = go(); return n
+        return go()`],
+
+	['maximum-depth-of-binary-tree', 'NEAR-MISS minimum depth', false, `class Solution:
+    def maxDepth(self, root):
+        if not root: return 0
+        return 1 + min(self.maxDepth(root.left), self.maxDepth(root.right))`],
+	['maximum-depth-of-binary-tree', 'correct', true, `class Solution:
+    def maxDepth(self, root):
+        if not root: return 0
+        return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))`],
+
+	// Balance is a property of every node, not just the root.
+	['balanced-binary-tree', 'NEAR-MISS checks the height difference at the root only', false, `class Solution:
+    def isBalanced(self, root):
+        def h(n): return 0 if not n else 1 + max(h(n.left), h(n.right))
+        return abs(h(root.left) - h(root.right)) <= 1 if root else True`],
+	['balanced-binary-tree', 'correct', true, `class Solution:
+    def isBalanced(self, root):
+        def h(n):
+            if not n: return 0
+            l, r = h(n.left), h(n.right)
+            if l < 0 or r < 0 or abs(l - r) > 1: return -1
+            return 1 + max(l, r)
+        return h(root) >= 0`],
+
+	['binary-tree-level-order-traversal', 'NEAR-MISS never groups by level', false, `class Solution:
+    def levelOrder(self, root):
+        if not root: return []
+        out, q = [], [root]
+        while q:
+            n = q.pop(0)
+            out.append(n.val)
+            if n.left: q.append(n.left)
+            if n.right: q.append(n.right)
+        return [out]`],
+	['binary-tree-level-order-traversal', 'correct', true, `class Solution:
+    def levelOrder(self, root):
+        if not root: return []
+        out, q = [], [root]
+        while q:
+            level = []
+            for _ in range(len(q)):
+                n = q.pop(0)
+                level.append(n.val)
+                if n.left: q.append(n.left)
+                if n.right: q.append(n.right)
+            out.append(level)
+        return out`]
 ];
 
 let bad = 0;

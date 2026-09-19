@@ -256,9 +256,32 @@ That is the third judge defect surfaced by this audit, after the RPN malformed e
 batch 4 and non-finite floats in batch 5. The pattern is consistent: a guard added so the harness
 could not crash was also swallowing the evidence.
 
+### What batch 7 found
+
+`validate-binary-search-tree` is the clearest example so far of a suite that looked thorough and
+tested nothing. Its generator produced either a genuine BST or an arbitrary random tree, which is
+almost always wildly invalid. Both classic bugs scored **42/42**.
+
+What was missing is the tree that is only *subtly* wrong:
+
+- **the ancestor bound** — every parent/child pair correctly ordered, but a node on the wrong side
+  of a grandparent. LeetCode's own `[2,null,3,1]`. A check comparing a node only with its direct
+  children cannot see it. Now **33/42**.
+- **the duplicate** — the BST property is strict, so equal values are invalid, and an in-order
+  scan written with `<=` accepts them. Now **30/42**.
+
+| problem | the gap | after |
+|---|---|---|
+| `validate-binary-search-tree` | valid or random, never nearly-valid; both bugs scored 42/42 | 33/42 and 30/42 |
+| `subtree-of-another-tree` | a randomly drawn subRoot is essentially never a subtree, so **1** case in 42 answered true and `return False` scored **41/42** | subRoot is lifted out of root, or lifted and then stripped of its descendants — the shape that fools a match stopping when subRoot runs out. Now 23/42 |
+| `diameter-of-binary-tree` | the diameter of a random tree almost always runs through the root: **2** cases in 42 did not, so measuring only at the root scored 40/42 | a bushy subtree hung off a one-sided root. Now 32/42 |
+| `binary-tree-maximum-path-sum` | the path is non-empty, so an all-negative tree answers with its largest single node — the only thing that catches a best-so-far seeded at 0. **2** cases were all-negative | now 20/42 |
+| `count-good-nodes-in-binary-tree` | same shape: values may be negative, and **3** cases in 43 were entirely so | now 16/43 |
+| `same-tree` | `[1,2]` and `[1,null,2]` have identical value sequences and mirrored shapes, which is what defeats comparing preorder without null markers | one node's children are swapped on purpose |
+
 ## Status
 
-49 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
+64 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
 
 ### Batch 1: Arrays & Hashing (9/9 audited)
 - [x] `contains-duplicate` — Easy
@@ -311,22 +334,22 @@ could not crash was also swallowing the evidence.
 - [x] `lru-cache` — Medium
 - [x] `merge-k-sorted-lists` — Hard
 - [x] `reverse-nodes-in-k-group` — Hard
-### Batch 7: Trees (0/15 audited)
-- [ ] `invert-binary-tree` — Easy
-- [ ] `maximum-depth-of-binary-tree` — Easy
-- [ ] `diameter-of-binary-tree` — Easy
-- [ ] `balanced-binary-tree` — Easy
-- [ ] `same-tree` — Easy
-- [ ] `subtree-of-another-tree` — Easy
-- [ ] `lowest-common-ancestor-of-a-binary-search-tree` — Medium
-- [ ] `binary-tree-level-order-traversal` — Medium
-- [ ] `binary-tree-right-side-view` — Medium
-- [ ] `count-good-nodes-in-binary-tree` — Medium
-- [ ] `validate-binary-search-tree` — Medium
-- [ ] `kth-smallest-element-in-a-bst` — Medium
-- [ ] `construct-binary-tree-from-preorder-and-inorder-traversal` — Medium
-- [ ] `binary-tree-maximum-path-sum` — Hard
-- [ ] `serialize-and-deserialize-binary-tree` — Hard
+### Batch 7: Trees (15/15 audited)
+- [x] `invert-binary-tree` — Easy
+- [x] `maximum-depth-of-binary-tree` — Easy
+- [x] `diameter-of-binary-tree` — Easy
+- [x] `balanced-binary-tree` — Easy
+- [x] `same-tree` — Easy
+- [x] `subtree-of-another-tree` — Easy
+- [x] `lowest-common-ancestor-of-a-binary-search-tree` — Medium
+- [x] `binary-tree-level-order-traversal` — Medium
+- [x] `binary-tree-right-side-view` — Medium
+- [x] `count-good-nodes-in-binary-tree` — Medium
+- [x] `validate-binary-search-tree` — Medium
+- [x] `kth-smallest-element-in-a-bst` — Medium
+- [x] `construct-binary-tree-from-preorder-and-inorder-traversal` — Medium
+- [x] `binary-tree-maximum-path-sum` — Hard
+- [x] `serialize-and-deserialize-binary-tree` — Hard
 ### Batch 8: Tries (0/3 audited)
 - [ ] `implement-trie-prefix-tree` — Medium
 - [ ] `design-add-and-search-words-data-structure` — Medium

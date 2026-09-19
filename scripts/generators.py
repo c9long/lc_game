@@ -123,6 +123,63 @@ def tree_values(level_order):
     return [v for v in level_order if v is not None]
 
 
+def _to_nodes(level_order):
+    """Level-order-with-nulls -> a nested {v, l, r} tree, so a shape can be perturbed."""
+    if not level_order:
+        return None
+    nodes = [None if v is None else {"v": v, "l": None, "r": None} for v in level_order]
+    kids = iter(nodes[1:])
+    for n in nodes:
+        if n is None:
+            continue
+        n["l"] = next(kids, None)
+        n["r"] = next(kids, None)
+    return nodes[0]
+
+
+def _to_level_order(root):
+    """Back to LeetCode's level-order array, trailing nulls trimmed."""
+    if root is None:
+        return []
+    out, queue = [], [root]
+    while queue:
+        n = queue.pop(0)
+        if n is None:
+            out.append(None)
+            continue
+        out.append(n["v"])
+        queue.append(n["l"])
+        queue.append(n["r"])
+    while out and out[-1] is None:
+        out.pop()
+    return out
+
+
+def _balanced_from_sorted(vals):
+    """A BST shape over an already sorted list, duplicates included."""
+    def place(lo, hi):
+        if lo > hi:
+            return None
+        mid = (lo + hi) // 2
+        return {"v": vals[mid], "l": place(lo, mid - 1), "r": place(mid + 1, hi)}
+    return place(0, len(vals) - 1)
+
+
+def _deep_offset_subtree(rng, n):
+    """A tree whose longest path lies INSIDE a subtree, not through the root.
+
+    The diameter of a random tree almost always runs through the root, so a solution measuring
+    only height(left) + height(right) at the root scored 40/42. Hanging a bushy subtree off a
+    one-sided root puts the longest path somewhere the root cannot see.
+    """
+    inner = tree(rng, max(2, n - 1))
+    if not inner:
+        return None
+    root = {"v": rng.randint(-20, 20), "l": None, "r": None}
+    root["l" if rng.random() < 0.5 else "r"] = _to_nodes(inner)
+    return _to_level_order(root)
+
+
 def linked(rng, n, lo=-30, hi=30):
     return ints(rng, n, lo, hi)
 
@@ -625,6 +682,12 @@ def _max_depth(rng):
 
 @generator("diameter-of-binary-tree")
 def _diameter(rng):
+    # The answer is in EDGES, and the case that matters is a diameter that does not pass through
+    # the root -- there were two in 42, so measuring only at the root scored 40/42.
+    if rng.random() < 0.4:
+        t = _deep_offset_subtree(rng, rng.randint(6, 14))
+        if t:
+            return [t]
     return [tree(rng, rng.randint(1, 14))]
 
 
@@ -636,13 +699,66 @@ def _balanced(rng):
 
 @generator("same-tree")
 def _same_tree(rng):
+    # Comparing preorder VALUES without null markers reads [1,2] and [1,null,2] as the same tree:
+    # identical value sequences, mirrored shapes. Perturbing the structure while keeping the
+    # values produces that case on purpose.
     a = tree(rng, rng.randint(0, 8))
-    return [a, list(a)] if rng.random() < 0.35 else [a, tree(rng, rng.randint(0, 8))]
+    roll = rng.random()
+    if roll < 0.3:
+        return [a, list(a)]
+    if roll < 0.55 and a:
+        root = _to_nodes(list(a))
+        nodes = []
+
+        def collect(n):
+            if n is None:
+                return
+            nodes.append(n)
+            collect(n["l"])
+            collect(n["r"])
+
+        collect(root)
+        single = [n for n in nodes if (n["l"] is None) != (n["r"] is None)]
+        if single:
+            n = rng.choice(single)
+            n["l"], n["r"] = n["r"], n["l"]            # same values, mirrored at one node
+            return [a, _to_level_order(root)]
+    return [a, tree(rng, rng.randint(0, 8))]
 
 
 @generator("subtree-of-another-tree")
 def _subtree(rng):
+    """root plus a subRoot that is often a REAL subtree of it, or a near-miss of one.
+
+    A randomly drawn subRoot is essentially never a subtree, so exactly one case in 42 answered
+    true and `return False` scored 41/42. Lifting a genuine subtree out of root fixes that; taking
+    a genuine subtree and then DROPPING its descendants produces the other trap, where a match
+    that stops when subRoot runs out reports a subtree that is really only a prefix.
+    """
     root = tree(rng, rng.randint(1, 12))
+    if not root:
+        return None
+    roll = rng.random()
+    if roll < 0.55:
+        nodes = []
+
+        def collect(n):
+            if n is None:
+                return
+            nodes.append(n)
+            collect(n["l"])
+            collect(n["r"])
+
+        collect(_to_nodes(root))
+        if not nodes:
+            return None
+        picked = rng.choice(nodes)
+        if roll < 0.35:
+            return [root, _to_level_order(picked)]         # a genuine subtree: true
+        trimmed = {"v": picked["v"], "l": None, "r": None}  # the same node, descendants cut
+        if picked["l"] or picked["r"]:
+            return [root, _to_level_order(trimmed)]        # a prefix, not a subtree: false
+        return [root, _to_level_order(picked)]
     return [root, tree(rng, rng.randint(1, 4))]
 
 
@@ -658,15 +774,68 @@ def _right_side(rng):
 
 @generator("count-good-nodes-in-binary-tree")
 def _good_nodes(rng):
-    return [tree(rng, rng.randint(1, 14))]
+    # Node values may be negative, so seeding the running maximum with 0 rather than the root is a
+    # real bug -- but only an all-negative tree shows it, and there were three in 43.
+    lo, hi = rng.choice([(-20, 20), (-20, 20), (-20, -1), (-10000, -1)])
+    return [tree(rng, rng.randint(1, 14), lo, hi)]
 
 
 @generator("validate-binary-search-tree")
 def _validate_bst(rng):
-    # A real BST roughly half the time; otherwise an arbitrary tree, which is usually invalid.
-    if rng.random() < 0.5:
+    """Valid BSTs, arbitrary trees, and the two shapes that are only SUBTLY wrong.
+
+    A tree that is either a real BST or a random jumble does not test this problem: both the
+    classic bugs scored 42/42. The two that matter:
+
+      ancestor bound  every parent/child pair is ordered correctly, but a node sits on the wrong
+                      side of a grandparent -- LeetCode's [2,null,3,1]. A check that only compares
+                      a node with its direct children cannot see it.
+      duplicate       the BST property is STRICT, so equal values are invalid. An in-order scan
+                      written with <= instead of < accepts them.
+    """
+    roll = rng.random()
+    if roll < 0.3:
         t = bst(rng, rng.randint(1, 10))
         return None if t is None else [t]
+    if roll < 0.55:
+        # Strictly-invalid duplicate: build over a sorted list with one value repeated, so the
+        # in-order sequence is non-decreasing but not increasing.
+        n = rng.randint(2, 9)
+        vals = bst_values(rng, n)
+        if vals is None:
+            return None
+        i = rng.randrange(len(vals))
+        vals = sorted(vals + [vals[i]])
+        return [_to_level_order(_balanced_from_sorted(vals))]
+    if roll < 0.8:
+        t = bst(rng, rng.randint(3, 10))
+        if not t:
+            return None
+        root = _to_nodes(t)
+        # Find a node that lies in some ancestor's subtree on a known side and has a child there;
+        # move that child across the ancestor's bound while leaving its parent ordering intact.
+        spots = []
+
+        def walk(n, ancestors):
+            if n is None:
+                return
+            for anc, side in ancestors:
+                if side == "r" and n["l"] is not None and anc["v"] < n["v"]:
+                    spots.append((n["l"], anc["v"] - 1, n["v"]))
+                if side == "l" and n["r"] is not None and anc["v"] > n["v"]:
+                    spots.append((n["r"], anc["v"] + 1, n["v"]))
+            walk(n["l"], ancestors + [(n, "l")])
+            walk(n["r"], ancestors + [(n, "r")])
+
+        walk(root, [])
+        usable = [(node, v) for node, v, parent in spots
+                  if (v < parent if node is not None else False)] or \
+                 [(node, v) for node, v, parent in spots if (v > parent if node is not None else False)]
+        if not usable:
+            return None
+        node, newval = rng.choice(usable)
+        node["v"] = newval
+        return [_to_level_order(root)]
     return [tree(rng, rng.randint(1, 10))]
 
 
@@ -691,7 +860,10 @@ def _lca_bst(rng):
 
 @generator("binary-tree-maximum-path-sum")
 def _max_path_sum(rng):
-    return [tree(rng, rng.randint(1, 12), -15, 15)]
+    # The path must be non-empty, so an all-negative tree answers with its largest single node --
+    # which is what catches a best-so-far initialised to 0. Two cases in 42 were all-negative.
+    lo, hi = rng.choice([(-15, 15), (-15, 15), (-15, -1), (-1000, -1)])
+    return [tree(rng, rng.randint(1, 12), lo, hi)]
 
 
 @generator("construct-binary-tree-from-preorder-and-inorder-traversal")
