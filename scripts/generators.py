@@ -381,12 +381,21 @@ def _container(rng):
 
 @generator("best-time-to-buy-and-sell-stock")
 def _best_time(rng):
-    return [ints(rng, edge_sizes(rng), 0, 30)]
+    n = edge_sizes(rng)
+    # A flat run is the case where a strictly-increasing check and a >= check disagree, and
+    # prices repeat far more often in a narrow band than in [0, 30].
+    hi = rng.choice([30, 30, 3, 1])
+    return [ints(rng, n, 0, hi)]
 
 
 @generator("longest-substring-without-repeating-characters")
 def _longest_substring(rng):
-    return [word(rng, rng.randint(0, 20), rng.choice(["ab", "abc", "abcdef"]))]
+    # LeetCode's alphabet is "English letters, digits, symbols and spaces" -- not lowercase only.
+    # With a lowercase-only suite, a solution that lowercases the input scored 43/43, and so did
+    # one that stripped everything non-alphanumeric. Both are wrong: 'aA' has no repeat, and a
+    # space is a character like any other.
+    alphabet = rng.choice(["ab", "abc", "abcdef", "aA", "aAbB", "ab12", "a b", "a!b?", "aA1! ", "  a"])
+    return [word(rng, rng.randint(0, 20), alphabet)]
 
 
 @generator("longest-repeating-character-replacement")
@@ -1216,17 +1225,55 @@ def _largest_rectangle(rng):
 
 @generator("permutation-in-string")
 def _permutation_in_string(rng):
-    return [word(rng, rng.randint(1, 5), "ab"), word(rng, rng.randint(1, 12), "ab")]
+    # A two-letter alphabet makes "same letters, different counts" -- the input that defeats
+    # comparing sets instead of counts -- much rarer than it should be, so widen it sometimes.
+    alphabet = rng.choice(["ab", "ab", "abc", "abcd"])
+    return [word(rng, rng.randint(1, 5), alphabet), word(rng, rng.randint(1, 12), alphabet)]
+
+
+def minimal_windows(s: str, t: str) -> set:
+    """Every distinct shortest substring of s containing all of t's characters, with multiplicity."""
+    need: dict[str, int] = {}
+    for c in t:
+        need[c] = need.get(c, 0) + 1
+    best, out = None, set()
+    for i in range(len(s)):
+        have: dict[str, int] = {}
+        for j in range(i, len(s)):
+            have[s[j]] = have.get(s[j], 0) + 1
+            if all(have.get(c, 0) >= n for c, n in need.items()):
+                length = j - i + 1
+                if best is None or length < best:
+                    best, out = length, {s[i:j + 1]}
+                elif length == best:
+                    out.add(s[i:j + 1])
+                break
+    return out
 
 
 @generator("minimum-window-substring")
 def _min_window(rng):
-    return [word(rng, rng.randint(1, 14), "abc"), word(rng, rng.randint(1, 4), "abc")]
+    # s and t are upper AND lower case English letters. With a lowercase-only alphabet a
+    # case-insensitive solution scored 43/43, though 'a' and 'A' are different characters here.
+    alphabet = rng.choice(["abc", "abc", "aAb", "aABb", "ABC"])
+    s = word(rng, rng.randint(1, 14), alphabet)
+    t = word(rng, rng.randint(1, 4), alphabet)
+    # "The testcases will be generated such that the answer is unique." Two different shortest
+    # windows is an input the problem promises never occurs, and a correct solution keeping the
+    # LAST shortest window rather than the first is then wrongly failed -- it scored 40/43 before
+    # this filter. Unlike the two-sum rejection this deletes nothing hard: a tie is a coincidence
+    # of the letters, uncorrelated with the traps (t with repeats, an answer at either end).
+    if len(minimal_windows(s, t)) > 1:
+        return None
+    return [s, t]
 
 
 @generator("sliding-window-maximum")
 def _sliding_max(rng):
-    nums = ints(rng, rng.randint(1, 15), -20, 20)
+    # An all-negative window is what catches a running maximum initialised to 0, and random
+    # values in [-20, 20] almost never produce one: there was a single case in 42.
+    lo, hi = rng.choice([(-20, 20), (-20, 20), (-20, -1), (-10000, -1)])
+    nums = ints(rng, rng.randint(1, 15), lo, hi)
     return [nums, rng.randint(1, len(nums))]
 
 

@@ -121,9 +121,51 @@ Measuring before changing anything is the point of step 3; each of these was a c
 | `valid-anagram` | **5** cases had the same letters in different counts, the case that defeats comparing `set()` | 12 |
 | `contains-duplicate` | duplicates were usually adjacent, which a neighbours-only check survives | 25 non-adjacent |
 
+### What batch 3 found
+
+The alphabet was the whole story, again, and in the same shape as `valid-palindrome`'s missing
+digits. Two suites drew from lowercase letters only, so the characters that make the problem a
+problem were absent from every case:
+
+| problem | the gap | after |
+|---|---|---|
+| `longest-substring-without-repeating-characters` | LeetCode's alphabet is "English letters, digits, symbols and spaces"; the generator drew from `ab`/`abc`/`abcdef`. A solution calling `.lower()` scored **43/43**, and so did one stripping punctuation. A 26-slot lowercase table scored 43/43 too | 12 mixed-case, 14 with a space, 7 with a digit, 7 with a symbol |
+| `minimum-window-substring` | `s` and `t` are upper **and** lower case; **1** case in 43 had any uppercase, so a case-insensitive solution scored 43/43 | 22 |
+| `sliding-window-maximum` | **1** all-negative case in 42, the only shape that catches a running maximum seeded at 0 | 21 |
+| `permutation-in-string` | a two-letter alphabet made "same letters, different counts" — the input that defeats a set — rarer than it should be | 27 cases over 3+ letters |
+| `best-time-to-buy-and-sell-stock` | no all-equal runs; `prices[i]` can be 0, so a minimum seeded at 0 is a real bug | 8 all-equal, 22 containing a zero |
+
+The case-insensitive near-miss on `longest-substring-without-repeating-characters` now scores
+**33/43**, and the 26-slot table **21/43**.
+
+#### The opposite failure, found the same day
+
+`minimum-window-substring` was also **over-rejecting**. LeetCode states "the testcases will be
+generated such that the answer is unique", and the generator ignored that: 4 of 43 cases had two
+different shortest windows. A correct solution keeping the *last* shortest window rather than the
+first scored **40/43** — failed for being correct. The generator now redraws when a tie appears.
+
+This is the `top-k-frequent-elements` lesson from the other side. Rejecting inputs is what caused
+the original two-sum disaster, so it is worth saying why it is right here: for two-sum, "has a
+second valid pair" and "has duplicates" are nearly the same condition, so the filter deleted the
+hard cases. For `minimum-window-substring` a tie is a coincidence of which letters landed where,
+uncorrelated with any of the traps — `t` with repeats, an answer at either end, `t` longer than
+`s`. Counts for those were unchanged by the filter.
+
+#### Checked and deliberately not flagged
+
+Two plausible-looking "bugs" are not bugs, and the audit pins them as CORRECT so a later change
+cannot start rejecting them:
+
+- `longest-repeating-character-replacement` with a **non-shrinking window** that returns
+  `len(s) - l`, never tracking a running maximum and never decreasing the stale `maxf`.
+- `sliding-window-maximum` popping the deque on `<=` rather than `<`.
+
+Both were verified exhaustively against brute force over small alphabets.
+
 ## Status
 
-18 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
+24 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
 
 ### Batch 1: Arrays & Hashing (9/9 audited)
 - [x] `contains-duplicate` — Easy
@@ -141,13 +183,13 @@ Measuring before changing anything is the point of step 3; each of these was a c
 - [x] `3sum` — Medium
 - [x] `container-with-most-water` — Medium
 - [x] `trapping-rain-water` — Hard
-### Batch 3: Sliding Window (0/6 audited)
-- [ ] `best-time-to-buy-and-sell-stock` — Easy
-- [ ] `longest-substring-without-repeating-characters` — Medium
-- [ ] `longest-repeating-character-replacement` — Medium
-- [ ] `permutation-in-string` — Medium
-- [ ] `minimum-window-substring` — Hard
-- [ ] `sliding-window-maximum` — Hard
+### Batch 3: Sliding Window (6/6 audited)
+- [x] `best-time-to-buy-and-sell-stock` — Easy
+- [x] `longest-substring-without-repeating-characters` — Medium
+- [x] `longest-repeating-character-replacement` — Medium
+- [x] `permutation-in-string` — Medium
+- [x] `minimum-window-substring` — Hard
+- [x] `sliding-window-maximum` — Hard
 ### Batch 4: Stack (0/7 audited)
 - [ ] `valid-parentheses` — Easy
 - [ ] `min-stack` — Medium

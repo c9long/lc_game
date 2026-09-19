@@ -323,7 +323,220 @@ const cases = [
         return res`],
 	['contains-duplicate', 'NEAR-MISS assumes at least two elements', false, `class Solution:
     def containsDuplicate(self, nums):
-        return len(set(nums)) != len(nums) or len(nums) < 2`]
+        return len(set(nums)) != len(nums) or len(nums) < 2`],
+
+	// ---- batch 3: Sliding Window ----
+	// The alphabet was the whole story for 3 and 76. Both suites used lowercase letters only, so a
+	// solution that lowercased its input -- or stripped punctuation -- scored a perfect 43/43.
+	['longest-substring-without-repeating-characters', 'NEAR-MISS case-insensitive', false, `class Solution:
+    def lengthOfLongestSubstring(self, s):
+        s = s.lower()
+        seen, l, res = set(), 0, 0
+        for r in range(len(s)):
+            while s[r] in seen:
+                seen.remove(s[l]); l += 1
+            seen.add(s[r]); res = max(res, r - l + 1)
+        return res`],
+	['longest-substring-without-repeating-characters', 'NEAR-MISS 26-slot lowercase table', false, `class Solution:
+    def lengthOfLongestSubstring(self, s):
+        last = [-1] * 26; l = 0; res = 0
+        for r, c in enumerate(s):
+            i = ord(c) - ord('a')
+            if 0 <= i < 26:
+                if last[i] >= l: l = last[i] + 1
+                last[i] = r
+            res = max(res, r - l + 1)
+        return res`],
+	['longest-substring-without-repeating-characters', 'NEAR-MISS left pointer jumps backwards', false, `class Solution:
+    def lengthOfLongestSubstring(self, s):
+        last, l, res = {}, 0, 0
+        for r, c in enumerate(s):
+            if c in last: l = last[c] + 1
+            last[c] = r
+            res = max(res, r - l + 1)
+        return res`],
+	['longest-substring-without-repeating-characters', 'correct last-index map', true, `class Solution:
+    def lengthOfLongestSubstring(self, s):
+        last, l, res = {}, 0, 0
+        for r, c in enumerate(s):
+            if c in last: l = max(l, last[c] + 1)
+            last[c] = r
+            res = max(res, r - l + 1)
+        return res`],
+
+	['minimum-window-substring', 'NEAR-MISS case-insensitive', false, `class Solution:
+    def minWindow(self, s, t):
+        from collections import Counter
+        need = Counter(t.lower()); have = {}; cnt, req = 0, len(need)
+        res, reslen, l = [-1, -1], float("inf"), 0
+        for r in range(len(s)):
+            c = s[r].lower(); have[c] = 1 + have.get(c, 0)
+            if c in need and have[c] == need[c]: cnt += 1
+            while cnt == req:
+                if (r - l + 1) < reslen: res, reslen = [l, r], r - l + 1
+                d = s[l].lower(); have[d] -= 1
+                if d in need and have[d] < need[d]: cnt -= 1
+                l += 1
+        l, r = res
+        return s[l:r+1] if reslen != float("inf") else ""`],
+	['minimum-window-substring', 'NEAR-MISS set instead of counts', false, `class Solution:
+    def minWindow(self, s, t):
+        need = set(t); have = {}
+        res, reslen, l = [-1, -1], float("inf"), 0
+        for r in range(len(s)):
+            have[s[r]] = 1 + have.get(s[r], 0)
+            while need <= set(k for k, v in have.items() if v > 0):
+                if (r - l + 1) < reslen: res, reslen = [l, r], r - l + 1
+                have[s[l]] -= 1; l += 1
+        l, r = res
+        return s[l:r+1] if reslen != float("inf") else ""`],
+	['minimum-window-substring', 'NEAR-MISS shrinks with if, not while', false, `class Solution:
+    def minWindow(self, s, t):
+        from collections import Counter
+        need = Counter(t); have = {}; cnt, req = 0, len(need)
+        res, reslen, l = [-1, -1], float("inf"), 0
+        for r in range(len(s)):
+            c = s[r]; have[c] = 1 + have.get(c, 0)
+            if c in need and have[c] == need[c]: cnt += 1
+            if cnt == req:
+                if (r - l + 1) < reslen: res, reslen = [l, r], r - l + 1
+                d = s[l]; have[d] -= 1
+                if d in need and have[d] < need[d]: cnt -= 1
+                l += 1
+        l, r = res
+        return s[l:r+1] if reslen != float("inf") else ""`],
+	// LeetCode guarantees the answer is unique, so keeping the LAST shortest window is as correct as
+	// keeping the first. The generator used to emit ties and this scored 40/43; it must be 43/43.
+	['minimum-window-substring', 'correct, keeps the last shortest window', true, `class Solution:
+    def minWindow(self, s, t):
+        from collections import Counter
+        need = Counter(t); have = {}; cnt, req = 0, len(need)
+        res, reslen, l = [-1, -1], float("inf"), 0
+        for r in range(len(s)):
+            c = s[r]; have[c] = 1 + have.get(c, 0)
+            if c in need and have[c] == need[c]: cnt += 1
+            while cnt == req:
+                if (r - l + 1) <= reslen: res, reslen = [l, r], r - l + 1
+                d = s[l]; have[d] -= 1
+                if d in need and have[d] < need[d]: cnt -= 1
+                l += 1
+        l, r = res
+        return s[l:r+1] if reslen != float("inf") else ""`],
+
+	// The bug that looks identical to the correct line: assignment rather than max().
+	['longest-repeating-character-replacement', 'NEAR-MISS assigns maxf instead of max()', false, `class Solution:
+    def characterReplacement(self, s, k):
+        count = {}; l = 0; maxf = 0; res = 0
+        for r in range(len(s)):
+            count[s[r]] = 1 + count.get(s[r], 0)
+            maxf = count[s[r]]
+            if (r - l + 1) - maxf > k: count[s[l]] -= 1; l += 1
+            res = max(res, r - l + 1)
+        return res`],
+	['longest-repeating-character-replacement', 'NEAR-MISS longest run plus k, uncapped', false, `class Solution:
+    def characterReplacement(self, s, k):
+        best = run = 1
+        for i in range(1, len(s)):
+            run = run + 1 if s[i] == s[i-1] else 1
+            best = max(best, run)
+        return best + k`],
+	// The non-shrinking window that returns len(s) - l is genuinely correct, not a near-miss: it was
+	// checked exhaustively against brute force. It is here so nobody "fixes" the suite to reject it.
+	['longest-repeating-character-replacement', 'correct non-shrinking window', true, `class Solution:
+    def characterReplacement(self, s, k):
+        count = {}; l = 0; maxf = 0
+        for r in range(len(s)):
+            count[s[r]] = 1 + count.get(s[r], 0)
+            maxf = max(maxf, count[s[r]])
+            if (r - l + 1) - maxf > k:
+                count[s[l]] -= 1; l += 1
+        return len(s) - l`],
+
+	['permutation-in-string', 'NEAR-MISS set instead of counts', false, `class Solution:
+    def checkInclusion(self, s1, s2):
+        n = len(s1)
+        if n > len(s2): return False
+        return any(set(s2[i:i+n]) == set(s1) for i in range(len(s2) - n + 1))`],
+	['permutation-in-string', 'NEAR-MISS never removes the outgoing char', false, `class Solution:
+    def checkInclusion(self, s1, s2):
+        from collections import Counter
+        need = Counter(s1); have = Counter()
+        for c in s2:
+            have[c] += 1
+            if have == need: return True
+        return False`],
+	['permutation-in-string', 'NEAR-MISS loop bound misses the last window', false, `class Solution:
+    def checkInclusion(self, s1, s2):
+        from collections import Counter
+        n = len(s1)
+        if n > len(s2): return False
+        need = Counter(s1)
+        return any(Counter(s2[i:i+n]) == need for i in range(len(s2) - n))`],
+	['permutation-in-string', 'correct sorted-window scan', true, `class Solution:
+    def checkInclusion(self, s1, s2):
+        n = len(s1); need = sorted(s1)
+        return any(sorted(s2[i:i+n]) == need for i in range(len(s2) - n + 1))`],
+
+	// An all-negative window is the only thing that catches a running maximum seeded with 0, and the
+	// suite had exactly one such case in 42 before the generator drew from negative-only ranges.
+	['sliding-window-maximum', 'NEAR-MISS running max seeded at 0', false, `class Solution:
+    def maxSlidingWindow(self, nums, k):
+        res = []
+        for i in range(len(nums) - k + 1):
+            m = 0
+            for j in range(i, i + k):
+                if nums[j] > m: m = nums[j]
+            res.append(m)
+        return res`],
+	['sliding-window-maximum', 'NEAR-MISS never evicts expired indices', false, `class Solution:
+    def maxSlidingWindow(self, nums, k):
+        from collections import deque
+        q, res = deque(), []
+        for i, n in enumerate(nums):
+            while q and nums[q[-1]] < n: q.pop()
+            q.append(i)
+            if i >= k - 1: res.append(nums[q[0]])
+        return res`],
+	['sliding-window-maximum', 'NEAR-MISS single running max, never recomputed', false, `class Solution:
+    def maxSlidingWindow(self, nums, k):
+        res = []; m = max(nums[:k]); res.append(m)
+        for i in range(k, len(nums)):
+            m = max(m, nums[i]); res.append(m)
+        return res`],
+	['sliding-window-maximum', 'correct deque', true, `class Solution:
+    def maxSlidingWindow(self, nums, k):
+        from collections import deque
+        q, res = deque(), []
+        for i, n in enumerate(nums):
+            while q and nums[q[-1]] <= n: q.pop()
+            q.append(i)
+            if q[0] <= i - k: q.popleft()
+            if i >= k - 1: res.append(nums[q[0]])
+        return res`],
+
+	// prices[i] can be 0, so seeding the running minimum with 0 is a real bug, not a safe default.
+	['best-time-to-buy-and-sell-stock', 'NEAR-MISS lowest seeded at 0', false, `class Solution:
+    def maxProfit(self, prices):
+        res = 0; lowest = 0
+        for price in prices:
+            if price < lowest: lowest = price
+            res = max(res, price - lowest)
+        return res`],
+	['best-time-to-buy-and-sell-stock', 'NEAR-MISS ignores ordering', false, `class Solution:
+    def maxProfit(self, prices):
+        return max(prices) - min(prices)`],
+	['best-time-to-buy-and-sell-stock', 'NEAR-MISS adjacent days only', false, `class Solution:
+    def maxProfit(self, prices):
+        best = 0
+        for i in range(1, len(prices)):
+            best = max(best, prices[i] - prices[i-1])
+        return best`],
+	['best-time-to-buy-and-sell-stock', 'correct one pass', true, `class Solution:
+    def maxProfit(self, prices):
+        lo, best = float("inf"), 0
+        for p in prices:
+            lo = min(lo, p); best = max(best, p - lo)
+        return best`]
 ];
 
 let bad = 0;
