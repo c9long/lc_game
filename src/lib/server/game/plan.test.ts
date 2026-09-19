@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { REFRESH_BACKLOG_TAKEOVER, chooseSlots, planItemDone } from './plan';
-import { problemsForNode } from '$lib/game/curriculum';
+import { NODE_ORDER, problemsForNode } from '$lib/game/curriculum';
 import { computeTree, type ProblemProgress } from '$lib/game/tree';
 
 describe('plan item doneness', () => {
@@ -61,14 +61,40 @@ describe('expedition slot choice', () => {
 	it('serves the shallower node first, however long the deeper one has waited', () => {
 		// A due Two Pointers problem one day late must come before a due 1-D DP problem ten days
 		// late. Refreshes walk the tree from the root, exactly as new problems do.
+		// Every node is solved and fresh so the whole path is open and only ordering decides.
 		const shallow = problemsForNode('two-pointers')[0].slug;
 		const deep = problemsForNode('dp-1d')[0].slug;
-		const progress = new Map<string, ProblemProgress>([
-			[deep, { solveCount: 1, srsStep: 0, dueAt: new Date(now.getTime() - 10 * DAY) }],
-			[shallow, { solveCount: 1, srsStep: 0, dueAt: new Date(now.getTime() - DAY) }]
-		]);
+		const progress = new Map<string, ProblemProgress>(
+			NODE_ORDER.flatMap((id) => problemsForNode(id)).map((p) => [
+				p.slug,
+				{ solveCount: 1, srsStep: 0, dueAt: new Date(now.getTime() + DAY) }
+			])
+		);
+		progress.set(deep, { solveCount: 1, srsStep: 0, dueAt: new Date(now.getTime() - 10 * DAY) });
+		progress.set(shallow, { solveCount: 1, srsStep: 0, dueAt: new Date(now.getTime() - DAY) });
 		const chosen = chooseSlots(snapFor(progress), null);
 		expect(chosen[0]).toMatchObject({ slot: 1, kind: 'refresh', slug: shallow });
+	});
+
+	it('holds back refreshes from nodes past one that is not yet unlocked', () => {
+		// Practice solves on leetcode.com put Sliding Window problems on the schedule while Two
+		// Pointers, its prerequisite, was still locked. Those must wait for the path to open.
+		const window = problemsForNode('sliding-window').map((p) => p.slug);
+		const progress = progressWith(window, window.length);
+		// Arrays & Hashing unlocked and fresh, Two Pointers untouched.
+		for (const slug of root.slice(0, Math.ceil(root.length / 2)))
+			progress.set(slug, { solveCount: 1, srsStep: 0, dueAt: new Date(now.getTime() + DAY) });
+		const chosen = chooseSlots(snapFor(progress), null);
+		expect(chosen.map((c) => c.kind)).toEqual(['new', 'new']);
+		expect(chosen.some((c) => window.includes(c.slug))).toBe(false);
+
+		// Once Two Pointers unlocks, the backlog takes over as normal.
+		const pointers = problemsForNode('two-pointers').map((p) => p.slug);
+		for (const slug of pointers.slice(0, Math.ceil(pointers.length / 2)))
+			progress.set(slug, { solveCount: 1, srsStep: 0, dueAt: new Date(now.getTime() + DAY) });
+		const opened = chooseSlots(snapFor(progress), null);
+		expect(opened.map((c) => c.kind)).toEqual(['refresh', 'refresh']);
+		expect(opened.every((c) => window.includes(c.slug))).toBe(true);
 	});
 
 	it('drops the daily challenge while the backlog stands', () => {

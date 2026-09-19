@@ -24,9 +24,11 @@ export interface NodeView {
 	/** 1 when nothing is overdue (or nothing solved yet). */
 	freshness: number;
 	status: NodeStatus;
-	/** Whether every prerequisite node is unlocked or complete. Kept separate from `status`
-	 *  because a node reaches `unlocked` on solve count alone: profile sync can record solves for a
-	 *  deep node long before the path to it is open. */
+	/** Whether every prerequisite node is unlocked or complete and itself has its prerequisites
+	 *  met, all the way back to the root. Kept separate from `status` because a node reaches
+	 *  `unlocked` on solve count alone: profile sync can record solves for a deep node long before
+	 *  the path to it is open. Transitive for the same reason: a synced-open Two Pointers must not
+	 *  open Sliding Window while Arrays & Hashing is still short of unlocking. */
 	prereqsMet: boolean;
 	rusting: boolean;
 	research: number;
@@ -54,8 +56,8 @@ export function computeTree(input: TreeInput): Map<string, NodeView> {
 		const total = problems.length;
 		const freshness = solved === 0 ? 1 : (solved - due) / solved;
 		const prereqsMet = node.requires.every((r) => {
-			const st = views.get(r)?.status;
-			return st === 'unlocked' || st === 'complete';
+			const v = views.get(r);
+			return (v?.status === 'unlocked' || v?.status === 'complete') && v.prereqsMet;
 		});
 		let status: NodeStatus;
 		if (total > 0 && solved >= total) status = 'complete';
@@ -117,7 +119,12 @@ export function nextNewProblems(
 }
 
 /** Solved problems that are due, in curriculum order: earliest node first, then problem order
- *  within the node.
+ *  within the node, skipping nodes the expedition may not serve from.
+ *
+ *  Gated on isServable exactly as new problems are. Practice solves (on leetcode.com, picked up
+ *  by profile sync) put problems from deep nodes on the SRS schedule long before the path there
+ *  opens, and those used to come due as refreshes: Sliding Window reviews while Two Pointers was
+ *  still locked. They stay on the schedule and are served once the path opens.
  *
  *  Mirrors nextNewProblems, so refreshes and new problems walk the tree the same way. It used to
  *  be most-overdue-first, which let a deep node's refresh pre-empt a root node's simply by having
@@ -130,11 +137,13 @@ export function nextNewProblems(
  *  outputs come from the vendored reference solutions, there is no suite to judge them with.
  */
 export function dueRefreshes(
+	tree: Map<string, NodeView>,
 	progress: Map<string, ProblemProgress>,
 	now: Date
 ): { slug: string; overdueMs: number }[] {
 	const out: { slug: string; overdueMs: number }[] = [];
 	for (const id of NODE_ORDER) {
+		if (!isServable(tree.get(id)!)) continue;
 		for (const p of problemsForNode(id)) {
 			const s = progress.get(p.slug);
 			if (!s || s.solveCount === 0 || !isDue(s, now)) continue;

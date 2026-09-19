@@ -91,7 +91,7 @@ describe('tree', () => {
 		expect(v.freshness).toBeCloseTo(0.25);
 		expect(v.rusting).toBe(true);
 		// root[2] is the most overdue, yet order follows the curriculum, not the wait.
-		const refreshes = dueRefreshes(progress, t0);
+		const refreshes = dueRefreshes(tree, progress, t0);
 		expect(refreshes.map((r) => r.slug)).toEqual([root[0], root[1], root[2]]);
 		const next = nextNewProblems(tree, progress, 2);
 		expect(next.map((p) => p.slug)).toEqual(root.slice(4, 6));
@@ -110,7 +110,7 @@ describe('tree', () => {
 			['maximum-number-of-vowels-in-a-substring-of-given-length', { solveCount: 1, srsStep: 0, dueAt: overdue }],
 			['most-common-word', { solveCount: 2, srsStep: 1, dueAt: overdue }]
 		]);
-		expect(dueRefreshes(progress, t0).map((r) => r.slug)).toEqual([inCurriculum]);
+		expect(dueRefreshes(computeTree({ progress, research: new Map(), now: t0 }), progress, t0).map((r) => r.slug)).toEqual([inCurriculum]);
 	});
 
 	it('never serves problems from a node whose prerequisites are still locked', () => {
@@ -145,6 +145,17 @@ describe('tree', () => {
 		expect(view.status).toBe('complete');
 		expect(view.prereqsMet).toBe(false);
 		expect(isServable(view)).toBe(false);
+	});
+
+	it('requires the whole path to be open, not just the direct prerequisite', () => {
+		// Two Pointers synced to `unlocked` while Arrays & Hashing is not must not open Sliding Window.
+		const t0 = new Date('2026-09-06T12:00:00Z');
+		const progress = new Map<string, ProblemProgress>();
+		for (const p of problemsForNode('two-pointers')) progress.set(p.slug, { solveCount: 1, srsStep: 0, dueAt: new Date(t0.getTime() + DAY) });
+		const tree = computeTree({ progress, research: new Map(), now: t0 });
+		expect(tree.get('two-pointers')!.status).toBe('complete');
+		expect(tree.get('sliding-window')!.prereqsMet).toBe(false);
+		expect(isServable(tree.get('sliding-window')!)).toBe(false);
 	});
 });
 

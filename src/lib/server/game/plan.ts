@@ -106,7 +106,7 @@ export function chooseSlots(
 	snap: { tree: Map<string, NodeView>; progress: Map<string, ProblemProgress>; now: Date },
 	daily: Daily | null
 ): { slot: number; slug: string; kind: PlanItem['kind']; done: boolean }[] {
-	const refreshes = dueRefreshes(snap.progress, snap.now);
+	const refreshes = dueRefreshes(snap.tree, snap.progress, snap.now);
 	const exclude = new Set<string>();
 	const chosen: { slot: number; slug: string; kind: PlanItem['kind']; done: boolean }[] = [];
 
