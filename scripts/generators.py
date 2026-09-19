@@ -1662,7 +1662,9 @@ def _missing_number(rng):
 
 @generator("number-of-1-bits")
 def _hamming_weight(rng):
-    return [rng.choice([0, 1, rng.randint(0, 2**31 - 1), 2**31 - 1, 2**16])]
+    # 1 <= n <= 2^31 - 1 in the current statement; it once took an unsigned 32-bit value, and
+    # zero is no longer a legal input.
+    return [rng.choice([1, rng.randint(1, 2**31 - 1), rng.randint(1, 2**31 - 1), 2**31 - 1, 2**16])]
 
 
 @generator("counting-bits")
@@ -1672,7 +1674,10 @@ def _counting_bits(rng):
 
 @generator("reverse-bits")
 def _reverse_bits(rng):
-    return [rng.choice([0, 1, 2**32 - 1, rng.randint(0, 2**32 - 1)])]
+    # The current statement takes a signed int with 0 <= n <= 2^31 - 2 and n EVEN, so bit 0 is
+    # always 0 and the reversal fits a signed 32-bit result -- LeetCode's own examples, 43261596
+    # and 2147483644, are both. The old unsigned draws up to 2^32 - 1 were outside that.
+    return [rng.choice([0, 2, 2**31 - 2, 2**30, 2 * rng.randint(0, 2**30 - 1), 2 * rng.randint(0, 2**30 - 1)])]
 
 
 @generator("sum-of-two-integers")

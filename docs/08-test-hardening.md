@@ -454,9 +454,42 @@ in `rotate-image`, the missing last-row and last-column guards in `spiral-matrix
 in `plus-one`, a dropped sign in `powx-n`, leading zeros and the empty `"0"` in `multiply-strings`,
 and de-duplicated points or zero-area squares in `detect-squares`.
 
+### What batch 18 found
+
+Every near-miss already failed by a wide margin. What needed fixing was the inputs, because two of
+these problems have changed shape on LeetCode since the suites were written:
+
+| problem | the gap | after |
+|---|---|---|
+| `reverse-bits` | now takes a **signed** int with `0 <= n <= 2^31 - 2` and `n` even, so bit 0 is always 0 and the reversal fits a signed 32-bit result. The generator still drew unsigned values up to `2^32 - 1`: 28 of 42 were odd and 17 too large | even values up to `2^31 - 2`, matching LeetCode's own examples `43261596` and `2147483644` |
+| `number-of-1-bits` | now `1 <= n <= 2^31 - 1`; 6 cases were 0 | none |
+
+Two of the known wrong solutions here — the naive carry loop for `sum-of-two-integers` and a
+floor-division digit loop for `reverse-integer` — spin forever on negative input in Python. Per the
+rule from batch 15 they are **not** in the audit; the near-misses used instead return a wrong
+value and stop.
+
+## Where this leaves the suites
+
+All 150 are audited, and the CI audit holds a near-miss/correct pair for every one. Across the
+batches the failures fell into a handful of kinds, in rough order of how often they turned up:
+
+1. **The input never contained the thing that makes the problem hard.** Lowercase-only alphabets
+   (3, 76), no ties (car-fleet, min-stack), no negatives (sliding-window-maximum, 124), no
+   duplicates where the constraint allows them (287), no answerable inputs at all (572,
+   hand-of-straights). Most of the audit's findings are this.
+2. **The input broke a guarantee the problem makes.** Ties in 76, all-dot patterns in 211, point
+   meetings in 253, empty strings in three 2-D DP problems. These fail *correct* solutions.
+3. **The judge itself hid a wrong answer**: cycles truncated to a correct-looking prefix, a
+   comparison rule that sorted away the meaning of `permutations`, `Infinity` crashing the worker.
+4. **A test for the tests misbehaved**: a near-miss that loops forever stalls the whole audit.
+
+Research before measuring found most of them; measuring before changing is what made each one a
+count rather than a hunch.
+
 ## Status
 
-143 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
+150 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
 
 ### Batch 1: Arrays & Hashing (9/9 audited)
 - [x] `contains-duplicate` — Easy
@@ -618,11 +651,11 @@ and de-duplicated points or zero-area squares in `detect-squares`.
 - [x] `powx-n` — Medium
 - [x] `multiply-strings` — Medium
 - [x] `detect-squares` — Medium
-### Batch 18: Bit Manipulation (0/7 audited)
-- [ ] `single-number` — Easy
-- [ ] `number-of-1-bits` — Easy
-- [ ] `counting-bits` — Easy
-- [ ] `reverse-bits` — Easy
-- [ ] `missing-number` — Easy
-- [ ] `sum-of-two-integers` — Medium
-- [ ] `reverse-integer` — Medium
+### Batch 18: Bit Manipulation (7/7 audited)
+- [x] `single-number` — Easy
+- [x] `number-of-1-bits` — Easy
+- [x] `counting-bits` — Easy
+- [x] `reverse-bits` — Easy
+- [x] `missing-number` — Easy
+- [x] `sum-of-two-integers` — Medium
+- [x] `reverse-integer` — Medium

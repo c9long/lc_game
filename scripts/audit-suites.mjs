@@ -3598,7 +3598,87 @@ class Solution:
         for (a, b), k in list(self.c.items()):
             if abs(a - x) == abs(b - y) and a != x:
                 n += k * self.c[(a, y)] * self.c[(x, b)]
-        return n`]
+        return n`],
+
+	// ---- batch 18: Bit Manipulation ----
+	// None of these may loop forever: the naive carry loop for sum-of-two-integers and a floor-division
+	// digit loop for reverse-integer both spin on negatives, so their near-misses return wrong values instead.
+	['single-number', 'NEAR-MISS sorted-pairs scan never returns the last element', false, `class Solution:
+    def singleNumber(self, nums):
+        s = sorted(nums)
+        for i in range(0, len(s) - 1, 2):
+            if s[i] != s[i + 1]: return s[i]`],
+	['single-number', 'NEAR-MISS XOR accumulator seeded with the first element', false, `class Solution:
+    def singleNumber(self, nums):
+        r = nums[0]
+        for x in nums: r ^= x
+        return r`],
+	['single-number', 'correct', true, `class Solution:
+    def singleNumber(self, nums):
+        r = 0
+        for x in nums: r ^= x
+        return r`],
+	['number-of-1-bits', 'NEAR-MISS counts ones in the decimal digits', false, `class Solution:
+    def hammingWeight(self, n): return str(n).count("1")`],
+	['number-of-1-bits', 'correct', true, `class Solution:
+    def hammingWeight(self, n): return bin(n).count("1")`],
+	['counting-bits', 'NEAR-MISS range(n) drops the last entry', false, `class Solution:
+    def countBits(self, n): return [bin(i).count("1") for i in range(n)]`],
+	['counting-bits', 'correct', true, `class Solution:
+    def countBits(self, n): return [bin(i).count("1") for i in range(n + 1)]`],
+	['reverse-bits', 'NEAR-MISS reverses without padding to 32 bits', false, `class Solution:
+    def reverseBits(self, n): return int(bin(n)[2:][::-1], 2)`],
+	['reverse-bits', 'NEAR-MISS 31 iterations instead of 32', false, `class Solution:
+    def reverseBits(self, n):
+        r = 0
+        for _ in range(31): r = (r << 1) | (n & 1); n >>= 1
+        return r`],
+	['reverse-bits', 'correct', true, `class Solution:
+    def reverseBits(self, n):
+        r = 0
+        for _ in range(32): r = (r << 1) | (n & 1); n >>= 1
+        return r`],
+	['missing-number', 'NEAR-MISS sort and look for a gap, no fall-through', false, `class Solution:
+    def missingNumber(self, nums):
+        s = sorted(nums)
+        for i in range(1, len(s)):
+            if s[i] != s[i - 1] + 1: return s[i - 1] + 1`],
+	['missing-number', 'NEAR-MISS XOR forgetting n', false, `class Solution:
+    def missingNumber(self, nums):
+        r = 0
+        for i, x in enumerate(nums): r ^= i ^ x
+        return r`],
+	['missing-number', 'correct', true, `class Solution:
+    def missingNumber(self, nums):
+        n = len(nums)
+        return n * (n + 1) // 2 - sum(nums)`],
+	['sum-of-two-integers', 'NEAR-MISS 32-bit mask without restoring the sign', false, `class Solution:
+    def getSum(self, a, b):
+        M = 0xFFFFFFFF
+        a &= M; b &= M
+        while b:
+            a, b = (a ^ b) & M, ((a & b) << 1) & M
+        return a`],
+	['sum-of-two-integers', 'correct', true, `class Solution:
+    def getSum(self, a, b):
+        M = 0xFFFFFFFF
+        a &= M; b &= M
+        while b:
+            a, b = (a ^ b) & M, ((a & b) << 1) & M
+        return a if a <= 0x7FFFFFFF else ~(a ^ M)`],
+	['reverse-integer', 'NEAR-MISS no overflow check', false, `class Solution:
+    def reverse(self, x):
+        r = int(str(abs(x))[::-1])
+        return -r if x < 0 else r`],
+	['reverse-integer', 'NEAR-MISS reverses the whole string, sign included', false, `class Solution:
+    def reverse(self, x):
+        r = int(str(x)[::-1])
+        return r if -2 ** 31 <= r <= 2 ** 31 - 1 else 0`],
+	['reverse-integer', 'correct', true, `class Solution:
+    def reverse(self, x):
+        r = int(str(abs(x))[::-1])
+        r = -r if x < 0 else r
+        return r if -2 ** 31 <= r <= 2 ** 31 - 1 else 0`]
 ];
 
 let bad = 0;
