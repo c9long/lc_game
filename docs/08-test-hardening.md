@@ -376,9 +376,20 @@ the sorted list, which the old comparison rule accepted.
 unsorted Hierholzer, a greedy walk, a nearest-neighbour chain, and the cheapest `n-1` edges taken
 without a cycle check. `alien-dictionary` was audited in batch 1.
 
+### What batch 13 found
+
+The most solidly built batch so far: 31 of 32 near-misses already failed, most by a wide margin,
+including the circular `house-robber-ii` run as a line, `decode-ways` treating `0` as a digit,
+`maximum-product-subarray` tracking only the maximum, greedy `coin-change`, and the forward
+0/1-knapsack loop that reuses an item in `partition-equal-subset-sum`.
+
+| problem | the gap | after |
+|---|---|---|
+| `word-break` | the generator built `s` by joining dictionary words, so taking the longest match almost never walked into a dead end, and greedy longest-match scored **43/43** | two traps built outright: words `x`, `xy`, `yz` with `s = xyz`, where the longest first match strands `z` (LeetCode's `"aab"` shape), and a word that is a proper prefix of `s` where `s` is itself a word, which defeats greedy *shortest* match. Now 37/43 and 38/43 |
+
 ## Status
 
-99 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
+111 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
 
 ### Batch 1: Arrays & Hashing (9/9 audited)
 - [x] `contains-duplicate` — Easy
@@ -490,19 +501,19 @@ without a cycle check. `alien-dictionary` was audited in batch 1.
 - [x] `swim-in-rising-water` — Hard
 - [x] `alien-dictionary` — Hard
 - [x] `cheapest-flights-within-k-stops` — Medium
-### Batch 13: 1-D Dynamic Programming (0/12 audited)
-- [ ] `climbing-stairs` — Easy
-- [ ] `min-cost-climbing-stairs` — Easy
-- [ ] `house-robber` — Medium
-- [ ] `house-robber-ii` — Medium
-- [ ] `longest-palindromic-substring` — Medium
-- [ ] `palindromic-substrings` — Medium
-- [ ] `decode-ways` — Medium
-- [ ] `coin-change` — Medium
-- [ ] `maximum-product-subarray` — Medium
-- [ ] `word-break` — Medium
-- [ ] `longest-increasing-subsequence` — Medium
-- [ ] `partition-equal-subset-sum` — Medium
+### Batch 13: 1-D Dynamic Programming (12/12 audited)
+- [x] `climbing-stairs` — Easy
+- [x] `min-cost-climbing-stairs` — Easy
+- [x] `house-robber` — Medium
+- [x] `house-robber-ii` — Medium
+- [x] `longest-palindromic-substring` — Medium
+- [x] `palindromic-substrings` — Medium
+- [x] `decode-ways` — Medium
+- [x] `coin-change` — Medium
+- [x] `maximum-product-subarray` — Medium
+- [x] `word-break` — Medium
+- [x] `longest-increasing-subsequence` — Medium
+- [x] `partition-equal-subset-sum` — Medium
 ### Batch 14: 2-D Dynamic Programming (0/11 audited)
 - [ ] `unique-paths` — Medium
 - [ ] `longest-common-subsequence` — Medium

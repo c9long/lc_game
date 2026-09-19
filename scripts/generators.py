@@ -1353,6 +1353,25 @@ def _max_product(rng):
 
 @generator("word-break")
 def _word_break(rng):
+    """Breakable and unbreakable strings, including the two shapes that defeat greedy matching.
+
+    Building s by joining dictionary words means taking the longest match almost never walks into
+    a dead end, so greedy longest-match scored 43/43. Two traps are now constructed:
+
+      longest      words x, xy, yz and s = xyz: the longest first match is xy, which strands z,
+                   while x + yz breaks it -- LeetCode's own ("aab", ["a","aa","ab"]) shape
+      shortest     a word p that is a proper prefix of s, where s is itself a word: the shortest
+                   first match p strands the rest -- ("aaa", ["aa","aaa"])
+    """
+    roll = rng.random()
+    if roll < 0.2:
+        x, y, z = (word(rng, rng.randint(1, 2), "abc") for _ in range(3))
+        words = sorted({x, x + y, y + z} | {word(rng, rng.randint(1, 3), "abc") for _ in range(rng.randint(0, 2))})
+        return [x + y + z, words]
+    if roll < 0.32:
+        whole = word(rng, rng.randint(3, 5), "ab")
+        cut = rng.randint(1, len(whole) - 1)
+        return [whole, sorted({whole[:cut], whole})]
     words = list({word(rng, rng.randint(1, 3), "abc") for _ in range(rng.randint(1, 6))})
     s = "".join(rng.choice(words) for _ in range(rng.randint(1, 5)))
     if rng.random() < 0.35:

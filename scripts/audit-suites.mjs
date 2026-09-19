@@ -2628,7 +2628,230 @@ class Solution:
                 if not used[v]:
                     d = abs(points[u][0]-points[v][0]) + abs(points[u][1]-points[v][1])
                     if d < best[v]: best[v] = d
-        return total`]
+        return total`],
+
+	// ---- batch 13: 1-D Dynamic Programming ----
+	// Joining dictionary words to build s meant taking the longest match almost never walked into
+	// a dead end, so greedy longest-match on word-break scored 43/43 before its traps were built.
+	['house-robber-ii', 'NEAR-MISS linear house robber on the whole circle', false, `class Solution:
+    def rob(self, nums):
+        a = b = 0
+        for x in nums: a, b = b, max(b, a + x)
+        return b`],
+	['house-robber-ii', 'NEAR-MISS two slices with no length-1 guard', false, `class Solution:
+    def rob(self, nums):
+        def go(xs):
+            a = b = 0
+            for x in xs: a, b = b, max(b, a + x)
+            return b
+        return max(go(nums[1:]), go(nums[:-1]))`],
+	['house-robber-ii', 'correct', true, `class Solution:
+    def rob(self, nums):
+        def go(xs):
+            a = b = 0
+            for x in xs: a, b = b, max(b, a + x)
+            return b
+        if len(nums) == 1: return nums[0]
+        return max(go(nums[1:]), go(nums[:-1]))`],
+	['decode-ways', 'NEAR-MISS treats 0 as a valid single digit', false, `class Solution:
+    def numDecodings(self, s):
+        a, b = 1, 1
+        for i in range(1, len(s)):
+            c = b + (a if 10 <= int(s[i-1:i+1]) <= 26 else 0)
+            a, b = b, c
+        return b`],
+	['decode-ways', 'NEAR-MISS two-digit check with no lower bound of 10', false, `class Solution:
+    def numDecodings(self, s):
+        if s[0] == "0": return 0
+        a, b = 1, 1
+        for i in range(1, len(s)):
+            c = (b if s[i] != "0" else 0) + (a if int(s[i-1:i+1]) <= 26 else 0)
+            a, b = b, c
+        return b`],
+	['decode-ways', 'correct', true, `class Solution:
+    def numDecodings(self, s):
+        if s[0] == "0": return 0
+        a, b = 1, 1
+        for i in range(1, len(s)):
+            c = (b if s[i] != "0" else 0) + (a if 10 <= int(s[i-1:i+1]) <= 26 else 0)
+            a, b = b, c
+        return b`],
+	['maximum-product-subarray', 'NEAR-MISS tracks only the running maximum', false, `class Solution:
+    def maxProduct(self, nums):
+        best = cur = nums[0]
+        for x in nums[1:]:
+            cur = max(x, cur * x); best = max(best, cur)
+        return best`],
+	['maximum-product-subarray', 'NEAR-MISS best initialised to 0', false, `class Solution:
+    def maxProduct(self, nums):
+        best = 0; hi = lo = 1
+        for x in nums:
+            hi, lo = max(x, hi * x, lo * x), min(x, hi * x, lo * x)
+            best = max(best, hi)
+        return best`],
+	['maximum-product-subarray', 'correct', true, `class Solution:
+    def maxProduct(self, nums):
+        best = hi = lo = nums[0]
+        for x in nums[1:]:
+            hi, lo = max(x, hi * x, lo * x), min(x, hi * x, lo * x)
+            best = max(best, hi)
+        return best`],
+	['coin-change', 'NEAR-MISS greedy, largest coin first', false, `class Solution:
+    def coinChange(self, coins, amount):
+        n = 0
+        for c in sorted(coins, reverse=True):
+            n += amount // c; amount %= c
+        return n if amount == 0 else -1`],
+	['coin-change', 'NEAR-MISS returns the sentinel unconverted', false, `class Solution:
+    def coinChange(self, coins, amount):
+        dp = [0] + [amount + 1] * amount
+        for a in range(1, amount + 1):
+            for c in coins:
+                if c <= a: dp[a] = min(dp[a], dp[a - c] + 1)
+        return dp[amount]`],
+	['coin-change', 'correct', true, `class Solution:
+    def coinChange(self, coins, amount):
+        dp = [0] + [amount + 1] * amount
+        for a in range(1, amount + 1):
+            for c in coins:
+                if c <= a: dp[a] = min(dp[a], dp[a - c] + 1)
+        return dp[amount] if dp[amount] <= amount else -1`],
+	['longest-increasing-subsequence', 'NEAR-MISS non-strict, equal values extend', false, `class Solution:
+    def lengthOfLIS(self, nums):
+        dp = [1] * len(nums)
+        for i in range(len(nums)):
+            for j in range(i):
+                if nums[j] <= nums[i]: dp[i] = max(dp[i], dp[j] + 1)
+        return max(dp)`],
+	['longest-increasing-subsequence', 'NEAR-MISS returns dp[-1] rather than the maximum', false, `class Solution:
+    def lengthOfLIS(self, nums):
+        dp = [1] * len(nums)
+        for i in range(len(nums)):
+            for j in range(i):
+                if nums[j] < nums[i]: dp[i] = max(dp[i], dp[j] + 1)
+        return dp[-1]`],
+	['longest-increasing-subsequence', 'correct patience sort', true, `import bisect
+class Solution:
+    def lengthOfLIS(self, nums):
+        t = []
+        for x in nums:
+            i = bisect.bisect_left(t, x)
+            if i == len(t): t.append(x)
+            else: t[i] = x
+        return len(t)`],
+	['partition-equal-subset-sum', 'NEAR-MISS iterates the dp forwards, reusing an item', false, `class Solution:
+    def canPartition(self, nums):
+        s = sum(nums)
+        if s % 2: return False
+        t = s // 2; dp = [True] + [False] * t
+        for x in nums:
+            for a in range(x, t + 1): dp[a] = dp[a] or dp[a - x]
+        return dp[t]`],
+	['partition-equal-subset-sum', 'NEAR-MISS no odd-total check', false, `class Solution:
+    def canPartition(self, nums):
+        t = sum(nums) // 2; dp = [True] + [False] * t
+        for x in nums:
+            for a in range(t, x - 1, -1): dp[a] = dp[a] or dp[a - x]
+        return dp[t]`],
+	['partition-equal-subset-sum', 'correct', true, `class Solution:
+    def canPartition(self, nums):
+        s = sum(nums)
+        if s % 2: return False
+        t = s // 2; dp = [True] + [False] * t
+        for x in nums:
+            for a in range(t, x - 1, -1): dp[a] = dp[a] or dp[a - x]
+        return dp[t]`],
+	['palindromic-substrings', 'NEAR-MISS odd centres only', false, `class Solution:
+    def countSubstrings(self, s):
+        n = 0
+        for c in range(len(s)):
+            l = r = c
+            while l >= 0 and r < len(s) and s[l] == s[r]: n += 1; l -= 1; r += 1
+        return n`],
+	['palindromic-substrings', 'NEAR-MISS counts distinct palindromes', false, `class Solution:
+    def countSubstrings(self, s):
+        return len({s[i:j] for i in range(len(s)) for j in range(i + 1, len(s) + 1) if s[i:j] == s[i:j][::-1]})`],
+	['palindromic-substrings', 'correct', true, `class Solution:
+    def countSubstrings(self, s):
+        n = 0
+        for c in range(2 * len(s) - 1):
+            l, r = c // 2, c // 2 + c % 2
+            while l >= 0 and r < len(s) and s[l] == s[r]: n += 1; l -= 1; r += 1
+        return n`],
+	['longest-palindromic-substring', 'NEAR-MISS odd centres only', false, `class Solution:
+    def longestPalindrome(self, s):
+        best = ""
+        for c in range(len(s)):
+            l = r = c
+            while l >= 0 and r < len(s) and s[l] == s[r]: l -= 1; r += 1
+            if r - l - 1 > len(best): best = s[l+1:r]
+        return best`],
+	['longest-palindromic-substring', 'correct, returns the LAST longest', true, `class Solution:
+    def longestPalindrome(self, s):
+        best = ""
+        for c in range(2 * len(s) - 1):
+            l, r = c // 2, c // 2 + c % 2
+            while l >= 0 and r < len(s) and s[l] == s[r]: l -= 1; r += 1
+            if r - l - 1 >= len(best): best = s[l+1:r]
+        return best`],
+	['house-robber', 'NEAR-MISS even-index sum against odd-index sum', false, `class Solution:
+    def rob(self, nums): return max(sum(nums[0::2]), sum(nums[1::2]))`],
+	['house-robber', 'correct', true, `class Solution:
+    def rob(self, nums):
+        a = b = 0
+        for x in nums: a, b = b, max(b, a + x)
+        return b`],
+	['min-cost-climbing-stairs', 'NEAR-MISS must step on the last stair', false, `class Solution:
+    def minCostClimbingStairs(self, cost):
+        a, b = cost[0], cost[1]
+        for c in cost[2:]: a, b = b, c + min(a, b)
+        return b`],
+	['min-cost-climbing-stairs', 'NEAR-MISS greedy cheaper of the next two', false, `class Solution:
+    def minCostClimbingStairs(self, cost):
+        i = -1; total = 0; n = len(cost)
+        while i + 1 < n:
+            if i + 2 >= n: i += 1; total += cost[i] if i < n else 0; break
+            if cost[i+1] <= cost[i+2]: i += 1
+            else: i += 2
+            total += cost[i]
+        return total`],
+	['min-cost-climbing-stairs', 'correct', true, `class Solution:
+    def minCostClimbingStairs(self, cost):
+        a = b = 0
+        for i in range(2, len(cost) + 1): a, b = b, min(b + cost[i-1], a + cost[i-2])
+        return b`],
+	['climbing-stairs', 'NEAR-MISS Fibonacci shifted by one', false, `class Solution:
+    def climbStairs(self, n):
+        a, b = 1, 1
+        for _ in range(n - 1): a, b = b, a + b
+        return a`],
+	['climbing-stairs', 'correct', true, `class Solution:
+    def climbStairs(self, n):
+        a, b = 1, 1
+        for _ in range(n): a, b = b, a + b
+        return a`],
+	['word-break', 'NEAR-MISS greedy longest match', false, `class Solution:
+    def wordBreak(self, s, wordDict):
+        i = 0; words = sorted(wordDict, key=len, reverse=True)
+        while i < len(s):
+            for w in words:
+                if s.startswith(w, i): i += len(w); break
+            else: return False
+        return True`],
+	['word-break', 'NEAR-MISS greedy shortest match', false, `class Solution:
+    def wordBreak(self, s, wordDict):
+        i = 0; words = sorted(wordDict, key=len)
+        while i < len(s):
+            for w in words:
+                if s.startswith(w, i): i += len(w); break
+            else: return False
+        return True`],
+	['word-break', 'correct', true, `class Solution:
+    def wordBreak(self, s, wordDict):
+        words = set(wordDict); dp = [True] + [False] * len(s)
+        for i in range(1, len(s) + 1):
+            dp[i] = any(dp[j] and s[j:i] in words for j in range(i))
+        return dp[-1]`]
 ];
 
 let bad = 0;
