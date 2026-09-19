@@ -316,9 +316,22 @@ problem, generating inputs the constraints forbid:
 Worth recording because it is the mirror of the usual finding. A generator can be too permissive
 as well as too narrow, and both produce a suite that disagrees with LeetCode.
 
+### What batch 9 found
+
+One suite where the generator had quietly made two different orderings the same thing:
+
+| problem | the gap | after |
+|---|---|---|
+| `design-twitter` | tweet ids are unique but **not** increasing over time, and the feed is ordered by when a tweet was posted. The generator handed ids out as 1, 2, 3, ..., so id order and post order always agreed and sorting the feed by tweet id scored **42/42** | ids are drawn from a shuffled pool, still unique. Now 33/42 |
+
+Everything else in this batch already failed its near-misses: the kth-*distinct* misreading on
+both 215 and 703, the unclamped `task-scheduler` frame formula, the missing empty-heap guard on
+`last-stone-weight`, and integer division in `find-median-from-data-stream`. `k-closest-points-to-
+origin` was audited back in batch 1.
+
 ## Status
 
-67 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
+74 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
 
 ### Batch 1: Arrays & Hashing (9/9 audited)
 - [x] `contains-duplicate` — Easy
@@ -391,14 +404,14 @@ as well as too narrow, and both produce a suite that disagrees with LeetCode.
 - [x] `implement-trie-prefix-tree` — Medium
 - [x] `design-add-and-search-words-data-structure` — Medium
 - [x] `word-search-ii` — Hard
-### Batch 9: Heap / Priority Queue (1/7 audited)
-- [ ] `kth-largest-element-in-a-stream` — Easy
-- [ ] `last-stone-weight` — Easy
+### Batch 9: Heap / Priority Queue (7/7 audited)
+- [x] `kth-largest-element-in-a-stream` — Easy
+- [x] `last-stone-weight` — Easy
 - [x] `k-closest-points-to-origin` — Medium
-- [ ] `kth-largest-element-in-an-array` — Medium
-- [ ] `task-scheduler` — Medium
-- [ ] `design-twitter` — Medium
-- [ ] `find-median-from-data-stream` — Hard
+- [x] `kth-largest-element-in-an-array` — Medium
+- [x] `task-scheduler` — Medium
+- [x] `design-twitter` — Medium
+- [x] `find-median-from-data-stream` — Hard
 ### Batch 10: Backtracking (0/9 audited)
 - [ ] `subsets` — Medium
 - [ ] `combination-sum` — Medium

@@ -1924,12 +1924,18 @@ def _detect_squares_gen(rng):
 
 @generator("design-twitter")
 def _twitter_gen(rng):
-    steps, tweet_id = [], 0
+    # Tweet ids are unique but NOT increasing over time, and the feed is ordered by when a tweet
+    # was posted. The old generator handed out 1, 2, 3, ... in order, which made the two orderings
+    # identical, so sorting by tweetId instead of by post time scored 42/42. Ids are now drawn in
+    # a shuffled order, which keeps them unique and stops id order standing in for time order.
+    ids = list(range(1, 40))
+    rng.shuffle(ids)
+    steps, used = [], 0
     for _ in range(rng.randint(4, 16)):
         roll = rng.random()
         if roll < 0.4:
-            tweet_id += 1                          # distinct, increasing ids keep the feed order well defined
-            steps.append(("postTweet", [rng.randint(1, 4), tweet_id]))
+            steps.append(("postTweet", [rng.randint(1, 4), ids[used]]))
+            used += 1
         elif roll < 0.7:
             steps.append(("getNewsFeed", [rng.randint(1, 4)]))
         else:

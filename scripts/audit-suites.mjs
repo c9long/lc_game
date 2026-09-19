@@ -1680,7 +1680,157 @@ class LRUCache:
             return ok
         for w in words:
             if any(go(r, c, w, 0) for r in range(rows) for c in range(cols)): out.add(w)
-        return list(out)`]
+        return list(out)`],
+
+	// ---- batch 9: Heap / Priority Queue ----
+	// Tweet ids are unique but not increasing over time. The generator handed them out in order,
+	// which made id order stand in for post order, so this scored 42/42.
+	['design-twitter', 'NEAR-MISS orders the feed by tweet id', false, `class Twitter:
+    def __init__(self): self.tweets = {}; self.follows = {}
+    def postTweet(self, userId, tweetId): self.tweets.setdefault(userId, []).append(tweetId)
+    def getNewsFeed(self, userId):
+        feed = list(self.tweets.get(userId, []))
+        for u in self.follows.get(userId, set()): feed += self.tweets.get(u, [])
+        feed.sort(reverse=True)
+        return feed[:10]
+    def follow(self, followerId, followeeId): self.follows.setdefault(followerId, set()).add(followeeId)
+    def unfollow(self, followerId, followeeId): self.follows.setdefault(followerId, set()).discard(followeeId)`],
+	['design-twitter', 'NEAR-MISS omits the user own tweets', false, `class Twitter:
+    def __init__(self): self.t = 0; self.tweets = {}; self.follows = {}
+    def postTweet(self, userId, tweetId):
+        self.t += 1; self.tweets.setdefault(userId, []).append((self.t, tweetId))
+    def getNewsFeed(self, userId):
+        feed = []
+        for u in self.follows.get(userId, set()): feed += self.tweets.get(u, [])
+        feed.sort(reverse=True)
+        return [tid for _, tid in feed[:10]]
+    def follow(self, followerId, followeeId): self.follows.setdefault(followerId, set()).add(followeeId)
+    def unfollow(self, followerId, followeeId): self.follows.setdefault(followerId, set()).discard(followeeId)`],
+	['design-twitter', 'NEAR-MISS oldest first', false, `class Twitter:
+    def __init__(self): self.t = 0; self.tweets = {}; self.follows = {}
+    def postTweet(self, userId, tweetId):
+        self.t += 1; self.tweets.setdefault(userId, []).append((self.t, tweetId))
+    def getNewsFeed(self, userId):
+        feed = list(self.tweets.get(userId, []))
+        for u in self.follows.get(userId, set()):
+            if u != userId: feed += self.tweets.get(u, [])
+        feed.sort()
+        return [tid for _, tid in feed[:10]]
+    def follow(self, followerId, followeeId): self.follows.setdefault(followerId, set()).add(followeeId)
+    def unfollow(self, followerId, followeeId): self.follows.setdefault(followerId, set()).discard(followeeId)`],
+	['design-twitter', 'correct', true, `class Twitter:
+    def __init__(self): self.t = 0; self.tweets = {}; self.follows = {}
+    def postTweet(self, userId, tweetId):
+        self.t += 1; self.tweets.setdefault(userId, []).append((self.t, tweetId))
+    def getNewsFeed(self, userId):
+        feed = list(self.tweets.get(userId, []))
+        for u in self.follows.get(userId, set()):
+            if u != userId: feed += self.tweets.get(u, [])
+        feed.sort(reverse=True)
+        return [tid for _, tid in feed[:10]]
+    def follow(self, followerId, followeeId): self.follows.setdefault(followerId, set()).add(followeeId)
+    def unfollow(self, followerId, followeeId): self.follows.setdefault(followerId, set()).discard(followeeId)`],
+
+	// Many distinct tasks fill every idle slot and then overflow the frame, so the frame formula
+	// must be clamped to the number of tasks.
+	['task-scheduler', 'NEAR-MISS frame formula not clamped to len(tasks)', false, `from collections import Counter
+class Solution:
+    def leastInterval(self, tasks, n):
+        c = Counter(tasks); m = max(c.values()); k = sum(1 for v in c.values() if v == m)
+        return (m - 1) * (n + 1) + k`],
+	['task-scheduler', 'NEAR-MISS ignores how many tasks tie at the maximum', false, `from collections import Counter
+class Solution:
+    def leastInterval(self, tasks, n):
+        c = Counter(tasks); m = max(c.values())
+        return max(len(tasks), (m - 1) * (n + 1) + 1)`],
+	['task-scheduler', 'correct', true, `from collections import Counter
+class Solution:
+    def leastInterval(self, tasks, n):
+        c = Counter(tasks); m = max(c.values()); k = sum(1 for v in c.values() if v == m)
+        return max(len(tasks), (m - 1) * (n + 1) + k)`],
+
+	// "the kth largest element in sorted order, not the kth distinct element"
+	['kth-largest-element-in-an-array', 'NEAR-MISS kth DISTINCT largest', false, `class Solution:
+    def findKthLargest(self, nums, k):
+        return sorted(set(nums), reverse=True)[k - 1]`],
+	['kth-largest-element-in-an-array', 'NEAR-MISS reads the wrong end of the heap', false, `import heapq
+class Solution:
+    def findKthLargest(self, nums, k):
+        h = []
+        for n in nums:
+            heapq.heappush(h, n)
+            if len(h) > k: heapq.heappop(h)
+        return h[-1]`],
+	['kth-largest-element-in-an-array', 'correct', true, `class Solution:
+    def findKthLargest(self, nums, k): return sorted(nums)[-k]`],
+
+	['kth-largest-element-in-a-stream', 'NEAR-MISS kth DISTINCT largest', false, `class KthLargest:
+    def __init__(self, k, nums): self.k = k; self.vals = list(nums)
+    def add(self, val):
+        self.vals.append(val)
+        return sorted(set(self.vals), reverse=True)[self.k - 1]`],
+	['kth-largest-element-in-a-stream', 'NEAR-MISS heap grows past k', false, `import heapq
+class KthLargest:
+    def __init__(self, k, nums):
+        self.k = k; self.h = list(nums); heapq.heapify(self.h)
+    def add(self, val):
+        heapq.heappush(self.h, val)
+        return self.h[0]`],
+	['kth-largest-element-in-a-stream', 'correct', true, `import heapq
+class KthLargest:
+    def __init__(self, k, nums):
+        self.k = k; self.h = list(nums); heapq.heapify(self.h)
+        while len(self.h) > k: heapq.heappop(self.h)
+    def add(self, val):
+        heapq.heappush(self.h, val)
+        if len(self.h) > self.k: heapq.heappop(self.h)
+        return self.h[0]`],
+
+	// Every stone can be destroyed, and then there is no heap top to read.
+	['last-stone-weight', 'NEAR-MISS no empty-heap guard', false, `import heapq
+class Solution:
+    def lastStoneWeight(self, stones):
+        h = [-s for s in stones]; heapq.heapify(h)
+        while len(h) > 1:
+            a = -heapq.heappop(h); b = -heapq.heappop(h)
+            if a != b: heapq.heappush(h, -(a - b))
+        return -h[0]`],
+	['last-stone-weight', 'correct', true, `import heapq
+class Solution:
+    def lastStoneWeight(self, stones):
+        h = [-s for s in stones]; heapq.heapify(h)
+        while len(h) > 1:
+            a = -heapq.heappop(h); b = -heapq.heappop(h)
+            if a != b: heapq.heappush(h, -(a - b))
+        return -h[0] if h else 0`],
+
+	['find-median-from-data-stream', 'NEAR-MISS integer division on an even count', false, `class MedianFinder:
+    def __init__(self): self.a = []
+    def addNum(self, num):
+        import bisect; bisect.insort(self.a, num)
+    def findMedian(self):
+        n = len(self.a)
+        return float(self.a[n//2]) if n % 2 else (self.a[n//2 - 1] + self.a[n//2]) // 2`],
+	['find-median-from-data-stream', 'NEAR-MISS two heaps, never rebalanced', false, `import heapq
+class MedianFinder:
+    def __init__(self): self.lo = []; self.hi = []
+    def addNum(self, num):
+        if self.lo and num < -self.lo[0]: heapq.heappush(self.lo, -num)
+        else: heapq.heappush(self.hi, num)
+    def findMedian(self):
+        if len(self.lo) > len(self.hi): return float(-self.lo[0])
+        if len(self.hi) > len(self.lo): return float(self.hi[0])
+        return (-self.lo[0] + self.hi[0]) / 2`],
+	['find-median-from-data-stream', 'correct', true, `import heapq
+class MedianFinder:
+    def __init__(self): self.lo = []; self.hi = []
+    def addNum(self, num):
+        heapq.heappush(self.lo, -num)
+        heapq.heappush(self.hi, -heapq.heappop(self.lo))
+        if len(self.hi) > len(self.lo): heapq.heappush(self.lo, -heapq.heappop(self.hi))
+    def findMedian(self):
+        if len(self.lo) > len(self.hi): return float(-self.lo[0])
+        return (-self.lo[0] + self.hi[0]) / 2`]
 ];
 
 let bad = 0;

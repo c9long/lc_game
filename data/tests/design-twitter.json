@@ -121,104 +121,8 @@
       "args": [
         [
           "Twitter",
-          "getNewsFeed",
-          "unfollow",
-          "unfollow",
-          "getNewsFeed",
-          "unfollow"
-        ],
-        [
-          [],
-          [
-            2
-          ],
-          [
-            3,
-            2
-          ],
-          [
-            2,
-            4
-          ],
-          [
-            4
-          ],
-          [
-            1,
-            3
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        [],
-        null,
-        null,
-        [],
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "getNewsFeed",
-          "getNewsFeed",
           "postTweet",
           "postTweet",
-          "getNewsFeed",
-          "getNewsFeed",
-          "unfollow"
-        ],
-        [
-          [],
-          [
-            2
-          ],
-          [
-            2
-          ],
-          [
-            4,
-            1
-          ],
-          [
-            1,
-            2
-          ],
-          [
-            4
-          ],
-          [
-            4
-          ],
-          [
-            2,
-            1
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        [],
-        [],
-        null,
-        null,
-        [
-          1
-        ],
-        [
-          1
-        ],
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "follow",
-          "getNewsFeed",
           "unfollow",
           "postTweet",
           "follow",
@@ -230,6 +134,7 @@
           "postTweet",
           "postTweet",
           "postTweet",
+          "follow",
           "follow",
           "follow"
         ],
@@ -237,10 +142,11 @@
           [],
           [
             4,
-            2
+            25
           ],
           [
-            3
+            3,
+            28
           ],
           [
             2,
@@ -248,7 +154,7 @@
           ],
           [
             1,
-            1
+            23
           ],
           [
             3,
@@ -256,11 +162,11 @@
           ],
           [
             4,
-            2
+            22
           ],
           [
             1,
-            3
+            31
           ],
           [
             1,
@@ -275,15 +181,15 @@
           ],
           [
             3,
-            4
+            24
           ],
           [
             1,
-            5
+            18
           ],
           [
             1,
-            6
+            39
           ],
           [
             2,
@@ -292,13 +198,17 @@
           [
             1,
             3
+          ],
+          [
+            4,
+            3
           ]
         ]
       ],
       "expected": [
         null,
         null,
-        [],
+        null,
         null,
         null,
         null,
@@ -306,9 +216,11 @@
         null,
         null,
         [
-          3,
-          1
+          31,
+          23,
+          28
         ],
+        null,
         null,
         null,
         null,
@@ -321,32 +233,341 @@
       "args": [
         [
           "Twitter",
-          "postTweet",
-          "unfollow",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "postTweet",
           "getNewsFeed",
           "postTweet",
           "postTweet",
-          "postTweet",
-          "getNewsFeed",
           "postTweet",
           "unfollow",
           "follow",
+          "unfollow",
+          "follow",
+          "unfollow",
           "postTweet",
           "postTweet"
         ],
         [
           [],
           [
+            1
+          ],
+          [
+            1,
+            33
+          ],
+          [
+            2,
+            12
+          ],
+          [
             4,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            2,
             1
           ],
           [
             2,
+            1
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            3,
+            9
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        [],
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "follow",
+          "follow",
+          "unfollow",
+          "getNewsFeed"
+        ],
+        [
+          [],
+          [
+            4,
+            2
+          ],
+          [
+            3,
             4
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        []
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "unfollow",
+          "postTweet",
+          "postTweet",
+          "postTweet",
+          "follow",
+          "getNewsFeed",
+          "unfollow",
+          "postTweet",
+          "getNewsFeed",
+          "postTweet",
+          "unfollow",
+          "getNewsFeed"
+        ],
+        [
+          [],
+          [
+            3,
+            4
+          ],
+          [
+            1,
+            25
+          ],
+          [
+            3,
+            18
+          ],
+          [
+            3,
+            34
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            3,
+            23
+          ],
+          [
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        [
+          25
+        ],
+        null,
+        null,
+        [
+          23,
+          34,
+          18
+        ],
+        null,
+        null,
+        [
+          25
+        ]
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "getNewsFeed",
+          "getNewsFeed",
+          "unfollow",
+          "follow",
+          "getNewsFeed",
+          "getNewsFeed",
+          "getNewsFeed",
+          "postTweet",
+          "getNewsFeed",
+          "getNewsFeed",
+          "postTweet",
+          "postTweet",
+          "getNewsFeed",
+          "getNewsFeed",
+          "getNewsFeed",
+          "postTweet"
+        ],
+        [
+          [],
+          [
+            4
+          ],
+          [
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2
+          ],
+          [
+            2
+          ],
+          [
+            4
+          ],
+          [
+            2,
+            13
+          ],
+          [
+            3
+          ],
+          [
+            4
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            3,
+            34
+          ],
+          [
+            2
+          ],
+          [
+            2
+          ],
+          [
+            1
+          ],
+          [
+            2,
+            25
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        [],
+        [],
+        null,
+        null,
+        [],
+        [],
+        [],
+        null,
+        [],
+        [],
+        null,
+        null,
+        [
+          16,
+          13
+        ],
+        [
+          16,
+          13
+        ],
+        [
+          16,
+          13
+        ],
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "postTweet",
+          "getNewsFeed",
+          "unfollow",
+          "postTweet",
+          "unfollow",
+          "follow"
+        ],
+        [
+          [],
+          [
+            1,
+            13
+          ],
+          [
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            5
           ],
           [
             4,
@@ -355,188 +576,269 @@
           [
             4,
             3
-          ],
-          [
-            1,
-            4
-          ],
-          [
-            1,
-            5
-          ],
-          [
-            4
-          ],
-          [
-            2,
-            6
-          ],
-          [
-            4,
-            7
-          ],
-          [
-            2,
-            8
-          ],
-          [
-            3
-          ],
-          [
-            4,
-            9
-          ],
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        [],
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "follow",
+          "postTweet",
+          "getNewsFeed",
+          "unfollow",
+          "postTweet"
+        ],
+        [
+          [],
           [
             2,
             1
           ],
           [
             1,
+            6
+          ],
+          [
             4
           ],
           [
             2,
-            10
+            3
+          ],
+          [
+            2,
+            1
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        [],
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "follow",
+          "follow",
+          "getNewsFeed",
+          "getNewsFeed",
+          "follow",
+          "postTweet"
+        ],
+        [
+          [],
+          [
+            3,
+            4
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2
+          ],
+          [
+            2
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            1,
+            32
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        [],
+        [],
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "postTweet",
+          "getNewsFeed",
+          "postTweet",
+          "getNewsFeed",
+          "postTweet",
+          "postTweet",
+          "getNewsFeed",
+          "postTweet",
+          "getNewsFeed",
+          "follow",
+          "postTweet",
+          "postTweet",
+          "getNewsFeed",
+          "postTweet",
+          "follow",
+          "unfollow"
+        ],
+        [
+          [],
+          [
+            3,
+            29
+          ],
+          [
+            4
+          ],
+          [
+            3,
+            23
+          ],
+          [
+            4
+          ],
+          [
+            2,
+            9
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            3
+          ],
+          [
+            2,
+            18
+          ],
+          [
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            37
+          ],
+          [
+            1,
+            27
+          ],
+          [
+            1
+          ],
+          [
+            3,
+            14
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            2
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        [],
+        null,
+        [],
+        null,
+        null,
+        [
+          23,
+          29
+        ],
+        null,
+        [
+          23,
+          29
+        ],
+        null,
+        null,
+        null,
+        [
+          27,
+          37,
+          5,
+          23,
+          29
+        ],
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "postTweet",
+          "getNewsFeed",
+          "postTweet",
+          "postTweet",
+          "getNewsFeed",
+          "postTweet",
+          "getNewsFeed",
+          "postTweet",
+          "getNewsFeed",
+          "unfollow",
+          "getNewsFeed",
+          "getNewsFeed",
+          "postTweet",
+          "getNewsFeed"
+        ],
+        [
+          [],
+          [
+            3,
+            25
+          ],
+          [
+            2
+          ],
+          [
+            2,
+            14
           ],
           [
             4,
             11
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        [
-          3,
-          2,
-          1
-        ],
-        null,
-        null,
-        null,
-        [],
-        null,
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "postTweet",
-          "follow",
-          "unfollow",
-          "follow"
-        ],
-        [
-          [],
+          ],
           [
-            4,
-            1
+            2
           ],
           [
             4,
+            36
+          ],
+          [
             3
-          ],
-          [
-            4,
-            3
-          ],
-          [
-            2,
-            1
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "getNewsFeed",
-          "getNewsFeed",
-          "getNewsFeed"
-        ],
-        [
-          [],
-          [
-            3,
-            1
-          ],
-          [
-            3,
-            2
-          ],
-          [
-            3,
-            3
-          ],
-          [
-            3,
-            4
-          ],
-          [
-            2
-          ],
-          [
-            2
-          ],
-          [
-            2
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        [],
-        [],
-        []
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "getNewsFeed",
-          "postTweet",
-          "follow",
-          "getNewsFeed",
-          "unfollow",
-          "postTweet",
-          "getNewsFeed"
-        ],
-        [
-          [],
-          [
-            2
-          ],
-          [
-            2,
-            1
           ],
           [
             1,
@@ -547,430 +849,7 @@
           ],
           [
             2,
-            4
-          ],
-          [
-            1,
-            2
-          ],
-          [
-            4
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        [],
-        null,
-        null,
-        [],
-        null,
-        null,
-        []
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "getNewsFeed",
-          "getNewsFeed",
-          "postTweet",
-          "getNewsFeed",
-          "getNewsFeed",
-          "follow",
-          "unfollow",
-          "getNewsFeed",
-          "postTweet",
-          "follow",
-          "postTweet",
-          "postTweet",
-          "postTweet"
-        ],
-        [
-          [],
-          [
-            4
-          ],
-          [
             3
-          ],
-          [
-            2,
-            1
-          ],
-          [
-            3
-          ],
-          [
-            2
-          ],
-          [
-            3,
-            4
-          ],
-          [
-            4,
-            3
-          ],
-          [
-            4
-          ],
-          [
-            1,
-            2
-          ],
-          [
-            1,
-            3
-          ],
-          [
-            4,
-            3
-          ],
-          [
-            2,
-            4
-          ],
-          [
-            3,
-            5
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        [],
-        [],
-        null,
-        [],
-        [
-          1
-        ],
-        null,
-        null,
-        [],
-        null,
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "unfollow",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "follow",
-          "postTweet",
-          "unfollow",
-          "getNewsFeed",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "follow"
-        ],
-        [
-          [],
-          [
-            3,
-            4
-          ],
-          [
-            2,
-            1
-          ],
-          [
-            2,
-            2
-          ],
-          [
-            1,
-            3
-          ],
-          [
-            1,
-            4
-          ],
-          [
-            2,
-            1
-          ],
-          [
-            2,
-            5
-          ],
-          [
-            2,
-            3
-          ],
-          [
-            4
-          ],
-          [
-            1,
-            6
-          ],
-          [
-            3,
-            7
-          ],
-          [
-            3,
-            8
-          ],
-          [
-            2,
-            1
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        [],
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "getNewsFeed",
-          "follow",
-          "getNewsFeed",
-          "postTweet",
-          "unfollow",
-          "getNewsFeed",
-          "getNewsFeed",
-          "getNewsFeed",
-          "getNewsFeed",
-          "getNewsFeed",
-          "postTweet",
-          "getNewsFeed",
-          "postTweet"
-        ],
-        [
-          [],
-          [
-            4
-          ],
-          [
-            4,
-            2
-          ],
-          [
-            1
-          ],
-          [
-            4,
-            1
-          ],
-          [
-            1,
-            2
-          ],
-          [
-            2
-          ],
-          [
-            2
-          ],
-          [
-            4
-          ],
-          [
-            2
-          ],
-          [
-            2
-          ],
-          [
-            3,
-            2
-          ],
-          [
-            3
-          ],
-          [
-            3,
-            3
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        [],
-        null,
-        [],
-        null,
-        null,
-        [],
-        [],
-        [
-          1
-        ],
-        [],
-        [],
-        null,
-        [
-          2
-        ],
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "follow",
-          "postTweet",
-          "postTweet",
-          "getNewsFeed",
-          "getNewsFeed",
-          "postTweet",
-          "unfollow",
-          "unfollow",
-          "postTweet",
-          "follow",
-          "getNewsFeed",
-          "getNewsFeed",
-          "getNewsFeed",
-          "postTweet",
-          "getNewsFeed",
-          "getNewsFeed"
-        ],
-        [
-          [],
-          [
-            4,
-            1
-          ],
-          [
-            4,
-            1
-          ],
-          [
-            2,
-            2
-          ],
-          [
-            1
-          ],
-          [
-            1
-          ],
-          [
-            1,
-            3
-          ],
-          [
-            4,
-            2
-          ],
-          [
-            1,
-            3
-          ],
-          [
-            4,
-            4
-          ],
-          [
-            1,
-            2
-          ],
-          [
-            2
-          ],
-          [
-            2
-          ],
-          [
-            4
-          ],
-          [
-            2,
-            5
-          ],
-          [
-            3
-          ],
-          [
-            4
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        [],
-        [],
-        null,
-        null,
-        null,
-        null,
-        null,
-        [
-          2
-        ],
-        [
-          2
-        ],
-        [
-          4,
-          3,
-          1
-        ],
-        null,
-        [],
-        [
-          4,
-          3,
-          1
-        ]
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "unfollow",
-          "getNewsFeed",
-          "getNewsFeed",
-          "getNewsFeed",
-          "postTweet",
-          "follow",
-          "postTweet",
-          "getNewsFeed",
-          "getNewsFeed",
-          "unfollow"
-        ],
-        [
-          [],
-          [
-            2,
-            1
-          ],
-          [
-            2
           ],
           [
             2
@@ -980,934 +859,92 @@
           ],
           [
             2,
-            1
-          ],
-          [
-            2,
-            1
-          ],
-          [
-            1,
-            2
-          ],
-          [
-            3
-          ],
-          [
-            1
-          ],
-          [
-            4,
-            3
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        [],
-        [],
-        [],
-        null,
-        null,
-        null,
-        [],
-        [
-          2
-        ],
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "getNewsFeed",
-          "follow",
-          "getNewsFeed",
-          "unfollow",
-          "follow",
-          "postTweet",
-          "postTweet",
-          "unfollow",
-          "postTweet",
-          "unfollow",
-          "follow"
-        ],
-        [
-          [],
-          [
-            2
-          ],
-          [
-            2,
-            1
-          ],
-          [
-            3
-          ],
-          [
-            2,
-            4
-          ],
-          [
-            1,
-            2
-          ],
-          [
-            4,
-            1
-          ],
-          [
-            2,
-            2
-          ],
-          [
-            3,
-            2
-          ],
-          [
-            3,
-            3
-          ],
-          [
-            4,
-            2
-          ],
-          [
-            4,
-            3
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        [],
-        null,
-        [],
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "postTweet",
-          "postTweet",
-          "getNewsFeed",
-          "postTweet",
-          "unfollow",
-          "unfollow",
-          "getNewsFeed",
-          "postTweet",
-          "unfollow",
-          "follow"
-        ],
-        [
-          [],
-          [
-            2,
-            1
-          ],
-          [
-            3,
-            2
-          ],
-          [
-            3
-          ],
-          [
-            3,
-            3
-          ],
-          [
-            3,
-            2
-          ],
-          [
-            2,
-            4
-          ],
-          [
-            2
-          ],
-          [
-            4,
-            4
-          ],
-          [
-            4,
-            3
-          ],
-          [
-            3,
-            2
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        [
-          2
-        ],
-        null,
-        null,
-        null,
-        [
-          1
-        ],
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "getNewsFeed",
-          "postTweet",
-          "follow",
-          "postTweet",
-          "getNewsFeed",
-          "unfollow",
-          "postTweet"
-        ],
-        [
-          [],
-          [
-            2
-          ],
-          [
-            1,
-            1
-          ],
-          [
-            2,
-            3
-          ],
-          [
-            1,
-            2
-          ],
-          [
-            4
-          ],
-          [
-            2,
-            3
-          ],
-          [
-            2,
-            3
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        [],
-        null,
-        null,
-        null,
-        [],
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "postTweet",
-          "getNewsFeed",
-          "getNewsFeed",
-          "getNewsFeed",
-          "postTweet",
-          "getNewsFeed",
-          "follow",
-          "getNewsFeed",
-          "postTweet"
-        ],
-        [
-          [],
-          [
-            2,
-            1
-          ],
-          [
-            3
-          ],
-          [
-            2
-          ],
-          [
-            2
-          ],
-          [
-            2,
-            2
-          ],
-          [
-            3
-          ],
-          [
-            4,
-            3
-          ],
-          [
-            1
-          ],
-          [
-            1,
-            3
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        [],
-        [
-          1
-        ],
-        [
-          1
-        ],
-        null,
-        [],
-        null,
-        [],
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "getNewsFeed",
-          "unfollow",
-          "postTweet",
-          "postTweet",
-          "getNewsFeed",
-          "getNewsFeed",
-          "postTweet",
-          "follow",
-          "follow",
-          "postTweet"
-        ],
-        [
-          [],
-          [
-            4
-          ],
-          [
-            1,
-            4
-          ],
-          [
-            4,
-            1
-          ],
-          [
-            3,
-            2
-          ],
-          [
-            4
-          ],
-          [
-            1
-          ],
-          [
-            4,
-            3
-          ],
-          [
-            2,
-            3
-          ],
-          [
-            4,
-            3
-          ],
-          [
-            1,
-            4
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        [],
-        null,
-        null,
-        null,
-        [
-          1
-        ],
-        [],
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "postTweet",
-          "getNewsFeed",
-          "getNewsFeed",
-          "postTweet"
-        ],
-        [
-          [],
-          [
-            2,
-            1
-          ],
-          [
-            4
-          ],
-          [
-            2
-          ],
-          [
-            4,
-            2
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        [],
-        [
-          1
-        ],
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "postTweet",
-          "follow",
-          "getNewsFeed",
-          "follow"
-        ],
-        [
-          [],
-          [
-            4,
-            1
-          ],
-          [
-            1,
-            4
-          ],
-          [
-            1
-          ],
-          [
-            1,
-            3
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        [
-          1
-        ],
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "postTweet",
-          "follow",
-          "getNewsFeed",
-          "unfollow"
-        ],
-        [
-          [],
-          [
-            3,
-            1
-          ],
-          [
-            1,
-            4
-          ],
-          [
-            4
-          ],
-          [
-            2,
-            1
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        [],
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "postTweet",
-          "getNewsFeed",
-          "postTweet",
-          "getNewsFeed",
-          "postTweet",
-          "getNewsFeed",
-          "postTweet",
-          "getNewsFeed",
-          "follow",
-          "postTweet",
-          "postTweet",
-          "getNewsFeed",
-          "postTweet"
-        ],
-        [
-          [],
-          [
-            3,
-            1
-          ],
-          [
-            4
-          ],
-          [
-            3,
-            2
-          ],
-          [
-            2
-          ],
-          [
-            1,
-            3
-          ],
-          [
-            3
-          ],
-          [
-            2,
-            4
-          ],
-          [
-            3
-          ],
-          [
-            1,
-            3
-          ],
-          [
-            3,
-            5
-          ],
-          [
-            1,
-            6
-          ],
-          [
-            1
-          ],
-          [
-            3,
-            7
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        [],
-        null,
-        [],
-        null,
-        [
-          2,
-          1
-        ],
-        null,
-        [
-          2,
-          1
-        ],
-        null,
-        null,
-        null,
-        [
-          6,
-          5,
-          3,
-          2,
-          1
-        ],
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "unfollow",
-          "postTweet",
-          "unfollow",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "getNewsFeed",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "unfollow",
-          "postTweet",
-          "postTweet",
-          "getNewsFeed",
-          "postTweet"
-        ],
-        [
-          [],
-          [
-            2,
-            1
-          ],
-          [
-            1,
-            1
-          ],
-          [
-            3,
-            4
-          ],
-          [
-            4,
-            2
-          ],
-          [
-            4,
-            3
-          ],
-          [
-            2,
-            4
-          ],
-          [
-            2
-          ],
-          [
-            3,
-            5
-          ],
-          [
-            2,
-            6
-          ],
-          [
-            3,
-            7
-          ],
-          [
-            2,
-            4
-          ],
-          [
-            4,
-            8
-          ],
-          [
-            4,
             9
           ],
           [
             4
-          ],
-          [
-            2,
-            10
           ]
         ]
       ],
       "expected": [
         null,
         null,
+        [],
         null,
         null,
+        [
+          14
+        ],
         null,
+        [
+          25
+        ],
         null,
+        [
+          36,
+          11
+        ],
         null,
+        [
+          14
+        ],
         [
           4
         ],
         null,
-        null,
-        null,
-        null,
-        null,
-        null,
         [
-          9,
-          8,
-          3,
-          2
-        ],
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "unfollow",
-          "getNewsFeed",
-          "postTweet",
-          "getNewsFeed"
-        ],
-        [
-          [],
-          [
-            2,
-            4
-          ],
-          [
-            2
-          ],
-          [
-            4,
-            1
-          ],
-          [
-            3
-          ]
+          36,
+          11
         ]
-      ],
-      "expected": [
-        null,
-        null,
-        [],
-        null,
-        []
       ]
     },
     {
       "args": [
         [
           "Twitter",
-          "postTweet",
-          "getNewsFeed",
-          "unfollow",
-          "getNewsFeed",
-          "getNewsFeed",
-          "postTweet",
-          "getNewsFeed"
-        ],
-        [
-          [],
-          [
-            1,
-            1
-          ],
-          [
-            4
-          ],
-          [
-            2,
-            3
-          ],
-          [
-            2
-          ],
-          [
-            1
-          ],
-          [
-            2,
-            2
-          ],
-          [
-            4
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        [],
-        null,
-        [],
-        [
-          1
-        ],
-        null,
-        []
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "unfollow",
           "follow",
-          "follow",
-          "postTweet",
-          "postTweet",
-          "follow",
-          "getNewsFeed",
-          "getNewsFeed"
-        ],
-        [
-          [],
-          [
-            4,
-            2
-          ],
-          [
-            2,
-            4
-          ],
-          [
-            4,
-            3
-          ],
-          [
-            2,
-            1
-          ],
-          [
-            2,
-            2
-          ],
-          [
-            4,
-            3
-          ],
-          [
-            4
-          ],
-          [
-            3
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        [],
-        []
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "postTweet",
-          "getNewsFeed",
-          "postTweet",
           "postTweet",
           "getNewsFeed",
           "getNewsFeed",
           "follow",
           "unfollow",
-          "unfollow"
-        ],
-        [
-          [],
-          [
-            1,
-            1
-          ],
-          [
-            3
-          ],
-          [
-            1,
-            2
-          ],
-          [
-            4,
-            3
-          ],
-          [
-            2
-          ],
-          [
-            2
-          ],
-          [
-            4,
-            2
-          ],
-          [
-            4,
-            2
-          ],
-          [
-            1,
-            2
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        [],
-        null,
-        null,
-        [],
-        [],
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
+          "unfollow",
           "getNewsFeed",
           "getNewsFeed",
           "getNewsFeed",
           "unfollow",
           "follow",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "getNewsFeed",
-          "unfollow",
           "postTweet"
         ],
         [
           [],
           [
+            1,
+            2
+          ],
+          [
+            4,
+            38
+          ],
+          [
+            2
+          ],
+          [
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
             1
           ],
           [
@@ -1926,42 +963,23 @@
           ],
           [
             4,
-            1
-          ],
-          [
-            1,
-            2
-          ],
-          [
-            3,
-            3
-          ],
-          [
-            3
-          ],
-          [
-            4,
-            2
-          ],
-          [
-            3,
-            4
+            39
           ]
         ]
       ],
       "expected": [
         null,
+        null,
+        null,
+        [],
+        [],
+        null,
+        null,
+        null,
         [],
         [],
         [],
         null,
-        null,
-        null,
-        null,
-        null,
-        [
-          3
-        ],
         null,
         null
       ]
@@ -1972,12 +990,6 @@
           "Twitter",
           "follow",
           "getNewsFeed",
-          "postTweet",
-          "getNewsFeed",
-          "postTweet",
-          "getNewsFeed",
-          "follow",
-          "postTweet",
           "follow",
           "follow",
           "unfollow",
@@ -1985,113 +997,7 @@
           "getNewsFeed",
           "follow",
           "getNewsFeed",
-          "getNewsFeed"
-        ],
-        [
-          [],
-          [
-            1,
-            2
-          ],
-          [
-            3
-          ],
-          [
-            1,
-            1
-          ],
-          [
-            1
-          ],
-          [
-            2,
-            2
-          ],
-          [
-            2
-          ],
-          [
-            2,
-            3
-          ],
-          [
-            3,
-            3
-          ],
-          [
-            2,
-            1
-          ],
-          [
-            4,
-            3
-          ],
-          [
-            3,
-            2
-          ],
-          [
-            3,
-            4
-          ],
-          [
-            3
-          ],
-          [
-            4,
-            3
-          ],
-          [
-            4
-          ],
-          [
-            3
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        [],
-        null,
-        [
-          1
-        ],
-        null,
-        [
-          2
-        ],
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        [
-          4,
-          3
-        ],
-        null,
-        [
-          4,
-          3
-        ],
-        [
-          4,
-          3
-        ]
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
           "getNewsFeed",
-          "follow",
-          "postTweet",
-          "getNewsFeed",
-          "follow",
-          "unfollow",
           "getNewsFeed",
           "follow",
           "postTweet",
@@ -2101,32 +1007,18 @@
         [
           [],
           [
-            1
-          ],
-          [
-            3,
-            1
-          ],
-          [
-            3,
-            1
-          ],
-          [
-            2
-          ],
-          [
-            4,
-            3
-          ],
-          [
-            1,
+            2,
             4
           ],
           [
-            2
+            3
           ],
           [
             2,
+            1
+          ],
+          [
+            4,
             3
           ],
           [
@@ -2134,22 +1026,60 @@
             2
           ],
           [
-            1
+            3,
+            33
+          ],
+          [
+            3
           ],
           [
             4,
+            3
+          ],
+          [
+            4
+          ],
+          [
+            3
+          ],
+          [
             1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            29
+          ],
+          [
+            2
+          ],
+          [
+            4,
+            3
           ]
         ]
       ],
       "expected": [
         null,
-        [],
-        null,
         null,
         [],
         null,
         null,
+        null,
+        null,
+        [
+          33
+        ],
+        null,
+        [
+          33
+        ],
+        [
+          33
+        ],
         [],
         null,
         null,
@@ -2161,20 +1091,10 @@
       "args": [
         [
           "Twitter",
-          "follow",
-          "getNewsFeed",
-          "postTweet",
           "postTweet",
           "unfollow",
           "follow",
           "postTweet",
-          "getNewsFeed",
-          "unfollow",
-          "getNewsFeed",
-          "follow",
-          "getNewsFeed",
-          "getNewsFeed",
-          "getNewsFeed",
           "getNewsFeed",
           "unfollow"
         ],
@@ -2182,18 +1102,7 @@
           [],
           [
             1,
-            4
-          ],
-          [
-            2
-          ],
-          [
-            1,
-            1
-          ],
-          [
-            1,
-            2
+            17
           ],
           [
             2,
@@ -2205,7 +1114,7 @@
           ],
           [
             1,
-            3
+            27
           ],
           [
             1
@@ -2213,86 +1122,6 @@
           [
             4,
             1
-          ],
-          [
-            3
-          ],
-          [
-            1,
-            4
-          ],
-          [
-            2
-          ],
-          [
-            3
-          ],
-          [
-            4
-          ],
-          [
-            2
-          ],
-          [
-            3,
-            4
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        [],
-        null,
-        null,
-        null,
-        null,
-        null,
-        [
-          3,
-          2,
-          1
-        ],
-        null,
-        [],
-        null,
-        [],
-        [],
-        [],
-        [],
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "postTweet",
-          "postTweet",
-          "getNewsFeed",
-          "postTweet",
-          "postTweet"
-        ],
-        [
-          [],
-          [
-            3,
-            1
-          ],
-          [
-            4,
-            2
-          ],
-          [
-            2
-          ],
-          [
-            2,
-            3
-          ],
-          [
-            1,
-            4
           ]
         ]
       ],
@@ -2300,8 +1129,12 @@
         null,
         null,
         null,
-        [],
         null,
+        null,
+        [
+          27,
+          17
+        ],
         null
       ]
     },
@@ -2325,7 +1158,7 @@
           [],
           [
             2,
-            1
+            11
           ],
           [
             4
@@ -2339,7 +1172,7 @@
           ],
           [
             2,
-            2
+            21
           ],
           [
             3
@@ -2353,11 +1186,11 @@
           ],
           [
             2,
-            3
+            37
           ],
           [
             4,
-            4
+            22
           ],
           [
             4,
@@ -2375,8 +1208,8 @@
         [],
         null,
         [
-          2,
-          1
+          21,
+          11
         ],
         null,
         null,
@@ -2387,73 +1220,111 @@
       "args": [
         [
           "Twitter",
-          "unfollow",
-          "follow",
           "postTweet",
-          "postTweet",
-          "follow",
-          "getNewsFeed",
           "postTweet",
           "unfollow",
           "getNewsFeed",
           "postTweet",
+          "postTweet",
+          "unfollow",
+          "postTweet"
+        ],
+        [
+          [],
+          [
+            3,
+            24
+          ],
+          [
+            2,
+            32
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4
+          ],
+          [
+            2,
+            12
+          ],
+          [
+            3,
+            20
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            2
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        [],
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "postTweet",
+          "unfollow",
+          "unfollow",
+          "getNewsFeed",
+          "getNewsFeed",
+          "getNewsFeed",
+          "getNewsFeed",
           "follow",
           "unfollow",
-          "follow",
           "getNewsFeed",
           "getNewsFeed"
         ],
         [
           [],
           [
-            1,
-            4
+            3,
+            26
           ],
           [
             1,
-            4
+            3
           ],
           [
-            2,
+            4,
             1
           ],
           [
-            1,
             2
           ],
           [
-            2,
-            4
-          ],
-          [
-            4
-          ],
-          [
-            3,
             3
           ],
           [
-            1,
-            4
-          ],
-          [
             2
           ],
           [
-            2,
-            4
+            3
+          ],
+          [
+            4,
+            2
           ],
           [
             1,
             3
-          ],
-          [
-            1,
-            2
-          ],
-          [
-            2,
-            4
           ],
           [
             4
@@ -2468,16 +1339,14 @@
         null,
         null,
         null,
-        null,
-        null,
         [],
-        null,
-        null,
         [
-          1
+          26
         ],
-        null,
-        null,
+        [],
+        [
+          26
+        ],
         null,
         null,
         [],
@@ -2488,409 +1357,754 @@
       "args": [
         [
           "Twitter",
-          "getNewsFeed",
-          "postTweet",
-          "postTweet",
-          "postTweet",
           "postTweet",
           "postTweet",
           "getNewsFeed",
-          "postTweet"
+          "getNewsFeed",
+          "getNewsFeed",
+          "follow",
+          "unfollow",
+          "unfollow",
+          "getNewsFeed"
         ],
         [
           [],
           [
-            2
-          ],
-          [
-            4,
-            1
-          ],
-          [
-            4,
-            2
-          ],
-          [
-            3,
-            3
-          ],
-          [
-            2,
-            4
-          ],
-          [
-            2,
-            5
-          ],
-          [
-            4
-          ],
-          [
-            3,
-            6
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        [],
-        null,
-        null,
-        null,
-        null,
-        null,
-        [
-          2,
-          1
-        ],
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "follow",
-          "unfollow",
-          "getNewsFeed",
-          "unfollow",
-          "unfollow",
-          "postTweet",
-          "getNewsFeed",
-          "postTweet",
-          "unfollow"
-        ],
-        [
-          [],
-          [
-            1,
-            4
-          ],
-          [
-            2,
-            3
-          ],
-          [
-            4
-          ],
-          [
-            4,
-            2
-          ],
-          [
-            3,
-            2
-          ],
-          [
-            1,
-            1
-          ],
-          [
-            1
-          ],
-          [
-            2,
-            2
-          ],
-          [
-            1,
-            3
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        [],
-        null,
-        null,
-        null,
-        [
-          1
-        ],
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "getNewsFeed",
-          "getNewsFeed",
-          "unfollow",
-          "follow",
-          "getNewsFeed",
-          "follow",
-          "unfollow",
-          "getNewsFeed",
-          "getNewsFeed",
-          "getNewsFeed",
-          "getNewsFeed",
-          "getNewsFeed",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "postTweet"
-        ],
-        [
-          [],
-          [
-            1
-          ],
-          [
-            2
-          ],
-          [
-            2,
-            3
-          ],
-          [
-            4,
-            3
-          ],
-          [
-            3
-          ],
-          [
             4,
             2
           ],
           [
             1,
-            3
-          ],
-          [
-            4
-          ],
-          [
-            4
-          ],
-          [
-            1
-          ],
-          [
-            1
-          ],
-          [
-            4
-          ],
-          [
-            1,
-            1
-          ],
-          [
-            1,
-            2
-          ],
-          [
-            1,
-            3
-          ],
-          [
-            4,
-            4
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        [],
-        [],
-        null,
-        null,
-        [],
-        null,
-        null,
-        [],
-        [],
-        [],
-        [],
-        [],
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "unfollow",
-          "follow",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "unfollow",
-          "getNewsFeed",
-          "getNewsFeed",
-          "getNewsFeed",
-          "follow",
-          "unfollow"
-        ],
-        [
-          [],
-          [
-            3,
-            4
-          ],
-          [
-            2,
-            3
-          ],
-          [
-            4,
-            1
-          ],
-          [
-            4,
-            2
-          ],
-          [
-            4,
-            3
-          ],
-          [
-            2,
-            4
-          ],
-          [
-            1,
-            5
-          ],
-          [
-            4,
-            1
-          ],
-          [
-            1
-          ],
-          [
-            4
-          ],
-          [
-            1
-          ],
-          [
-            1,
-            4
-          ],
-          [
-            4,
-            1
-          ]
-        ]
-      ],
-      "expected": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        [
-          5
-        ],
-        [
-          3,
-          2,
-          1
-        ],
-        [
-          5
-        ],
-        null,
-        null
-      ]
-    },
-    {
-      "args": [
-        [
-          "Twitter",
-          "postTweet",
-          "unfollow",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "postTweet",
-          "unfollow",
-          "unfollow",
-          "postTweet",
-          "follow",
-          "postTweet"
-        ],
-        [
-          [],
-          [
-            2,
-            1
-          ],
-          [
-            4,
-            3
-          ],
-          [
-            3,
-            2
-          ],
-          [
-            1,
-            3
-          ],
-          [
-            4,
-            4
-          ],
-          [
-            1,
-            5
-          ],
-          [
-            3,
             6
           ],
           [
+            1
+          ],
+          [
+            4
+          ],
+          [
+            1
+          ],
+          [
             1,
-            7
+            4
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        [
+          6
+        ],
+        [
+          2
+        ],
+        [
+          6
+        ],
+        null,
+        null,
+        null,
+        [
+          2
+        ]
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "unfollow",
+          "postTweet",
+          "follow",
+          "getNewsFeed",
+          "getNewsFeed",
+          "postTweet",
+          "postTweet"
+        ],
+        [
+          [],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            29
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3
+          ],
+          [
+            3
+          ],
+          [
+            3,
+            18
           ],
           [
             1,
             8
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        [],
+        [],
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "postTweet",
+          "postTweet",
+          "postTweet",
+          "getNewsFeed",
+          "follow",
+          "postTweet",
+          "follow",
+          "follow",
+          "getNewsFeed"
+        ],
+        [
+          [],
+          [
+            4,
+            27
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            2
           ],
           [
             2,
-            9
+            4
+          ],
+          [
+            4,
+            19
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            4
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        [],
+        null,
+        null,
+        null,
+        null,
+        [
+          19,
+          4,
+          27
+        ]
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "follow",
+          "follow",
+          "getNewsFeed",
+          "getNewsFeed",
+          "postTweet",
+          "follow",
+          "getNewsFeed",
+          "follow",
+          "postTweet"
+        ],
+        [
+          [],
+          [
+            4,
+            1
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            4
+          ],
+          [
+            1
+          ],
+          [
+            3,
+            13
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        [],
+        [],
+        null,
+        null,
+        [
+          13
+        ],
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "postTweet",
+          "getNewsFeed",
+          "getNewsFeed",
+          "follow",
+          "follow",
+          "follow",
+          "getNewsFeed",
+          "follow",
+          "postTweet",
+          "getNewsFeed",
+          "postTweet",
+          "getNewsFeed",
+          "follow",
+          "postTweet",
+          "getNewsFeed"
+        ],
+        [
+          [],
+          [
+            2,
+            16
+          ],
+          [
+            1
+          ],
+          [
+            4
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            4
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            15
+          ],
+          [
+            1
+          ],
+          [
+            1,
+            36
+          ],
+          [
+            4
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            4,
+            30
+          ],
+          [
+            2
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        [],
+        [],
+        null,
+        null,
+        null,
+        [],
+        null,
+        null,
+        [],
+        null,
+        [],
+        null,
+        null,
+        [
+          30,
+          15,
+          16
+        ]
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "getNewsFeed",
+          "getNewsFeed",
+          "postTweet",
+          "follow",
+          "postTweet",
+          "postTweet",
+          "postTweet",
+          "postTweet",
+          "getNewsFeed",
+          "getNewsFeed",
+          "getNewsFeed"
+        ],
+        [
+          [],
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3,
+            27
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            36
+          ],
+          [
+            4,
+            33
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            1
+          ],
+          [
+            4
+          ],
+          [
+            1
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        [],
+        [],
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        [
+          1
+        ],
+        [
+          1,
+          33,
+          36
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "getNewsFeed",
+          "getNewsFeed",
+          "postTweet",
+          "getNewsFeed",
+          "getNewsFeed",
+          "unfollow",
+          "getNewsFeed",
+          "unfollow",
+          "postTweet",
+          "follow"
+        ],
+        [
+          [],
+          [
+            1
+          ],
+          [
+            1
+          ],
+          [
+            2,
+            26
+          ],
+          [
+            4
+          ],
+          [
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            2
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            3,
+            14
+          ],
+          [
+            2,
+            4
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        [],
+        [],
+        null,
+        [],
+        [],
+        null,
+        [
+          26
+        ],
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "unfollow",
+          "postTweet",
+          "follow",
+          "unfollow",
+          "getNewsFeed",
+          "postTweet",
+          "getNewsFeed",
+          "follow",
+          "postTweet"
+        ],
+        [
+          [],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            23
           ],
           [
             4,
             3
           ],
           [
+            2,
+            4
+          ],
+          [
+            2
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            18
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        [],
+        null,
+        [
+          5
+        ],
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "postTweet",
+          "getNewsFeed",
+          "unfollow",
+          "follow"
+        ],
+        [
+          [],
+          [
             1,
+            18
+          ],
+          [
+            2
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
             3
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        [],
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "getNewsFeed",
+          "postTweet",
+          "postTweet",
+          "getNewsFeed",
+          "getNewsFeed",
+          "postTweet",
+          "postTweet",
+          "postTweet",
+          "follow"
+        ],
+        [
+          [],
+          [
+            2
+          ],
+          [
+            3,
+            19
+          ],
+          [
+            1,
+            15
+          ],
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            2,
+            22
           ],
           [
             3,
             10
           ],
           [
-            3,
-            1
+            2,
+            34
           ],
           [
-            1,
-            11
+            3,
+            4
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        [],
+        null,
+        null,
+        [
+          15
+        ],
+        [],
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "postTweet",
+          "unfollow",
+          "follow",
+          "follow",
+          "postTweet",
+          "follow",
+          "getNewsFeed",
+          "getNewsFeed",
+          "getNewsFeed",
+          "follow",
+          "postTweet",
+          "getNewsFeed",
+          "postTweet",
+          "getNewsFeed"
+        ],
+        [
+          [],
+          [
+            4,
+            6
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            32
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4
+          ],
+          [
+            3
+          ],
+          [
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            1
           ]
         ]
       ],
@@ -2902,14 +2116,81 @@
         null,
         null,
         null,
+        [
+          32,
+          6
+        ],
+        [],
+        [
+          32,
+          6
+        ],
+        null,
+        null,
+        [
+          32,
+          6
+        ],
+        null,
+        []
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "unfollow",
+          "postTweet",
+          "follow",
+          "unfollow",
+          "getNewsFeed",
+          "unfollow",
+          "getNewsFeed",
+          "postTweet"
+        ],
+        [
+          [],
+          [
+            1,
+            2
+          ],
+          [
+            4,
+            20
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1
+          ],
+          [
+            2,
+            19
+          ]
+        ]
+      ],
+      "expected": [
         null,
         null,
         null,
         null,
         null,
+        [],
         null,
-        null,
-        null,
+        [],
         null
       ]
     },
@@ -2918,17 +2199,9 @@
         [
           "Twitter",
           "follow",
+          "postTweet",
+          "getNewsFeed",
           "follow",
-          "getNewsFeed",
-          "getNewsFeed",
-          "postTweet",
-          "postTweet",
-          "follow",
-          "getNewsFeed",
-          "postTweet",
-          "getNewsFeed",
-          "postTweet",
-          "unfollow",
           "getNewsFeed",
           "getNewsFeed",
           "postTweet"
@@ -2936,48 +2209,19 @@
         [
           [],
           [
-            3,
-            1
-          ],
-          [
-            3,
-            1
-          ],
-          [
+            2,
             3
-          ],
-          [
-            3
-          ],
-          [
-            3,
-            1
           ],
           [
             1,
-            2
-          ],
-          [
-            3,
-            2
+            25
           ],
           [
             4
-          ],
-          [
-            3,
-            3
-          ],
-          [
-            3
           ],
           [
             4,
-            4
-          ],
-          [
-            3,
-            2
+            3
           ],
           [
             3
@@ -2986,8 +2230,8 @@
             1
           ],
           [
-            1,
-            5
+            2,
+            8
           ]
         ]
       ],
@@ -2996,26 +2240,700 @@
         null,
         null,
         [],
+        null,
+        [],
+        [
+          25
+        ],
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "getNewsFeed",
+          "getNewsFeed",
+          "getNewsFeed",
+          "postTweet"
+        ],
+        [
+          [],
+          [
+            4
+          ],
+          [
+            3
+          ],
+          [
+            3
+          ],
+          [
+            1,
+            30
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        [],
+        [],
+        [],
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "postTweet",
+          "postTweet",
+          "getNewsFeed",
+          "unfollow",
+          "getNewsFeed",
+          "postTweet",
+          "unfollow",
+          "getNewsFeed",
+          "unfollow",
+          "getNewsFeed"
+        ],
+        [
+          [],
+          [
+            1,
+            36
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            1
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            3
+          ],
+          [
+            4,
+            27
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            4
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        [
+          5,
+          36
+        ],
+        null,
+        [],
+        null,
+        null,
+        [],
+        null,
+        [
+          27
+        ]
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "postTweet",
+          "follow",
+          "postTweet",
+          "postTweet",
+          "getNewsFeed",
+          "follow",
+          "getNewsFeed",
+          "follow",
+          "postTweet",
+          "unfollow"
+        ],
+        [
+          [],
+          [
+            1,
+            33
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            2,
+            34
+          ],
+          [
+            1
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            1
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            2,
+            37
+          ],
+          [
+            2,
+            4
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        [
+          33
+        ],
+        null,
+        [
+          33
+        ],
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "follow",
+          "getNewsFeed",
+          "postTweet",
+          "getNewsFeed"
+        ],
+        [
+          [],
+          [
+            1,
+            2
+          ],
+          [
+            1
+          ],
+          [
+            4,
+            37
+          ],
+          [
+            2
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        [],
+        null,
+        []
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "getNewsFeed",
+          "getNewsFeed",
+          "postTweet",
+          "postTweet",
+          "getNewsFeed",
+          "postTweet",
+          "getNewsFeed",
+          "postTweet",
+          "getNewsFeed",
+          "postTweet",
+          "postTweet",
+          "follow",
+          "follow"
+        ],
+        [
+          [],
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            1,
+            6
+          ],
+          [
+            1,
+            13
+          ],
+          [
+            4
+          ],
+          [
+            1,
+            16
+          ],
+          [
+            2
+          ],
+          [
+            4,
+            36
+          ],
+          [
+            4
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            3,
+            2
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        [],
+        [],
+        null,
+        null,
+        [],
+        null,
+        [],
+        null,
+        [
+          36
+        ],
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "getNewsFeed",
+          "getNewsFeed",
+          "follow",
+          "getNewsFeed",
+          "unfollow"
+        ],
+        [
+          [],
+          [
+            2
+          ],
+          [
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4
+          ],
+          [
+            1,
+            4
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        [],
+        [],
+        null,
+        [],
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "postTweet",
+          "postTweet",
+          "postTweet",
+          "unfollow",
+          "postTweet",
+          "getNewsFeed",
+          "unfollow",
+          "getNewsFeed",
+          "follow"
+        ],
+        [
+          [],
+          [
+            1,
+            23
+          ],
+          [
+            3,
+            31
+          ],
+          [
+            4,
+            7
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            4,
+            35
+          ],
+          [
+            4
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        [
+          35,
+          7
+        ],
+        null,
+        [
+          23
+        ],
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "getNewsFeed",
+          "follow",
+          "getNewsFeed",
+          "postTweet",
+          "getNewsFeed",
+          "getNewsFeed",
+          "postTweet",
+          "getNewsFeed",
+          "postTweet",
+          "postTweet",
+          "unfollow",
+          "getNewsFeed"
+        ],
+        [
+          [],
+          [
+            4
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            4
+          ],
+          [
+            1
+          ],
+          [
+            2,
+            13
+          ],
+          [
+            1
+          ],
+          [
+            1,
+            35
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        [],
+        null,
+        [],
+        null,
+        [],
+        [],
+        null,
         [],
         null,
         null,
         null,
+        [
+          8,
+          15
+        ]
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "getNewsFeed",
+          "unfollow",
+          "follow",
+          "postTweet",
+          "follow",
+          "postTweet",
+          "postTweet",
+          "postTweet",
+          "postTweet",
+          "getNewsFeed",
+          "unfollow",
+          "postTweet"
+        ],
+        [
+          [],
+          [
+            3
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            35
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            30
+          ],
+          [
+            3,
+            11
+          ],
+          [
+            4,
+            22
+          ],
+          [
+            3,
+            8
+          ],
+          [
+            3
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            4
+          ]
+        ]
+      ],
+      "expected": [
+        null,
         [],
         null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
         [
-          3,
-          2,
-          1
+          8,
+          11
+        ],
+        null,
+        null
+      ]
+    },
+    {
+      "args": [
+        [
+          "Twitter",
+          "getNewsFeed",
+          "getNewsFeed",
+          "postTweet",
+          "unfollow",
+          "postTweet",
+          "postTweet",
+          "getNewsFeed",
+          "follow",
+          "getNewsFeed",
+          "getNewsFeed",
+          "postTweet",
+          "postTweet",
+          "getNewsFeed",
+          "getNewsFeed",
+          "unfollow"
+        ],
+        [
+          [],
+          [
+            4
+          ],
+          [
+            3
+          ],
+          [
+            2,
+            12
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            20
+          ],
+          [
+            4,
+            6
+          ],
+          [
+            2
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3
+          ],
+          [
+            4
+          ],
+          [
+            3,
+            37
+          ],
+          [
+            4,
+            10
+          ],
+          [
+            3
+          ],
+          [
+            2
+          ],
+          [
+            4,
+            1
+          ]
+        ]
+      ],
+      "expected": [
+        null,
+        [],
+        [],
+        null,
+        null,
+        null,
+        null,
+        [
+          20,
+          12
+        ],
+        null,
+        [],
+        [
+          6
         ],
         null,
         null,
         [
-          3,
-          2,
-          1
+          37
         ],
         [
-          2
+          20,
+          12
         ],
         null
       ]
@@ -3025,107 +2943,39 @@
         [
           "Twitter",
           "unfollow",
-          "follow",
-          "postTweet",
-          "follow",
-          "postTweet",
-          "postTweet",
           "getNewsFeed",
-          "follow",
-          "postTweet",
-          "follow",
-          "follow",
           "getNewsFeed",
           "unfollow",
-          "postTweet",
-          "unfollow"
+          "getNewsFeed"
         ],
         [
           [],
           [
-            4,
-            3
+            1,
+            2
           ],
           [
-            2,
-            4
-          ],
-          [
-            4,
             1
           ],
           [
-            1,
-            2
-          ],
-          [
-            1,
-            2
-          ],
-          [
-            4,
-            3
-          ],
-          [
-            2
-          ],
-          [
-            2,
             4
           ],
           [
             4,
-            4
-          ],
-          [
-            1,
             2
           ],
           [
-            3,
-            2
-          ],
-          [
-            4
-          ],
-          [
-            2,
             1
-          ],
-          [
-            2,
-            5
-          ],
-          [
-            1,
-            4
           ]
         ]
       ],
       "expected": [
         null,
         null,
+        [],
+        [],
         null,
-        null,
-        null,
-        null,
-        null,
-        [
-          3,
-          1
-        ],
-        null,
-        null,
-        null,
-        null,
-        [
-          4,
-          3,
-          1
-        ],
-        null,
-        null,
-        null
+        []
       ]
     }
   ],
