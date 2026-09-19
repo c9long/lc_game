@@ -153,6 +153,31 @@ def decode(type_name: str, value, ns):
     raise Unsupported(f"cannot decode parameter type {type_name!r}")
 
 
+def json_safe(value):
+    """Replace values json.dumps would write as invalid JSON with their names.
+
+    json.dumps happily emits Infinity, -Infinity and NaN, none of which JSON.parse accepts. Both
+    the browser worker and the audit harness cross that boundary as a JSON string, so a solution
+    returning float("inf") -- a sentinel people reach for constantly in binary search and median
+    problems -- took down the whole run with an opaque SyntaxError instead of failing one case.
+    Naming them keeps the result readable and, since expected values are loaded from JSON and can
+    never be non-finite, keeps the comparison correctly unequal.
+    """
+    if isinstance(value, float):
+        if value != value:
+            return "NaN"
+        if value == float("inf"):
+            return "Infinity"
+        if value == float("-inf"):
+            return "-Infinity"
+        return value
+    if isinstance(value, (list, tuple)):
+        return [json_safe(v) for v in value]
+    if isinstance(value, dict):
+        return {k: json_safe(v) for k, v in value.items()}
+    return value
+
+
 def encode(type_name: str, value):
     """Python value -> JSON-safe value for storage and comparison."""
     t = (type_name or "").strip()
@@ -546,7 +571,7 @@ def run_case(ns, spec, raw_args):
 def produce(source: str, spec: dict, inputs: list) -> list:
     """Run `source` over every input and return the encoded outputs. Used to build expectations."""
     ns = namespace(source)
-    return [run_case(ns, spec, args) for args in inputs]
+    return [json_safe(run_case(ns, spec, args)) for args in inputs]
 
 
 # ---------- comparison ----------
@@ -598,7 +623,7 @@ def judge(source: str, spec: dict, cases: list) -> list:
     for case in cases:
         entry = {"args": case["args"], "expected": case["expected"]}
         try:
-            actual = run_case(ns, spec, case["args"])
+            actual = json_safe(run_case(ns, spec, case["args"]))
             entry["actual"] = actual
             entry["ok"] = (
                 validator(case["args"], actual, case["expected"])

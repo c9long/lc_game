@@ -509,7 +509,9 @@ def _rpn(rng):
 
 @generator("binary-search")
 def _binary_search(rng):
-    n = rng.randint(1, 20)
+    # A one-element array is the shortest legal input and the one a `while l < r` loop with
+    # `r = mid - 1` never examines; there were two cases in 42.
+    n = rng.choice([1, 1, 2, 2, 3, 4, 6, 9, 13, 20])
     nums = distinct_ints(rng, n, -100, 100)
     if nums is None:
         return None
@@ -521,30 +523,54 @@ def _binary_search(rng):
 @generator("koko-eating-bananas")
 def _koko(rng):
     piles = ints(rng, rng.randint(1, 8), 1, 40)
-    return [piles, rng.randint(len(piles), len(piles) + 12)]
+    # h == len(piles) is the tightest legal budget, where the answer is exactly max(piles); a very
+    # large h is the other end, where the answer is 1. Three and one case covered those.
+    roll = rng.random()
+    if roll < 0.2:
+        h = len(piles)
+    elif roll < 0.35:
+        h = sum(piles) + rng.randint(0, 20)
+    else:
+        h = rng.randint(len(piles), len(piles) + 12)
+    return [piles, h]
 
 
 @generator("find-minimum-in-rotated-sorted-array")
 def _find_min_rotated(rng):
-    n = rng.randint(1, 15)
+    # "Rotated between 1 and n times" includes n times, which is the identity, so an already
+    # sorted array is a legal input -- it is LeetCode's own example 3. It is also the only shape
+    # that catches comparing against nums[0] rather than nums[right]. Short arrays matter for the
+    # same reason: with n <= 2 the midpoint coincides with an endpoint.
+    n = rng.choice([1, 1, 2, 2, 3, 3, 5, 7, 10, 15])
     nums = distinct_ints(rng, n, -80, 80)
     if nums is None:
         return None
     nums.sort()
-    k = rng.randrange(n)
+    k = 0 if rng.random() < 0.3 else rng.randrange(n)
     return [nums[k:] + nums[:k]]
 
 
 @generator("search-in-rotated-sorted-array")
 def _search_rotated(rng):
-    n = rng.randint(1, 15)
+    # A two-element array is where `nums[lo] < nums[mid]` and `nums[lo] <= nums[mid]` diverge:
+    # mid == lo, so the strict form takes the wrong branch. One case in 43 was length 2, and the
+    # bug scored 42/43 on the strength of it. Unrotated arrays matter too -- "possibly rotated".
+    # The one shape that separates `nums[l] < nums[m]` from `nums[l] <= nums[m]`: on a
+    # two-element window mid == lo, so the strict form falls into the "right half is sorted"
+    # branch and discards the target when it is the smaller, rotated-round element. Left to
+    # chance this appeared once in 43 cases, and raising the odds only moved it somewhere else,
+    # so it is constructed outright.
+    if rng.random() < 0.12:
+        lo_v, hi_v = sorted(rng.sample(range(-80, 81), 2))
+        return [[hi_v, lo_v], lo_v]
+    n = rng.choice([1, 2, 2, 3, 3, 4, 6, 9, 12, 15])
     nums = distinct_ints(rng, n, -80, 80)
     if nums is None:
         return None
     nums.sort()
-    k = rng.randrange(n)
+    k = 0 if rng.random() < 0.25 else rng.randrange(n)
     rotated = nums[k:] + nums[:k]
-    target = rng.choice(rotated) if rng.random() < 0.6 else rng.randint(-90, 90)
+    target = rng.choice(rotated) if rng.random() < 0.65 else rng.randint(-90, 90)
     return [rotated, target]
 
 
@@ -1388,7 +1414,9 @@ def _sliding_max(rng):
 
 @generator("search-a-2d-matrix")
 def _search_2d(rng):
-    r, c = rng.randint(1, 5), rng.randint(1, 5)
+    # 1 <= m, n, so a 1x1 matrix is legal and was absent. Square matrices matter for the opposite
+    # reason: they are where flattening with // m instead of // n is silently correct.
+    r, c = (1, 1) if rng.random() < 0.1 else (rng.randint(1, 5), rng.randint(1, 5))
     vals = sorted(rng.sample(range(-60, 61), r * c))
     matrix = [vals[i * c:(i + 1) * c] for i in range(r)]
     target = rng.choice(vals) if rng.random() < 0.6 else rng.randint(-70, 70)
@@ -1397,7 +1425,20 @@ def _search_2d(rng):
 
 @generator("median-of-two-sorted-arrays")
 def _median_two(rng):
-    a, b = rng.randint(0, 8), rng.randint(0, 8)
+    # 0 <= m, n and 1 <= m + n, so one array may be empty but not both. The partition index
+    # j = half - i goes negative only when the array being searched is the LONGER one, so a
+    # solution that never swaps to the shorter array needs a heavily skewed pair to expose it --
+    # with both sides drawn from 0..8 it failed a single case in 42. Total length 1, the smallest
+    # legal input, was missing outright.
+    roll = rng.random()
+    if roll < 0.12:
+        a, b = (1, 0) if rng.random() < 0.5 else (0, 1)
+    elif roll < 0.4:
+        a, b = rng.randint(4, 12), rng.randint(0, 1)   # skewed, either way round
+        if rng.random() < 0.5:
+            a, b = b, a
+    else:
+        a, b = rng.randint(0, 8), rng.randint(0, 8)
     if a + b == 0:
         return None
     return [sorted(ints(rng, a, -40, 40)), sorted(ints(rng, b, -40, 40))]

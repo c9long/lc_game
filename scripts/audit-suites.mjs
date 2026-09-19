@@ -745,7 +745,238 @@ class Solution:
             if o < n: go(cur + "(", o + 1, c)
             if c < o: go(cur + ")", o, c + 1)
         go("", 0, 0)
-        return res`]
+        return res`],
+
+	// ---- batch 5: Binary Search ----
+	// "Rotated between 1 and n times" includes the identity, so an already sorted array is legal --
+	// it is LeetCode's own example 3, and the only shape that catches nums[0] as the pivot.
+	['find-minimum-in-rotated-sorted-array', 'NEAR-MISS pivots on nums[0]', false, `class Solution:
+    def findMin(self, nums):
+        l, r = 0, len(nums) - 1
+        while l < r:
+            m = (l + r) // 2
+            if nums[m] >= nums[0]: l = m + 1
+            else: r = m
+        return nums[l]`],
+	['find-minimum-in-rotated-sorted-array', 'correct, pivots on nums[r]', true, `class Solution:
+    def findMin(self, nums):
+        l, r = 0, len(nums) - 1
+        while l < r:
+            m = (l + r) // 2
+            if nums[m] > nums[r]: l = m + 1
+            else: r = m
+        return nums[l]`],
+
+	// On a two-element window mid == lo, so the strict test takes the wrong branch. Chance produced
+	// one such case in 43; the generator now builds the shape outright.
+	['search-in-rotated-sorted-array', 'NEAR-MISS strict nums[l] < nums[m]', false, `class Solution:
+    def search(self, nums, target):
+        l, r = 0, len(nums) - 1
+        while l <= r:
+            m = (l + r) // 2
+            if nums[m] == target: return m
+            if nums[l] < nums[m]:
+                if nums[l] <= target < nums[m]: r = m - 1
+                else: l = m + 1
+            else:
+                if nums[m] < target <= nums[r]: l = m + 1
+                else: r = m - 1
+        return -1`],
+	['search-in-rotated-sorted-array', 'NEAR-MISS picks a side by target >= nums[0]', false, `class Solution:
+    def search(self, nums, target):
+        n = len(nums); l, r = 0, n - 1
+        while l < r:
+            m = (l + r) // 2
+            if nums[m] > nums[r]: l = m + 1
+            else: r = m
+        p = l
+        lo, hi = (p, n - 1) if target >= nums[0] else (0, p - 1)
+        while lo <= hi:
+            m = (lo + hi) // 2
+            if nums[m] == target: return m
+            if nums[m] < target: lo = m + 1
+            else: hi = m - 1
+        return -1`],
+	['search-in-rotated-sorted-array', 'correct', true, `class Solution:
+    def search(self, nums, target):
+        l, r = 0, len(nums) - 1
+        while l <= r:
+            m = (l + r) // 2
+            if nums[m] == target: return m
+            if nums[l] <= nums[m]:
+                if nums[l] <= target < nums[m]: r = m - 1
+                else: l = m + 1
+            else:
+                if nums[m] < target <= nums[r]: l = m + 1
+                else: r = m - 1
+        return -1`],
+
+	['binary-search', 'NEAR-MISS closed interval with an exclusive loop test', false, `class Solution:
+    def search(self, nums, target):
+        l, r = 0, len(nums) - 1
+        while l < r:
+            m = (l + r) // 2
+            if nums[m] == target: return m
+            if nums[m] < target: l = m + 1
+            else: r = m - 1
+        return -1`],
+	['binary-search', 'correct', true, `import bisect
+class Solution:
+    def search(self, nums, target):
+        i = bisect.bisect_left(nums, target)
+        return i if i < len(nums) and nums[i] == target else -1`],
+
+	// Flattening with the ROW count is silently right on a square matrix, which is why the suite
+	// needs rectangles, and 1x1 is legal but was absent.
+	['search-a-2d-matrix', 'NEAR-MISS flattens with the row count', false, `class Solution:
+    def searchMatrix(self, matrix, target):
+        m, n = len(matrix), len(matrix[0])
+        l, r = 0, m * n - 1
+        while l <= r:
+            mid = (l + r) // 2
+            v = matrix[mid // m][mid % m]
+            if v == target: return True
+            if v < target: l = mid + 1
+            else: r = mid - 1
+        return False`],
+	['search-a-2d-matrix', 'NEAR-MISS bisect_left picks the row after the right one', false, `import bisect
+class Solution:
+    def searchMatrix(self, matrix, target):
+        firsts = [row[0] for row in matrix]
+        i = bisect.bisect_left(firsts, target)
+        if i >= len(matrix): i = len(matrix) - 1
+        row = matrix[i]
+        j = bisect.bisect_left(row, target)
+        return j < len(row) and row[j] == target`],
+	['search-a-2d-matrix', 'correct', true, `class Solution:
+    def searchMatrix(self, matrix, target):
+        m, n = len(matrix), len(matrix[0])
+        l, r = 0, m * n - 1
+        while l <= r:
+            mid = (l + r) // 2
+            v = matrix[mid // n][mid % n]
+            if v == target: return True
+            if v < target: l = mid + 1
+            else: r = mid - 1
+        return False`],
+
+	['koko-eating-bananas', 'NEAR-MISS floor instead of ceiling hours', false, `class Solution:
+    def minEatingSpeed(self, piles, h):
+        l, r = 1, max(piles); res = r
+        while l <= r:
+            k = (l + r) // 2
+            if sum(p // k for p in piles) <= h: res = k; r = k - 1
+            else: l = k + 1
+        return res`],
+	['koko-eating-bananas', 'NEAR-MISS upper bound sum(piles)//h', false, `import math
+class Solution:
+    def minEatingSpeed(self, piles, h):
+        l, r = 1, max(1, sum(piles) // h); res = r
+        while l <= r:
+            k = (l + r) // 2
+            if sum(math.ceil(p / k) for p in piles) <= h: res = k; r = k - 1
+            else: l = k + 1
+        return res`],
+	// hi = max(piles) is the correct tight bound, not a bug: at that speed every pile takes one
+	// hour and piles.length <= h is guaranteed. Pinned so it is never "fixed" into a near-miss.
+	['koko-eating-bananas', 'correct with hi = max(piles)', true, `import math
+class Solution:
+    def minEatingSpeed(self, piles, h):
+        l, r = 1, max(piles); res = r
+        while l <= r:
+            k = (l + r) // 2
+            if sum(math.ceil(p / k) for p in piles) <= h: res = k; r = k - 1
+            else: l = k + 1
+        return res`],
+
+	// Python's negative index wraps, so a missing >= 0 guard answers the NEWEST value for a query
+	// that precedes every stored timestamp, rather than the empty string.
+	['time-based-key-value-store', 'NEAR-MISS no guard, negative index wraps', false, `import bisect
+class TimeMap:
+    def __init__(self): self.d = {}
+    def set(self, key, value, timestamp):
+        t, v = self.d.setdefault(key, ([], [])); t.append(timestamp); v.append(value)
+    def get(self, key, timestamp):
+        if key not in self.d: return ""
+        ts, vs = self.d[key]
+        return vs[bisect.bisect_right(ts, timestamp) - 1]`],
+	['time-based-key-value-store', 'NEAR-MISS bisect_left', false, `import bisect
+class TimeMap:
+    def __init__(self): self.d = {}
+    def set(self, key, value, timestamp):
+        t, v = self.d.setdefault(key, ([], [])); t.append(timestamp); v.append(value)
+    def get(self, key, timestamp):
+        if key not in self.d: return ""
+        ts, vs = self.d[key]
+        i = bisect.bisect_left(ts, timestamp) - 1
+        return vs[i] if i >= 0 else ""`],
+	['time-based-key-value-store', 'NEAR-MISS keeps the smallest valid timestamp', false, `class TimeMap:
+    def __init__(self): self.d = {}
+    def set(self, key, value, timestamp):
+        t, v = self.d.setdefault(key, ([], [])); t.append(timestamp); v.append(value)
+    def get(self, key, timestamp):
+        if key not in self.d: return ""
+        ts, vs = self.d[key]
+        lo, hi, res = 0, len(ts) - 1, ""
+        while lo <= hi:
+            m = (lo + hi) // 2
+            if ts[m] <= timestamp: res = vs[m]; hi = m - 1
+            else: lo = m + 1
+        return res`],
+	['time-based-key-value-store', 'correct', true, `import bisect
+class TimeMap:
+    def __init__(self): self.d = {}
+    def set(self, key, value, timestamp):
+        t, v = self.d.setdefault(key, ([], [])); t.append(timestamp); v.append(value)
+    def get(self, key, timestamp):
+        if key not in self.d: return ""
+        ts, vs = self.d[key]
+        i = bisect.bisect_right(ts, timestamp) - 1
+        return vs[i] if i >= 0 else ""`],
+
+	// j = half - i only goes negative when the array being searched is the LONGER one, so this
+	// needs a heavily skewed pair; with both sides drawn from 0..8 it failed a single case.
+	['median-of-two-sorted-arrays', 'NEAR-MISS never swaps to the shorter array', false, `class Solution:
+    def findMedianSortedArrays(self, nums1, nums2):
+        A, B = nums1, nums2
+        total = len(A) + len(B); half = (total + 1) // 2
+        l, r = 0, len(A)
+        while True:
+            i = (l + r) // 2; j = half - i
+            Aleft = A[i-1] if i > 0 else float("-inf")
+            Aright = A[i] if i < len(A) else float("inf")
+            Bleft = B[j-1] if j > 0 else float("-inf")
+            Bright = B[j] if j < len(B) else float("inf")
+            if Aleft <= Bright and Bleft <= Aright:
+                if total % 2: return float(max(Aleft, Bleft))
+                return (max(Aleft, Bleft) + min(Aright, Bright)) / 2
+            if Aleft > Bright: r = i - 1
+            else: l = i + 1`],
+	['median-of-two-sorted-arrays', 'NEAR-MISS left partition one too small', false, `class Solution:
+    def findMedianSortedArrays(self, nums1, nums2):
+        A, B = (nums1, nums2) if len(nums1) <= len(nums2) else (nums2, nums1)
+        total = len(A) + len(B); half = total // 2
+        l, r = 0, len(A)
+        while True:
+            i = (l + r) // 2; j = half - i
+            Aleft = A[i-1] if i > 0 else float("-inf")
+            Aright = A[i] if i < len(A) else float("inf")
+            Bleft = B[j-1] if j > 0 else float("-inf")
+            Bright = B[j] if j < len(B) else float("inf")
+            if Aleft <= Bright and Bleft <= Aright:
+                if total % 2: return float(max(Aleft, Bleft))
+                return (max(Aleft, Bleft) + min(Aright, Bright)) / 2
+            if Aleft > Bright: r = i - 1
+            else: l = i + 1`],
+	['median-of-two-sorted-arrays', 'NEAR-MISS integer division on an even total', false, `class Solution:
+    def findMedianSortedArrays(self, nums1, nums2):
+        m = sorted(nums1 + nums2); n = len(m)
+        if n % 2: return float(m[n//2])
+        return (m[n//2 - 1] + m[n//2]) // 2`],
+	['median-of-two-sorted-arrays', 'correct merge', true, `class Solution:
+    def findMedianSortedArrays(self, nums1, nums2):
+        m = sorted(nums1 + nums2); n = len(m)
+        return float(m[n//2]) if n % 2 else (m[n//2 - 1] + m[n//2]) / 2`]
 ];
 
 let bad = 0;

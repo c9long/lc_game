@@ -200,9 +200,39 @@ Two things assumed going in turned out to be wrong, both checked by running the 
 - Comparing against `nums[0]` is a genuine bug in `find-minimum-in-rotated-sorted-array` but is
   **benign** in `search-in-rotated-sorted-array`. The same-looking hint is wrong for one of them.
 
+### What batch 5 found
+
+Mostly thin margins rather than open holes: several near-misses already failed, but on one or two
+cases, which is one regeneration away from failing on none.
+
+| problem | the gap | after |
+|---|---|---|
+| `search-in-rotated-sorted-array` | on a two-element window `mid == lo`, so `nums[l] < nums[m]` takes the wrong branch. **1** case in 43 was length 2, and the bug scored **42/43** on the strength of it | the shape is now built outright: a rotated pair whose target is the smaller element |
+| `median-of-two-sorted-arrays` | `j = half - i` only goes negative when the array being searched is the longer one. Both sides drawn from 0..8 made that rare, so never swapping to the shorter array scored **41/42**. Total length 1, the smallest legal input, was absent | 12 heavily skewed pairs, 4 of total length 1 |
+| `find-minimum-in-rotated-sorted-array` | "rotated between 1 and n times" includes the identity, so a sorted array is legal — it is LeetCode's example 3, and the only shape that catches pivoting on `nums[0]` | 22 unrotated, 20 of length <= 2 |
+| `koko-eating-bananas` | `h == piles.length` is the tightest legal budget, where the answer is exactly `max(piles)`; **3** cases had it and **1** answered 1 | 10 and 10 |
+| `search-a-2d-matrix` | 1x1 is legal and absent; square matrices are where flattening with the row count is silently right | 3 one-by-one |
+| `binary-search` | **2** single-element arrays, the input a `while l < r` loop with `r = mid - 1` never examines | 6 |
+
+#### A crash in the judge itself
+
+Adding a median near-miss that returns `float("-inf")` did not fail — it took down the whole audit
+run. `json.dumps` writes `Infinity`, `-Infinity` and `NaN` happily, and `JSON.parse` accepts none
+of them, so the result never made it back across the boundary.
+
+The same boundary is in `src/lib/pyodide/worker.js`, which is the **browser judge**. Any solution
+returning an infinite sentinel — and binary-search and median problems invite exactly that — would
+have produced an opaque worker error instead of a failed case. `driver.py` now maps non-finite
+floats to their names in `json_safe`, so both the worker and the audit report them as ordinary
+wrong answers. Expected values are loaded from JSON and can never be non-finite, so the comparison
+stays correctly unequal.
+
+This is the second time a change made for the suites turned up a defect in the judge, after the RPN
+malformed-expression finding in batch 4.
+
 ## Status
 
-31 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
+38 of 150 audited. `pnpm run audit` re-runs every near-miss, and CI fails if one starts passing. Batches follow the tech tree, so the nodes in play are hardened first.
 
 ### Batch 1: Arrays & Hashing (9/9 audited)
 - [x] `contains-duplicate` — Easy
@@ -235,14 +265,14 @@ Two things assumed going in turned out to be wrong, both checked by running the 
 - [x] `daily-temperatures` — Medium
 - [x] `car-fleet` — Medium
 - [x] `largest-rectangle-in-histogram` — Hard
-### Batch 5: Binary Search (0/7 audited)
-- [ ] `binary-search` — Easy
-- [ ] `search-a-2d-matrix` — Medium
-- [ ] `koko-eating-bananas` — Medium
-- [ ] `find-minimum-in-rotated-sorted-array` — Medium
-- [ ] `search-in-rotated-sorted-array` — Medium
-- [ ] `time-based-key-value-store` — Medium
-- [ ] `median-of-two-sorted-arrays` — Hard
+### Batch 5: Binary Search (7/7 audited)
+- [x] `binary-search` — Easy
+- [x] `search-a-2d-matrix` — Medium
+- [x] `koko-eating-bananas` — Medium
+- [x] `find-minimum-in-rotated-sorted-array` — Medium
+- [x] `search-in-rotated-sorted-array` — Medium
+- [x] `time-based-key-value-store` — Medium
+- [x] `median-of-two-sorted-arrays` — Hard
 ### Batch 6: Linked List (0/11 audited)
 - [ ] `reverse-linked-list` — Easy
 - [ ] `merge-two-sorted-lists` — Easy
