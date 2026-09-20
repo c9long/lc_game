@@ -71,7 +71,21 @@ Phases 1 to 8 are implemented in one pass: repo hygiene, passkey auth, admin/coo
 - **Granary and Walls repurposed 2026-09-16**, since their effects were morale's. The Granary adds +1 timber and +1 stone to every solve's haul, after multipliers. The Walls (3 Hard solves) scale iron ×1.5 — the one material only Hard problems yield, and the one every late building is short of.
 - **Destroy** (added 2026-09-07) demolishes a building and refunds its **level 1 base cost only**, behind a confirmation dialog. Upgrade materials, Ingots and coins are not refunded, so levelling up stays a commitment while a misplaced building remains a mistake you can walk back.
 - **Three cities, 6x6, with terrain (added 2026-09-20).** One open 8x8 with no placement rules had a single best answer: fill it with Hash Markets. Arrays & Hashing is the root node, so they unlock first; they cost only timber and stone, which Mediums pour out; nothing capped them and nothing rewarded variety. The grid is now 6x6 and there are three of them, named for computer scientists: **Hopper's Humble Hamlet** (open from the start), **Knuth's Knotted Knolls** (1000 lifetime essence) and **Dijkstra's Dizzy Delta** (10000). A solve yields about 3 essence, one per topic tag, so these are long hauls on purpose: raised from 150 and 400 on 2026-09-20, which the first weeks of solving would have walked straight past — a city unlocked in a fortnight is just a bigger grid. Unlocking is derived from `totalEssence()` rather than stored, which finally gives essence — earned on every solve since the beginning and spent on nothing since the solution-view cost went — something to do. If essence ever gains a sink, that derivation needs a lifetime counter of its own.
-- **Terrain locks both ways.** A river tile takes only a Two-Pointer Bridge, a mountain only the DP Academy or DP Observatory, a forest only the Arboretum or Trie Library — and each of those buildings can be built *nowhere else*. So terrain is a budget of tiles per building rather than an obstacle to clear, and the cities differ in what they are rich in: Knuth's is mountain country, Dijkstra's is a river delta. The Trie Library sits in the forest with the Arboretum for now; building it inside another building, as an annex, is a later patch.
+- **Terrain locks both ways.** Each kind names the terrains it accepts (`terrain` on `BuildingKind`, absent meaning plains), and a tile takes only the kinds that name it. So terrain is a budget of tiles per building rather than an obstacle to clear, and the cities differ in what they are rich in: Knuth's is mountain country, Dijkstra's is a river delta. The Trie Library sits in the forest with the Arboretum for now; building it inside another building, as an annex, is a later patch.
+
+  | Kind | Stands on |
+  |---|---|
+  | Two-Pointer Bridge | river |
+  | Window Mill, Search Lighthouse | plains **or** river |
+  | Chain Foundry | plains **or** forest |
+  | Arboretum, Trie Library | forest |
+  | DP Academy, DP Observatory, Heap Mine | mountain |
+  | Interval Clocktower | plains, **and beside a river** |
+  | everything else | plains |
+
+  Shared ground was added on 2026-09-20, after the first version gave every kind exactly one terrain: rivers only ever held bridges and everything else crowded onto plains, which made terrain five private clubs rather than a landscape. `canStand(kind, city, x, y)` is the single predicate behind building, moving and relocation, so none of the three can be looser than the others, and `terrainLabel()` is the one place the rule is put into words. The Clocktower's `nearTerrain` is the first rule about a tile's *surroundings* rather than its ground: a town clock belongs over the water. The Heap Forge became the **Heap Mine** in the same change, when it went mountain-only — its id is still `heap-forge`, since D1 rows reference it.
+
+  Hopper's Hamlet grew from two peaks to four at the same time: the Academy, the Observatory and the Mine all want mountain, and two tiles between three kinds is not a choice.
 - **Diversity bonus (the anti-monoculture rule).** One building's output for an active day is
 
   ```
@@ -80,6 +94,8 @@ Phases 1 to 8 are implemented in one pass: repo hygiene, passkey auth, admin/coo
   ```
 
   capped in practice at ×1.6, since a tile has four neighbours. `DIVERSITY_BONUS_PER_KIND` and the whole formula live in `buildingYield()` in `src/lib/game/city.ts`, which `baseProduction()` sums — so the breakdown on a tile and the city header cannot drift apart.
+
+  **Roads** is the same ×1.25 whether it comes from Graph Roads or from a Two-Pointer Bridge, which pays both of its banks — the bridge's second job, added 2026-09-20, so a river is a lane worth building along rather than a gap in the map. It is a flag and not a count: roads *and* a bridge beside the same building is still ×1.25, which keeps the ceiling where it was.
 
   The point is what it does *not* pay for. **Identical neighbours are worth nothing**, so three Hash Markets in a row earn a flat 9/day, while swapping the middle one for a Stack Tower — same three tiles, same rates — earns 10.35. Every building counts as a kind, including the Granary, Walls, Monument and Graph Roads, so where the effect buildings go now matters too. Only tiles in the **same city** are neighbours: two cities sharing coordinates are not adjacent, and a building in storage has none.
 

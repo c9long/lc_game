@@ -204,7 +204,7 @@ fi
 # Cities and terrain. A building left over from the old open 8x8 is moved onto a tile that exists
 # and that its kind is allowed to stand on, the first time the city is loaded.
 $W execute lc-game --local --persist-to "$STATE" --command \
-  "INSERT OR IGNORE INTO buildings (id, kind, city, x, y, level, built_at) VALUES ('smoke-far','hut',0,7,7,2,$NOW), ('smoke-wet','pointer-bridge',0,4,0,1,$NOW);" >/dev/null
+  "INSERT OR IGNORE INTO buildings (id, kind, city, x, y, level, built_at) VALUES ('smoke-far','hut',0,7,7,2,$NOW), ('smoke-wet','pointer-bridge',0,4,0,1,$NOW), ('smoke-clock','interval-clock',0,3,1,1,$NOW), ('smoke-mill','window-mill',0,5,0,1,$NOW);" >/dev/null
 curl -s -o /dev/null -H "cookie: lc_session=$TOKEN" "$B/city"
 FAR=$(q "SELECT x || ',' || y AS at FROM buildings WHERE id='smoke-far'")
 WET=$(q "SELECT x || ',' || y AS at FROM buildings WHERE id='smoke-wet'")
@@ -229,6 +229,15 @@ wants build '{"kind":"hut","city":0,"x":9,"y":0}' bad_request "a tile off the 6x
 wants move '{"id":"smoke-far","city":0,"x":3,"y":0}' ok "a hut moves to a free plains tile"
 MOVED=$(q "SELECT x || ',' || y AS at FROM buildings WHERE id='smoke-far'")
 if [ "$MOVED" = "3,0" ]; then echo "ok   the move was written ($MOVED)"; else echo "FAIL move wrote $MOVED (want 3,0)"; fail=1; fi
+
+# The clocktower stands on plains, but only on the bank: (3,1) and (2,4) touch the river, (5,5) is dry.
+CLOCK=$(q "SELECT x || ',' || y AS at FROM buildings WHERE id='smoke-clock'")
+if [ "$CLOCK" = "3,1" ]; then echo "ok   a riverside clocktower was left where it stood"; else echo "FAIL the clocktower moved off (3,1) to $CLOCK"; fail=1; fi
+wants move '{"id":"smoke-clock","city":0,"x":5,"y":5}' terrain "a clocktower cannot be moved inland"
+wants move '{"id":"smoke-clock","city":0,"x":2,"y":4}' ok "a clocktower moves along the bank"
+# A mill names two terrains, so it is at home on the bank and on the water, and nowhere else.
+wants move '{"id":"smoke-mill","city":0,"x":2,"y":2}' ok "a mill moves onto the river"
+wants move '{"id":"smoke-mill","city":0,"x":0,"y":3}' terrain "a mill cannot be moved onto the mountain"
 
 # The resource bar overlays most views but is hidden while solving, drilling or reading the tree.
 has_bar() { curl -s -H "cookie: lc_session=$TOKEN" "$B$1" | grep -qi 'aria-label="Resources"' && echo yes || echo no; }

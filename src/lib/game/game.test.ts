@@ -14,6 +14,7 @@ import {
 	baseProduction,
 	buildingYield,
 	canAfford,
+	canStand,
 	cityUnlocked,
 	costAtLevel,
 	dailyCoins,
@@ -23,6 +24,7 @@ import {
 	relocate,
 	settleProduction,
 	terrainAt,
+	terrainLabel,
 	unlockedCities,
 	wellPlaced,
 	type PlacedBuilding
@@ -429,6 +431,22 @@ describe('per-building yield', () => {
 		expect(y.perDay).toBeCloseTo(1.25 * 1.15); // the roads are also a different kind next door
 	});
 
+	it('pays both banks of a Two-Pointer Bridge, and does not stack with roads', () => {
+		// The bridge earns coins AND carries the roads bonus across to its neighbours: (1,1) is water.
+		const banks = [
+			{ id: 'a', kind: 'hut', city: 0, x: 1, y: 0, level: 1 },
+			{ id: 'w', kind: 'pointer-bridge', city: 0, x: 1, y: 1, level: 1 }
+		];
+		expect(buildingYield(banks[0], banks, tree).adjacency).toBe(1.25);
+
+		// Roads on the other side as well. The bonus is a flag, not a count, so it stays at 1.25 --
+		// only the diversity multiplier notices the second neighbour.
+		const both = [...banks, { id: 'r', kind: 'graph-roads', city: 0, x: 0, y: 0, level: 1 }];
+		const y = buildingYield(both[0], both, tree);
+		expect(y.adjacency).toBe(1.25);
+		expect(y.perDay).toBeCloseTo(1.25 * (1 + 2 * DIVERSITY_BONUS_PER_KIND));
+	});
+
 	it('reports nothing for a building that produces no coins', () => {
 		const placed = [{ id: 'g', kind: 'granary', city: 0, x: 0, y: 0, level: 1 }];
 		expect(buildingYield(placed[0], placed, tree).perDay).toBe(0);
@@ -564,6 +582,56 @@ describe('cities and terrain', () => {
 		expect(buildingYield(stored[0], stored, tree).perDay).toBe(0);
 		expect(dailyCoins(stored, tree)).toBe(0);
 	});
+
+	it('lets a kind name more than one terrain, and still refuses the rest', () => {
+		// Shared ground: a watermill and a harbour light belong on the bank or on the water.
+		for (const kind of ['window-mill', 'search-lighthouse']) {
+			expect(fitsTerrain(kind, 'plains')).toBe(true);
+			expect(fitsTerrain(kind, 'river')).toBe(true);
+			expect(fitsTerrain(kind, 'mountain')).toBe(false);
+			expect(fitsTerrain(kind, 'forest')).toBe(false);
+		}
+		expect(fitsTerrain('chain-foundry', 'forest')).toBe(true);
+		expect(fitsTerrain('chain-foundry', 'plains')).toBe(true);
+		expect(fitsTerrain('chain-foundry', 'river')).toBe(false);
+		// And the exclusives stay exclusive.
+		expect(fitsTerrain('heap-forge', 'mountain')).toBe(true);
+		expect(fitsTerrain('heap-forge', 'plains')).toBe(false);
+		expect(fitsTerrain('arboretum', 'plains')).toBe(false);
+
+		expect(terrainLabel('window-mill')).toBe('plains or river');
+		expect(terrainLabel('heap-forge')).toBe('mountain only');
+		expect(terrainLabel('hut')).toBe('plains');
+		expect(terrainLabel('interval-clock')).toBe('plains beside a river');
+	});
+
+	it('puts the clocktower on the bank but never in the water', () => {
+		const placed: PlacedBuilding[] = [];
+		// (3,1) and (2,4) are plains with a river tile beside them; (5,5) is dry inland.
+		expect(canStand('interval-clock', 0, 3, 1)).toBe(true);
+		expect(canStand('interval-clock', 0, 2, 4)).toBe(true);
+		expect(canStand('interval-clock', 0, 5, 5)).toBe(false);
+		expect(placementError('interval-clock', 0, 3, 1, placed, 0)).toBeNull();
+		expect(placementError('interval-clock', 0, 5, 5, placed, 0)).toMatchObject({
+			error: 'terrain',
+			message: 'must stand beside a river'
+		});
+		// Plains-only: the river itself is still out, near or not.
+		expect(placementError('interval-clock', 0, 2, 2, placed, 0)?.error).toBe('terrain');
+	});
+
+	it('leaves somewhere in the first city for every kind to stand', () => {
+		// The terrain budget is deliberately tight, but a kind you can never place anywhere is a bug,
+		// not a design: this catches a map edit that paves over the last peak or the last wood.
+		for (const kind of BUILDINGS) {
+			const homes = [];
+			for (let y = 0; y < GRID_SIZE; y++) {
+				for (let x = 0; x < GRID_SIZE; x++) if (canStand(kind.id, 0, x, y)) homes.push([x, y]);
+			}
+			expect(homes.length, `${kind.name} has nowhere to stand in ${CITIES[0].name}`).toBeGreaterThan(0);
+		}
+	});
+
 });
 
 describe('relocation onto the smaller map', () => {
@@ -591,6 +659,19 @@ describe('relocation onto the smaller map', () => {
 		for (const m of moves) Object.assign(placed.find((p) => p.id === m.id)!, m);
 		expect(relocate(placed)).toEqual([]);
 		expect(placed.every(wellPlaced)).toBe(true);
+	});
+
+	it('walks a building onto the ground its kind now needs', () => {
+		// Both were legal before terrain tightened: the mine was on plains, the clock inland.
+		const placed = [b('m', 'heap-forge', 0, 0, 0, 2), b('c', 'interval-clock', 0, 5, 5)];
+		const moves = relocate(placed);
+		expect(moves).toHaveLength(2);
+		for (const m of moves) Object.assign(placed.find((p) => p.id === m.id)!, m);
+		expect(terrainAt(0, placed[0].x, placed[0].y)).toBe('mountain');
+		expect(placed[0].level).toBe(2); // the upgrade survives the move
+		expect(canStand('interval-clock', 0, placed[1].x, placed[1].y)).toBe(true);
+		expect(placed.every(wellPlaced)).toBe(true);
+		expect(relocate(placed)).toEqual([]);
 	});
 
 	it('stores what will not fit, biggest buildings keeping their tiles', () => {

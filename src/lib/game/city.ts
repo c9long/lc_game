@@ -17,15 +17,20 @@ export interface BuildingKind {
 	node?: string;
 	effect?: BuildingEffect;
 	maxLevel: number;
+	/** The terrains this kind may stand on. Absent means plains, and only plains. */
+	terrain?: Terrain[];
+	/** And it must have this terrain on one of the four tiles beside it. */
+	nearTerrain?: Terrain;
 }
 
-export type BuildingEffect = 'adjacency' | 'hauls' | 'ironworks' | 'monument';
+export type BuildingEffect = 'adjacency' | 'crossing' | 'hauls' | 'ironworks' | 'monument';
 
 /** What each effect does, for the city page. The Granary and Walls were repurposed on 2026-09-16
  *  when morale went: the Granary held freeze days and Walls halved morale loss, and neither had
  *  anything left to do. Their new effects live in awards.ts, where the haul is computed. */
 export const EFFECT_TEXT: Record<BuildingEffect, string> = {
 	adjacency: 'neighbouring buildings produce ×1.25',
+	crossing: 'buildings on either bank produce ×1.25',
 	hauls: '+1 timber and +1 stone on every solve',
 	ironworks: '×1.5 iron from Hard solves',
 	monument: 'a monument'
@@ -47,20 +52,6 @@ export const TERRAIN_META: Record<Terrain, { label: string; emoji: string }> = {
 	mountain: { label: 'mountain', emoji: '⛰️' },
 	forest: { label: 'forest', emoji: '🌲' }
 };
-
-/** Which kinds each terrain takes. The lock runs both ways: a kind named here can ONLY be built on
- *  its terrain, and its terrain takes nothing else. Rivers, peaks and woods are therefore a budget
- *  of tiles for those buildings rather than obstacles to clear. */
-export const TERRAIN_BUILDINGS: Record<Exclude<Terrain, 'plains'>, string[]> = {
-	river: ['pointer-bridge'],
-	mountain: ['dp-academy', 'dp-observatory'],
-	forest: ['arboretum', 'trie-library']
-};
-
-/** The same rule read the other way: kind -> the only terrain it fits. Absent means plains. */
-export const TERRAIN_FOR_KIND = new Map<string, Terrain>(
-	Object.entries(TERRAIN_BUILDINGS).flatMap(([t, ids]) => ids.map((id) => [id, t as Terrain] as const))
-);
 
 export interface City {
 	id: number;
@@ -85,7 +76,9 @@ export const CITIES: City[] = [
 		name: "Hopper's Humble Hamlet",
 		honoree: 'Grace Hopper',
 		essence: 0,
-		terrain: ['......', '.~~...', '..~*..', '..~**.', '^.....', '^.....']
+		// A south-west massif of four peaks: the DP Academy, the Observatory and the Heap Mine all
+		// want mountain, and two tiles between the three of them left no room to choose.
+		terrain: ['......', '.~~...', '..~*..', '^.~**.', '^.....', '^^....']
 	},
 	{
 		id: 1,
@@ -112,20 +105,22 @@ export const STORAGE = -1;
 export const BUILDINGS: BuildingKind[] = [
 	{ id: 'hut', name: 'Hut', emoji: '🛖', cost: { timber: 5 }, coins: 1, maxLevel: 3 },
 	{ id: 'hash-market', name: 'Hash Market', emoji: '🏪', cost: { timber: 10, stone: 5 }, gate: { node: 'arrays-hashing', status: 'unlocked' }, coins: 3, node: 'arrays-hashing', maxLevel: 3 },
-	{ id: 'pointer-bridge', name: 'Two-Pointer Bridge', emoji: '🌉', cost: { stone: 8 }, gate: { node: 'two-pointers', status: 'unlocked' }, coins: 2, node: 'two-pointers', maxLevel: 3 },
+	{ id: 'pointer-bridge', name: 'Two-Pointer Bridge', emoji: '🌉', cost: { stone: 8 }, gate: { node: 'two-pointers', status: 'unlocked' }, coins: 2, node: 'two-pointers', effect: 'crossing', maxLevel: 3, terrain: ['river'] },
 	{ id: 'stack-tower', name: 'Stack Tower', emoji: '🗼', cost: { stone: 10 }, gate: { node: 'stack', status: 'unlocked' }, coins: 3, node: 'stack', maxLevel: 3 },
-	{ id: 'search-lighthouse', name: 'Search Lighthouse', emoji: '🗼', cost: { stone: 12 }, gate: { node: 'binary-search', status: 'unlocked' }, coins: 4, node: 'binary-search', maxLevel: 3 },
-	{ id: 'window-mill', name: 'Window Mill', emoji: '🏭', cost: { timber: 12, stone: 6 }, gate: { node: 'sliding-window', status: 'unlocked' }, coins: 4, node: 'sliding-window', maxLevel: 3 },
-	{ id: 'chain-foundry', name: 'Chain Foundry', emoji: '⛓️', cost: { stone: 12, iron: 2 }, gate: { node: 'linked-list', status: 'unlocked' }, coins: 4, node: 'linked-list', maxLevel: 3 },
-	{ id: 'arboretum', name: 'Arboretum', emoji: '🌳', cost: { stone: 15, iron: 5 }, gate: { node: 'trees', status: 'unlocked' }, coins: 6, node: 'trees', maxLevel: 3 },
-	{ id: 'trie-library', name: 'Trie Library', emoji: '📚', cost: { stone: 10, iron: 5 }, gate: { node: 'tries', status: 'unlocked' }, coins: 5, node: 'tries', maxLevel: 3 },
-	{ id: 'heap-forge', name: 'Heap Forge', emoji: '⚒️', cost: { stone: 15, iron: 6 }, gate: { node: 'heap', status: 'unlocked' }, coins: 6, node: 'heap', maxLevel: 3 },
+	{ id: 'search-lighthouse', name: 'Search Lighthouse', emoji: '🗼', cost: { stone: 12 }, gate: { node: 'binary-search', status: 'unlocked' }, coins: 4, node: 'binary-search', maxLevel: 3, terrain: ['plains', 'river'] },
+	{ id: 'window-mill', name: 'Window Mill', emoji: '🏭', cost: { timber: 12, stone: 6 }, gate: { node: 'sliding-window', status: 'unlocked' }, coins: 4, node: 'sliding-window', maxLevel: 3, terrain: ['plains', 'river'] },
+	{ id: 'chain-foundry', name: 'Chain Foundry', emoji: '⛓️', cost: { stone: 12, iron: 2 }, gate: { node: 'linked-list', status: 'unlocked' }, coins: 4, node: 'linked-list', maxLevel: 3, terrain: ['plains', 'forest'] },
+	{ id: 'arboretum', name: 'Arboretum', emoji: '🌳', cost: { stone: 15, iron: 5 }, gate: { node: 'trees', status: 'unlocked' }, coins: 6, node: 'trees', maxLevel: 3, terrain: ['forest'] },
+	{ id: 'trie-library', name: 'Trie Library', emoji: '📚', cost: { stone: 10, iron: 5 }, gate: { node: 'tries', status: 'unlocked' }, coins: 5, node: 'tries', maxLevel: 3, terrain: ['forest'] },
+	// Renamed from the Heap Forge on 2026-09-20 when it became mountain-only: you mine a heap.
+	{ id: 'heap-forge', name: 'Heap Mine', emoji: '⛏️', cost: { stone: 15, iron: 6 }, gate: { node: 'heap', status: 'unlocked' }, coins: 6, node: 'heap', maxLevel: 3, terrain: ['mountain'] },
 	{ id: 'maze', name: 'Backtracking Maze', emoji: '🌀', cost: { stone: 15, iron: 6 }, gate: { node: 'backtracking', status: 'unlocked' }, coins: 6, node: 'backtracking', maxLevel: 3 },
 	{ id: 'graph-roads', name: 'Graph Roads', emoji: '🛣️', cost: { stone: 15, iron: 5 }, gate: { node: 'graphs', status: 'unlocked' }, coins: 2, node: 'graphs', effect: 'adjacency', maxLevel: 1 },
-	{ id: 'dp-academy', name: 'DP Academy', emoji: '🏫', cost: { stone: 20, iron: 10 }, gate: { node: 'dp-1d', status: 'unlocked' }, coins: 10, node: 'dp-1d', maxLevel: 3 },
-	{ id: 'dp-observatory', name: 'DP Observatory', emoji: '🔭', cost: { stone: 25, iron: 12 }, gate: { node: 'dp-2d', status: 'unlocked' }, coins: 12, node: 'dp-2d', maxLevel: 3 },
+	{ id: 'dp-academy', name: 'DP Academy', emoji: '🏫', cost: { stone: 20, iron: 10 }, gate: { node: 'dp-1d', status: 'unlocked' }, coins: 10, node: 'dp-1d', maxLevel: 3, terrain: ['mountain'] },
+	{ id: 'dp-observatory', name: 'DP Observatory', emoji: '🔭', cost: { stone: 25, iron: 12 }, gate: { node: 'dp-2d', status: 'unlocked' }, coins: 12, node: 'dp-2d', maxLevel: 3, terrain: ['mountain'] },
 	{ id: 'greedy-market', name: 'Greedy Bazaar', emoji: '🎪', cost: { stone: 12, iron: 4 }, gate: { node: 'greedy', status: 'unlocked' }, coins: 5, node: 'greedy', maxLevel: 3 },
-	{ id: 'interval-clock', name: 'Interval Clocktower', emoji: '🕰️', cost: { stone: 12, iron: 4 }, gate: { node: 'intervals', status: 'unlocked' }, coins: 5, node: 'intervals', maxLevel: 3 },
+	// A town clock is built where the town gathers, which is the water: plains, but on the bank.
+	{ id: 'interval-clock', name: 'Interval Clocktower', emoji: '🕰️', cost: { stone: 12, iron: 4 }, gate: { node: 'intervals', status: 'unlocked' }, coins: 5, node: 'intervals', maxLevel: 3, nearTerrain: 'river' },
 	{ id: 'bit-workshop', name: 'Bit Workshop', emoji: '🔧', cost: { iron: 10 }, gate: { node: 'bit-manipulation', status: 'unlocked' }, coins: 6, node: 'bit-manipulation', maxLevel: 3 },
 	{ id: 'geometry-hall', name: 'Geometry Hall', emoji: '📐', cost: { stone: 20, iron: 10 }, gate: { node: 'math-geometry', status: 'unlocked' }, coins: 8, node: 'math-geometry', maxLevel: 3 },
 	{ id: 'granary', name: 'Granary', emoji: '🌾', cost: { timber: 10, stone: 10 }, coins: 0, effect: 'hauls', maxLevel: 1 },
@@ -192,13 +187,51 @@ export function terrainAt(city: number, x: number, y: number): Terrain | null {
 	return TERRAIN_BY_CHAR[c.terrain[y][x]] ?? 'plains';
 }
 
-/** The terrain a kind needs. Anything not spoken for by TERRAIN_BUILDINGS belongs on plains. */
-export function terrainFor(kindId: string): Terrain {
-	return TERRAIN_FOR_KIND.get(kindId) ?? 'plains';
+/** The terrains a kind may stand on. A kind that names none belongs on plains.
+ *
+ *  The lock still runs both ways: a terrain takes exactly the kinds that name it, so a river tile
+ *  refuses anything without `river` in its list and plains refuse the Arboretum. What changed on
+ *  2026-09-20 is that a kind may name more than one, so the mill and the lighthouse are at home
+ *  on either the bank or the water, and terrain is a landscape rather than five private clubs. */
+export function terrainsFor(kindId: string): Terrain[] {
+	return BUILDING_BY_ID.get(kindId)?.terrain ?? ['plains'];
 }
 
 export function fitsTerrain(kindId: string, terrain: Terrain): boolean {
-	return terrainFor(kindId) === terrain;
+	return terrainsFor(kindId).includes(terrain);
+}
+
+/** The terrain a kind must have beside it, over and above the ground it stands on. */
+export function nearTerrainFor(kindId: string): Terrain | null {
+	return BUILDING_BY_ID.get(kindId)?.nearTerrain ?? null;
+}
+
+/** How the rule reads in a sentence, for the catalog and the error messages. */
+export function terrainLabel(kindId: string): string {
+	const near = nearTerrainFor(kindId);
+	const terrains = terrainsFor(kindId);
+	const ground = terrains.map((t) => TERRAIN_META[t].label).join(' or ');
+	if (near) return `${ground} beside a ${TERRAIN_META[near].label}`;
+	return terrains.length === 1 && terrains[0] !== 'plains' ? `${ground} only` : ground;
+}
+
+/** Does this tile have `terrain` on one of its four orthogonal neighbours? */
+export function terrainBeside(city: number, x: number, y: number, terrain: Terrain): boolean {
+	return [
+		[x + 1, y],
+		[x - 1, y],
+		[x, y + 1],
+		[x, y - 1]
+	].some(([nx, ny]) => terrainAt(city, nx, ny) === terrain);
+}
+
+/** May this kind stand on this tile, ground and surroundings both? The single predicate behind
+ *  placement, moving and relocation, so none of the three can be looser than the others. */
+export function canStand(kindId: string, city: number, x: number, y: number): boolean {
+	const terrain = terrainAt(city, x, y);
+	if (!terrain || !fitsTerrain(kindId, terrain)) return false;
+	const near = nearTerrainFor(kindId);
+	return !near || terrainBeside(city, x, y, near);
 }
 
 /** How many cities the essence earned so far has founded. Essence is never spent, so the balance
@@ -232,19 +265,23 @@ export function placementError(
 	const terrain = terrainAt(city, x, y);
 	if (!terrain) return { error: 'bad_request', message: 'off the grid' };
 	if (!fitsTerrain(kindId, terrain)) {
-		const needs = terrainFor(kindId);
-		const message =
-			needs === 'plains'
-				? `cannot be built on ${TERRAIN_META[terrain].label}`
-				: `can only be built on ${TERRAIN_META[needs].label}`;
-		return { error: 'terrain', message };
+		return { error: 'terrain', message: `cannot be built on ${TERRAIN_META[terrain].label} — ${terrainLabel(kindId)}` };
+	}
+	const near = nearTerrainFor(kindId);
+	if (near && !terrainBeside(city, x, y, near)) {
+		return { error: 'terrain', message: `must stand beside a ${TERRAIN_META[near].label}` };
 	}
 	if (placed.some((b) => b.city === city && b.x === x && b.y === y)) return { error: 'occupied', message: 'tile is occupied' };
 	return null;
 }
 
-/** Coins produced by the city for one active day. */
+/** Coins produced by the city for one active day. Graph Roads and Two-Pointer Bridges both grant
+ *  it to their neighbours, and it does NOT stack: roads and a bridge beside the same building is
+ *  still ×1.25, so the ceiling stays where it was rather than a roads/bridge sandwich running away. */
 export const ROAD_ADJACENCY_BONUS = 1.25;
+
+/** The effects that hand ROAD_ADJACENCY_BONUS to the four tiles around them. */
+const ADJACENCY_EFFECTS = new Set<BuildingEffect>(['adjacency', 'crossing']);
 
 /** Each DIFFERENT kind of building next door adds this much. Four distinct neighbours is ×1.6.
  *  This is what a street of nothing but Hash Markets gives up: identical neighbours add nothing,
@@ -257,7 +294,7 @@ export interface BuildingYield {
 	base: number;
 	/** The node's freshness, or 1 for a building not tied to a node. */
 	freshness: number;
-	/** ROAD_ADJACENCY_BONUS when it neighbours Graph Roads, else 1. */
+	/** ROAD_ADJACENCY_BONUS when it neighbours Graph Roads or a bridge, else 1. */
 	adjacency: number;
 	/** 1 + DIVERSITY_BONUS_PER_KIND per distinct neighbouring kind other than its own. */
 	diversity: number;
@@ -288,7 +325,10 @@ export function buildingYield(
 	);
 	const base = kind.coins * b.level;
 	const freshness = kind.node ? (tree.get(kind.node)?.freshness ?? 1) : 1;
-	const adjacency = neighbours.some((p) => BUILDING_BY_ID.get(p.kind)?.effect === 'adjacency')
+	const adjacency = neighbours.some((p) => {
+		const effect = BUILDING_BY_ID.get(p.kind)?.effect;
+		return effect !== undefined && ADJACENCY_EFFECTS.has(effect);
+	})
 		? ROAD_ADJACENCY_BONUS
 		: 1;
 	const distinct = new Set(neighbours.map((p) => p.kind).filter((k) => k !== b.kind)).size;
@@ -316,8 +356,7 @@ export interface Relocation {
 /** Is this building standing somewhere it is allowed to stand? */
 export function wellPlaced(b: PlacedBuilding): boolean {
 	if (b.city === STORAGE) return true;
-	const terrain = terrainAt(b.city, b.x, b.y);
-	return terrain !== null && fitsTerrain(b.kind, terrain);
+	return canStand(b.kind, b.city, b.x, b.y);
 }
 
 /**
@@ -348,7 +387,7 @@ export function relocate(placed: PlacedBuilding[]): Relocation[] {
 		for (let y = 0; y < GRID_SIZE; y++) {
 			for (let x = 0; x < GRID_SIZE; x++) {
 				if (taken.has(`${city},${x},${y}`)) continue;
-				if (!fitsTerrain(b.kind, terrainAt(city, x, y)!)) continue;
+				if (!canStand(b.kind, city, x, y)) continue;
 				const d = Math.abs(x - b.x) + Math.abs(y - b.y);
 				if (!best || d < best.d) best = { x, y, d };
 			}

@@ -3,6 +3,9 @@
 	import { invalidateAll } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/ConfirmDialog.svelte';
 	import { RESOURCE_META, formatCost } from '$lib/game/resources';
+	// The placement rules are shared with the server rather than restated here, so the catalog a
+	// tile offers and the tile the API accepts are decided by the same function.
+	import { TERRAIN_META, canStand, terrainAt, type Terrain } from '$lib/game/city';
 	let { data } = $props();
 	let cityId = $state(0);
 	let selected = $state<{ x: number; y: number } | null>(null);
@@ -29,13 +32,9 @@
 
 	const city = $derived(data.cities.find((c) => c.id === cityId) ?? data.cities[0]);
 	const at = (x: number, y: number) => data.buildings.find((b) => b.city === cityId && b.x === x && b.y === y);
-	const terrainAt = (x: number, y: number) => TERRAIN[city.terrain[y][x]] ?? 'plains';
+	const groundAt = (x: number, y: number): Terrain => terrainAt(cityId, x, y) ?? 'plains';
 	const essence = $derived(Object.entries(data.resources).filter(([k, v]) => k.startsWith('essence:') && v > 0));
 	const cells = $derived(Array.from({ length: data.size * data.size }, (_, i) => ({ x: i % data.size, y: Math.floor(i / data.size) })));
-
-	/** Mirrors TERRAIN_BY_CHAR in city.ts: the map is drawn as characters, one per tile. */
-	const TERRAIN: Record<string, 'plains' | 'river' | 'mountain' | 'forest'> = { '.': 'plains', '~': 'river', '^': 'mountain', '*': 'forest' };
-	const TERRAIN_EMOJI = { plains: '', river: '🌊', mountain: '⛰️', forest: '🌲' };
 
 	/** Demolition is irreversible and refunds only the level 1 cost, so it asks first. */
 	let pendingDestroy = $state<null | { id: string; name: string; level: number; refund: Record<string, number> }>(null);
@@ -109,7 +108,11 @@
 			<p><strong>Coins per active day</strong> = rate × level × freshness × roads × neighbours.</p>
 			<ul>
 				<li><strong>Freshness</strong> — the share of that building's node that is not overdue. Refreshing restores it.</li>
-				<li><strong>Roads</strong> — ×1.25 on the four tiles around Graph Roads.</li>
+				<li>
+					<strong>Roads</strong> — ×1.25 on the four tiles around Graph Roads, and the same around a
+					Two-Pointer Bridge, which pays both of its banks. The two do not stack: one of each beside the
+					same building is still ×1.25.
+				</li>
 				<li>
 					<strong>Neighbours</strong> — ×1.15 for each <em>different</em> kind of building on the four tiles
 					beside it, up to ×1.6. Two of the same kind side by side add nothing to each other, so a mixed
@@ -117,9 +120,11 @@
 				</li>
 			</ul>
 			<p class="muted">
-				Terrain is fixed: a river takes only a Two-Pointer Bridge, a mountain only the DP Academy or
-				Observatory, a forest only the Arboretum or Trie Library — and those go nowhere else. Essence founds
-				new cities. Moving a building is free; destroying one refunds its level 1 cost only.
+				Terrain is fixed, and each kind names the ground it accepts: the mill and the lighthouse stand on
+				plains or river, the foundry on plains or forest, the Heap Mine and the DP buildings only on
+				mountain, the clocktower on plains but only beside the water. A tile takes nothing that does not
+				name it. Essence founds new cities. Moving a building is free; destroying one refunds its level 1
+				cost only.
 			</p>
 			<button onclick={closeHelp}>Got it</button>
 		</div>
@@ -132,7 +137,7 @@
 		<div class="board" style="grid-template-columns: repeat({data.size}, 1fr)">
 			{#each cells as c (`${c.x},${c.y}`)}
 				{@const b = at(c.x, c.y)}
-				{@const t = terrainAt(c.x, c.y)}
+				{@const t = groundAt(c.x, c.y)}
 				<button
 					class="cell {t}"
 					class:selected={selected?.x === c.x && selected?.y === c.y}
@@ -141,7 +146,7 @@
 					title={b ? `${b.name} L${b.level} on ${t}` : t}
 				>
 					{#if b}<span class="emoji">{b.emoji}</span><span class="lvl">{b.level}</span>
-					{:else if t !== 'plains'}<span class="terrain">{TERRAIN_EMOJI[t]}</span>{/if}
+					{:else if t !== 'plains'}<span class="terrain">{TERRAIN_META[t].emoji}</span>{/if}
 				</button>
 			{/each}
 		</div>
@@ -165,7 +170,7 @@
 			<p class="muted">Select a tile to build or upgrade.</p>
 		{:else}
 			{@const b = at(selected.x, selected.y)}
-			{@const t = terrainAt(selected.x, selected.y)}
+			{@const t = groundAt(selected.x, selected.y)}
 			{#if b}
 				<h3>{b.emoji} {b.name} <span class="muted">level {b.level}</span></h3>
 				{#if b.rate > 0}
@@ -173,7 +178,7 @@
 					<p class="muted breakdown">
 						{b.rate} base × level {b.level} = {fmtCoins(b.yield.base)}
 						{#if b.hasNode}<br />× freshness {Math.round(b.yield.freshness * 100)}%{/if}
-						{#if b.yield.adjacency > 1}<br /><span title="Graph Roads on a neighbouring tile">× roads ×{b.yield.adjacency}</span>{/if}
+						{#if b.yield.adjacency > 1}<br /><span title="Graph Roads or a Two-Pointer Bridge on a neighbouring tile">× roads ×{b.yield.adjacency}</span>{/if}
 						{#if b.yield.diversity > 1}<br /><span title="×1.15 for each different kind of building on the four tiles beside this one, up to ×1.6">× neighbours ×{b.yield.diversity.toFixed(2)}</span>{/if}
 					</p>
 					{#if b.hasNode && b.yield.freshness < 1}
@@ -197,9 +202,9 @@
 					<button class="destructive" disabled={busy} onclick={() => destroy(b)}>Destroy</button>
 				</div>
 			{:else}
-				{@const fits = data.catalog.filter((k) => k.terrain === t)}
+				{@const fits = data.catalog.filter((k) => canStand(k.id, cityId, selected!.x, selected!.y))}
 				<h3>Build at ({selected.x}, {selected.y})</h3>
-				<p class="muted small">{TERRAIN_EMOJI[t]} {t}{t === 'plains' ? '' : ' — nothing else can be built here'}</p>
+				<p class="muted small">{TERRAIN_META[t].emoji} {t} — {fits.length} of the {data.catalog.length} kinds can stand here</p>
 				<ul class="catalog">
 					{#each fits as k (k.id)}
 						<li class:disabled={!k.gated || !k.affordable}>
@@ -208,7 +213,7 @@
 								<span class="muted">{k.coins ? `${k.coins} coins/day` : k.effect}</span>
 								<button disabled={busy || !k.gated || !k.affordable} onclick={() => post('/api/city/build', { kind: k.id, city: cityId, x: selected!.x, y: selected!.y })}>Build</button>
 							</div>
-							<div class="muted small">{fmtCost(k.cost)}{k.gateText ? ` · needs ${k.gateText}` : ''}{k.nodeFreshness !== null && k.nodeFreshness < 1 ? ` · freshness ${Math.round(k.nodeFreshness * 100)}%` : ''}</div>
+							<div class="muted small">{fmtCost(k.cost)} · {k.terrainLabel}{k.gateText ? ` · needs ${k.gateText}` : ''}{k.nodeFreshness !== null && k.nodeFreshness < 1 ? ` · freshness ${Math.round(k.nodeFreshness * 100)}%` : ''}</div>
 						</li>
 					{/each}
 				</ul>

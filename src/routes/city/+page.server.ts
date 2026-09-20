@@ -15,7 +15,9 @@ import {
 	cityUnlocked,
 	dailyCoins,
 	gateSatisfied,
-	terrainFor
+	nearTerrainFor,
+	terrainLabel,
+	terrainsFor
 } from '$lib/game/city';
 import { totalEssence } from '$lib/game/resources';
 import { NODE_BY_ID } from '$lib/game/curriculum';
@@ -27,7 +29,7 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 	const ctx = { tree: snap.tree, totalSolves: snap.totalSolves, hardSolves: snap.hardSolves };
 	const essence = totalEssence(snap.resources);
 	const catalog = BUILDINGS.map((b) => {
-		const terrain = terrainFor(b.id);
+		const terrains = terrainsFor(b.id);
 		return {
 			id: b.id,
 			name: b.name,
@@ -36,9 +38,10 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 			effect: b.effect ? EFFECT_TEXT[b.effect] : null,
 			maxLevel: b.maxLevel,
 			cost: costAtLevel(b, 1),
-			terrain,
-			terrainLabel: TERRAIN_META[terrain].label,
-			terrainEmoji: TERRAIN_META[terrain].emoji,
+			terrains,
+			nearTerrain: nearTerrainFor(b.id),
+			terrainLabel: terrainLabel(b.id),
+			terrainEmoji: terrains.length === 1 ? TERRAIN_META[terrains[0]].emoji : '',
 			gateText: !b.gate
 				? ''
 				: 'node' in b.gate
@@ -63,7 +66,7 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 			refund: costAtLevel(kind, 1),
 			rate: kind.coins,
 			hasNode: Boolean(kind.node),
-			terrain: terrainFor(kind.id),
+			terrainLabel: terrainLabel(kind.id),
 			effect: kind.effect ? EFFECT_TEXT[kind.effect] : null,
 			// Computed with the same function the city total sums, so the two always agree.
 			yield: buildingYield(p, snap.buildings, snap.tree)
