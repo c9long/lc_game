@@ -28,7 +28,7 @@
       "hint": null,
       "api": "assignment",
       "url": "https://docs.python.org/3.12/tutorial/introduction.html",
-      "explain": "The right-hand side is evaluated fully before anything is assigned, so `a, b = b, a` builds the tuple `(2, 1)` from the old values and only then unpacks it. No temporary variable needed."
+      "explain": "The right-hand side is evaluated fully before anything is assigned, so `a, b = b, a` builds a tuple from the OLD values and only then unpacks it. No temporary variable needed."
     },
     {
       "id": "hand-py-fund-floordiv",
@@ -106,7 +106,7 @@
       "hint": null,
       "api": "%",
       "url": "https://docs.python.org/3.12/tutorial/introduction.html",
-      "explain": "Python's `%` always takes the sign of the RIGHT operand, so -7 % 3 is 2, not -1 as in C or Java. Useful for wrapping an index: `i % n` is always in range."
+      "explain": "Python's `%` always takes the sign of the RIGHT operand, so a negative number modulo a positive one comes back positive, where C and Java would give you a negative. Useful for wrapping an index: `i % n` is always in range."
     },
     {
       "id": "hand-py-fund-divmod",
@@ -600,7 +600,7 @@
       "hint": null,
       "api": "range",
       "url": "https://docs.python.org/3.12/library/stdtypes.html#range",
-      "explain": "With a negative step the range counts down, and the end is still exclusive, so `range(3, 0, -1)` stops at 1 and never reaches 0."
+      "explain": "With a negative step the range counts down, and the end is still exclusive, so the range stops before the end value and never includes it."
     },
     {
       "id": "hand-py-fund-accumulate",
@@ -756,7 +756,7 @@
       "hint": null,
       "api": "comparison",
       "url": "https://docs.python.org/3.12/library/stdtypes.html#comparisons",
-      "explain": "Comparisons chain the way they do in mathematics: `1 < 2 < 3` means `1 < 2 and 2 < 3`, and the middle value is only evaluated once."
+      "explain": "Comparisons chain the way they do in mathematics: `a < b < c` means `a < b and b < c`, and the middle value is only evaluated once."
     },
     {
       "id": "hand-py-fund-not-empty",
