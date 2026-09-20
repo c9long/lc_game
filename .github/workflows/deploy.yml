@@ -48,6 +48,11 @@ jobs:
       - name: Unit tests
         run: pnpm test
 
+      # Drill answers are produced by executing the code, never written by hand, so the way to check
+      # them is to execute it again — for the hand-written drills and every generated instance.
+      - name: Verify drills
+        run: pnpm drills:verify
+
       - name: Verify generated test suites
         run: python3 scripts/verify-tests.py
 
