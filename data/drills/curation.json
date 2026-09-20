@@ -1,6 +1,7 @@
 {
   "_comment": "Hand curation over the mined bank. exclude: drill ids to drop. maxPerModule: cap per docs page. extra: hand-written drills (same shape).",
-  "exclude": [],
+  "exclude": ["31f27b61f711"],
+  "_exclude_comment": "31f27b61f711 prints three lines, and the answer box is a single line, so it could never be answered correctly.",
   "maxPerModule": 60,
   "extra": [
     {

@@ -5,7 +5,7 @@ import { drillAttempts, drillState, planItems, type User } from '../db/schema';
 import { randomId } from '../crypto';
 import { addResourceStatement, getState, setState } from './state';
 import { DRILL_BANKS, DRILL_LANGS, drillById } from '$lib/game/drillbank';
-import { afterDrill, buildDrillSet, checkAnswer, ingotsFor, type Drill, type DrillProgress } from '$lib/game/drills';
+import { afterDrill, answerNote, buildDrillSet, checkAnswer, ingotsFor, type Drill, type DrillProgress } from '$lib/game/drills';
 
 export interface DrillSetState {
 	lang: string;
@@ -55,6 +55,8 @@ export interface AnswerResult {
 	url: string;
 	api: string | null;
 	explain: string | null;
+	/** Set on a near miss of the right value in the wrong type; null otherwise. */
+	note: string | null;
 	ingots: number;
 	setDone: boolean;
 	setIngots: number;
@@ -119,6 +121,7 @@ export async function answerDrill(
 		url: drill.url,
 		api: drill.api ?? null,
 		explain: drill.explain ?? null,
+		note: correct ? null : answerNote(drill, answer),
 		ingots: delta,
 		setDone,
 		setIngots: set.ingots
@@ -163,18 +166,21 @@ export interface PracticeResult {
 	url: string;
 	api: string | null;
 	explain: string | null;
+	note: string | null;
 }
 
 /** Checks a practice answer. Records nothing: practice never touches scheduling or history. */
 export function checkPracticeAnswer(drillId: string, answer: string): PracticeResult | { error: string } {
 	const drill = drillById(drillId);
 	if (!drill) return { error: 'unknown drill' };
+	const correct = checkAnswer(drill, answer);
 	return {
-		correct: checkAnswer(drill, answer),
+		correct,
 		expected: drill.answer,
 		alternatives: drill.alternatives ?? [],
 		url: drill.url,
 		api: drill.api ?? null,
-		explain: drill.explain ?? null
+		explain: drill.explain ?? null,
+		note: correct ? null : answerNote(drill, answer)
 	};
 }

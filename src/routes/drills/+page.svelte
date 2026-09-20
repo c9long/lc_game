@@ -5,7 +5,7 @@
 	let idx = $state(0);
 	let answer = $state('');
 	let busy = $state(false);
-	let feedback = $state<null | { correct: boolean; expected: string; alternatives: string[]; url: string; api: string | null; explain: string | null; ingots: number; setDone: boolean }>(null);
+	let feedback = $state<null | { correct: boolean; expected: string; alternatives: string[]; url: string; api: string | null; explain: string | null; note: string | null; ingots: number; setDone: boolean }>(null);
 	let message = $state('');
 
 	const remaining = $derived(data.drills.filter((d) => d.answered === undefined));
@@ -69,7 +69,7 @@
 	let practice = $state<PracticeDrill | null>(null);
 	let practiceAnswer = $state('');
 	let practiceBusy = $state(false);
-	let practiceFeedback = $state<null | { correct: boolean; expected: string; alternatives: string[]; url: string; api: string | null; explain: string | null }>(null);
+	let practiceFeedback = $state<null | { correct: boolean; expected: string; alternatives: string[]; url: string; api: string | null; explain: string | null; note: string | null }>(null);
 	let practiceDone = $state(0);
 	let practiceCorrect = $state(0);
 	let seen = $state<string[]>([]);
@@ -199,6 +199,7 @@
 						<div class="banner" class:ok={practiceFeedback.correct}>
 							{practiceFeedback.correct ? '✓ Correct' : '✗ Not quite'} · expected <code>{practiceFeedback.expected}</code>
 							{#if practiceFeedback.alternatives.length}<span class="muted"> (also accepted: {practiceFeedback.alternatives.join(', ')})</span>{/if}
+							{#if practiceFeedback.note}<br /><span class="muted">{practiceFeedback.note}</span>{/if}
 							<br /><a href={practiceFeedback.url} target="_blank" rel="noreferrer">{practiceFeedback.api ?? 'docs'} ↗</a>
 						</div>
 						{#if practiceFeedback.explain}
@@ -234,8 +235,15 @@
 					{feedback.correct ? '✓ Correct' : '✗ Not quite'} · expected <code>{feedback.expected}</code>
 					{#if feedback.alternatives.length}<span class="muted"> (also accepted: {feedback.alternatives.join(', ')})</span>{/if}
 					{#if feedback.ingots > 0}<strong> +{feedback.ingots} ingot{feedback.ingots === 1 ? '' : 's'}</strong>{/if}
+					{#if feedback.note}<br /><span class="muted">{feedback.note}</span>{/if}
 					<br /><a href={feedback.url} target="_blank" rel="noreferrer">{feedback.api ?? 'docs'} ↗</a>
 				</div>
+				{#if feedback.explain}
+					<details class="explain">
+						<summary>Why?</summary>
+						<p>{feedback.explain}</p>
+					</details>
+				{/if}
 				<button class="primary" onclick={next} onkeydown={onkey}>Next</button>
 			{/if}
 		{/if}

@@ -1,5 +1,7 @@
 /** Syntax drills: recall exercises mined from language documentation. No code is executed. */
 
+import { parseStrict, sameValue } from './pyvalue';
+
 export type DrillKind = 'cloze' | 'output';
 
 export interface Drill {
@@ -65,17 +67,29 @@ export function normalizeOutput(s: string): string {
 }
 
 export function normalizeCloze(s: string): string {
-	return s.trim().replace(/\s+/g, '').replace(/\($/, '');
+	return s.trim().replace(/\s+/g, '').replace(/\(\)?$/, '');
 }
 
 export function checkAnswer(drill: Drill, given: string): boolean {
 	const candidates = [drill.answer, ...(drill.alternatives ?? [])];
 	if (drill.kind === 'cloze') {
 		const g = normalizeCloze(given);
-		return candidates.some((c) => normalizeCloze(c) === g);
+		if (candidates.some((c) => normalizeCloze(c) === g)) return true;
+		// Writing the call out in full is the same knowledge: `heapq.heapify` for `heapify`. Narrow
+		// deliberately — a general suffix match would accept `collections.defaultdict` where the blank
+		// is the factory argument (`defaultdict(___)`), which is the opposite of knowing the answer.
+		const api = drill.api ?? '';
+		return api.includes('.') && g === api && api.split('.').pop() === drill.answer;
 	}
-	const g = normalizeOutput(given);
-	return candidates.some((c) => normalizeOutput(c) === g);
+	// Any spelling of the same value counts; string comparison is the fallback for output that is not
+	// a literal (`<class 'float'>`, `Counter({'a': 1})`).
+	for (const c of candidates) {
+		const same = sameValue(c, given);
+		if (same === null) {
+			if (normalizeOutput(c) === normalizeOutput(given)) return true;
+		} else if (same) return true;
+	}
+	return false;
 }
 
 export interface DrillProgress {
@@ -131,4 +145,24 @@ export function ingotsFor(results: boolean[]): number {
 	const correct = results.filter(Boolean).length;
 	const bonus = results.length >= DRILL_SET_SIZE && correct === results.length ? PERFECT_SET_BONUS : 0;
 	return correct * INGOT_PER_CORRECT + bonus;
+}
+
+/** A nudge for a near miss of the right value in the wrong type. `bin(10)` prints `'0b1010'`, and
+ *  typing `0b1010` is exactly the misunderstanding the drill exists to catch — a bare ✗ teaches less
+ *  than saying which way it was wrong. Null when the answer is not that kind of near miss. */
+export function answerNote(drill: Drill, given: string): string | null {
+	if (drill.kind !== 'output') return null;
+	const want = parseStrict(drill.answer);
+	const got = parseStrict(given);
+	if (!want || !got || want.t === got.t) return null;
+	if (want.t === 'str' && got.t !== 'str' && given.trim() === want.v) {
+		return 'The characters are right, but that line prints a string — it needs quotes.';
+	}
+	if (want.t === 'int' && got.t === 'float' && Number(want.v) === got.v) {
+		return 'Right number, wrong type: this prints an int, not a float.';
+	}
+	if (want.t === 'float' && got.t === 'int' && want.v === Number(got.v)) {
+		return 'Right number, wrong type: this prints a float, not an int.';
+	}
+	return null;
 }
