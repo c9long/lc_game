@@ -521,9 +521,10 @@ describe('cities and terrain', () => {
 
 	it('founds a city the moment the essence is there', () => {
 		expect(cityUnlocked(0, 0)).toBe(true);
-		expect(cityUnlocked(1, 149)).toBe(false);
-		expect(cityUnlocked(1, 150)).toBe(true);
-		expect(unlockedCities(400).map((c) => c.id)).toEqual([0, 1, 2]);
+		expect(cityUnlocked(1, 999)).toBe(false);
+		expect(cityUnlocked(1, 1000)).toBe(true);
+		expect(cityUnlocked(2, 9999)).toBe(false);
+		expect(unlockedCities(10000).map((c) => c.id)).toEqual([0, 1, 2]);
 		expect(unlockedCities(0)).toHaveLength(1);
 	});
 
@@ -535,8 +536,8 @@ describe('cities and terrain', () => {
 		expect(placementError('pointer-bridge', 0, 1, 0, placed, 0)?.error).toBe('terrain');
 		expect(placementError('pointer-bridge', 0, 2, 2, placed, 0)).toBeNull();
 		expect(placementError('hut', 1, 3, 3, placed, 0)?.error).toBe('locked');
-		expect(placementError('hut', 1, 3, 3, placed, 150)).toBeNull();
-		expect(placementError('hut', 7, 0, 0, placed, 999)?.error).toBe('bad_request');
+		expect(placementError('hut', 1, 3, 3, placed, 1000)).toBeNull();
+		expect(placementError('hut', 7, 0, 0, placed, 99_999)?.error).toBe('bad_request');
 		expect(placementError('hut', 0, 9, 0, placed, 0)?.error).toBe('bad_request');
 	});
 

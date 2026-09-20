@@ -74,7 +74,11 @@ export interface City {
 }
 
 /** Cities are unlocked by essence, which until now was earned on every solve and never spent on
- *  anything. Each is the same size; what differs is how much of it the terrain spoken for. */
+ *  anything. Each is the same size; what differs is how much of it the terrain has spoken for.
+ *
+ *  The thresholds are deliberately long hauls. A solve yields about 3 essence -- one per topic tag
+ *  -- so the second city is hundreds of solves and refreshes away, and the third is the whole 150
+ *  kept fresh for a long time. A city you unlock in a fortnight is just a bigger grid. */
 export const CITIES: City[] = [
 	{
 		id: 0,
@@ -87,14 +91,14 @@ export const CITIES: City[] = [
 		id: 1,
 		name: "Knuth's Knotted Knolls",
 		honoree: 'Donald Knuth',
-		essence: 150,
+		essence: 1000,
 		terrain: ['^^...*', '.^..**', '..~...', '..~..^', '...~^^', '*..~..']
 	},
 	{
 		id: 2,
 		name: "Dijkstra's Dizzy Delta",
 		honoree: 'Edsger Dijkstra',
-		essence: 400,
+		essence: 10000,
 		terrain: ['..~...', '..~.^.', '.~~...', '.~..*.', '~...*.', '~..*.^']
 	}
 ];
