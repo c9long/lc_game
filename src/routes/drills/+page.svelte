@@ -64,7 +64,7 @@
 	// --- unlimited practice, unlocked once the day's set is done ---
 	// Nothing here is scored or recorded: the counters are per-session only, and `seen` just keeps
 	// the server from handing back a drill twice in a row until the bank wraps.
-	type PracticeDrill = { id: string; kind: string; module: string; context: string | null; code: string; hint: string | null };
+	type PracticeDrill = { id: string; kind: string; module: string; context: string | null; code: string; hint: string | null; variant: number };
 
 	let practice = $state<PracticeDrill | null>(null);
 	let practiceAnswer = $state('');
@@ -106,7 +106,7 @@
 			const r = await fetch('/api/drills/practice', {
 				method: 'POST',
 				headers: { 'content-type': 'application/json' },
-				body: JSON.stringify({ drillId: practice.id, answer: practiceAnswer })
+				body: JSON.stringify({ drillId: practice.id, answer: practiceAnswer, variant: practice.variant })
 			});
 			const j = (await r.json()) as any;
 			if (!r.ok) throw new Error(j.message ?? j.error ?? 'failed');

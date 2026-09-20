@@ -5,6 +5,7 @@ import { drillAttempts, drillState, planItems, type User } from '../db/schema';
 import { randomId } from '../crypto';
 import { addResourceStatement, getState, setState } from './state';
 import { DRILL_BANKS, DRILL_LANGS, drillById } from '$lib/game/drillbank';
+import { drillInstance, instanceCount } from '$lib/game/drillvariants';
 import { afterDrill, answerNote, buildDrillSet, checkAnswer, ingotsFor, type Drill, type DrillProgress } from '$lib/game/drills';
 
 export interface DrillSetState {
@@ -12,6 +13,9 @@ export interface DrillSetState {
 	ids: string[];
 	/** drillId -> correct */
 	results: Record<string, boolean>;
+	/** drillId -> which generated instance of that drill was served. Absent on sets built before
+	 *  drills had instances, and absent entries mean the drill as written. */
+	variants?: Record<string, number>;
 	ingots: number;
 	bonusPaid: boolean;
 }
@@ -43,7 +47,19 @@ export async function getOrCreateDrillSet(db: Db, today: string, now: Date): Pro
 	const progress = await loadDrillProgress(db);
 	const set = buildDrillSet(bank, progress, now);
 	if (set.length === 0) return null;
-	const state: DrillSetState = { lang, ids: set.map((d) => d.id), results: {}, ingots: 0, bonusPaid: false };
+	// Which instance of each drill to serve. Answering correctly moves to the next one, so a drill
+	// that keeps coming back does not keep asking about the same data; answering wrong does not, so
+	// the instance you missed is the one you meet again.
+	const variants: Record<string, number> = {};
+	for (const d of set) variants[d.id] = (progress.get(d.id)?.correct ?? 0) % instanceCount(d.id);
+	const state: DrillSetState = {
+		lang,
+		ids: set.map((d) => d.id),
+		results: {},
+		variants,
+		ingots: 0,
+		bonusPaid: false
+	};
 	await setState(db, key(today), state);
 	return state;
 }
@@ -73,15 +89,17 @@ export async function answerDrill(
 	const set = await getState<DrillSetState | null>(db, key(today), null);
 	if (!set || !set.ids.includes(drillId)) return { error: 'that drill is not in today\'s set' };
 	if (drillId in set.results) return { error: 'already answered' };
-	const drill: Drill | undefined = drillById(drillId);
-	if (!drill) return { error: 'unknown drill' };
+	const base: Drill | undefined = drillById(drillId);
+	if (!base) return { error: 'unknown drill' };
+	// Grade against the instance that was actually on screen, not against the drill as written.
+	const drill = drillInstance(base, set.variants?.[drillId] ?? 0);
 
 	const correct = checkAnswer(drill, answer);
 	const prev = await db.select().from(drillState).where(eq(drillState.drillId, drillId)).get();
 	const srs = afterDrill(prev ? { srsStep: prev.srsStep, dueAt: prev.dueAt } : null, correct, now);
 	const nextState = {
 		drillId,
-		lang: drill.lang,
+		lang: base.lang,
 		srsStep: srs.srsStep,
 		dueAt: srs.dueAt,
 		correct: (prev?.correct ?? 0) + (correct ? 1 : 0),
@@ -144,8 +162,9 @@ export function isSetComplete(set: DrillSetState | null): boolean {
 	return Boolean(set && set.ids.length > 0 && set.ids.every((id) => id in set.results));
 }
 
-/** A drill for free practice: never one from today's set, and preferring ones not just seen. */
-export function pickPracticeDrill(set: DrillSetState, exclude: string[] = []): Drill | null {
+/** A drill for free practice: never one from today's set, and preferring ones not just seen. The
+ *  instance is drawn at random too, since practice has no schedule to walk through. */
+export function pickPracticeDrill(set: DrillSetState, exclude: string[] = []): { drill: Drill; variant: number } | null {
 	const bank = DRILL_BANKS[set.lang] ?? [];
 	if (bank.length === 0) return null;
 	const today = new Set(set.ids);
@@ -156,7 +175,9 @@ export function pickPracticeDrill(set: DrillSetState, exclude: string[] = []): D
 	const seen = new Set(exclude);
 	const pool = rest.filter((d) => !seen.has(d.id));
 	const from = pool.length > 0 ? pool : rest;
-	return from[Math.floor(Math.random() * from.length)];
+	const drill = from[Math.floor(Math.random() * from.length)];
+	const variant = Math.floor(Math.random() * instanceCount(drill.id));
+	return { drill: drillInstance(drill, variant), variant };
 }
 
 export interface PracticeResult {
@@ -169,10 +190,14 @@ export interface PracticeResult {
 	note: string | null;
 }
 
-/** Checks a practice answer. Records nothing: practice never touches scheduling or history. */
-export function checkPracticeAnswer(drillId: string, answer: string): PracticeResult | { error: string } {
-	const drill = drillById(drillId);
-	if (!drill) return { error: 'unknown drill' };
+/** Checks a practice answer. Records nothing: practice never touches scheduling or history.
+ *  `variant` says which instance the client was shown; it is clamped rather than trusted, and there
+ *  is nothing to protect here anyway since practice writes nothing. */
+export function checkPracticeAnswer(drillId: string, answer: string, variant = 0): PracticeResult | { error: string } {
+	const base = drillById(drillId);
+	if (!base) return { error: 'unknown drill' };
+	const i = Number.isInteger(variant) ? Math.min(Math.max(variant, 0), instanceCount(drillId) - 1) : 0;
+	const drill = drillInstance(base, i);
 	const correct = checkAnswer(drill, answer);
 	return {
 		correct,

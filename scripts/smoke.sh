@@ -79,7 +79,21 @@ FIRST_ID=$(printf '%s' "$SET_JSON" | node -e 'let s="";process.stdin.on("data",d
 if [ -z "$FIRST_ID" ]; then
   echo "FAIL no drill set was created for $TODAY"; fail=1
 else
-  ANSWER=$(node -e 'const id=process.argv[1];const c=require("./data/drills/curation.json").extra;const m=require("./data/drills/python.json").drills;const d=[...c,...m].find(x=>x.id===id);process.stdout.write(d.answer)' "$FIRST_ID")
+  # A drill is served as one of several generated instances, so the expected answer is the instance's,
+  # not the one written in the bank. The set records which instance it chose.
+  if printf '%s' "$SET_JSON" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const v=JSON.parse(JSON.parse(s)[0].results[0].value).variants;process.exit(v&&typeof v==="object"?0:1)})'; then
+    echo "ok   drill set records which instance it served"
+  else
+    echo "FAIL drill set has no variants map"; fail=1
+  fi
+  ANSWER=$(printf '%s' "$SET_JSON" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{
+    const set=JSON.parse(JSON.parse(s)[0].results[0].value);
+    const id=set.ids[0];
+    const c=require("./data/drills/curation.json").extra;const m=require("./data/drills/python.json").drills;
+    const base=[...c,...m].find(x=>x.id===id);
+    const v=(require("./data/drills/variants.json").variants[id]||[])[(set.variants?.[id]??0)-1];
+    process.stdout.write({...base,...(v||{})}.answer);
+  })')
   BODY=$(node -e 'process.stdout.write(JSON.stringify({drillId:process.argv[1],answer:process.argv[2]}))' "$FIRST_ID" "$ANSWER")
   RESP=$(curl -s -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" -d "$BODY" "$B/api/drills/answer")
   if printf '%s' "$RESP" | grep -q '"correct":true'; then echo "ok   drill answer accepted ($FIRST_ID)"; else echo "FAIL drill answer: $RESP"; fail=1; fi
@@ -109,9 +123,21 @@ if [ -n "${FIRST_ID:-}" ]; then
   if [ -z "$PRAC_ID" ]; then echo "FAIL practice returned no drill: $PRAC"; fail=1; else
     if printf '%s' "$PRAC" | grep -q '"answer"'; then echo "FAIL practice leaked the answer to the client"; fail=1; else echo "ok   practice drill served without its answer"; fi
     if printf '%s' "$ALL_IDS" | tr ' ' '\n' | grep -qx "$PRAC_ID"; then echo "FAIL practice served a drill from today's set"; fail=1; else echo "ok   practice avoids today's set"; fi
-    PBODY=$(node -e 'process.stdout.write(JSON.stringify({drillId:process.argv[1],answer:"zzz-not-the-answer"}))' "$PRAC_ID")
+    PRAC_V=$(printf '%s' "$PRAC" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const j=JSON.parse(s);console.log(j.drill&&typeof j.drill.variant==="number"?j.drill.variant:"")})')
+    if [ -z "$PRAC_V" ]; then echo "FAIL practice did not say which instance it served"; fail=1; fi
+    PBODY=$(node -e 'process.stdout.write(JSON.stringify({drillId:process.argv[1],answer:"zzz-not-the-answer",variant:Number(process.argv[2]||0)}))' "$PRAC_ID" "$PRAC_V")
     PRESP=$(curl -s -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" -d "$PBODY" "$B/api/drills/practice")
     if printf '%s' "$PRESP" | grep -q '"correct":false'; then echo "ok   practice answer checked"; else echo "FAIL practice answer: $PRESP"; fail=1; fi
+    # The expected answer that comes back must be the served instance's, not the bank's.
+    PEXP=$(printf '%s' "$PRESP" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{process.stdout.write(JSON.parse(s).expected??"")})')
+    PWANT=$(node -e 'const id=process.argv[1],i=Number(process.argv[2]||0);const c=require("./data/drills/curation.json").extra;const m=require("./data/drills/python.json").drills;const base=[...c,...m].find(x=>x.id===id);const v=(require("./data/drills/variants.json").variants[id]||[])[i-1];process.stdout.write({...base,...(v||{})}.answer)' "$PRAC_ID" "$PRAC_V")
+    if [ "$PEXP" = "$PWANT" ]; then echo "ok   practice graded the instance it served"; else echo "FAIL practice expected [$PEXP], instance answers [$PWANT]"; fail=1; fi
+    # The page must not ship answers either, now that an instance gives them a second place to leak.
+    if curl -s -H "cookie: lc_session=$TOKEN" "$B/drills" | grep -q '\\"answer\\"'; then
+      echo "FAIL /drills shipped an answer field to the client"; fail=1
+    else
+      echo "ok   /drills ships no answer field"
+    fi
   fi
 
   ING_AFTER=$(count_state "SELECT amount FROM resources WHERE kind = 'ingots'")

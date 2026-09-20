@@ -26,8 +26,9 @@ export const GET: RequestHandler = async (event) => {
 	if (gate instanceof Response) return gate;
 
 	const exclude = (event.url.searchParams.get('exclude') ?? '').split(',').filter(Boolean);
-	const drill = pickPracticeDrill(gate, exclude);
-	if (!drill) return json({ error: 'empty', message: 'No practice drills left in this bank.' }, { status: 404 });
+	const picked = pickPracticeDrill(gate, exclude);
+	if (!picked) return json({ error: 'empty', message: 'No practice drills left in this bank.' }, { status: 404 });
+	const { drill, variant } = picked;
 
 	// The answer stays on the server; practice is checked here exactly as the daily set is.
 	return json({
@@ -37,7 +38,8 @@ export const GET: RequestHandler = async (event) => {
 			module: drill.module,
 			context: drill.context,
 			code: drill.code,
-			hint: drill.hint ?? null
+			hint: drill.hint ?? null,
+			variant
 		}
 	});
 };
@@ -46,11 +48,12 @@ export const POST: RequestHandler = async (event) => {
 	const gate = await requireUnlocked(event);
 	if (gate instanceof Response) return gate;
 
-	const body = await readJson<{ drillId?: unknown; answer?: unknown }>(event.request);
+	const body = await readJson<{ drillId?: unknown; answer?: unknown; variant?: unknown }>(event.request);
 	if (typeof body.drillId !== 'string' || typeof body.answer !== 'string') {
 		return json({ error: 'bad_request', message: 'drillId and answer are required' }, { status: 400 });
 	}
-	const result = checkPracticeAnswer(body.drillId, body.answer);
+	const variant = typeof body.variant === 'number' ? body.variant : 0;
+	const result = checkPracticeAnswer(body.drillId, body.answer, variant);
 	if ('error' in result) return json({ error: 'bad_request', message: result.error }, { status: 400 });
 	return json(result);
 };

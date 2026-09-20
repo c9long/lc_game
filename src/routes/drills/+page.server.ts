@@ -5,6 +5,7 @@ import { loadSnapshot } from '$lib/server/game/state';
 import { getOrCreateDrillSet, isSetComplete, loadDrillProgress } from '$lib/server/game/drills';
 import { DRILL_BANKS } from '$lib/game/drillbank';
 import { drillById } from '$lib/game/drillbank';
+import { drillInstance } from '$lib/game/drillvariants';
 
 export const load: PageServerLoad = async ({ locals, platform }) => {
 	const user = requireUser(locals);
@@ -14,7 +15,11 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 	const progress = await loadDrillProgress(db);
 
 	const drills = (set?.ids ?? [])
-		.map((id) => drillById(id))
+		.map((id) => {
+			const d = drillById(id);
+			// Show the instance the set was built with; the answer is still never sent to the client.
+			return d && drillInstance(d, set?.variants?.[id] ?? 0);
+		})
 		.filter((d): d is NonNullable<typeof d> => Boolean(d))
 		.map((d) => ({
 			id: d.id,

@@ -25,6 +25,17 @@ export interface Drill {
 	explain?: string | null;
 }
 
+/** The fields a generated instance of a drill replaces. Everything else — the answer's meaning, the
+ *  explanation, the documentation link — belongs to the drill, not to the instance. */
+export interface DrillVariant {
+	context?: string;
+	code?: string;
+	hint?: string | null;
+	/** Absent for a cloze instance: the blank is filled by the same name whatever the data is. */
+	answer?: string;
+	alternatives?: string[];
+}
+
 export const DRILL_SET_SIZE = 5;
 /** How many of a set may be reviews. The rest introduce new material, when any is left.
  *

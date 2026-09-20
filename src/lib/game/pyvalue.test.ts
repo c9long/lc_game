@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { parseStrict, sameValue } from './pyvalue';
 import { checkAnswer, type Drill } from './drills';
 import { DRILL_BANKS } from './drillbank';
+import { drillInstance, instanceCount, variantsFor } from './drillvariants';
 
 const yes = (expected: string, given: string) => expect(sameValue(expected, given)).toBe(true);
 const no = (expected: string, given: string) => expect(sameValue(expected, given)).toBe(false);
@@ -151,18 +152,59 @@ describe('cloze answers', () => {
 });
 
 describe('the bank itself', () => {
-	// The generator that produces drill variants has no reviewer, so this is the net under it: every
-	// drill the app can serve must accept the answer it ships with.
-	it('accepts its own answers', () => {
+	// The generator that produces drill instances has no reviewer, so this is the net under it: every
+	// instance the app can serve must accept the answer it ships with.
+	it('accepts its own answers, in every instance', () => {
 		const bad: string[] = [];
+		let instances = 0;
 		for (const [lang, bank] of Object.entries(DRILL_BANKS)) {
-			for (const d of bank) {
-				if (!checkAnswer(d, d.answer)) bad.push(`${lang}/${d.id} (${d.answer})`);
-				for (const alt of d.alternatives ?? []) {
-					if (!checkAnswer(d, alt)) bad.push(`${lang}/${d.id} alt (${alt})`);
+			for (const base of bank) {
+				for (let i = 0; i < instanceCount(base.id); i++) {
+					const d = drillInstance(base, i);
+					instances++;
+					if (!checkAnswer(d, d.answer)) bad.push(`${lang}/${d.id}#${i} (${d.answer})`);
+					for (const alt of d.alternatives ?? []) {
+						if (!checkAnswer(d, alt)) bad.push(`${lang}/${d.id}#${i} alt (${alt})`);
+					}
 				}
 			}
 		}
 		expect(bad).toEqual([]);
+		expect(instances).toBeGreaterThan(DRILL_BANKS.python.length);
+	});
+
+	it('never generates an instance that repeats the answer it replaces', () => {
+		const repeated: string[] = [];
+		for (const bank of Object.values(DRILL_BANKS)) {
+			for (const base of bank) {
+				const seen = new Set([base.answer, base.hint ?? '']);
+				for (const v of variantsFor(base.id)) {
+					const key = base.kind === 'output' ? (v.answer ?? base.answer) : (v.hint ?? base.hint ?? '');
+					if (seen.has(key)) repeated.push(`${base.id} (${key})`);
+					seen.add(key);
+				}
+			}
+		}
+		expect(repeated).toEqual([]);
+	});
+});
+
+describe('drill instances', () => {
+	const base = DRILL_BANKS.python.find((d) => variantsFor(d.id).length > 0)!;
+
+	it('serves the drill as written at index 0 and out of range', () => {
+		expect(drillInstance(base, 0)).toBe(base);
+		expect(drillInstance(base, 99)).toBe(base);
+		expect(drillInstance(base, -1)).toBe(base);
+	});
+
+	it('replaces only the fields the instance carries', () => {
+		const v = variantsFor(base.id)[0];
+		const d = drillInstance(base, 1);
+		expect(d.id).toBe(base.id);
+		expect(d.module).toBe(base.module);
+		expect(d.explain ?? null).toBe(base.explain ?? null);
+		expect(d.code).toBe(v.code ?? base.code);
+		expect(d.answer).toBe(v.answer ?? base.answer);
 	});
 });
