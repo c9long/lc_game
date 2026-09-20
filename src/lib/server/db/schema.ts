@@ -142,12 +142,14 @@ export const buildings = sqliteTable(
 	{
 		id: text('id').primaryKey(),
 		kind: text('kind').notNull(),
+		/** The city it stands in. -1 (STORAGE in city.ts) is held out of play, x being the slot. */
+		city: integer('city').notNull().default(0),
 		x: integer('x').notNull(),
 		y: integer('y').notNull(),
 		level: integer('level').notNull().default(1),
 		builtAt: ts('built_at').notNull()
 	},
-	(t) => [uniqueIndex('buildings_xy_unique').on(t.x, t.y)]
+	(t) => [uniqueIndex('buildings_city_xy_unique').on(t.city, t.x, t.y)]
 );
 
 /** Small mutable game-wide values: coins settled through, the day's drill set, cached daily. */

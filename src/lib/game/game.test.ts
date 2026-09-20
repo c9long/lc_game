@@ -5,7 +5,28 @@ import { NODES, NODE_ORDER, PROBLEM_BY_SLUG, PROBLEMS, problemsForNode } from '.
 import { computeTree, dueRefreshes, isServable, nextNewProblems, type ProblemProgress } from './tree';
 import { HAULS_BONUS, IRONWORKS_MULT, computeAward } from './awards';
 import { WEEKLY_BUDGET, weeklyCount } from './budget';
-import { BUILDINGS, baseProduction, buildingYield, canAfford, costAtLevel, dailyCoins, gateSatisfied, settleProduction } from './city';
+import {
+	BUILDINGS,
+	CITIES,
+	DIVERSITY_BONUS_PER_KIND,
+	GRID_SIZE,
+	STORAGE,
+	baseProduction,
+	buildingYield,
+	canAfford,
+	cityUnlocked,
+	costAtLevel,
+	dailyCoins,
+	fitsTerrain,
+	gateSatisfied,
+	placementError,
+	relocate,
+	settleProduction,
+	terrainAt,
+	unlockedCities,
+	wellPlaced,
+	type PlacedBuilding
+} from './city';
 import { DRILL_INTERVALS, MAX_DUE_PER_SET, afterDrill, buildDrillSet, checkAnswer, ingotsFor, normalizeOutput, type Drill, type DrillProgress } from './drills';
 
 const DAY = 86_400_000;
@@ -195,12 +216,13 @@ describe('city', () => {
 		expect(canAfford({ timber: 8, ingots: 3 }, costAtLevel(hut, 2))).toBe(false); // coins now count too
 		expect(canAfford({ timber: 8, ingots: 3, coins: 15 }, costAtLevel(hut, 2))).toBe(true);
 		const placed = [
-			{ id: 'a', kind: 'hut', x: 0, y: 0, level: 2 },
-			{ id: 'r', kind: 'graph-roads', x: 1, y: 0, level: 1 },
-			{ id: 'g', kind: 'granary', x: 5, y: 5, level: 1 }
+			{ id: 'a', kind: 'hut', city: 0, x: 0, y: 0, level: 2 },
+			{ id: 'r', kind: 'graph-roads', city: 0, x: 1, y: 0, level: 1 },
+			{ id: 'g', kind: 'granary', city: 0, x: 5, y: 5, level: 1 }
 		];
-		expect(baseProduction(placed, tree)).toBeCloseTo(2 * 1.25 + 2);
-		expect(dailyCoins(placed, tree)).toBe(5); // 4.5 rounds up
+		// Hut: 2 base × 1.25 roads × 1.15 for one different neighbour. Roads: 2 × 1.15 for the hut.
+		expect(baseProduction(placed, tree)).toBeCloseTo(2 * 1.25 * 1.15 + 2 * 1.15);
+		expect(dailyCoins(placed, tree)).toBe(5); // 5.175 rounds down
 	});
 });
 
@@ -392,23 +414,23 @@ describe('per-building yield', () => {
 	const tree = computeTree({ progress: new Map(), research: new Map(), now: t0 });
 
 	it('breaks a building down into the factors that produce its number', () => {
-		const hut = [{ id: 'a', kind: 'hut', x: 0, y: 0, level: 2 }];
+		const hut = [{ id: 'a', kind: 'hut', city: 0, x: 0, y: 0, level: 2 }];
 		const y = buildingYield(hut[0], hut, tree);
-		expect(y).toMatchObject({ base: 2, freshness: 1, adjacency: 1, perDay: 2 });
+		expect(y).toMatchObject({ base: 2, freshness: 1, adjacency: 1, diversity: 1, perDay: 2 });
 	});
 
 	it('applies the road bonus', () => {
 		const placed = [
-			{ id: 'a', kind: 'hut', x: 0, y: 0, level: 1 },
-			{ id: 'r', kind: 'graph-roads', x: 1, y: 0, level: 1 }
+			{ id: 'a', kind: 'hut', city: 0, x: 0, y: 0, level: 1 },
+			{ id: 'r', kind: 'graph-roads', city: 0, x: 1, y: 0, level: 1 }
 		];
 		const y = buildingYield(placed[0], placed, tree);
 		expect(y.adjacency).toBe(1.25);
-		expect(y.perDay).toBe(1.25);
+		expect(y.perDay).toBeCloseTo(1.25 * 1.15); // the roads are also a different kind next door
 	});
 
 	it('reports nothing for a building that produces no coins', () => {
-		const placed = [{ id: 'g', kind: 'granary', x: 0, y: 0, level: 1 }];
+		const placed = [{ id: 'g', kind: 'granary', city: 0, x: 0, y: 0, level: 1 }];
 		expect(buildingYield(placed[0], placed, tree).perDay).toBe(0);
 	});
 
@@ -416,9 +438,9 @@ describe('per-building yield', () => {
 		// baseProduction sums buildingYield, so a drift between the tile panel and the city header
 		// is impossible by construction. This pins that they stay wired together.
 		const placed = [
-			{ id: 'a', kind: 'hut', x: 0, y: 0, level: 1 },
-			{ id: 'b', kind: 'hut', x: 3, y: 3, level: 2 },
-			{ id: 'r', kind: 'graph-roads', x: 1, y: 0, level: 1 }
+			{ id: 'a', kind: 'hut', city: 0, x: 0, y: 0, level: 1 },
+			{ id: 'b', kind: 'hut', city: 0, x: 3, y: 3, level: 2 },
+			{ id: 'r', kind: 'graph-roads', city: 0, x: 1, y: 0, level: 1 }
 		];
 		const summed = placed.reduce((n, b) => n + buildingYield(b, placed, tree).perDay, 0);
 		expect(baseProduction(placed, tree)).toBeCloseTo(summed);
@@ -465,5 +487,124 @@ describe('drill set composition', () => {
 		const progress = new Map<string, DrillProgress>();
 		for (const d of bank) progress.set(d.id, { srsStep: 0, dueAt: overdue, correct: 0, wrong: 1 });
 		expect(buildDrillSet(bank, progress, now, 5)).toHaveLength(5);
+	});
+});
+
+describe('cities and terrain', () => {
+	const tree = computeTree({ progress: new Map(), research: new Map(), now: t0 });
+	const b = (id: string, kind: string, city: number, x: number, y: number, level = 1): PlacedBuilding => ({ id, kind, city, x, y, level });
+
+	it('draws three cities whose maps are the right shape', () => {
+		expect(CITIES).toHaveLength(3);
+		for (const c of CITIES) {
+			expect(c.terrain).toHaveLength(GRID_SIZE);
+			for (const row of c.terrain) expect(row).toHaveLength(GRID_SIZE);
+			// Every terrain a city has must be somewhere a building can actually stand.
+			expect(c.terrain.join('')).toMatch(/^[.~^*]+$/);
+		}
+	});
+
+	it('locks terrain both ways', () => {
+		expect(fitsTerrain('pointer-bridge', 'river')).toBe(true);
+		expect(fitsTerrain('pointer-bridge', 'plains')).toBe(false); // bridges span water only
+		expect(fitsTerrain('hash-market', 'river')).toBe(false);
+		expect(fitsTerrain('hash-market', 'plains')).toBe(true);
+		expect(fitsTerrain('dp-academy', 'mountain')).toBe(true);
+		expect(fitsTerrain('trie-library', 'forest')).toBe(true);
+		expect(terrainAt(0, 2, 2)).toBe('river');
+		expect(terrainAt(0, 0, 4)).toBe('mountain');
+		expect(terrainAt(0, 3, 2)).toBe('forest');
+		expect(terrainAt(0, 0, 0)).toBe('plains');
+		expect(terrainAt(0, GRID_SIZE, 0)).toBeNull();
+		expect(terrainAt(9, 0, 0)).toBeNull();
+	});
+
+	it('founds a city the moment the essence is there', () => {
+		expect(cityUnlocked(0, 0)).toBe(true);
+		expect(cityUnlocked(1, 149)).toBe(false);
+		expect(cityUnlocked(1, 150)).toBe(true);
+		expect(unlockedCities(400).map((c) => c.id)).toEqual([0, 1, 2]);
+		expect(unlockedCities(0)).toHaveLength(1);
+	});
+
+	it('refuses a placement for the one reason that applies', () => {
+		const placed = [b('a', 'hut', 0, 0, 0)];
+		expect(placementError('hut', 0, 1, 0, placed, 0)).toBeNull();
+		expect(placementError('hut', 0, 0, 0, placed, 0)?.error).toBe('occupied');
+		expect(placementError('hut', 0, 2, 2, placed, 0)?.error).toBe('terrain');
+		expect(placementError('pointer-bridge', 0, 1, 0, placed, 0)?.error).toBe('terrain');
+		expect(placementError('pointer-bridge', 0, 2, 2, placed, 0)).toBeNull();
+		expect(placementError('hut', 1, 3, 3, placed, 0)?.error).toBe('locked');
+		expect(placementError('hut', 1, 3, 3, placed, 150)).toBeNull();
+		expect(placementError('hut', 7, 0, 0, placed, 999)?.error).toBe('bad_request');
+		expect(placementError('hut', 0, 9, 0, placed, 0)?.error).toBe('bad_request');
+	});
+
+	it('pays for different neighbours, not for more of the same', () => {
+		const row = [b('a', 'hash-market', 0, 0, 0), b('b', 'hash-market', 0, 1, 0), b('c', 'hash-market', 0, 2, 0)];
+		// The old dominant strategy: three of a kind in a row, and no one earns a thing extra.
+		for (const m of row) expect(buildingYield(m, row, tree).diversity).toBe(1);
+
+		// Same three tiles, same rates, one swapped for another kind: the whole street earns more.
+		const interleaved = [b('a', 'hash-market', 0, 0, 0), b('b', 'stack-tower', 0, 1, 0), b('c', 'hash-market', 0, 2, 0)];
+		expect(baseProduction(interleaved, tree)).toBeCloseTo(9 * 1.15);
+		expect(baseProduction(interleaved, tree)).toBeGreaterThan(baseProduction(row, tree));
+
+		// Three different neighbours around one market, one of which produces nothing itself.
+		const crossroads = [b('a', 'hash-market', 0, 1, 1), b('b', 'hut', 0, 0, 1), b('c', 'stack-tower', 0, 2, 1), b('d', 'granary', 0, 1, 0)];
+		expect(buildingYield(crossroads[0], crossroads, tree).diversity).toBeCloseTo(1 + 3 * DIVERSITY_BONUS_PER_KIND);
+	});
+
+	it('keeps each city to itself and pays nothing for storage', () => {
+		// Same coordinates, different cities: neither is the other's neighbour.
+		const apart = [b('a', 'hash-market', 0, 1, 1), b('b', 'hut', 1, 1, 0)];
+		expect(buildingYield(apart[0], apart, tree).diversity).toBe(1);
+		const stored = [b('s', 'hash-market', STORAGE, 0, 0, 3)];
+		expect(buildingYield(stored[0], stored, tree).perDay).toBe(0);
+		expect(dailyCoins(stored, tree)).toBe(0);
+	});
+});
+
+describe('relocation onto the smaller map', () => {
+	const b = (id: string, kind: string, city: number, x: number, y: number, level = 1): PlacedBuilding => ({ id, kind, city, x, y, level });
+
+	it('leaves a city that is already valid alone', () => {
+		const placed = [b('a', 'hut', 0, 0, 0), b('r', 'pointer-bridge', 0, 2, 2), b('s', 'hut', STORAGE, 0, 0)];
+		expect(placed.every(wellPlaced)).toBe(true);
+		expect(relocate(placed)).toEqual([]);
+	});
+
+	it('brings buildings in off the old 8x8 and off ground that is no longer theirs', () => {
+		const placed = [b('far', 'hut', 0, 7, 7, 2), b('wet', 'pointer-bridge', 0, 0, 0), b('dry', 'hash-market', 0, 2, 3)];
+		const moves = relocate(placed);
+		expect(moves).toHaveLength(3);
+		const by = Object.fromEntries(moves.map((m) => [m.id, m]));
+		// The bridge lands on water, the market on ground, and the stray corner tile comes inside.
+		expect(terrainAt(0, by.wet.x, by.wet.y)).toBe('river');
+		expect(terrainAt(0, by.dry.x, by.dry.y)).toBe('plains');
+		expect(by.far).toMatchObject({ city: 0 });
+		expect(by.far.x).toBeLessThan(GRID_SIZE);
+		expect(by.far.y).toBeLessThan(GRID_SIZE);
+
+		// Applying the moves settles the city: running it again finds nothing left to do.
+		for (const m of moves) Object.assign(placed.find((p) => p.id === m.id)!, m);
+		expect(relocate(placed)).toEqual([]);
+		expect(placed.every(wellPlaced)).toBe(true);
+	});
+
+	it('stores what will not fit, biggest buildings keeping their tiles', () => {
+		// Nine bridges for four river tiles: five have to wait in storage.
+		const placed = Array.from({ length: 9 }, (_, i) => b(`b${i}`, 'pointer-bridge', 0, 7, i, i === 8 ? 3 : 1));
+		const moves = relocate(placed);
+		for (const m of moves) Object.assign(placed.find((p) => p.id === m.id)!, m);
+		const inCity = placed.filter((p) => p.city === 0);
+		const stored = placed.filter((p) => p.city === STORAGE);
+		expect(inCity.length + stored.length).toBe(9);
+		expect(stored.length).toBeGreaterThan(0);
+		expect(inCity.map((p) => p.id)).toContain('b8'); // the level 3 one is placed first
+		for (const p of inCity) expect(terrainAt(0, p.x, p.y)).toBe('river');
+		// Storage slots are distinct, so the (city, x, y) unique index holds.
+		expect(new Set(stored.map((p) => p.x)).size).toBe(stored.length);
+		expect(relocate(placed)).toEqual([]);
 	});
 });

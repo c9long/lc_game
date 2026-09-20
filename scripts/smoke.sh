@@ -201,6 +201,35 @@ else
 fi
 
 
+# Cities and terrain. A building left over from the old open 8x8 is moved onto a tile that exists
+# and that its kind is allowed to stand on, the first time the city is loaded.
+$W execute lc-game --local --persist-to "$STATE" --command \
+  "INSERT OR IGNORE INTO buildings (id, kind, city, x, y, level, built_at) VALUES ('smoke-far','hut',0,7,7,2,$NOW), ('smoke-wet','pointer-bridge',0,4,0,1,$NOW);" >/dev/null
+curl -s -o /dev/null -H "cookie: lc_session=$TOKEN" "$B/city"
+FAR=$(q "SELECT x || ',' || y AS at FROM buildings WHERE id='smoke-far'")
+WET=$(q "SELECT x || ',' || y AS at FROM buildings WHERE id='smoke-wet'")
+LVL=$(q "SELECT level AS n FROM buildings WHERE id='smoke-far'")
+# Hopper's Humble Hamlet has its river at (1,1), (2,1), (2,2) and (2,3).
+case "$WET" in 1,1|2,1|2,2|2,3) WETOK=yes ;; *) WETOK=no ;; esac
+if [ "$FAR" != "7,7" ] && [ "$LVL" = "2" ] && [ "$WETOK" = "yes" ]; then
+  echo "ok   the old grid was relocated onto the 6x6 map (hut 7,7 -> $FAR at level 2; bridge -> river $WET)"
+else
+  echo "FAIL relocation: hut at $FAR level $LVL, bridge at $WET (want it on the river)"; fail=1
+fi
+curl -s -o /dev/null -H "cookie: lc_session=$TOKEN" "$B/city"
+AGAIN=$(q "SELECT x || ',' || y AS at FROM buildings WHERE id='smoke-far'")
+if [ "$AGAIN" = "$FAR" ]; then echo "ok   a second load relocates nothing"; else echo "FAIL relocation ran again: $FAR -> $AGAIN"; fail=1; fi
+
+post_json() { curl -s --max-time 30 -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" -d "$2" "$B/api/city/$1"; }
+wants() { case "$(post_json "$1" "$2")" in *"\"$3\""*) echo "ok   $4" ;; *) echo "FAIL $4: $(post_json "$1" "$2")"; fail=1 ;; esac; }
+wants move '{"id":"smoke-wet","city":0,"x":0,"y":0}' terrain "a bridge cannot be moved off the river"
+wants move '{"id":"smoke-far","city":0,"x":2,"y":2}' terrain "a hut cannot be moved onto the river"
+wants build '{"kind":"hut","city":1,"x":0,"y":0}' locked "an unfounded city refuses a building"
+wants build '{"kind":"hut","city":0,"x":9,"y":0}' bad_request "a tile off the 6x6 grid is refused"
+wants move '{"id":"smoke-far","city":0,"x":3,"y":0}' ok "a hut moves to a free plains tile"
+MOVED=$(q "SELECT x || ',' || y AS at FROM buildings WHERE id='smoke-far'")
+if [ "$MOVED" = "3,0" ]; then echo "ok   the move was written ($MOVED)"; else echo "FAIL move wrote $MOVED (want 3,0)"; fail=1; fi
+
 # The resource bar overlays most views but is hidden while solving, drilling or reading the tree.
 has_bar() { curl -s -H "cookie: lc_session=$TOKEN" "$B$1" | grep -qi 'aria-label="Resources"' && echo yes || echo no; }
 for route in / /city /admin; do

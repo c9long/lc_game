@@ -95,7 +95,7 @@ export async function applyAccepted(db: Db, user: User, input: AcceptedInput): P
 	const assisted = isRefresh && Boolean(viewed);
 	const daily = await getState<Daily | null>(db, `daily:${date}`, null);
 	const placed: PlacedBuilding[] = (await db.select().from(buildings).all()).map((b) => ({
-		id: b.id, kind: b.kind, x: b.x, y: b.y, level: b.level
+		id: b.id, kind: b.kind, city: b.city, x: b.x, y: b.y, level: b.level
 	}));
 
 	const award = computeAward({

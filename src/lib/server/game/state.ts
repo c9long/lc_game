@@ -2,7 +2,7 @@ import { eq, gte, sql } from 'drizzle-orm';
 import type { Db } from '../db';
 import { awards, buildings, gameState, ledger, problemState, resources, type User } from '../db/schema';
 import { weeklyCount } from '$lib/game/budget';
-import { dailyCoins, settleProduction, type PlacedBuilding } from '$lib/game/city';
+import { dailyCoins, relocate, settleProduction, STORAGE, type PlacedBuilding } from '$lib/game/city';
 import { PROBLEM_BY_SLUG } from '$lib/game/curriculum';
 import { addDays, localDate } from '$lib/game/dates';
 import { computeTree, type NodeView, type ProblemProgress } from '$lib/game/tree';
@@ -50,6 +50,30 @@ export function addResourceStatement(db: Db, kind: string, amount: number) {
 		.onConflictDoUpdate({ target: resources.kind, set: { amount: sql`${resources.amount} + excluded.amount` } });
 }
 
+/** The grid shrank to 6x6 and grew terrain, so buildings from the old open 8x8 can be standing
+ *  somewhere that no longer exists or no longer takes them. relocate() says where each one goes;
+ *  this writes those moves and updates the list in place.
+ *
+ *  Everything moving is parked in a scratch city first. Without that, a building stepping into a
+ *  tile that another building is about to vacate would trip the (city, x, y) unique index halfway
+ *  through the batch. relocate() returns nothing once the city is valid, so this is a no-op on
+ *  every load after the first. */
+const SCRATCH_CITY = STORAGE - 1;
+
+async function applyRelocations(db: Db, placed: PlacedBuilding[]): Promise<void> {
+	const moves = relocate(placed);
+	if (moves.length === 0) return;
+	const statements = [
+		...moves.map((m, i) => db.update(buildings).set({ city: SCRATCH_CITY, x: i, y: 0 }).where(eq(buildings.id, m.id))),
+		...moves.map((m) => db.update(buildings).set({ city: m.city, x: m.x, y: m.y }).where(eq(buildings.id, m.id)))
+	] as unknown as Parameters<typeof db.batch>[0];
+	await db.batch(statements);
+	for (const m of moves) {
+		const b = placed.find((p) => p.id === m.id);
+		if (b) Object.assign(b, { city: m.city, x: m.x, y: m.y });
+	}
+}
+
 export async function loadSnapshot(db: Db, user: User, now = new Date()): Promise<Snapshot> {
 	const today = localDate(now, user.timezone);
 
@@ -84,7 +108,8 @@ export async function loadSnapshot(db: Db, user: User, now = new Date()): Promis
 	for (const r of resRows) res[r.kind] = r.amount;
 
 	const bRows = await db.select().from(buildings).all();
-	const placed: PlacedBuilding[] = bRows.map((b) => ({ id: b.id, kind: b.kind, x: b.x, y: b.y, level: b.level }));
+	const placed: PlacedBuilding[] = bRows.map((b) => ({ id: b.id, kind: b.kind, city: b.city, x: b.x, y: b.y, level: b.level }));
+	await applyRelocations(db, placed);
 
 	const since = addDays(today, -70);
 	const ledgerRows = await db.select({ date: ledger.date }).from(ledger).where(gte(ledger.date, since)).all();

@@ -70,7 +70,23 @@ Phases 1 to 8 are implemented in one pass: repo hygiene, passkey auth, admin/coo
 - Buildings are gated by tree nodes (Hash Market needs Arrays & Hashing unlocked, DP Academy needs 1-D DP unlocked, and so on), and by solve counts for Walls and the Monument. Production is scaled by the node's freshness and by adjacency to Graph Roads, and only accrues on days with at least one solve. Coins buy upgrades; grid expansion and cosmetics are future work.
 - **Granary and Walls repurposed 2026-09-16**, since their effects were morale's. The Granary adds +1 timber and +1 stone to every solve's haul, after multipliers. The Walls (3 Hard solves) scale iron ×1.5 — the one material only Hard problems yield, and the one every late building is short of.
 - **Destroy** (added 2026-09-07) demolishes a building and refunds its **level 1 base cost only**, behind a confirmation dialog. Upgrade materials, Ingots and coins are not refunded, so levelling up stays a commitment while a misplaced building remains a mistake you can walk back.
-- 8x8 grid with adjacency bonuses only. Emoji or SVG tiles.
+- **Three cities, 6x6, with terrain (added 2026-09-20).** One open 8x8 with no placement rules had a single best answer: fill it with Hash Markets. Arrays & Hashing is the root node, so they unlock first; they cost only timber and stone, which Mediums pour out; nothing capped them and nothing rewarded variety. The grid is now 6x6 and there are three of them, named for computer scientists: **Hopper's Humble Hamlet** (open from the start), **Knuth's Knotted Knolls** (150 lifetime essence) and **Dijkstra's Dizzy Delta** (400). Unlocking is derived from `totalEssence()` rather than stored, which finally gives essence — earned on every solve since the beginning and spent on nothing since the solution-view cost went — something to do. If essence ever gains a sink, that derivation needs a lifetime counter of its own.
+- **Terrain locks both ways.** A river tile takes only a Two-Pointer Bridge, a mountain only the DP Academy or DP Observatory, a forest only the Arboretum or Trie Library — and each of those buildings can be built *nowhere else*. So terrain is a budget of tiles per building rather than an obstacle to clear, and the cities differ in what they are rich in: Knuth's is mountain country, Dijkstra's is a river delta. The Trie Library sits in the forest with the Arboretum for now; building it inside another building, as an annex, is a later patch.
+- **Diversity bonus (the anti-monoculture rule).** One building's output for an active day is
+
+  ```
+  perDay = coins × level × freshness × roads × neighbours
+  neighbours = 1 + 0.15 × (distinct kinds among the 4 orthogonal tiles, excluding its own kind)
+  ```
+
+  capped in practice at ×1.6, since a tile has four neighbours. `DIVERSITY_BONUS_PER_KIND` and the whole formula live in `buildingYield()` in `src/lib/game/city.ts`, which `baseProduction()` sums — so the breakdown on a tile and the city header cannot drift apart.
+
+  The point is what it does *not* pay for. **Identical neighbours are worth nothing**, so three Hash Markets in a row earn a flat 9/day, while swapping the middle one for a Stack Tower — same three tiles, same rates — earns 10.35. Every building counts as a kind, including the Granary, Walls, Monument and Graph Roads, so where the effect buildings go now matters too. Only tiles in the **same city** are neighbours: two cities sharing coordinates are not adjacent, and a building in storage has none.
+
+  A cap per kind and diminishing returns were the alternatives. Both say "you may not", where this says "here is more" — and a bonus keeps a beginner's first row of Huts legal while making the interesting layout the better one.
+
+  The rule is explained in the app, behind a **ⓘ How production works** panel on `/city` that opens on a first visit and stays shut once dismissed (`lc:city:help-dismissed` in localStorage), plus `title` tooltips on the roads and neighbours lines of a tile's breakdown.
+- **Storage and moving.** Buildings from the old 8x8 that are off the smaller grid, or standing on ground that is now a river, are moved to the nearest tile in their city that fits, biggest first, keeping their level; anything that will not fit is held in **storage**, produces nothing, and can be placed again for free. `relocate()` is pure and idempotent, so `loadSnapshot` can run it on every load with no migration flag. A **move** endpoint (free) replaces destroying and rebuilding, which lost the upgrades anyway.
 
 ### Syntax drills (the Forge)
 
