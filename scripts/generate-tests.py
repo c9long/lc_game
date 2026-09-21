@@ -92,34 +92,9 @@ def load_meta(slugs: list[str], refresh: bool) -> dict:
     return cache
 
 
-def usable_source(text: str) -> str:
-    """Return the largest parseable prefix of a vendored reference solution.
-
-    Several files in the NeetCode repo append an alternative implementation after the primary one
-    ("# BFS Version From Video", a second `class Solution`), and a few of those appendices have
-    broken indentation that makes the whole file unparseable. The primary solution comes first, so
-    truncating at top-level boundaries from the end recovers it. Applied to the ORACLE only —
-    Chris's own code is never trimmed.
-    """
-    try:
-        ast.parse(text)
-        return text
-    except SyntaxError:
-        pass
-    lines = text.split("\n")
-    # Boundaries at any indentation: graph-valid-tree appends its alternative *inside* the first
-    # class, so there is no column-zero cut point to truncate at.
-    starts = [i for i, ln in enumerate(lines) if re.match(r"^\s*(class |def |#)", ln)]
-    for cut in reversed(starts):
-        candidate = "\n".join(lines[:cut])
-        if "def " not in candidate:
-            continue
-        try:
-            ast.parse(candidate)
-            return candidate
-        except SyntaxError:
-            continue
-    raise driver.Unsupported("reference solution does not parse")
+# usable_source lives in driver.py: the browser needs it too, to use the reference as the oracle
+# for custom testcases.
+usable_source = driver.usable_source
 
 
 def build_spec(slug: str, meta: dict, curation: dict) -> dict:

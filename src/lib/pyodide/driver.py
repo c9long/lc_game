@@ -5,7 +5,8 @@ file rather than two implementations:
 
   build time   scripts/generate-tests.py runs the vendored NeetCode reference solution through
                produce() to generate the expected outputs stored in data/tests/<slug>.json
-  runtime      the Pyodide web worker runs Chris's code through judge() and compares against them
+  runtime      the Pyodide web worker runs Chris's code through judge() and compares against them,
+               and runs his own inputs through custom(), with the reference as the oracle
 
 If the two ever diverged, every expected output in the repo would be subtly wrong, so nothing
 problem-specific belongs here: the shape of a problem comes from LeetCode's `metaData`, which is
@@ -16,8 +17,12 @@ browser) because signal does not exist in Pyodide.
 """
 from __future__ import annotations
 
+import ast
+import contextlib
 import copy
+import io
 import json
+import re
 from collections import deque
 
 # Reference solutions are written for LeetCode's editor, which supplies these names implicitly.
@@ -621,12 +626,25 @@ def compare(expected, actual, rule: str = "exact") -> bool:
         return expected == actual
 
 
-def judge(source: str, spec: dict, cases: list) -> list:
-    """Run `source` against stored cases. Returns one result dict per case, never raising."""
+def _checker(spec: dict):
+    """The rule deciding whether an answer is right: the problem's validator when it has several
+    valid answers, otherwise comparison with the expected output. Shared by judge() and custom() so
+    a custom case is judged exactly as a stored one is. Raises ValueError for an unknown validator."""
     rule = spec.get("compare", "exact")
     validator = VALIDATORS.get(spec.get("validate") or "")
     if spec.get("validate") and validator is None:
-        return [{"ok": False, "error": f"unknown validator {spec.get('validate')!r}", "fatal": True}]
+        raise ValueError(f"unknown validator {spec.get('validate')!r}")
+    if validator:
+        return lambda args, actual, expected: validator(args, actual, expected)
+    return lambda args, actual, expected: compare(expected, actual, rule)
+
+
+def judge(source: str, spec: dict, cases: list) -> list:
+    """Run `source` against stored cases. Returns one result dict per case, never raising."""
+    try:
+        check = _checker(spec)
+    except ValueError as e:
+        return [{"ok": False, "error": str(e), "fatal": True}]
     try:
         ns = namespace(source)
     except Exception as e:  # a syntax or import error is a whole-submission failure
@@ -638,13 +656,104 @@ def judge(source: str, spec: dict, cases: list) -> list:
         try:
             actual = json_safe(run_case(ns, spec, case["args"]))
             entry["actual"] = actual
-            entry["ok"] = (
-                validator(case["args"], actual, case["expected"])
-                if validator
-                else compare(case["expected"], actual, rule)
-            )
+            entry["ok"] = check(case["args"], actual, case["expected"])
         except Exception as e:
             entry["ok"] = False
             entry["error"] = f"{type(e).__name__}: {e}"
+        results.append(entry)
+    return results
+
+
+# ---------- custom testcases ----------
+
+def usable_source(text: str) -> str:
+    """Return the largest parseable prefix of a vendored reference solution.
+
+    Several files in the NeetCode repo append an alternative implementation after the primary one
+    ("# BFS Version From Video", a second `class Solution`), and a few of those appendices have
+    broken indentation that makes the whole file unparseable. The primary solution comes first, so
+    truncating at top-level boundaries from the end recovers it. Applied to the REFERENCE only —
+    Chris's own code is never trimmed. Lives here because the browser uses the reference as the
+    oracle for custom testcases, as the test generator does.
+    """
+    try:
+        ast.parse(text)
+        return text
+    except SyntaxError:
+        pass
+    lines = text.split("\n")
+    # Boundaries at any indentation: graph-valid-tree appends its alternative *inside* the first
+    # class, so there is no column-zero cut point to truncate at.
+    starts = [i for i, ln in enumerate(lines) if re.match(r"^\s*(class |def |#)", ln)]
+    for cut in reversed(starts):
+        candidate = "\n".join(lines[:cut])
+        if "def " not in candidate:
+            continue
+        try:
+            ast.parse(candidate)
+            return candidate
+        except SyntaxError:
+            continue
+    raise Unsupported("reference solution does not parse")
+
+
+def custom(source: str, ref_source, spec: dict, inputs: list) -> list:
+    """Run Chris's code on inputs he typed himself, with the reference solution as the oracle.
+
+    The expected output comes from running the reference on the same input, which is how every
+    stored expectation was produced, and the verdict uses the same rule as judge(). An input the
+    reference cannot handle — usually one outside the problem's constraints, which LeetCode checks
+    and this cannot — gets `refError` and no verdict rather than a misleading one. `ref_source` may
+    be None, in which case only the output is reported. Each case carries its own stdout. Never raises.
+    """
+    try:
+        check = _checker(spec)
+    except ValueError as e:
+        return [{"ok": False, "error": str(e), "fatal": True}]
+
+    expected: list = [None] * len(inputs)
+    ref_errors: list = [None] * len(inputs)
+    if ref_source is not None:
+        try:
+            ref_ns = namespace(usable_source(ref_source))
+        except Exception as e:
+            ref_ns = None
+            ref_errors = [f"{type(e).__name__}: {e}"] * len(inputs)
+        if ref_ns is not None:
+            for i, args in enumerate(inputs):
+                try:
+                    with contextlib.redirect_stdout(io.StringIO()):
+                        expected[i] = json_safe(run_case(ref_ns, spec, args))
+                except Exception as e:
+                    ref_errors[i] = f"{type(e).__name__}: {e}"
+
+    try:
+        ns = namespace(source)
+    except Exception as e:
+        return [{"ok": False, "error": f"{type(e).__name__}: {e}", "fatal": True}]
+
+    results = []
+    for i, args in enumerate(inputs):
+        entry = {"args": args, "stdout": ""}
+        if ref_source is not None:
+            entry["expected"] = expected[i]
+            if ref_errors[i]:
+                entry["refError"] = ref_errors[i]
+        out = io.StringIO()
+        try:
+            with contextlib.redirect_stdout(out):
+                actual = json_safe(run_case(ns, spec, args))
+            entry["actual"] = actual
+            if ref_source is None or ref_errors[i]:
+                entry["ok"] = None
+            else:
+                try:
+                    entry["ok"] = bool(check(args, actual, expected[i]))
+                except Exception:
+                    entry["ok"] = False
+        except Exception as e:
+            entry["ok"] = False
+            entry["error"] = f"{type(e).__name__}: {e}"
+        entry["stdout"] = out.getvalue()
         results.append(entry)
     return results

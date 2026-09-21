@@ -149,3 +149,86 @@ export async function judge(
 export function exampleCases(suite: Suite): TestCase[] {
 	return suite.cases.slice(0, suite.exampleCount || suite.cases.length);
 }
+
+// ---------- custom testcases ----------
+//
+// Inputs typed by hand, LeetCode style: one field per parameter, each holding a JSON value. The
+// expected output comes from running the reference solution on the same input in the worker.
+// Nothing here talks to the server, so a custom run is never recorded.
+
+export interface CustomResult {
+	/** null when there is no expected output to judge against (no reference, or it failed). */
+	ok: boolean | null;
+	args?: unknown[];
+	expected?: unknown;
+	actual?: unknown;
+	error?: string;
+	/** The reference solution failed on this input — usually one outside the problem's constraints. */
+	refError?: string;
+	fatal?: boolean;
+	stdout?: string;
+}
+
+export interface CustomOutcome {
+	results: CustomResult[];
+	elapsedMs: number;
+	timedOut: boolean;
+}
+
+export async function runCustom(
+	source: string,
+	suite: Suite,
+	refSource: string | null,
+	inputs: unknown[][],
+	timeoutMs = TIME_LIMIT_MS
+): Promise<CustomOutcome> {
+	try {
+		const r = await call<{ results: CustomResult[]; elapsedMs: number }>(
+			{
+				type: 'custom',
+				source,
+				refSource,
+				specJson: JSON.stringify(suite),
+				inputsJson: JSON.stringify(inputs)
+			},
+			timeoutMs
+		);
+		return { results: r.results, elapsedMs: r.elapsedMs, timedOut: false };
+	} catch (e) {
+		if ((e as Error).message === 'timeout') return { results: [], elapsedMs: timeoutMs, timedOut: true };
+		throw e;
+	}
+}
+
+/** The fields of one testcase, in the order the harness expects them. A design problem takes the
+ *  list of operations and the list of their arguments, as LeetCode's own testcase box does. */
+export function paramsOf(suite: Suite): { name: string; type: string }[] {
+	if (suite.mode === 'design') {
+		return [
+			{ name: 'operations', type: 'string[]' },
+			{ name: 'arguments', type: 'list' }
+		];
+	}
+	return suite.params;
+}
+
+/** A value as LeetCode writes it in a testcase: compact JSON, `[2,7,11,15]`, `"abc"`. */
+export function formatValue(v: unknown): string {
+	return JSON.stringify(v) ?? 'null';
+}
+
+/** Parses each field as JSON. `errors[i]` is set for a field that does not parse, and `args` is
+ *  present only when every field does. */
+export function parseCase(fields: string[]): { args?: unknown[]; errors: (string | null)[] } {
+	const args: unknown[] = [];
+	const errors = fields.map((text, i) => {
+		if (text.trim() === '') return 'empty';
+		try {
+			args[i] = JSON.parse(text);
+			return null;
+		} catch {
+			return text.includes("'") ? 'not valid JSON (strings take double quotes)' : 'not valid JSON';
+		}
+	});
+	return errors.every((e) => e === null) ? { args, errors } : { errors };
+}

@@ -46,13 +46,6 @@ def code_for(slug: str) -> str | None:
 
 
 def main() -> int:
-    # usable_source lives in the generator; import it by path since the filename has a hyphen.
-    import importlib.util
-
-    spec = importlib.util.spec_from_file_location("gentests", ROOT / "scripts" / "generate-tests.py")
-    gentests = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(gentests)
-
     problems = {p["slug"]: p["code"] for p in json.loads((ROOT / "data" / "neetcode150.json").read_text())}
     files = sorted(TESTS.glob("*.json"))
     if not files:
@@ -76,9 +69,15 @@ def main() -> int:
         signal.signal(signal.SIGALRM, _alarm)
         signal.alarm(TIMEOUT_S)
         try:
-            source = gentests.usable_source(source_file.read_text())
+            raw = source_file.read_text()
+            source = driver.usable_source(raw)
             with contextlib.redirect_stdout(io.StringIO()):
                 results = driver.judge(source, suite, suite["cases"])
+                # Custom testcases take the other path through the driver: the reference is the
+                # oracle, fetched raw by the browser. Judging the reference against itself on its own
+                # examples has to come back clean for every problem shape.
+                examples = [c["args"] for c in suite["cases"][: suite.get("exampleCount") or len(suite["cases"])]]
+                custom = driver.custom(source, raw, suite, examples)
         except Timeout:
             failures.append((slug, f"reference solution exceeded {TIMEOUT_S}s"))
             continue
@@ -92,6 +91,13 @@ def main() -> int:
         if bad:
             detail = bad[0].get("error") or f"expected {bad[0].get('expected')!r}, got {bad[0].get('actual')!r}"
             failures.append((slug, f"{len(bad)}/{len(results)} cases fail: {detail}"))
+            continue
+
+        bad = [r for r in custom if r.get("ok") is not True]
+        if bad:
+            b = bad[0]
+            detail = b.get("refError") or b.get("error") or f"expected {b.get('expected')!r}, got {b.get('actual')!r}"
+            failures.append((slug, f"custom testcase path fails on {len(bad)}/{len(custom)} examples: {detail}"))
             continue
 
         expectations = [json.dumps(c["expected"], sort_keys=True) for c in suite["cases"]]

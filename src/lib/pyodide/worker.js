@@ -15,6 +15,7 @@ const here = new URL('./', import.meta.url).href;
 
 let pyodide = null;
 let judgeFn = null;
+let customFn = null;
 let stdout = [];
 
 async function boot() {
@@ -38,12 +39,16 @@ import lc_driver
 def _judge(source, spec_json, cases_json):
     return json.dumps(lc_driver.judge(source, json.loads(spec_json), json.loads(cases_json)))
 
+def _custom(source, ref_source, spec_json, inputs_json):
+    return json.dumps(lc_driver.custom(source, ref_source, json.loads(spec_json), json.loads(inputs_json)))
+
 _judge
 `);
+	customFn = pyodide.globals.get('_custom');
 }
 
 self.onmessage = async (event) => {
-	const { id, type, source, specJson, casesJson } = event.data ?? {};
+	const { id, type, source, refSource, specJson, casesJson, inputsJson } = event.data ?? {};
 	try {
 		if (type === 'boot') {
 			await boot();
@@ -58,6 +63,22 @@ self.onmessage = async (event) => {
 			// Already JSON: the client serialises before posting, because a Svelte $state proxy
 			// cannot be structured-cloned across the worker boundary.
 			const raw = judgeFn(source, specJson, casesJson);
+			self.postMessage({
+				id,
+				ok: true,
+				results: JSON.parse(raw),
+				stdout: stdout.join('\n'),
+				elapsedMs: Math.round(performance.now() - started)
+			});
+			return;
+		}
+
+		if (type === 'custom') {
+			await boot();
+			stdout = [];
+			const started = performance.now();
+			// Per-case stdout comes back inside each result; the driver captures it around each call.
+			const raw = customFn(source, refSource ?? null, specJson, inputsJson);
 			self.postMessage({
 				id,
 				ok: true,

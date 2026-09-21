@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Editor from '$lib/components/Editor.svelte';
+	import CustomTests from '$lib/components/CustomTests.svelte';
 	import { judge, warmUp, exampleCases, type Suite } from '$lib/pyodide/client';
 	let { data } = $props();
 
@@ -9,6 +10,8 @@
 	let lang = $state(data.lastLang ?? 'python3');
 	let code = $state('');
 	let busy = $state<'run' | 'submit' | null>(null);
+	/** A custom testcase run holds the worker; Run and Submit wait for it. */
+	let customBusy = $state(false);
 	let suite = $state<Suite | null>(null);
 	let suiteError = $state('');
 	let result = $state<Record<string, any> | null>(null);
@@ -108,7 +111,7 @@
 	});
 
 	async function execute(kind: 'run' | 'submit') {
-		if (busy || !suite || !canJudge) return;
+		if (busy || customBusy || !suite || !canJudge) return;
 		busy = kind;
 		message = '';
 		award = null;
@@ -206,6 +209,12 @@
 	const kindLabel = $derived(resultKind === 'submit' ? 'Submission' : 'Run');
 	// The in-browser judge is Pyodide, so only Python can be executed (docs/07-pyodide-judge.md).
 	const canJudge = $derived(lang === 'python3' && suite !== null);
+	/** The Python reference, the oracle for custom testcases. Fetched from the public static path by
+	 *  the panel, never through /api/solve/.../solutions, so using it records no look. */
+	const refUrl = $derived.by(() => {
+		const py = data.langs.find((l) => l.slug === 'python3');
+		return py && data.cur?.solutions?.[py.dir] ? `/solutions/${py.dir}/${data.cur.code}.${py.ext}` : null;
+	});
 </script>
 
 <svelte:head><title>{data.title} · LC Game</title></svelte:head>
@@ -247,8 +256,8 @@
 			<button onclick={resetToStarter}>Starter</button>
 			{#if lastAcceptedFor}<button onclick={loadLastAccepted}>Last accepted</button>{/if}
 			<span class="spacer"></span>
-			<button onclick={() => execute('run')} disabled={busy !== null || !canJudge} title="Ctrl+Enter">{busy === 'run' ? 'Running…' : 'Run'}</button>
-			<button class="primary" onclick={() => execute('submit')} disabled={busy !== null || !canJudge} title="Ctrl+Shift+Enter">{busy === 'submit' ? 'Judging…' : 'Submit'}</button>
+			<button onclick={() => execute('run')} disabled={busy !== null || customBusy || !canJudge} title="Ctrl+Enter">{busy === 'run' ? 'Running…' : 'Run'}</button>
+			<button class="primary" onclick={() => execute('submit')} disabled={busy !== null || customBusy || !canJudge} title="Ctrl+Shift+Enter">{busy === 'submit' ? 'Judging…' : 'Submit'}</button>
 		</div>
 
 		<Editor bind:value={code} language={monacoLang} onrun={() => execute('run')} onsubmit={() => execute('submit')} />
@@ -259,6 +268,10 @@
 				{#if suite.cases.length > suite.exampleCount}· {suite.cases.length} in total on Submit{/if}
 				{#if suite.compare !== 'exact'}· order-insensitive ({suite.compare}){/if}
 			</p>
+		{/if}
+
+		{#if canJudge && suite}
+			<CustomTests {suite} slug={data.slug} {code} {refUrl} blocked={busy !== null} onrunning={(r) => (customBusy = r)} />
 		{/if}
 
 		{#if message}<div class="banner">{message}</div>{/if}
