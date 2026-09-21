@@ -53,6 +53,12 @@
 		}
 	}
 
+	/** Each answer box is created fresh when a card's feedback clears, so focusing it as it is
+	 *  created puts the cursor in it after Next (or Enter) with no click. */
+	function focusOnMount(node: HTMLInputElement) {
+		node.focus();
+	}
+
 	function onkey(e: KeyboardEvent) {
 		if (e.key === 'Enter' && !e.shiftKey) {
 			e.preventDefault();
@@ -186,6 +192,7 @@
 					{#if !practiceFeedback}
 						<div class="row">
 							<input
+								{@attach focusOnMount}
 								bind:value={practiceAnswer}
 								onkeydown={onPracticeKey}
 								placeholder={practice.kind === 'cloze' ? 'name' : 'output'}
@@ -227,7 +234,7 @@
 			{/if}
 			{#if !feedback}
 				<div class="row">
-					<input bind:value={answer} onkeydown={onkey} placeholder={current.kind === 'cloze' ? 'name' : 'output'} autocomplete="off" spellcheck="false" style="flex:1; font-family: ui-monospace, monospace" />
+					<input {@attach focusOnMount} bind:value={answer} onkeydown={onkey} placeholder={current.kind === 'cloze' ? 'name' : 'output'} autocomplete="off" spellcheck="false" style="flex:1; font-family: ui-monospace, monospace" />
 					<button class="primary" onclick={submit} disabled={busy || !answer.trim()}>Check</button>
 				</div>
 			{:else}
