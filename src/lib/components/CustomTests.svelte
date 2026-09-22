@@ -8,6 +8,8 @@
 		paramsOf,
 		parseCase,
 		runCustom,
+		stop,
+		STOPPED,
 		type CustomResult,
 		type Suite
 	} from '$lib/pyodide/client';
@@ -124,7 +126,7 @@
 			view = 'result';
 			if (active >= inputs.length) active = 0;
 		} catch (e) {
-			failure = e instanceof Error ? e.message : String(e);
+			failure = e instanceof Error && e.message === STOPPED ? 'Stopped.' : e instanceof Error ? e.message : String(e);
 		} finally {
 			running = false;
 			onrunning?.(false);
@@ -148,9 +150,11 @@
 		<button class="tab" class:on={view === 'result'} onclick={() => (view = 'result')} disabled={!results && !timedOut}>Test Result</button>
 		<span class="spacer"></span>
 		<button class="link" onclick={resetToExamples}>Reset to examples</button>
-		<button onclick={run} disabled={running || blocked || !valid} title={valid ? '' : 'Fix the highlighted input first'}>
-			{running ? 'Running…' : 'Run custom'}
-		</button>
+		{#if running}
+			<button class="stop" onclick={stop} title="Stop the code that is running now">■ Stop</button>
+		{:else}
+			<button onclick={run} disabled={blocked || !valid} title={valid ? '' : 'Fix the highlighted input first'}>Run custom</button>
+		{/if}
 	</div>
 
 	<div class="row cases">
@@ -241,5 +245,6 @@
 	.block pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 	.good { color: var(--good); }
 	.bad { color: var(--bad); }
+	button.stop { border-color: var(--bad); color: var(--bad); }
 	button.link { border: none; background: none; color: var(--accent-2); padding: 0; }
 </style>

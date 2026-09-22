@@ -52,6 +52,23 @@ export const TIME_LIMIT_MS = 15_000;
 
 let worker: Worker | null = null;
 let nextId = 1;
+/** Rejecters for calls still waiting on the current worker, so stop() can end them. */
+const pending = new Set<(e: Error) => void>();
+
+/** Message of the error a call rejects with when stop() ends it. */
+export const STOPPED = 'stopped';
+
+/** Kill whatever is running now — an infinite loop, a run left going. The worker cannot interrupt
+ *  itself (see worker.js), so this discards it, exactly as the time limit does, and starts booting a
+ *  fresh one straight away so the next run is not kept waiting for Pyodide. */
+export function stop(): void {
+	const w = worker;
+	if (!w) return;
+	w.terminate();
+	worker = null;
+	for (const reject of [...pending]) reject(new Error(STOPPED));
+	void warmUp();
+}
 
 function spawn(): Worker {
 	const w = new Worker('/pyodide/worker.js', { type: 'module' });
@@ -64,6 +81,11 @@ function call<T>(message: Record<string, unknown>, timeoutMs: number): Promise<T
 	const id = nextId++;
 
 	return new Promise<T>((resolve, reject) => {
+		const abort = (e: Error) => {
+			cleanup();
+			reject(e);
+		};
+		pending.add(abort);
 		const timer = setTimeout(() => {
 			cleanup();
 			// A runaway loop leaves the worker wedged, so it is discarded rather than reused.
@@ -73,6 +95,7 @@ function call<T>(message: Record<string, unknown>, timeoutMs: number): Promise<T
 		}, timeoutMs);
 
 		function cleanup() {
+			pending.delete(abort);
 			clearTimeout(timer);
 			w.removeEventListener('message', onMessage);
 			w.removeEventListener('error', onError);

@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import Editor from '$lib/components/Editor.svelte';
 	import CustomTests from '$lib/components/CustomTests.svelte';
-	import { judge, warmUp, exampleCases, type Suite } from '$lib/pyodide/client';
+	import { judge, warmUp, exampleCases, stop, STOPPED, type Suite } from '$lib/pyodide/client';
 	let { data } = $props();
 
 	const STORAGE_LANG = 'lc-game:lang';
@@ -161,7 +161,9 @@
 				flushSave();
 			}
 		} catch (e) {
-			message = e instanceof Error ? e.message : String(e);
+			// A stopped run has no verdict, so nothing was posted and nothing is recorded.
+			if (e instanceof Error && e.message === STOPPED) message = `${kind === 'run' ? 'Run' : 'Submission'} stopped.`;
+			else message = e instanceof Error ? e.message : String(e);
 		} finally {
 			busy = null;
 		}
@@ -257,6 +259,9 @@
 			{#if lastAcceptedFor}<button onclick={loadLastAccepted}>Last accepted</button>{/if}
 			<span class="spacer"></span>
 			<button onclick={() => execute('run')} disabled={busy !== null || customBusy || !canJudge} title="Ctrl+Enter">{busy === 'run' ? 'Running…' : 'Run'}</button>
+			{#if busy !== null || customBusy}
+				<button class="stop" onclick={stop} title="Stop the code that is running now">■ Stop</button>
+			{/if}
 			<button class="primary" onclick={() => execute('submit')} disabled={busy !== null || customBusy || !canJudge} title="Ctrl+Shift+Enter">{busy === 'submit' ? 'Judging…' : 'Submit'}</button>
 		</div>
 
@@ -368,6 +373,7 @@
 	.desc { max-height: 80vh; overflow: auto; }
 	.work { display: grid; gap: 0.8rem; }
 	.toolbar .spacer { flex: 1; }
+	button.stop { border-color: var(--bad); color: var(--bad); }
 	.result table { width: 100%; table-layout: fixed; }
 	.result td code { overflow-wrap: anywhere; }
 	.result.pass { border-color: var(--good); }
