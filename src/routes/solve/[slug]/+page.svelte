@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { invalidateAll } from '$app/navigation';
 	import Editor from '$lib/components/Editor.svelte';
 	import CustomTests from '$lib/components/CustomTests.svelte';
 	import { judge, warmUp, exampleCases, stop, STOPPED, type Suite } from '$lib/pyodide/client';
@@ -159,6 +160,9 @@
 				justAccepted[lang] = code;
 				code = data.snippets[lang] ?? '';
 				flushSave();
+				// The refresh is done, so the problem is no longer due. Reload the page's data, or the
+				// "due for a refresh" warnings stay up until a reload even though looking is now free.
+				void invalidateAll();
 			}
 		} catch (e) {
 			// A stopped run has no verdict, so nothing was posted and nothing is recorded.
