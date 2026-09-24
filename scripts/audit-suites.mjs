@@ -80,6 +80,21 @@ const cases = [
     def topKFrequent(self, nums, k):
         from collections import Counter
         return [v for v, _ in Counter(nums).most_common(k)]`],
+  ['top-k-frequent-elements', 'NEAR-MISS bucket sort one bucket short', false, `class Solution:
+    def topKFrequent(self, nums, k):
+        count = {}
+        for n in nums:
+            count[n] = count.get(n, 0) + 1
+        freq = [[] for _ in range(len(nums) + 1)]
+        for n, c in count.items():
+            freq[c].append(n)
+        res = []
+        for i in range(len(nums) - 1, 0, -1):
+            for n in freq[i]:
+                res.append(n)
+                if len(res) == k:
+                    return res
+        return res`],
   ['top-k-frequent-elements', 'CHEAT returns most common 1', false, `class Solution:
     def topKFrequent(self, nums, k):
         from collections import Counter

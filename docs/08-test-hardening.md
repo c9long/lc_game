@@ -659,3 +659,23 @@ count rather than a hunch.
 - [x] `missing-number` — Easy
 - [x] `sum-of-two-integers` — Medium
 - [x] `reverse-integer` — Medium
+
+## Arrays where every element is the same (2026-09-24)
+
+Chris's Top K Frequent solution passed the suite and was wrong: it failed on `nums = [7, 7], k = 1`.
+A bucket-sort solution indexes buckets by frequency, so `len(nums)` is the highest bucket it can
+ever need, and an off-by-one in that bound only shows when some value actually reaches it.
+
+The suite had no such case, and neither did 31 others. Drawing values independently from a range
+essentially never produces an array where everything is equal — for Top K, 1 in 13 per extra
+element — so the only repeats-everywhere cases anywhere in `data/tests/` were arrays of length one,
+where the bug tends to cancel out. Ties are exactly what separate a strict comparison from a
+non-strict one, which makes this a systematic blind spot rather than one problem's bad luck.
+
+`generators.same()` draws one, and eighteen generators now use it: the frequency and counting
+problems, the monotonic-deque and monotonic-stack ones (a window of equals is the only input where
+popping on `>=` and on `>` differ), the DP arrays, and the duplicate-tolerant backtracking ones.
+`[7, 7]` with `k = 1`, `[3, 3, 3, 3]` with `k = 1` and `[1, 1, 2, 2]` with `k = 2` are also pinned
+as curated extras, so they survive however the draw goes.
+
+A near-miss for the off-by-one bucket bound is in the audit. It scores 25/46 on the new suite.

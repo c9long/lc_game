@@ -68,6 +68,20 @@ def word(rng, n, alphabet=string.ascii_lowercase):
     return "".join(rng.choice(alphabet) for _ in range(n))
 
 
+UNIFORM_CHANCE = 0.12
+
+
+def same(rng, lo, hi, n_lo=2, n_hi=8):
+    """An array where every element is the same value.
+
+    Drawing values independently from any range essentially never produces one, so every suite's
+    arrays were varied and the only repeats-everywhere cases were arrays of length 1, where the
+    bug a repeat exposes usually cancels out. Ties are what break a strict-vs-non-strict comparison,
+    and a value filling the whole array is what breaks a bound of len(nums) - 1.
+    """
+    return [rng.randint(lo, hi)] * rng.randint(n_lo, n_hi)
+
+
 def edge_sizes(rng):
     """Bias towards the boundaries, where solutions actually break."""
     return rng.choice([1, 1, 2, 2, 3, 3, 4, 5, 8, 12, 20, 40])
@@ -223,6 +237,8 @@ def _contains_duplicate(rng):
     n = max(2, edge_sizes(rng))
     if rng.random() < 0.10:
         return [[rng.randint(-50, 50)]]             # the shortest the constraints allow
+    if rng.random() < UNIFORM_CHANCE:
+        return [same(rng, -50, 50)]                 # every element the same: the answer is True
     if rng.random() < 0.5:
         return [distinct_ints(rng, n)]              # answer False
     # The duplicate is planted at two random positions rather than left to chance, so it is usually
@@ -302,6 +318,14 @@ def _top_k_frequent(rng):
     # "It is guaranteed that the answer is unique", so the k-th and (k+1)-th frequencies must
     # differ; anything else is an input the problem promises will not occur. Ties BELOW the cut are
     # allowed, which the old generator forbade by making every frequency distinct.
+    #
+    # One value filling the whole array is drawn deliberately. A bucket-sort solution indexes
+    # buckets by frequency, so the highest bucket it can ever need is len(nums), and an off-by-one
+    # in that bound only shows when some value actually reaches it. Drawing 1..20 values from
+    # thirteen is never going to produce that by chance: the only such cases the suite had were
+    # arrays of length one, where the bug can cancel out.
+    if rng.random() < 0.15:
+        return [[rng.randint(-6, 6)] * rng.randint(2, 8), 1]
     nums = ints(rng, rng.randint(1, 20), -6, 6)
     counts = {}
     for n in nums:
@@ -347,6 +371,10 @@ def _longest_consecutive(rng):
         return [[]]                                 # the constraints allow an empty array
     if rng.random() < 0.08:
         return [[rng.randint(-10 ** 9, 10 ** 9)]]   # one element, at the far end of the value range
+    if rng.random() < UNIFORM_CHANCE:
+        # One value repeated: the longest run is 1, and a counter that does not de-duplicate says
+        # otherwise. The repeat-inside-a-run case below only ever tested a repeat beside neighbours.
+        return [same(rng, -30, 30)]
     nums = []
     for _ in range(rng.randint(1, 4)):
         start = rng.randint(-30, 30)
@@ -586,7 +614,7 @@ def _binary_search(rng):
 
 @generator("koko-eating-bananas")
 def _koko(rng):
-    piles = ints(rng, rng.randint(1, 8), 1, 40)
+    piles = same(rng, 1, 40) if rng.random() < UNIFORM_CHANCE else ints(rng, rng.randint(1, 8), 1, 40)
     # h == len(piles) is the tightest legal budget, where the answer is exactly max(piles); a very
     # large h is the other end, where the answer is 1. Three and one case covered those.
     roll = rng.random()
@@ -649,6 +677,8 @@ def _jump_game_ii(rng):
 
 @generator("last-stone-weight")
 def _last_stone(rng):
+    if rng.random() < UNIFORM_CHANCE:
+        return [same(rng, 1, 30)]                   # equal stones annihilate in pairs
     return [ints(rng, rng.randint(1, 12), 1, 30)]
 
 
@@ -659,11 +689,15 @@ def _climbing_stairs(rng):
 
 @generator("min-cost-climbing-stairs")
 def _min_cost_stairs(rng):
+    if rng.random() < UNIFORM_CHANCE:
+        return [same(rng, 0, 40)]
     return [ints(rng, rng.randint(2, 15), 0, 40)]
 
 
 @generator("house-robber")
 def _house_robber(rng):
+    if rng.random() < UNIFORM_CHANCE:
+        return [same(rng, 0, 40)]
     return [ints(rng, rng.randint(1, 15), 0, 40)]
 
 
@@ -671,6 +705,8 @@ def _house_robber(rng):
 def _max_subarray(rng):
     # The subarray must be non-empty, so an all-negative array answers with its largest element.
     # That is what catches a running sum floored at 0, and there were two such arrays in 43.
+    if rng.random() < UNIFORM_CHANCE:
+        return [same(rng, -20, 20)]
     lo, hi = rng.choice([(-20, 20), (-20, 20), (-20, -1), (-10000, -1)])
     return [ints(rng, rng.randint(1, 18), lo, hi)]
 
@@ -1330,6 +1366,8 @@ def _itinerary(rng):
 
 @generator("house-robber-ii")
 def _rob_ii(rng):
+    if rng.random() < UNIFORM_CHANCE:
+        return [same(rng, 0, 40)]
     return [ints(rng, rng.randint(1, 14), 0, 40)]
 
 
@@ -1396,6 +1434,8 @@ def _lis(rng):
 
 @generator("partition-equal-subset-sum")
 def _partition_equal(rng):
+    if rng.random() < UNIFORM_CHANCE:
+        return [same(rng, 1, 25)]                   # equal values split evenly only when there are an even number
     return [ints(rng, rng.randint(1, 12), 1, 25)]
 
 
@@ -1414,6 +1454,8 @@ def _lcs(rng):
 
 @generator("best-time-to-buy-and-sell-stock-with-cooldown")
 def _cooldown(rng):
+    if rng.random() < UNIFORM_CHANCE:
+        return [same(rng, 0, 20)]                   # a flat price line earns nothing
     return [ints(rng, rng.randint(1, 12), 0, 20)]
 
 
@@ -1479,6 +1521,8 @@ def _edit_distance(rng):
 
 @generator("burst-balloons", count=25)
 def _burst_balloons(rng):
+    if rng.random() < UNIFORM_CHANCE:
+        return [same(rng, 0, 12, 2, 6)]
     return [ints(rng, rng.randint(1, 8), 0, 12)]    # the reference is O(n^3)
 
 
@@ -1525,6 +1569,8 @@ def _subsets(rng):
 @generator("subsets-ii", count=25)
 def _subsets_ii(rng):
     # 1 <= nums.length, so an empty array is not a legal input.
+    if rng.random() < UNIFORM_CHANCE:
+        return [same(rng, -3, 3, 2, 5)]             # n equal values have n + 1 distinct subsets, not 2**n
     return [ints(rng, rng.randint(1, 7), -3, 3)]
 
 
@@ -1540,6 +1586,8 @@ def _combination_sum(rng):
 
 @generator("combination-sum-ii", count=25)
 def _combination_sum_ii(rng):
+    if rng.random() < UNIFORM_CHANCE:
+        return [same(rng, 1, 9, 2, 6), rng.randint(1, 20)]
     return [sorted(ints(rng, rng.randint(1, 8), 1, 9)), rng.randint(1, 20)]
 
 
@@ -1695,6 +1743,8 @@ def _reverse_integer(rng):
 
 @generator("jump-game")
 def _jump_game(rng):
+    if rng.random() < UNIFORM_CHANCE:
+        return [same(rng, 0, 3)]                    # all zeros cannot move, all n > 0 always can
     return [ints(rng, rng.randint(1, 14), 0, 4)]
 
 
@@ -1775,12 +1825,17 @@ def _k_closest(rng):
 
 @generator("kth-largest-element-in-an-array")
 def _kth_largest_array(rng):
-    nums = ints(rng, rng.randint(1, 15), -30, 30)
+    # Every element equal makes the k-th largest the same whatever k is, which is what catches a
+    # partition that drops or duplicates ties.
+    nums = same(rng, -30, 30) if rng.random() < UNIFORM_CHANCE else ints(rng, rng.randint(1, 15), -30, 30)
     return [nums, rng.randint(1, len(nums))]
 
 
 @generator("task-scheduler")
 def _task_scheduler(rng):
+    if rng.random() < UNIFORM_CHANCE:
+        # One label repeated is the worst case for the cooldown: every gap must be idled through.
+        return [[rng.choice("ABCD")] * rng.randint(2, 8), rng.randint(0, 4)]
     return [[rng.choice("ABCD") for _ in range(rng.randint(1, 14))], rng.randint(0, 4)]
 
 
@@ -1877,6 +1932,8 @@ def _car_fleet(rng):
 def _largest_rectangle(rng):
     n = rng.randint(1, 14)
     shape = rng.random()
+    if shape < 0.1:                                  # one flat bar across the whole histogram
+        return [same(rng, 0, 20, 2, 12)]
     if shape < 0.2:                                  # plateaus: the prev/next-smaller strictness bug
         out = []
         while len(out) < n:
@@ -1937,6 +1994,11 @@ def _min_window(rng):
 def _sliding_max(rng):
     # An all-negative window is what catches a running maximum initialised to 0, and random
     # values in [-20, 20] almost never produce one: there was a single case in 42.
+    if rng.random() < UNIFORM_CHANCE:
+        # Equal values decide whether the deque pops on >= or on >, and a window of equals is the
+        # only input where the two differ.
+        nums = same(rng, -20, 20)
+        return [nums, rng.randint(1, len(nums))]
     lo, hi = rng.choice([(-20, 20), (-20, 20), (-20, -1), (-10000, -1)])
     nums = ints(rng, rng.randint(1, 15), lo, hi)
     return [nums, rng.randint(1, len(nums))]

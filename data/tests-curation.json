@@ -66,6 +66,7 @@
     "LRUCache example never forces an eviction that is later read back, and the Trie example never",
     "searches a strict prefix, so `search == startsWith` passes it.",
     "Format matches the problem's params: for design problems that is [ops, argsPerOp].",
+    "top-k-frequent-elements pins arrays where ONE value fills the whole array: a bucket-sort solution indexes buckets by frequency, so len(nums) is the highest bucket it can ever need, and an off-by-one in that bound only shows when a value actually reaches it. [1,1,2,2] with k=2 pins the other end, where every value ties and k takes them all.",
     "n-queens is drawn at random from 1..9, so some sizes were absent from any given run; n = 2 and n = 3 matter most because they are the only ones with NO solutions, and an empty answer is what a wrong diagonal check turns into. Pinned here rather than left to the draw."
   ],
   "extra": {
@@ -456,6 +457,33 @@
             2
           ]
         ]
+      ]
+    ],
+    "top-k-frequent-elements": [
+      [
+        [
+          7,
+          7
+        ],
+        1
+      ],
+      [
+        [
+          3,
+          3,
+          3,
+          3
+        ],
+        1
+      ],
+      [
+        [
+          1,
+          1,
+          2,
+          2
+        ],
+        2
       ]
     ],
     "n-queens": [
