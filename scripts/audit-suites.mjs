@@ -80,6 +80,31 @@ const cases = [
     def topKFrequent(self, nums, k):
         from collections import Counter
         return [v for v, _ in Counter(nums).most_common(k)]`],
+  // Chris's own solution, 2026-09-24: it scored 43/43 on the suite as it then stood. The early
+  // return covers arrays of length 1, which were the only all-equal arrays the suite had, and the
+  // bucket loop stops at len(nums) - 1, so the bucket a value that fills the whole array lands in
+  // is never read. nums = [7, 7], k = 1 returns [].
+  ['top-k-frequent-elements', 'NEAR-MISS counts buckets but never reads bucket len(nums)', false, `class Solution:
+    def topKFrequent(self, nums, k):
+        if len(nums) == 1:
+            return nums
+        count = defaultdict(list)
+        nums.sort()
+        cur = 1
+        for i in range(1, len(nums)):
+            if nums[i] == nums[i-1]:
+                cur += 1
+            else:
+                count[cur].append(nums[i-1])
+                cur = 1
+        count[cur].append(nums[len(nums)-1])
+        res = []
+        for i in range(len(nums)-1, -1, -1):
+            if len(res) == k:
+                return res
+            else:
+                res += count[i]
+        return res`],
   ['top-k-frequent-elements', 'NEAR-MISS bucket sort one bucket short', false, `class Solution:
     def topKFrequent(self, nums, k):
         count = {}

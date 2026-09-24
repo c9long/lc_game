@@ -678,4 +678,7 @@ popping on `>=` and on `>` differ), the DP arrays, and the duplicate-tolerant ba
 `[7, 7]` with `k = 1`, `[3, 3, 3, 3]` with `k = 1` and `[1, 1, 2, 2]` with `k = 2` are also pinned
 as curated extras, so they survive however the draw goes.
 
-A near-miss for the off-by-one bucket bound is in the audit. It scores 25/46 on the new suite.
+Two near-misses for the off-by-one bucket bound are in the audit, including the solution that
+prompted this — 43/43 on the suite as it then stood, 35/46 now. Its early return for a
+single-element array is what hid the bug: the only all-equal arrays the suite had were of length 1,
+so the one branch that skipped them was also the one branch that made them pass.
