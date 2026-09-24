@@ -249,6 +249,15 @@
 <div class="solve">
 	<section class="card prose desc">
 		{@html data.contentHtml ?? '<p>No description available.</p>'}
+		{#if data.notes.length}
+			<!-- LeetCode has dropped the definitions its statements used to carry, so a problem can use
+			     its central term without ever defining it. The statement stays verbatim; this says what
+			     the term means. -->
+			<aside class="notes">
+				<strong>Clarification</strong>
+				<ul>{#each data.notes as n (n)}<li>{n}</li>{/each}</ul>
+			</aside>
+		{/if}
 		<p class="row">{#each data.tags as t (t)}<span class="pill">{t}</span>{/each}</p>
 	</section>
 
@@ -375,6 +384,8 @@
 	.solve { display: grid; grid-template-columns: minmax(300px, 2fr) minmax(420px, 3fr); gap: 1rem; align-items: start; }
 	@media (max-width: 1000px) { .solve { grid-template-columns: 1fr; } }
 	.desc { max-height: 80vh; overflow: auto; }
+	.notes { border-left: 3px solid var(--accent-2); background: var(--panel-2); border-radius: 6px; padding: 0.5rem 0.9rem; margin: 1rem 0; }
+	.notes ul { margin: 0.3rem 0 0; padding-left: 1.1rem; }
 	.work { display: grid; gap: 0.8rem; }
 	.toolbar .spacer { flex: 1; }
 	button.stop { border-color: var(--bad); color: var(--bad); }

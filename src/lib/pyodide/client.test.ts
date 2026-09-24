@@ -34,3 +34,18 @@ describe('custom testcase fields', () => {
 		expect(Object.keys(suites).length).toBe(150);
 	});
 });
+
+describe('description clarifications', () => {
+	// LeetCode's statements are shown verbatim, so where one never defines its own term the note
+	// file is the only place that does. A note for a slug that does not exist would never be seen.
+	it('names real problems and says something', async () => {
+		const notes = (await import('../../../data/description-notes.json')).default.notes as Record<string, string[]>;
+		const problems = (await import('../../../data/neetcode150.json')).default as { slug: string }[];
+		const slugs = new Set(problems.map((p) => p.slug));
+		for (const [slug, lines] of Object.entries(notes)) {
+			expect(slugs.has(slug), `${slug} is not a problem`).toBe(true);
+			expect(lines.length).toBeGreaterThan(0);
+			for (const line of lines) expect(line.trim().length).toBeGreaterThan(20);
+		}
+	});
+});

@@ -10,8 +10,11 @@ import { LANGS } from '$lib/langs';
 import { PROBLEM_BY_SLUG } from '$lib/game/curriculum';
 import { isDue } from '$lib/game/srs';
 import ownDescriptions from '../../../../data/premium-descriptions.json';
+import descriptionNotes from '../../../../data/description-notes.json';
 
 const OWN_DESCRIPTIONS = ownDescriptions as Record<string, { title: string; html: string; starterPython?: string }>;
+/** Definitions LeetCode's own statement leaves out; see data/description-notes.json. */
+const NOTES = (descriptionNotes as { notes: Record<string, string[]> }).notes;
 
 export const load: PageServerLoad = async ({ params, locals, platform }) => {
 	const user = requireUser(locals);
@@ -74,6 +77,7 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 		// statement is supplied from data/premium-descriptions.json instead.
 		contentHtml: problem.contentHtml ?? OWN_DESCRIPTIONS[problem.slug]?.html ?? null,
 		ownDescription: !problem.contentHtml && Boolean(OWN_DESCRIPTIONS[problem.slug]),
+		notes: NOTES[problem.slug] ?? [],
 		tags: problem.tags,
 		exampleTestcases: problem.exampleTestcases ?? '',
 		isPaidOnly: problem.isPaidOnly,

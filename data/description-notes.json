@@ -1,0 +1,56 @@
+{
+  "_comment": [
+    "Clarifications shown under a problem's statement, added 2026-09-24.",
+    "LeetCode's statements are shown verbatim and are never edited here. But LeetCode has dropped",
+    "the definitions it used to carry — 'A subarray is a contiguous non-empty sequence...' — and",
+    "several statements now use their central term without ever defining it. Longest Consecutive",
+    "Sequence never says what a consecutive sequence is, so it reads as though the run has to be",
+    "adjacent in the array. NeetCode's rewrites define these terms; these notes say the same thing,",
+    "in the app's own words, without touching the statement itself.",
+    "Add a slug here when a statement leaves its own term undefined. Keep it to definitions: a hint",
+    "about how to solve the problem does not belong on the page that sets it."
+  ],
+  "notes": {
+    "longest-consecutive-sequence": [
+      "A consecutive sequence is a sequence of elements in which each element is exactly 1 greater than the previous element. The elements do not have to be next to each other in the original array."
+    ],
+    "maximum-subarray": [
+      "A subarray is a contiguous, non-empty run of elements within the array."
+    ],
+    "maximum-product-subarray": [
+      "A subarray is a contiguous, non-empty run of elements within the array."
+    ],
+    "longest-substring-without-repeating-characters": [
+      "A substring is a contiguous run of characters within the string.",
+      "A subsequence keeps the order but may skip characters, so it is not the same thing: in \"pwwkew\", \"pwke\" is a subsequence but not a substring."
+    ],
+    "longest-repeating-character-replacement": [
+      "A substring is a contiguous run of characters within the string."
+    ],
+    "permutation-in-string": [
+      "A substring is a contiguous run of characters within the string."
+    ],
+    "minimum-window-substring": [
+      "A substring is a contiguous run of characters within the string."
+    ],
+    "longest-palindromic-substring": [
+      "A substring is a contiguous run of characters within the string."
+    ],
+    "palindrome-partitioning": [
+      "A substring is a contiguous run of characters within the string, so the parts of a partition are the pieces s is cut into, in order."
+    ],
+    "interleaving-string": [
+      "A substring is a contiguous run of characters within the string."
+    ],
+    "longest-increasing-subsequence": [
+      "A subsequence is what is left after deleting some elements (possibly none) without reordering the rest, so its elements do not have to be next to each other in the array.",
+      "Strictly increasing means each element is greater than the one before it; equal neighbours do not count."
+    ],
+    "distinct-subsequences": [
+      "A subsequence is what is left after deleting some characters (possibly none) without reordering the rest, so its characters do not have to be next to each other in the string."
+    ],
+    "hand-of-straights": [
+      "Consecutive cards means their values increase by exactly 1 each time, such as 2, 3, 4. Order in the hand does not matter, since the cards are rearranged."
+    ]
+  }
+}
