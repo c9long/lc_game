@@ -77,7 +77,7 @@ def main() -> int:
                 # oracle, fetched raw by the browser. Judging the reference against itself on its own
                 # examples has to come back clean for every problem shape.
                 examples = [c["args"] for c in suite["cases"][: suite.get("exampleCount") or len(suite["cases"])]]
-                custom = driver.custom(source, raw, suite, examples)
+                custom = driver.custom(source, raw, suite, examples)["cases"]
         except Timeout:
             failures.append((slug, f"reference solution exceeded {TIMEOUT_S}s"))
             continue

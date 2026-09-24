@@ -189,11 +189,14 @@ export interface CustomResult {
 	/** The reference solution failed on this input — usually one outside the problem's constraints. */
 	refError?: string;
 	fatal?: boolean;
+	/** Everything this case printed, stdout and stderr together. */
 	stdout?: string;
 }
 
 export interface CustomOutcome {
 	results: CustomResult[];
+	/** Console output from loading the file, before any case ran. */
+	setup: string;
 	elapsedMs: number;
 	timedOut: boolean;
 }
@@ -206,7 +209,7 @@ export async function runCustom(
 	timeoutMs = TIME_LIMIT_MS
 ): Promise<CustomOutcome> {
 	try {
-		const r = await call<{ results: CustomResult[]; elapsedMs: number }>(
+		const r = await call<{ results: { setup: string; cases: CustomResult[] }; elapsedMs: number }>(
 			{
 				type: 'custom',
 				source,
@@ -216,9 +219,9 @@ export async function runCustom(
 			},
 			timeoutMs
 		);
-		return { results: r.results, elapsedMs: r.elapsedMs, timedOut: false };
+		return { results: r.results.cases, setup: r.results.setup, elapsedMs: r.elapsedMs, timedOut: false };
 	} catch (e) {
-		if ((e as Error).message === 'timeout') return { results: [], elapsedMs: timeoutMs, timedOut: true };
+		if ((e as Error).message === 'timeout') return { results: [], setup: '', elapsedMs: timeoutMs, timedOut: true };
 		throw e;
 	}
 }

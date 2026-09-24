@@ -704,12 +704,16 @@ def custom(source: str, ref_source, spec: dict, inputs: list) -> list:
     stored expectation was produced, and the verdict uses the same rule as judge(). An input the
     reference cannot handle — usually one outside the problem's constraints, which LeetCode checks
     and this cannot — gets `refError` and no verdict rather than a misleading one. `ref_source` may
-    be None, in which case only the output is reported. Each case carries its own stdout. Never raises.
+    be None, in which case only the output is reported. Never raises.
+
+    Returns {"setup": str, "cases": [...]}. Each case carries the console output of its own call,
+    stdout and stderr together, since a traceback printed by hand is console output like any other.
+    `setup` is whatever the file printed while it was being loaded, which belongs to no single case.
     """
     try:
         check = _checker(spec)
     except ValueError as e:
-        return [{"ok": False, "error": str(e), "fatal": True}]
+        return {"setup": "", "cases": [{"ok": False, "error": str(e), "fatal": True}]}
 
     expected: list = [None] * len(inputs)
     ref_errors: list = [None] * len(inputs)
@@ -722,15 +726,22 @@ def custom(source: str, ref_source, spec: dict, inputs: list) -> list:
         if ref_ns is not None:
             for i, args in enumerate(inputs):
                 try:
-                    with contextlib.redirect_stdout(io.StringIO()):
+                    with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
                         expected[i] = json_safe(run_case(ref_ns, spec, args))
                 except Exception as e:
                     ref_errors[i] = f"{type(e).__name__}: {e}"
 
+    # A print at the top of the file runs while the file is loaded, before any case, so it is
+    # captured separately rather than being lost or blamed on the first case.
+    setup = io.StringIO()
     try:
-        ns = namespace(source)
+        with contextlib.redirect_stdout(setup), contextlib.redirect_stderr(setup):
+            ns = namespace(source)
     except Exception as e:
-        return [{"ok": False, "error": f"{type(e).__name__}: {e}", "fatal": True}]
+        return {
+            "setup": setup.getvalue(),
+            "cases": [{"ok": False, "error": f"{type(e).__name__}: {e}", "fatal": True}],
+        }
 
     results = []
     for i, args in enumerate(inputs):
@@ -741,7 +752,7 @@ def custom(source: str, ref_source, spec: dict, inputs: list) -> list:
                 entry["refError"] = ref_errors[i]
         out = io.StringIO()
         try:
-            with contextlib.redirect_stdout(out):
+            with contextlib.redirect_stdout(out), contextlib.redirect_stderr(out):
                 actual = json_safe(run_case(ns, spec, args))
             entry["actual"] = actual
             if ref_source is None or ref_errors[i]:
@@ -756,4 +767,4 @@ def custom(source: str, ref_source, spec: dict, inputs: list) -> list:
             entry["error"] = f"{type(e).__name__}: {e}"
         entry["stdout"] = out.getvalue()
         results.append(entry)
-    return results
+    return {"setup": setup.getvalue(), "cases": results}

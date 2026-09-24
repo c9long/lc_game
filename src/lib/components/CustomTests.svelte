@@ -63,6 +63,7 @@
 	let view = $state<'testcase' | 'result'>('testcase');
 	let running = $state(false);
 	let results = $state<CustomResult[] | null>(null);
+	let setup = $state('');
 	let elapsedMs = $state(0);
 	let timedOut = $state(false);
 	let failure = $state('');
@@ -121,6 +122,7 @@
 			const inputs = parsed.map((p) => p.args!);
 			const out = await runCustom(code, suite, await reference(), inputs);
 			results = out.results;
+			setup = out.setup;
 			elapsedMs = out.elapsedMs;
 			timedOut = out.timedOut;
 			view = 'result';
@@ -193,6 +195,7 @@
 	{:else if fatal}
 		<p class="bad">Compile Error</p>
 		<pre>{fatal.error}</pre>
+		{#if setup}<div class="block"><span class="muted">Console, while the file was loaded</span><pre>{setup}</pre></div>{/if}
 	{:else if current}
 		<p class="muted">
 			{#if current.ok === true}<strong class="good">Output matches</strong>
@@ -204,8 +207,15 @@
 			<span class="muted">Input</span>
 			{#each params as p, j (p.name)}<pre>{p.name} = {formatValue(current.args?.[j])}</pre>{/each}
 		</div>
-		{#if current.stdout}
-			<div class="block"><span class="muted">Stdout</span><pre>{current.stdout}</pre></div>
+		<div class="block">
+			<span class="muted">Console</span>
+			{#if current.stdout}<pre>{current.stdout}</pre>{:else}<pre class="muted">(nothing printed)</pre>{/if}
+		</div>
+		{#if setup}
+			<div class="block">
+				<span class="muted">Console, while the file was loaded</span>
+				<pre>{setup}</pre>
+			</div>
 		{/if}
 		<div class="block">
 			<span class="muted">Output</span>
