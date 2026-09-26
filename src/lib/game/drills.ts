@@ -152,10 +152,22 @@ export function buildDrillSet(
 	return out;
 }
 
-export function ingotsFor(results: boolean[]): number {
+/** Ingots for a whole set. `multiplier` applies to each correct answer (Monuments); the perfect-set
+ *  bonus is a flat reward for the set and is not multiplied. */
+export function ingotsFor(results: boolean[], multiplier = 1): number {
 	const correct = results.filter(Boolean).length;
 	const bonus = results.length >= DRILL_SET_SIZE && correct === results.length ? PERFECT_SET_BONUS : 0;
-	return correct * INGOT_PER_CORRECT + bonus;
+	return correct * INGOT_PER_CORRECT * multiplier + bonus;
+}
+
+/** What one answer pays, so each answer is priced at the multiplier in force when it was given.
+ *  Recomputing the whole set's total instead would re-price earlier answers after a Monument went
+ *  up mid-set. */
+export function ingotsForAnswer(correct: boolean, setResults: boolean[], multiplier = 1): number {
+	let n = correct ? INGOT_PER_CORRECT * multiplier : 0;
+	const done = setResults.length >= DRILL_SET_SIZE;
+	if (done && setResults.every(Boolean)) n += PERFECT_SET_BONUS;
+	return n;
 }
 
 /** A nudge for a near miss of the right value in the wrong type. `bin(10)` prints `'0b1010'`, and

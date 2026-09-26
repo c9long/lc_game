@@ -21,6 +21,8 @@ import {
 	fitsTerrain,
 	gateSatisfied,
 	placementError,
+	drillIngotMultiplier,
+	MAX_MONUMENTS_PER_CITY,
 	relocate,
 	settleProduction,
 	terrainAt,
@@ -29,7 +31,7 @@ import {
 	wellPlaced,
 	type PlacedBuilding
 } from './city';
-import { DRILL_INTERVALS, MAX_DUE_PER_SET, afterDrill, buildDrillSet, checkAnswer, ingotsFor, normalizeOutput, type Drill, type DrillProgress } from './drills';
+import { DRILL_INTERVALS, MAX_DUE_PER_SET, afterDrill, buildDrillSet, checkAnswer, ingotsFor, ingotsForAnswer, normalizeOutput, type Drill, type DrillProgress } from './drills';
 
 const DAY = 86_400_000;
 const t0 = new Date('2026-09-04T12:00:00Z');
@@ -688,5 +690,39 @@ describe('relocation onto the smaller map', () => {
 		// Storage slots are distinct, so the (city, x, y) unique index holds.
 		expect(new Set(stored.map((p) => p.x)).size).toBe(stored.length);
 		expect(relocate(placed)).toEqual([]);
+	});
+});
+
+describe('monuments', () => {
+	const m = (id: string, city: number, x: number) => ({ id, kind: 'monument', city, x, y: 0, level: 1 });
+
+	it('adds +100% Ingots per Monument, rather than doubling', () => {
+		expect(drillIngotMultiplier([])).toBe(1);
+		expect(drillIngotMultiplier([m('a', 0, 0)])).toBe(2);
+		expect(drillIngotMultiplier([m('a', 0, 0), m('b', 0, 1)])).toBe(3);
+		expect(drillIngotMultiplier([m('a', 0, 0), m('b', 0, 1), m('c', 1, 0)])).toBe(4);
+		// held in storage, a Monument does nothing
+		expect(drillIngotMultiplier([m('a', 0, 0), m('b', STORAGE, 0)])).toBe(2);
+	});
+
+	it('pays each answer at the multiplier, and leaves the perfect-set bonus flat', () => {
+		expect(ingotsForAnswer(true, [], 3)).toBe(3);
+		expect(ingotsForAnswer(false, [], 3)).toBe(0);
+		expect(ingotsForAnswer(true, [true, true, true, true, true], 3)).toBe(3 + 2);
+		expect(ingotsForAnswer(true, [true, false, true, true, true], 3)).toBe(3);
+		expect(ingotsFor([true, true, true, true, true], 2)).toBe(10 + 2);
+	});
+
+	it(`caps a city at ${MAX_MONUMENTS_PER_CITY}`, () => {
+		const two = [m('a', 0, 4), m('b', 0, 5)];
+		expect(placementError('monument', 0, 1, 0, [m('a', 0, 4)], 0)).toBeNull();
+		expect(placementError('monument', 0, 1, 0, two, 0)?.error).toBe('limit');
+		// another city is not affected, and neither is a Monument moving within its own city
+		expect(placementError('monument', 1, 3, 3, two, 1000)).toBeNull();
+		expect(placementError('monument', 0, 1, 0, [m('a', 0, 4)], 0)).toBeNull();
+		// storage does not count towards a city's cap
+		expect(placementError('monument', 0, 1, 0, [m('a', 0, 4), m('b', STORAGE, 0)], 0)).toBeNull();
+		// other kinds are unaffected
+		expect(placementError('hut', 0, 1, 0, two, 0)).toBeNull();
 	});
 });

@@ -1,12 +1,13 @@
 import { and, eq, inArray } from 'drizzle-orm';
 import type { BatchItem } from 'drizzle-orm/batch';
 import type { Db } from '../db';
-import { drillAttempts, drillState, planItems, type User } from '../db/schema';
+import { buildings, drillAttempts, drillState, planItems, type User } from '../db/schema';
 import { randomId } from '../crypto';
 import { addResourceStatement, getState, setState } from './state';
 import { DRILL_BANKS, DRILL_LANGS, drillById } from '$lib/game/drillbank';
 import { drillInstance, instanceCount } from '$lib/game/drillvariants';
-import { afterDrill, answerNote, buildDrillSet, checkAnswer, ingotsFor, type Drill, type DrillProgress } from '$lib/game/drills';
+import { afterDrill, answerNote, buildDrillSet, checkAnswer, ingotsForAnswer, type Drill, type DrillProgress } from '$lib/game/drills';
+import { drillIngotMultiplier } from '$lib/game/city';
 
 export interface DrillSetState {
 	lang: string;
@@ -110,10 +111,10 @@ export async function answerDrill(
 	set.results[drillId] = correct;
 	const results = set.ids.map((id) => set.results[id]).filter((r): r is boolean => r !== undefined);
 	const setDone = results.length === set.ids.length;
-	const earnedSoFar = set.ingots;
-	const total = setDone ? ingotsFor(results) : results.filter(Boolean).length;
-	const delta = total - earnedSoFar;
-	set.ingots = total;
+	// Monuments standing in a city add +100% each to what a correct answer pays.
+	const multiplier = await ingotMultiplier(db);
+	const delta = ingotsForAnswer(correct, setDone ? results : [], multiplier);
+	set.ingots += delta;
 	set.bonusPaid = setDone;
 
 	const statements: BatchItem<'sqlite'>[] = [
@@ -153,6 +154,12 @@ export async function answerDrill(
 // set is chosen from the spaced-repetition ladder, so letting practice advance srsStep would let
 // an evening of grinding empty tomorrow's set — practising ahead would quietly consume the
 // schedule it is meant to support. Keeping it ephemeral means "no rewards" has no asterisk.
+
+/** The Ingot multiplier from Monuments currently standing in a city. */
+export async function ingotMultiplier(db: Db): Promise<number> {
+	const rows = await db.select({ kind: buildings.kind, city: buildings.city }).from(buildings).where(eq(buildings.kind, 'monument')).all();
+	return drillIngotMultiplier(rows);
+}
 
 export async function loadDrillSet(db: Db, today: string): Promise<DrillSetState | null> {
 	return getState<DrillSetState | null>(db, key(today), null);

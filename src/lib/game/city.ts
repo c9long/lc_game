@@ -33,8 +33,21 @@ export const EFFECT_TEXT: Record<BuildingEffect, string> = {
 	crossing: 'buildings on either bank produce ×1.25',
 	hauls: '+1 timber and +1 stone on every solve',
 	ironworks: '×1.5 iron from Hard solves',
-	monument: 'a monument'
+	monument: '+100% Ingots from drills; each Monument adds another +100%, not a doubling'
 };
+
+/** How many Monuments a single city may hold. The bonus adds rather than compounds, so the cap is
+ *  what keeps it bounded: two per city, six across all three, for at most ×7 Ingots. */
+export const MAX_MONUMENTS_PER_CITY = 2;
+/** Added to the Ingot multiplier per Monument standing in a city (storage does not count). */
+export const MONUMENT_INGOT_BONUS = 1;
+
+/** The multiplier on Ingots from drill answers: 1 + 1 per standing Monument. Added, never
+ *  multiplied — two Monuments are ×3, not ×4. */
+export function drillIngotMultiplier(placed: Pick<PlacedBuilding, 'kind' | 'city'>[]): number {
+	const standing = placed.filter((b) => b.kind === 'monument' && b.city !== STORAGE).length;
+	return 1 + MONUMENT_INGOT_BONUS * standing;
+}
 
 /** Six, not the original eight: a wide open grid had one dominant answer — fill it with Hash
  *  Markets — so tiles are scarcer now and spread over three cities with terrain of their own. */
@@ -272,6 +285,10 @@ export function placementError(
 		return { error: 'terrain', message: `must stand beside a ${TERRAIN_META[near].label}` };
 	}
 	if (placed.some((b) => b.city === city && b.x === x && b.y === y)) return { error: 'occupied', message: 'tile is occupied' };
+	// `placed` excludes the building being moved, so a Monument can still move within its city.
+	if (kindId === 'monument' && placed.filter((b) => b.kind === 'monument' && b.city === city).length >= MAX_MONUMENTS_PER_CITY) {
+		return { error: 'limit', message: `a city holds at most ${MAX_MONUMENTS_PER_CITY} Monuments` };
+	}
 	return null;
 }
 

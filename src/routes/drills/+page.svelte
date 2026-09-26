@@ -259,6 +259,7 @@
 	<section class="card">
 		<h2>Forge</h2>
 		<p>Ingots: <strong>{data.ingots}</strong> · {data.dueCount} drill{data.dueCount === 1 ? '' : 's'} due</p>
+		{#if data.ingotMultiplier > 1}<p class="muted">🗿 Monuments: each correct answer pays ×{data.ingotMultiplier}</p>{/if}
 		<table>
 			<thead><tr><th>Module</th><th>Seen</th><th>Mastered</th><th>Total</th></tr></thead>
 			<tbody>

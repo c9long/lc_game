@@ -2,7 +2,7 @@ import type { PageServerLoad } from './$types';
 import { getDb } from '$lib/server/db';
 import { requireUser } from '$lib/server/guard';
 import { loadSnapshot } from '$lib/server/game/state';
-import { getOrCreateDrillSet, isSetComplete, loadDrillProgress } from '$lib/server/game/drills';
+import { getOrCreateDrillSet, ingotMultiplier, isSetComplete, loadDrillProgress } from '$lib/server/game/drills';
 import { DRILL_BANKS } from '$lib/game/drillbank';
 import { drillById } from '$lib/game/drillbank';
 import { drillInstance } from '$lib/game/drillvariants';
@@ -54,6 +54,7 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 		drills,
 		setIngots: set?.ingots ?? 0,
 		ingots: snap.resources.ingots ?? 0,
+		ingotMultiplier: await ingotMultiplier(db),
 		modules: Object.entries(modules).map(([k, v]) => ({ key: k, ...v })),
 		dueCount: [...progress.values()].filter((p) => p.dueAt && p.dueAt.getTime() <= snap.now.getTime()).length
 	};
