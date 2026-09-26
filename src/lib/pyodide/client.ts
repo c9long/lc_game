@@ -55,6 +55,13 @@ let nextId = 1;
 /** Rejecters for calls still waiting on the current worker, so stop() can end them. */
 const pending = new Set<(e: Error) => void>();
 
+/** Bumped whenever a message or result shape changes. Must match PROTOCOL in worker.js. The worker
+ *  is loaded from the server on every fresh start, so a page open across a deploy can end up
+ *  talking to a newer worker than it was built for; this turns that into a clear message rather
+ *  than results read in the wrong shape. */
+const PROTOCOL = 2;
+export const OUTDATED = 'The judge was updated since this page loaded. Reload the page to use it.';
+
 /** Message of the error a call rejects with when stop() ends it. */
 export const STOPPED = 'stopped';
 
@@ -104,7 +111,8 @@ function call<T>(message: Record<string, unknown>, timeoutMs: number): Promise<T
 		function onMessage(event: MessageEvent) {
 			if (event.data?.id !== id) return;
 			cleanup();
-			if (event.data.ok) resolve(event.data as T);
+			if (event.data.protocol !== PROTOCOL) reject(new Error(OUTDATED));
+			else if (event.data.ok) resolve(event.data as T);
 			else reject(new Error(event.data.error ?? 'worker failed'));
 		}
 

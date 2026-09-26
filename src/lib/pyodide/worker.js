@@ -13,6 +13,9 @@ import { loadPyodide } from './pyodide.mjs';
 
 const here = new URL('./', import.meta.url).href;
 
+/** Bumped whenever a message or result shape changes. Must match PROTOCOL in client.ts. */
+const PROTOCOL = 2;
+
 let pyodide = null;
 let judgeFn = null;
 let customFn = null;
@@ -52,7 +55,7 @@ self.onmessage = async (event) => {
 	try {
 		if (type === 'boot') {
 			await boot();
-			self.postMessage({ id, ok: true, booted: true });
+			self.postMessage({ id, protocol: PROTOCOL, ok: true, booted: true });
 			return;
 		}
 
@@ -65,6 +68,7 @@ self.onmessage = async (event) => {
 			const raw = judgeFn(source, specJson, casesJson);
 			self.postMessage({
 				id,
+				protocol: PROTOCOL,
 				ok: true,
 				results: JSON.parse(raw),
 				stdout: stdout.join('\n'),
@@ -81,6 +85,7 @@ self.onmessage = async (event) => {
 			const raw = customFn(source, refSource ?? null, specJson, inputsJson);
 			self.postMessage({
 				id,
+				protocol: PROTOCOL,
 				ok: true,
 				results: JSON.parse(raw),
 				stdout: stdout.join('\n'),
@@ -89,8 +94,8 @@ self.onmessage = async (event) => {
 			return;
 		}
 
-		self.postMessage({ id, ok: false, error: `unknown message type: ${type}` });
+		self.postMessage({ id, protocol: PROTOCOL, ok: false, error: `unknown message type: ${type}` });
 	} catch (e) {
-		self.postMessage({ id, ok: false, error: e?.message ?? String(e), stdout: stdout.join('\n') });
+		self.postMessage({ id, protocol: PROTOCOL, ok: false, error: e?.message ?? String(e), stdout: stdout.join('\n') });
 	}
 };
