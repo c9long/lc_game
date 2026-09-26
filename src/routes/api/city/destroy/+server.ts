@@ -8,7 +8,7 @@ import { addResourceStatement, loadSnapshot } from '$lib/server/game/state';
 import { BUILDING_BY_ID, costAtLevel } from '$lib/game/city';
 
 /**
- * Demolishes a building and refunds the LEVEL 1 base cost only.
+ * Demolishes a building and refunds the LEVEL 1 base cost only, at the price of the city it stands in.
  *
  * Upgrades are deliberately not refunded: their materials, Ingots and coins are spent for good, so
  * demolishing a levelled-up building is a real loss rather than a free undo. Refunding the base
@@ -26,7 +26,7 @@ export const POST: RequestHandler = async (event) => {
 	const kind = BUILDING_BY_ID.get(placed.kind);
 	if (!kind) return json({ error: 'bad_request', message: 'unknown building' }, { status: 400 });
 
-	const refund = costAtLevel(kind, 1);
+	const refund = costAtLevel(kind, 1, placed.city);
 	await db.batch([
 		db.delete(buildings).where(eq(buildings.id, placed.id)),
 		...Object.entries(refund).map(([k, v]) => addResourceStatement(db, k, v))

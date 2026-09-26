@@ -4,16 +4,20 @@ import type { RequestHandler } from './$types';
 import { getDb } from '$lib/server/db';
 import { buildings } from '$lib/server/db/schema';
 import { readJson, requireUser } from '$lib/server/guard';
-import { loadSnapshot } from '$lib/server/game/state';
+import { addResourceStatement, loadSnapshot } from '$lib/server/game/state';
 import { totalEssence } from '$lib/game/resources';
-import { BUILDING_BY_ID, placementError } from '$lib/game/city';
+import { BUILDING_BY_ID, canAfford, moveCost, placementError } from '$lib/game/city';
 
 /**
  * Moves a building to another tile, in its city or any other founded one, keeping its level.
  *
- * Free, and deliberately so. Demolishing and rebuilding already rearranges a city for the price of
- * the upgrades; charging for a move would only mean losing levels is the cheaper way to do it.
- * It is also how a building comes back out of storage after the grid shrank beneath it.
+ * Free within a city tier or down one, and deliberately so. Demolishing and rebuilding already
+ * rearranges a city for the price of the upgrades; charging for a move would only mean losing levels
+ * is the cheaper way to do it. It is also how a building comes back out of storage after the grid
+ * shrank beneath it.
+ *
+ * Moving UP a tier charges the price difference (moveCost), or the tiers would be one free move
+ * from meaningless: build in the Hamlet, move to the Delta, earn nine times as much.
  */
 export const POST: RequestHandler = async (event) => {
 	const user = requireUser(event.locals);
@@ -34,7 +38,12 @@ export const POST: RequestHandler = async (event) => {
 	const others = snap.buildings.filter((b) => b.id !== placed.id);
 	const bad = placementError(kind.id, body.city, body.x, body.y, others, totalEssence(snap.resources));
 	if (bad) return json(bad, { status: 400 });
+	const cost = moveCost(kind, placed.level, placed.city, body.city);
+	if (!canAfford(snap.resources, cost)) return json({ error: 'poor', message: 'not enough resources to move it up a tier' }, { status: 400 });
 
-	await db.update(buildings).set({ city: body.city, x: body.x, y: body.y }).where(eq(buildings.id, placed.id));
-	return json({ ok: true });
+	await db.batch([
+		db.update(buildings).set({ city: body.city, x: body.x, y: body.y }).where(eq(buildings.id, placed.id)),
+		...Object.entries(cost).map(([k, v]) => addResourceStatement(db, k, -v))
+	]);
+	return json({ ok: true, charged: cost });
 };

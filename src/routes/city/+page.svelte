@@ -5,14 +5,19 @@
 	import { RESOURCE_META, formatCost } from '$lib/game/resources';
 	// The placement rules are shared with the server rather than restated here, so the catalog a
 	// tile offers and the tile the API accepts are decided by the same function.
-	import { TERRAIN_META, canStand, terrainAt, type Terrain } from '$lib/game/city';
+	import { BUILDING_BY_ID, TERRAIN_META, canAfford, canStand, moveCost, terrainAt, type Terrain } from '$lib/game/city';
 	let { data } = $props();
 	let cityId = $state(0);
 	let selected = $state<{ x: number; y: number } | null>(null);
 	let message = $state('');
 	let busy = $state(false);
 	/** The building waiting for a destination tile, set by Move or by placing one out of storage. */
-	let moving = $state<null | { id: string; name: string }>(null);
+	let moving = $state<null | { id: string; name: string; kind: string; level: number; city: number }>(null);
+	/** What dropping it on the city now shown would cost: nothing, unless that city is a higher tier. */
+	const moveCharge = $derived.by(() => {
+		const kind = moving && BUILDING_BY_ID.get(moving.kind);
+		return moving && kind ? moveCost(kind, moving.level, moving.city, cityId) : {};
+	});
 
 	/** The rules panel. Open on a first visit, because the neighbour bonus is not guessable from a
 	 *  grid of tiles, and shut for good once dismissed — the choice is remembered per browser. */
@@ -74,8 +79,8 @@
 		selected = { x, y };
 	}
 
-	function pickUp(b: { id: string; name: string }) {
-		moving = { id: b.id, name: b.name };
+	function pickUp(b: { id: string; name: string; kind: string; level: number; city: number }) {
+		moving = { id: b.id, name: b.name, kind: b.kind, level: b.level, city: b.city };
 		message = `Pick a tile for the ${b.name}.`;
 	}
 
@@ -96,6 +101,7 @@
 		<button class="tab" class:active={c.id === cityId} disabled={!c.unlocked} onclick={() => { cityId = c.id; selected = null; }}>
 			{c.name}
 			<span class="muted small">{c.unlocked ? c.honoree : `✨ ${data.essence} / ${c.essence}`}</span>
+			{#if c.costMult > 1}<span class="muted small">costs ×{c.costMult} · coins ×{c.coinMult}</span>{/if}
 		</button>
 	{/each}
 </div>
@@ -105,8 +111,13 @@
 	</button>
 	{#if helpOpen}
 		<div class="help-body card">
-			<p><strong>Coins per active day</strong> = rate × level × freshness × roads × neighbours.</p>
+			<p><strong>Coins per active day</strong> = rate × level × city × freshness × roads × neighbours.</p>
 			<ul>
+				<li>
+					<strong>City</strong> — each city past the first costs ×4 the one before it, in everything
+					including upgrades, and produces ×3 the coins: ×4 and ×3 in Knuth's Knolls, ×16 and ×9 in
+					Dijkstra's Delta.
+				</li>
 				<li><strong>Freshness</strong> — the share of that building's node that is not overdue. Refreshing restores it.</li>
 				<li>
 					<strong>Roads</strong> — ×1.25 on the four tiles around Graph Roads, and the same around a
@@ -123,7 +134,8 @@
 				Terrain is fixed, and each kind names the ground it accepts: the mill and the lighthouse stand on
 				plains or river, the foundry on plains or forest, the Heap Mine and the DP buildings only on
 				mountain, the clocktower on plains but only beside the water. A tile takes nothing that does not
-				name it. Essence founds new cities. Moving a building is free; destroying one refunds its level 1
+				name it. Essence founds new cities. Moving a building is free within a city or to an earlier one;
+				moving it to a later city charges the difference in price. Destroying one refunds its level 1
 				cost only.
 			</p>
 			<button onclick={closeHelp}>Got it</button>
@@ -152,7 +164,7 @@
 		</div>
 		{#if data.stored.length}
 			<div class="stored">
-				<h4>Stored <span class="muted small">— these lost their tile when the map changed. Placing them is free.</span></h4>
+				<h4>Stored <span class="muted small">— these lost their tile when the map changed. Placing them in the first city is free.</span></h4>
 				<ul class="row">
 					{#each data.stored as s (s.id)}
 						<li><button class="pill" disabled={busy} onclick={() => pickUp(s)}>{s.emoji} {s.name} L{s.level} · place</button></li>
@@ -165,6 +177,11 @@
 	<aside class="card side">
 		{#if moving}
 			<p>Moving the <strong>{moving.name}</strong>. Click a tile that fits it, on any founded city.</p>
+			{#if Object.keys(moveCharge).length}
+				<p class:bad={!canAfford(data.resources, moveCharge)}>Moving it into {city.name} costs {fmtCost(moveCharge)} — the difference from the price where it stands.</p>
+			{:else if moving.city !== cityId}
+				<p class="muted">Moving it into {city.name} is free.</p>
+			{/if}
 			<button onclick={() => { moving = null; message = ''; }}>Cancel</button>
 		{:else if !selected}
 			<p class="muted">Select a tile to build or upgrade.</p>
@@ -176,7 +193,7 @@
 				{#if b.rate > 0}
 					<p class="yield">🪙 <strong>{fmtCoins(b.yield.perDay)}</strong> coins per active day</p>
 					<p class="muted breakdown">
-						{b.rate} base × level {b.level} = {fmtCoins(b.yield.base)}
+						{b.rate} base × level {b.level}{b.yield.tier > 1 ? ` × city ×${b.yield.tier}` : ''} = {fmtCoins(b.yield.base)}
 						{#if b.hasNode}<br />× freshness {Math.round(b.yield.freshness * 100)}%{/if}
 						{#if b.yield.adjacency > 1}<br /><span title="Graph Roads or a Two-Pointer Bridge on a neighbouring tile">× roads ×{b.yield.adjacency}</span>{/if}
 						{#if b.yield.diversity > 1}<br /><span title="×1.15 for each different kind of building on the four tiles beside this one, up to ×1.6">× neighbours ×{b.yield.diversity.toFixed(2)}</span>{/if}
@@ -207,13 +224,13 @@
 				<p class="muted small">{TERRAIN_META[t].emoji} {t} — {fits.length} of the {data.catalog.length} kinds can stand here</p>
 				<ul class="catalog">
 					{#each fits as k (k.id)}
-						<li class:disabled={!k.gated || !k.affordable}>
+						<li class:disabled={!k.gated || !k.affordable[cityId]}>
 							<div class="row">
 								<span>{k.emoji} <strong>{k.name}</strong></span>
-								<span class="muted">{k.coins ? `${k.coins} coins/day` : k.effect}</span>
-								<button disabled={busy || !k.gated || !k.affordable} onclick={() => post('/api/city/build', { kind: k.id, city: cityId, x: selected!.x, y: selected!.y })}>Build</button>
+								<span class="muted">{k.coins[cityId] ? `${k.coins[cityId]} coins/day` : k.effect}</span>
+								<button disabled={busy || !k.gated || !k.affordable[cityId]} onclick={() => post('/api/city/build', { kind: k.id, city: cityId, x: selected!.x, y: selected!.y })}>Build</button>
 							</div>
-							<div class="muted small">{fmtCost(k.cost)} · {k.terrainLabel}{k.gateText ? ` · needs ${k.gateText}` : ''}{k.nodeFreshness !== null && k.nodeFreshness < 1 ? ` · freshness ${Math.round(k.nodeFreshness * 100)}%` : ''}</div>
+							<div class="muted small">{fmtCost(k.cost[cityId])} · {k.terrainLabel}{k.gateText ? ` · needs ${k.gateText}` : ''}{k.nodeFreshness !== null && k.nodeFreshness < 1 ? ` · freshness ${Math.round(k.nodeFreshness * 100)}%` : ''}</div>
 						</li>
 					{/each}
 				</ul>
@@ -269,6 +286,7 @@
 	.catalog { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; max-height: 70vh; overflow: auto; }
 	.catalog li { border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
 	.catalog li.disabled { opacity: 0.55; }
+	.bad { color: var(--bad); }
 	.small { font-size: 0.8rem; }
 	.side { position: sticky; top: 1rem; }
 </style>

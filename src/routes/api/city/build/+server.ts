@@ -22,7 +22,7 @@ export const POST: RequestHandler = async (event) => {
 		if (!placed) return json({ error: 'not_found' }, { status: 404 });
 		const kind = BUILDING_BY_ID.get(placed.kind)!;
 		if (placed.level >= kind.maxLevel) return json({ error: 'max_level', message: 'already at max level' }, { status: 400 });
-		const cost = costAtLevel(kind, placed.level + 1);
+		const cost = costAtLevel(kind, placed.level + 1, placed.city);
 		if (!canAfford(snap.resources, cost)) return json({ error: 'poor', message: 'not enough resources' }, { status: 400 });
 		await db.batch([
 			db.update(buildings).set({ level: placed.level + 1 }).where(eq(buildings.id, placed.id)),
@@ -44,7 +44,7 @@ export const POST: RequestHandler = async (event) => {
 	if (kind.maxLevel === 1 && kind.effect && snap.buildings.some((b) => b.kind === kind.id)) {
 		return json({ error: 'unique', message: `only one ${kind.name} allowed` }, { status: 400 });
 	}
-	const cost = costAtLevel(kind, 1);
+	const cost = costAtLevel(kind, 1, body.city);
 	if (!canAfford(snap.resources, cost)) return json({ error: 'poor', message: 'not enough resources' }, { status: 400 });
 	await db.batch([
 		db.insert(buildings).values({ id: randomId(), kind: kind.id, city: body.city, x: body.x, y: body.y, level: 1, builtAt: new Date() }),

@@ -11,9 +11,12 @@ import {
 	DIVERSITY_BONUS_PER_KIND,
 	GRID_SIZE,
 	STORAGE,
+	BUILDING_BY_ID,
 	baseProduction,
 	buildingYield,
 	canAfford,
+	investedCost,
+	moveCost,
 	canStand,
 	cityUnlocked,
 	costAtLevel,
@@ -724,5 +727,55 @@ describe('monuments', () => {
 		expect(placementError('monument', 0, 1, 0, [m('a', 0, 4), m('b', STORAGE, 0)], 0)).toBeNull();
 		// other kinds are unaffected
 		expect(placementError('hut', 0, 1, 0, two, 0)).toBeNull();
+	});
+});
+
+describe('city tiers', () => {
+	const tree = computeTree({ progress: new Map(), research: new Map(), now: t0 });
+	const market = BUILDING_BY_ID.get('hash-market')!;
+	const scaled = (cost: Record<string, number>, n: number) => Object.fromEntries(Object.entries(cost).map(([k, v]) => [k, v * n]));
+
+	it('prices each city at four times the one before, in every resource', () => {
+		for (const kind of BUILDINGS) {
+			for (let level = 1; level <= kind.maxLevel; level++) {
+				const hamlet = costAtLevel(kind, level, 0);
+				expect(costAtLevel(kind, level)).toEqual(hamlet);
+				expect(costAtLevel(kind, level, 1)).toEqual(scaled(hamlet, 4));
+				expect(costAtLevel(kind, level, 2)).toEqual(scaled(hamlet, 16));
+			}
+		}
+		// Ingots and coins on an upgrade scale too, not just materials.
+		expect(costAtLevel(market, 3, 2)).toEqual({ timber: 23 * 16, stone: 12 * 16, ingots: 96, coins: 480 });
+		expect(costAtLevel(market, 1, STORAGE)).toEqual(costAtLevel(market, 1, 0));
+	});
+
+	it('produces three times the coins per tier', () => {
+		const at = (city: number) => {
+			const placed = [{ id: 'a', kind: 'hash-market', city, x: 0, y: 0, level: 2 }];
+			return buildingYield(placed[0], placed, tree);
+		};
+		expect(at(0)).toMatchObject({ base: 6, tier: 1, perDay: 6 });
+		expect(at(1)).toMatchObject({ base: 18, tier: 3, perDay: 18 });
+		expect(at(2)).toMatchObject({ base: 54, tier: 9, perDay: 54 });
+		const spread = [
+			{ id: 'a', kind: 'hut', city: 0, x: 0, y: 0, level: 1 },
+			{ id: 'b', kind: 'hut', city: 1, x: 0, y: 0, level: 1 },
+			{ id: 'c', kind: 'hut', city: 2, x: 0, y: 0, level: 1 }
+		];
+		expect(dailyCoins(spread, tree)).toBe(1 + 3 + 9);
+	});
+
+	it('charges the difference to move up a tier, and nothing to move across or down', () => {
+		const up = moveCost(market, 2, 0, 1);
+		const knolls = investedCost(market, 2, 1);
+		const hamlet = investedCost(market, 2, 0);
+		expect(up).toEqual(Object.fromEntries(Object.entries(knolls).map(([k, v]) => [k, v - hamlet[k]])));
+		expect(up).toEqual({ timber: 3 * (10 + 15), stone: 3 * (5 + 8), ingots: 9, coins: 45 });
+		expect(moveCost(market, 2, 1, 0)).toEqual({});
+		expect(moveCost(market, 2, 1, 1)).toEqual({});
+		expect(moveCost(market, 1, 0, 0)).toEqual({});
+		// storage prices as the first city
+		expect(moveCost(market, 1, STORAGE, 2)).toEqual({ timber: 150, stone: 75 });
+		expect(moveCost(market, 1, STORAGE, 0)).toEqual({});
 	});
 });

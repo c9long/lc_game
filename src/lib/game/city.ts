@@ -73,6 +73,8 @@ export interface City {
 	honoree: string;
 	/** Lifetime essence needed to found it. Zero for the first city. */
 	essence: number;
+	/** 0 for the first city. Each tier multiplies costs by TIER_COST_MULT and coins by TIER_COIN_MULT. */
+	tier: number;
 	/** GRID_SIZE rows of GRID_SIZE characters, indexed [y][x]. */
 	terrain: string[];
 }
@@ -89,6 +91,7 @@ export const CITIES: City[] = [
 		name: "Hopper's Humble Hamlet",
 		honoree: 'Grace Hopper',
 		essence: 0,
+		tier: 0,
 		// A south-west massif of four peaks: the DP Academy, the Observatory and the Heap Mine all
 		// want mountain, and two tiles between the three of them left no room to choose.
 		terrain: ['......', '.~~...', '..~*..', '^.~**.', '^.....', '^^....']
@@ -98,6 +101,7 @@ export const CITIES: City[] = [
 		name: "Knuth's Knotted Knolls",
 		honoree: 'Donald Knuth',
 		essence: 1000,
+		tier: 1,
 		terrain: ['^^...*', '.^..**', '..~...', '..~..^', '...~^^', '*..~..']
 	},
 	{
@@ -105,11 +109,37 @@ export const CITIES: City[] = [
 		name: "Dijkstra's Dizzy Delta",
 		honoree: 'Edsger Dijkstra',
 		essence: 10000,
+		tier: 2,
 		terrain: ['..~...', '..~.^.', '.~~...', '.~..*.', '~...*.', '~..*.^']
 	}
 ];
 
 export const CITY_BY_ID = new Map(CITIES.map((c) => [c.id, c]));
+
+/** Each city tier costs four times the one below it, in everything — materials, Ingots and the
+ *  coins an upgrade takes — and produces three times the coins. So a building pays for itself a
+ *  third more slowly per tier: the later cities are less efficient, and are wanted anyway because
+ *  the Hamlet runs out of tiles and their absolute income is larger.
+ *
+ *  Coins are scaled on the cost side too, deliberately. Base buildings are paid in materials, which
+ *  only solves produce; coins buy nothing but upgrades. Scaling materials alone would charge the
+ *  scarce currency and pay out the plentiful one. With upgrade coins scaled as well, a higher
+ *  tier's larger income meets a larger sink. */
+export const TIER_COST_MULT = 4;
+export const TIER_COIN_MULT = 3;
+
+/** Storage and unknown cities price as the first tier: everything in storage was built there. */
+function tierOf(city: number): number {
+	return CITY_BY_ID.get(city)?.tier ?? 0;
+}
+
+export function cityCostMult(city: number): number {
+	return TIER_COST_MULT ** tierOf(city);
+}
+
+export function cityCoinMult(city: number): number {
+	return TIER_COIN_MULT ** tierOf(city);
+}
 
 /** Buildings held out of any city: they keep their kind and level, produce nothing, and can be
  *  placed again for free. Somewhere for a building to go when the grid shrank under it. */
@@ -174,13 +204,42 @@ export const INGOTS_PER_UPGRADE_LEVEL = 3;
  *  what funds a growing city, rather than coins having nothing to be spent on. */
 export const COINS_PER_UPGRADE_LEVEL = 15;
 
-/** Upgrades cost the base resources scaled up, plus Ingots (earned only from syntax drills). */
-export function costAtLevel(kind: BuildingKind, level: number): Record<string, number> {
+/** Upgrades cost the base resources scaled up, plus Ingots (earned only from syntax drills). The
+ *  whole price is then multiplied by the city's tier — after rounding, so a Knolls price is exactly
+ *  four Hamlet prices. */
+export function costAtLevel(kind: BuildingKind, level: number, city: number = CITIES[0].id): Record<string, number> {
 	const out: Record<string, number> = {};
 	for (const [k, v] of Object.entries(kind.cost)) out[k] = Math.ceil(v * Math.pow(UPGRADE_COST_MULT, level - 1));
 	if (level > 1) {
 		out.ingots = INGOTS_PER_UPGRADE_LEVEL * (level - 1);
 		out.coins = COINS_PER_UPGRADE_LEVEL * (level - 1);
+	}
+	const mult = cityCostMult(city);
+	for (const k of Object.keys(out)) out[k] *= mult;
+	return out;
+}
+
+/** Everything paid for a building of this level in this city: the build and each upgrade. */
+export function investedCost(kind: BuildingKind, level: number, city: number): Record<string, number> {
+	const out: Record<string, number> = {};
+	for (let l = 1; l <= level; l++) {
+		for (const [k, v] of Object.entries(costAtLevel(kind, l, city))) out[k] = (out[k] ?? 0) + v;
+	}
+	return out;
+}
+
+/** What moving a building up a tier costs: the difference between what it would have cost where it
+ *  is going and what it cost where it stands. Without this, moving is a way round the tiers — build
+ *  in the Hamlet, move to the Delta, earn nine times as much for a Hamlet price. Moving within a
+ *  tier or down one is free and refunds nothing, as spent upgrades are not refunded either. */
+export function moveCost(kind: BuildingKind, level: number, from: number, to: number): Record<string, number> {
+	if (tierOf(to) <= tierOf(from)) return {};
+	const there = investedCost(kind, level, to);
+	const here = investedCost(kind, level, from);
+	const out: Record<string, number> = {};
+	for (const [k, v] of Object.entries(there)) {
+		const d = v - (here[k] ?? 0);
+		if (d > 0) out[k] = d;
 	}
 	return out;
 }
@@ -307,8 +366,10 @@ export const DIVERSITY_BONUS_PER_KIND = 0.15;
 
 /** What one building contributes per active day, and where the number comes from. */
 export interface BuildingYield {
-	/** The building's rate at level 1, times its level, before any scaling. */
+	/** The building's rate at level 1, times its level and its city's tier multiplier. */
 	base: number;
+	/** The city's coin multiplier, already included in `base`. */
+	tier: number;
 	/** The node's freshness, or 1 for a building not tied to a node. */
 	freshness: number;
 	/** ROAD_ADJACENCY_BONUS when it neighbours Graph Roads or a bridge, else 1. */
@@ -332,7 +393,7 @@ export function buildingYield(
 	tree: Map<string, NodeView>
 ): BuildingYield {
 	const kind = BUILDING_BY_ID.get(b.kind);
-	const none = { base: 0, freshness: 1, adjacency: 1, diversity: 1, perDay: 0 };
+	const none = { base: 0, tier: 1, freshness: 1, adjacency: 1, diversity: 1, perDay: 0 };
 	// A building in storage stands in no city and earns nothing until it is placed again.
 	if (!kind || kind.coins === 0 || b.city === STORAGE) return none;
 
@@ -340,7 +401,8 @@ export function buildingYield(
 	const neighbours = placed.filter(
 		(p) => p.city === b.city && Math.abs(p.x - b.x) + Math.abs(p.y - b.y) === 1
 	);
-	const base = kind.coins * b.level;
+	const tier = cityCoinMult(b.city);
+	const base = kind.coins * b.level * tier;
 	const freshness = kind.node ? (tree.get(kind.node)?.freshness ?? 1) : 1;
 	const adjacency = neighbours.some((p) => {
 		const effect = BUILDING_BY_ID.get(p.kind)?.effect;
@@ -350,7 +412,7 @@ export function buildingYield(
 		: 1;
 	const distinct = new Set(neighbours.map((p) => p.kind).filter((k) => k !== b.kind)).size;
 	const diversity = 1 + DIVERSITY_BONUS_PER_KIND * distinct;
-	return { base, freshness, adjacency, diversity, perDay: base * freshness * adjacency * diversity };
+	return { base, tier, freshness, adjacency, diversity, perDay: base * freshness * adjacency * diversity };
 }
 
 export function baseProduction(placed: PlacedBuilding[], tree: Map<string, NodeView>): number {

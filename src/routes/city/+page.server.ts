@@ -11,6 +11,8 @@ import {
 	TERRAIN_META,
 	buildingYield,
 	canAfford,
+	cityCoinMult,
+	cityCostMult,
 	costAtLevel,
 	cityUnlocked,
 	dailyCoins,
@@ -34,10 +36,11 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 			id: b.id,
 			name: b.name,
 			emoji: b.emoji,
-			coins: b.coins,
+			// Price and output depend on the city's tier, so each is sent per city, indexed by city id.
+			coins: CITIES.map((c) => b.coins * cityCoinMult(c.id)),
 			effect: b.effect ? EFFECT_TEXT[b.effect] : null,
 			maxLevel: b.maxLevel,
-			cost: costAtLevel(b, 1),
+			cost: CITIES.map((c) => costAtLevel(b, 1, c.id)),
 			terrains,
 			nearTerrain: nearTerrainFor(b.id),
 			terrainLabel: terrainLabel(b.id),
@@ -50,20 +53,20 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 						? `${b.gate.solves} solves`
 						: `${b.gate.hard} Hard solves`,
 			gated: gateSatisfied(b.gate, ctx),
-			affordable: canAfford(snap.resources, costAtLevel(b, 1)),
+			affordable: CITIES.map((c) => canAfford(snap.resources, costAtLevel(b, 1, c.id))),
 			nodeFreshness: b.node ? (snap.tree.get(b.node)?.freshness ?? 1) : null
 		};
 	});
 	const view = (p: (typeof snap.buildings)[number]) => {
 		const kind = BUILDINGS.find((b) => b.id === p.kind)!;
-		const next = p.level < kind.maxLevel ? costAtLevel(kind, p.level + 1) : null;
+		const next = p.level < kind.maxLevel ? costAtLevel(kind, p.level + 1, p.city) : null;
 		return {
 			...p,
 			name: kind.name,
 			emoji: kind.emoji,
 			next,
 			canUpgrade: next ? canAfford(snap.resources, next) : false,
-			refund: costAtLevel(kind, 1),
+			refund: costAtLevel(kind, 1, p.city),
 			rate: kind.coins,
 			hasNode: Boolean(kind.node),
 			terrainLabel: terrainLabel(kind.id),
@@ -81,6 +84,8 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 			honoree: c.honoree,
 			essence: c.essence,
 			unlocked: cityUnlocked(c.id, essence),
+			costMult: cityCostMult(c.id),
+			coinMult: cityCoinMult(c.id),
 			terrain: c.terrain
 		})),
 		resources: snap.resources,
