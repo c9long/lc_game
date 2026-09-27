@@ -76,9 +76,34 @@ describe('python value comparison', () => {
 		yes('{}', '{}');
 	});
 
+	it('accepts the name of a type for what type() prints', () => {
+		yes("<class 'float'>", 'float');
+		yes("<class 'float'>", ' float ');
+		yes("<class 'float'>", "<class 'float'>");
+		yes("<class 'float'>", '<class "float">');
+		no("<class 'float'>", 'int');
+		no("<class 'float'>", 'Float');
+		// quoted, it is a string, and type() does not return one
+		no("<class 'float'>", "'float'");
+		no("<class 'float'>", '3.0');
+		yes("<class 'collections.Counter'>", 'Counter');
+	});
+
+	it('accepts a constructor repr, or just what is inside it', () => {
+		yes("Counter({'a': 1})", "Counter({'a': 1})");
+		yes("Counter({'a': 1})", "{'a': 1}");
+		yes("Counter({'a': 1})", '{a: 1}');
+		yes("Counter({'a': 2, 'b': 1})", "Counter({'b': 1, 'a': 2})");
+		yes("Counter({'a': 1})", "collections.Counter({'a': 1})");
+		no("Counter({'a': 1})", "{'a': 2}");
+		no("Counter({'a': 1})", "dict({'a': 1})");
+		no("Counter({'a': 1})", "defaultdict({'a': 1})");
+		yes('deque([1, 2])', '[1, 2]');
+		no('deque([1, 2])', '[2, 1]');
+	});
+
 	it('leaves output it cannot parse to the caller', () => {
-		expect(sameValue("<class 'float'>", "<class 'float'>")).toBe(null);
-		expect(sameValue("Counter({'a': 1})", "{'a': 1}")).toBe(null);
+		expect(sameValue('<function f at 0x10>', '<function f at 0x10>')).toBe(null);
 		expect(parseStrict("(1, 'a')\n(2, 'b')")).toBe(null);
 	});
 

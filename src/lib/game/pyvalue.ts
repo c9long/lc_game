@@ -15,7 +15,11 @@ export type PyValue =
 	| { t: 'list'; v: PyValue[] }
 	| { t: 'tuple'; v: PyValue[] }
 	| { t: 'set'; v: PyValue[] }
-	| { t: 'dict'; v: [PyValue, PyValue][] };
+	| { t: 'dict'; v: [PyValue, PyValue][] }
+	/** `<class 'float'>`: what `type(x)` prints. */
+	| { t: 'class'; name: string }
+	/** `Counter({'a': 1})`: a constructor-style repr, the type's name around a literal. */
+	| { t: 'call'; name: string; arg: PyValue };
 
 const CLOSERS: Record<string, string> = { '[': ']', '(': ')', '{': '}' };
 
@@ -46,11 +50,35 @@ class Reader {
 		if (c === '') return null;
 		if (c === '[' || c === '(' || c === '{') return this.container(c);
 		if (c === '"' || c === "'") return this.str();
+		if (c === '<') return this.klass();
 		const word = this.keyword();
 		if (word) return word;
 		const num = this.number();
 		if (num) return num;
+		const call = this.call();
+		if (call) return call;
 		return this.lenient ? this.bare() : null;
+	}
+
+	klass(): PyValue | null {
+		const m = /^<class\s+(['"])([\w.]+)\1\s*>/.exec(this.s.slice(this.i));
+		if (!m) return null;
+		this.i += m[0].length;
+		return { t: 'class', name: m[2] };
+	}
+
+	/** `Name(literal)`. Only a name directly followed by a parenthesis, so a bare word stays a word. */
+	call(): PyValue | null {
+		const m = /^([A-Za-z_][\w.]*)\(/.exec(this.s.slice(this.i));
+		if (!m) return null;
+		const start = this.i;
+		this.i += m[1].length;
+		const arg = this.container('(');
+		if (!arg) {
+			this.i = start;
+			return null;
+		}
+		return { t: 'call', name: m[1], arg };
 	}
 
 	/** Everything up to the next structural character, as a string. Trimmed, so a whitespace-padded
@@ -232,6 +260,12 @@ function matchAll<T>(expected: T[], given: T[], eq: (a: T, b: T) => boolean): bo
 export function pyEqual(expected: PyValue, given: PyValue): boolean {
 	// int and float stay distinct: `7 / 2` giving 3.5 where `7 // 2` gives 3 is a lesson, and so is
 	// `6 / 2` giving 3.0 rather than 3.
+	// `float` answers `<class 'float'>`: the type's name is the knowledge, the wrapper is decoration.
+	// Only an unquoted word: `'float'` is a string, which is not what `type()` returns.
+	if (expected.t === 'class' && given.t === 'str' && given.bare) return sameName(expected.name, given.v);
+	// `{'a': 1}` answers `Counter({'a': 1})`: the contents are the question, and the type is already
+	// on the screen in the code being asked about.
+	if (expected.t === 'call' && given.t !== 'call') return pyEqual(expected.arg, given);
 	if (expected.t !== given.t) return false;
 	switch (expected.t) {
 		case 'int':
@@ -255,11 +289,23 @@ export function pyEqual(expected: PyValue, given: PyValue): boolean {
 			const g = (given as { v: [PyValue, PyValue][] }).v;
 			return matchAll(expected.v, g, (a, b) => pyEqual(a[0], b[0]) && pyEqual(a[1], b[1]));
 		}
+		case 'class':
+			return sameName(expected.name, (given as { name: string }).name);
+		case 'call': {
+			const g = given as { name: string; arg: PyValue };
+			return sameName(expected.name, g.name) && pyEqual(expected.arg, g.arg);
+		}
 	}
 }
 
-/** True when `given` prints the same Python value as `expected`. Null when `expected` is not a
- *  literal this understands (`<class 'float'>`, `Counter({'a': 1})`, multi-line output), leaving the
+/** `collections.Counter` and `Counter` name the same type. Case-sensitive, like everything else. */
+function sameName(expected: string, given: string): boolean {
+	const last = (n: string) => n.split('.').pop();
+	return expected === given || last(expected) === last(given);
+}
+
+/** True when `given` prints the same Python value as `expected`. Null when `expected` is not
+ *  something this understands (a repr like `<function f at 0x...>`, multi-line output), leaving the
  *  caller to fall back to string comparison. */
 export function sameValue(expected: string, given: string): boolean | null {
 	const want = parseStrict(expected);
