@@ -12,7 +12,6 @@ import {
 	buildingYield,
 	canAfford,
 	cityCoinMult,
-	cityCostMult,
 	costAtLevel,
 	cityUnlocked,
 	dailyCoins,
@@ -84,8 +83,6 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 			honoree: c.honoree,
 			essence: c.essence,
 			unlocked: cityUnlocked(c.id, essence),
-			costMult: cityCostMult(c.id),
-			coinMult: cityCoinMult(c.id),
 			terrain: c.terrain
 		})),
 		resources: snap.resources,

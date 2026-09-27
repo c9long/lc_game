@@ -101,7 +101,6 @@
 		<button class="tab" class:active={c.id === cityId} disabled={!c.unlocked} onclick={() => { cityId = c.id; selected = null; }}>
 			{c.name}
 			<span class="muted small">{c.unlocked ? c.honoree : `✨ ${data.essence} / ${c.essence}`}</span>
-			{#if c.costMult > 1}<span class="muted small">costs ×{c.costMult} · coins ×{c.coinMult}</span>{/if}
 		</button>
 	{/each}
 </div>
