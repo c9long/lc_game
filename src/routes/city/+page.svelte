@@ -192,7 +192,7 @@
 				{#if b.rate > 0}
 					<p class="yield">🪙 <strong>{fmtCoins(b.yield.perDay)}</strong> coins per active day</p>
 					<p class="muted breakdown">
-						{b.rate} base × level {b.level}{b.yield.tier > 1 ? ` × city ×${b.yield.tier}` : ''} = {fmtCoins(b.yield.base)}
+						{b.rate * b.yield.tier} base × level {b.level} = {fmtCoins(b.yield.base)}
 						{#if b.hasNode}<br />× freshness {Math.round(b.yield.freshness * 100)}%{/if}
 						{#if b.yield.adjacency > 1}<br /><span title="Graph Roads or a Two-Pointer Bridge on a neighbouring tile">× roads ×{b.yield.adjacency}</span>{/if}
 						{#if b.yield.diversity > 1}<br /><span title="×1.15 for each different kind of building on the four tiles beside this one, up to ×1.6">× neighbours ×{b.yield.diversity.toFixed(2)}</span>{/if}
