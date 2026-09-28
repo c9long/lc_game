@@ -86,6 +86,23 @@
   },
   {
     "order": 5,
+    "code": "0271-encode-and-decode-strings",
+    "slug": "encode-and-decode-strings",
+    "title": "Encode and Decode Strings",
+    "pattern": "Arrays & Hashing",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": true,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 6,
     "code": "0238-product-of-array-except-self",
     "slug": "product-of-array-except-self",
     "title": "Product of Array Except Self",
@@ -102,7 +119,7 @@
     }
   },
   {
-    "order": 6,
+    "order": 7,
     "code": "0036-valid-sudoku",
     "slug": "valid-sudoku",
     "title": "Valid Sudoku",
@@ -110,23 +127,6 @@
     "difficulty": "Medium",
     "blind75": false,
     "premium": false,
-    "solutions": {
-      "python": true,
-      "go": true,
-      "csharp": true,
-      "cpp": true,
-      "rust": true
-    }
-  },
-  {
-    "order": 7,
-    "code": "0271-encode-and-decode-strings",
-    "slug": "encode-and-decode-strings",
-    "title": "Encode and Decode Strings",
-    "pattern": "Arrays & Hashing",
-    "difficulty": "Medium",
-    "blind75": true,
-    "premium": true,
     "solutions": {
       "python": true,
       "go": true,
@@ -392,23 +392,6 @@
   },
   {
     "order": 23,
-    "code": "0022-generate-parentheses",
-    "slug": "generate-parentheses",
-    "title": "Generate Parentheses",
-    "pattern": "Stack",
-    "difficulty": "Medium",
-    "blind75": false,
-    "premium": false,
-    "solutions": {
-      "python": true,
-      "go": true,
-      "csharp": true,
-      "cpp": true,
-      "rust": true
-    }
-  },
-  {
-    "order": 24,
     "code": "0739-daily-temperatures",
     "slug": "daily-temperatures",
     "title": "Daily Temperatures",
@@ -425,7 +408,7 @@
     }
   },
   {
-    "order": 25,
+    "order": 24,
     "code": "0853-car-fleet",
     "slug": "car-fleet",
     "title": "Car Fleet",
@@ -442,7 +425,7 @@
     }
   },
   {
-    "order": 26,
+    "order": 25,
     "code": "0084-largest-rectangle-in-histogram",
     "slug": "largest-rectangle-in-histogram",
     "title": "Largest Rectangle In Histogram",
@@ -459,7 +442,7 @@
     }
   },
   {
-    "order": 27,
+    "order": 26,
     "code": "0704-binary-search",
     "slug": "binary-search",
     "title": "Binary Search",
@@ -476,7 +459,7 @@
     }
   },
   {
-    "order": 28,
+    "order": 27,
     "code": "0074-search-a-2d-matrix",
     "slug": "search-a-2d-matrix",
     "title": "Search a 2D Matrix",
@@ -493,7 +476,7 @@
     }
   },
   {
-    "order": 29,
+    "order": 28,
     "code": "0875-koko-eating-bananas",
     "slug": "koko-eating-bananas",
     "title": "Koko Eating Bananas",
@@ -510,7 +493,7 @@
     }
   },
   {
-    "order": 30,
+    "order": 29,
     "code": "0153-find-minimum-in-rotated-sorted-array",
     "slug": "find-minimum-in-rotated-sorted-array",
     "title": "Find Minimum In Rotated Sorted Array",
@@ -527,7 +510,7 @@
     }
   },
   {
-    "order": 31,
+    "order": 30,
     "code": "0033-search-in-rotated-sorted-array",
     "slug": "search-in-rotated-sorted-array",
     "title": "Search In Rotated Sorted Array",
@@ -544,7 +527,7 @@
     }
   },
   {
-    "order": 32,
+    "order": 31,
     "code": "0981-time-based-key-value-store",
     "slug": "time-based-key-value-store",
     "title": "Time Based Key Value Store",
@@ -561,7 +544,7 @@
     }
   },
   {
-    "order": 33,
+    "order": 32,
     "code": "0004-median-of-two-sorted-arrays",
     "slug": "median-of-two-sorted-arrays",
     "title": "Median of Two Sorted Arrays",
@@ -578,7 +561,7 @@
     }
   },
   {
-    "order": 34,
+    "order": 33,
     "code": "0206-reverse-linked-list",
     "slug": "reverse-linked-list",
     "title": "Reverse Linked List",
@@ -595,10 +578,27 @@
     }
   },
   {
-    "order": 35,
+    "order": 34,
     "code": "0021-merge-two-sorted-lists",
     "slug": "merge-two-sorted-lists",
     "title": "Merge Two Sorted Lists",
+    "pattern": "Linked List",
+    "difficulty": "Easy",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 35,
+    "code": "0141-linked-list-cycle",
+    "slug": "linked-list-cycle",
+    "title": "Linked List Cycle",
     "pattern": "Linked List",
     "difficulty": "Easy",
     "blind75": true,
@@ -681,23 +681,6 @@
   },
   {
     "order": 40,
-    "code": "0141-linked-list-cycle",
-    "slug": "linked-list-cycle",
-    "title": "Linked List Cycle",
-    "pattern": "Linked List",
-    "difficulty": "Easy",
-    "blind75": true,
-    "premium": false,
-    "solutions": {
-      "python": true,
-      "go": true,
-      "csharp": true,
-      "cpp": true,
-      "rust": true
-    }
-  },
-  {
-    "order": 41,
     "code": "0287-find-the-duplicate-number",
     "slug": "find-the-duplicate-number",
     "title": "Find The Duplicate Number",
@@ -714,7 +697,7 @@
     }
   },
   {
-    "order": 42,
+    "order": 41,
     "code": "0146-lru-cache",
     "slug": "lru-cache",
     "title": "LRU Cache",
@@ -731,7 +714,7 @@
     }
   },
   {
-    "order": 43,
+    "order": 42,
     "code": "0023-merge-k-sorted-lists",
     "slug": "merge-k-sorted-lists",
     "title": "Merge K Sorted Lists",
@@ -748,7 +731,7 @@
     }
   },
   {
-    "order": 44,
+    "order": 43,
     "code": "0025-reverse-nodes-in-k-group",
     "slug": "reverse-nodes-in-k-group",
     "title": "Reverse Nodes In K Group",
@@ -765,7 +748,7 @@
     }
   },
   {
-    "order": 45,
+    "order": 44,
     "code": "0226-invert-binary-tree",
     "slug": "invert-binary-tree",
     "title": "Invert Binary Tree",
@@ -782,7 +765,7 @@
     }
   },
   {
-    "order": 46,
+    "order": 45,
     "code": "0104-maximum-depth-of-binary-tree",
     "slug": "maximum-depth-of-binary-tree",
     "title": "Maximum Depth of Binary Tree",
@@ -799,7 +782,7 @@
     }
   },
   {
-    "order": 47,
+    "order": 46,
     "code": "0543-diameter-of-binary-tree",
     "slug": "diameter-of-binary-tree",
     "title": "Diameter of Binary Tree",
@@ -816,7 +799,7 @@
     }
   },
   {
-    "order": 48,
+    "order": 47,
     "code": "0110-balanced-binary-tree",
     "slug": "balanced-binary-tree",
     "title": "Balanced Binary Tree",
@@ -833,7 +816,7 @@
     }
   },
   {
-    "order": 49,
+    "order": 48,
     "code": "0100-same-tree",
     "slug": "same-tree",
     "title": "Same Tree",
@@ -850,7 +833,7 @@
     }
   },
   {
-    "order": 50,
+    "order": 49,
     "code": "0572-subtree-of-another-tree",
     "slug": "subtree-of-another-tree",
     "title": "Subtree of Another Tree",
@@ -867,7 +850,7 @@
     }
   },
   {
-    "order": 51,
+    "order": 50,
     "code": "0235-lowest-common-ancestor-of-a-binary-search-tree",
     "slug": "lowest-common-ancestor-of-a-binary-search-tree",
     "title": "Lowest Common Ancestor of a Binary Search Tree",
@@ -884,7 +867,7 @@
     }
   },
   {
-    "order": 52,
+    "order": 51,
     "code": "0102-binary-tree-level-order-traversal",
     "slug": "binary-tree-level-order-traversal",
     "title": "Binary Tree Level Order Traversal",
@@ -901,7 +884,7 @@
     }
   },
   {
-    "order": 53,
+    "order": 52,
     "code": "0199-binary-tree-right-side-view",
     "slug": "binary-tree-right-side-view",
     "title": "Binary Tree Right Side View",
@@ -918,7 +901,7 @@
     }
   },
   {
-    "order": 54,
+    "order": 53,
     "code": "1448-count-good-nodes-in-binary-tree",
     "slug": "count-good-nodes-in-binary-tree",
     "title": "Count Good Nodes In Binary Tree",
@@ -935,7 +918,7 @@
     }
   },
   {
-    "order": 55,
+    "order": 54,
     "code": "0098-validate-binary-search-tree",
     "slug": "validate-binary-search-tree",
     "title": "Validate Binary Search Tree",
@@ -952,7 +935,7 @@
     }
   },
   {
-    "order": 56,
+    "order": 55,
     "code": "0230-kth-smallest-element-in-a-bst",
     "slug": "kth-smallest-element-in-a-bst",
     "title": "Kth Smallest Element In a Bst",
@@ -969,7 +952,7 @@
     }
   },
   {
-    "order": 57,
+    "order": 56,
     "code": "0105-construct-binary-tree-from-preorder-and-inorder-traversal",
     "slug": "construct-binary-tree-from-preorder-and-inorder-traversal",
     "title": "Construct Binary Tree From Preorder And Inorder Traversal",
@@ -986,7 +969,7 @@
     }
   },
   {
-    "order": 58,
+    "order": 57,
     "code": "0124-binary-tree-maximum-path-sum",
     "slug": "binary-tree-maximum-path-sum",
     "title": "Binary Tree Maximum Path Sum",
@@ -1003,7 +986,7 @@
     }
   },
   {
-    "order": 59,
+    "order": 58,
     "code": "0297-serialize-and-deserialize-binary-tree",
     "slug": "serialize-and-deserialize-binary-tree",
     "title": "Serialize And Deserialize Binary Tree",
@@ -1020,58 +1003,7 @@
     }
   },
   {
-    "order": 60,
-    "code": "0208-implement-trie-prefix-tree",
-    "slug": "implement-trie-prefix-tree",
-    "title": "Implement Trie Prefix Tree",
-    "pattern": "Tries",
-    "difficulty": "Medium",
-    "blind75": true,
-    "premium": false,
-    "solutions": {
-      "python": true,
-      "go": true,
-      "csharp": true,
-      "cpp": true,
-      "rust": true
-    }
-  },
-  {
-    "order": 61,
-    "code": "0211-design-add-and-search-words-data-structure",
-    "slug": "design-add-and-search-words-data-structure",
-    "title": "Design Add And Search Words Data Structure",
-    "pattern": "Tries",
-    "difficulty": "Medium",
-    "blind75": true,
-    "premium": false,
-    "solutions": {
-      "python": true,
-      "go": true,
-      "csharp": true,
-      "cpp": true,
-      "rust": true
-    }
-  },
-  {
-    "order": 62,
-    "code": "0212-word-search-ii",
-    "slug": "word-search-ii",
-    "title": "Word Search II",
-    "pattern": "Tries",
-    "difficulty": "Hard",
-    "blind75": true,
-    "premium": false,
-    "solutions": {
-      "python": true,
-      "go": true,
-      "csharp": true,
-      "cpp": true,
-      "rust": true
-    }
-  },
-  {
-    "order": 63,
+    "order": 59,
     "code": "0703-kth-largest-element-in-a-stream",
     "slug": "kth-largest-element-in-a-stream",
     "title": "Kth Largest Element In a Stream",
@@ -1088,7 +1020,7 @@
     }
   },
   {
-    "order": 64,
+    "order": 60,
     "code": "1046-last-stone-weight",
     "slug": "last-stone-weight",
     "title": "Last Stone Weight",
@@ -1105,7 +1037,7 @@
     }
   },
   {
-    "order": 65,
+    "order": 61,
     "code": "0973-k-closest-points-to-origin",
     "slug": "k-closest-points-to-origin",
     "title": "K Closest Points to Origin",
@@ -1122,7 +1054,7 @@
     }
   },
   {
-    "order": 66,
+    "order": 62,
     "code": "0215-kth-largest-element-in-an-array",
     "slug": "kth-largest-element-in-an-array",
     "title": "Kth Largest Element In An Array",
@@ -1139,7 +1071,7 @@
     }
   },
   {
-    "order": 67,
+    "order": 63,
     "code": "0621-task-scheduler",
     "slug": "task-scheduler",
     "title": "Task Scheduler",
@@ -1156,7 +1088,7 @@
     }
   },
   {
-    "order": 68,
+    "order": 64,
     "code": "0355-design-twitter",
     "slug": "design-twitter",
     "title": "Design Twitter",
@@ -1173,7 +1105,7 @@
     }
   },
   {
-    "order": 69,
+    "order": 65,
     "code": "0295-find-median-from-data-stream",
     "slug": "find-median-from-data-stream",
     "title": "Find Median From Data Stream",
@@ -1190,7 +1122,7 @@
     }
   },
   {
-    "order": 70,
+    "order": 66,
     "code": "0078-subsets",
     "slug": "subsets",
     "title": "Subsets",
@@ -1207,7 +1139,7 @@
     }
   },
   {
-    "order": 71,
+    "order": 67,
     "code": "0039-combination-sum",
     "slug": "combination-sum",
     "title": "Combination Sum",
@@ -1224,41 +1156,7 @@
     }
   },
   {
-    "order": 72,
-    "code": "0046-permutations",
-    "slug": "permutations",
-    "title": "Permutations",
-    "pattern": "Backtracking",
-    "difficulty": "Medium",
-    "blind75": false,
-    "premium": false,
-    "solutions": {
-      "python": true,
-      "go": true,
-      "csharp": true,
-      "cpp": true,
-      "rust": true
-    }
-  },
-  {
-    "order": 73,
-    "code": "0090-subsets-ii",
-    "slug": "subsets-ii",
-    "title": "Subsets II",
-    "pattern": "Backtracking",
-    "difficulty": "Medium",
-    "blind75": false,
-    "premium": false,
-    "solutions": {
-      "python": true,
-      "go": true,
-      "csharp": true,
-      "cpp": true,
-      "rust": true
-    }
-  },
-  {
-    "order": 74,
+    "order": 68,
     "code": "0040-combination-sum-ii",
     "slug": "combination-sum-ii",
     "title": "Combination Sum II",
@@ -1275,7 +1173,58 @@
     }
   },
   {
-    "order": 75,
+    "order": 69,
+    "code": "0046-permutations",
+    "slug": "permutations",
+    "title": "Permutations",
+    "pattern": "Backtracking",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 70,
+    "code": "0090-subsets-ii",
+    "slug": "subsets-ii",
+    "title": "Subsets II",
+    "pattern": "Backtracking",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 71,
+    "code": "0022-generate-parentheses",
+    "slug": "generate-parentheses",
+    "title": "Generate Parentheses",
+    "pattern": "Backtracking",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 72,
     "code": "0079-word-search",
     "slug": "word-search",
     "title": "Word Search",
@@ -1292,7 +1241,7 @@
     }
   },
   {
-    "order": 76,
+    "order": 73,
     "code": "0131-palindrome-partitioning",
     "slug": "palindrome-partitioning",
     "title": "Palindrome Partitioning",
@@ -1309,7 +1258,7 @@
     }
   },
   {
-    "order": 77,
+    "order": 74,
     "code": "0017-letter-combinations-of-a-phone-number",
     "slug": "letter-combinations-of-a-phone-number",
     "title": "Letter Combinations of a Phone Number",
@@ -1326,13 +1275,64 @@
     }
   },
   {
-    "order": 78,
+    "order": 75,
     "code": "0051-n-queens",
     "slug": "n-queens",
     "title": "N Queens",
     "pattern": "Backtracking",
     "difficulty": "Hard",
     "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 76,
+    "code": "0208-implement-trie-prefix-tree",
+    "slug": "implement-trie-prefix-tree",
+    "title": "Implement Trie Prefix Tree",
+    "pattern": "Tries",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 77,
+    "code": "0211-design-add-and-search-words-data-structure",
+    "slug": "design-add-and-search-words-data-structure",
+    "title": "Design Add And Search Words Data Structure",
+    "pattern": "Tries",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
+    "order": 78,
+    "code": "0212-word-search-ii",
+    "slug": "word-search-ii",
+    "title": "Word Search II",
+    "pattern": "Tries",
+    "difficulty": "Hard",
+    "blind75": true,
     "premium": false,
     "solutions": {
       "python": true,
@@ -1361,23 +1361,6 @@
   },
   {
     "order": 80,
-    "code": "0133-clone-graph",
-    "slug": "clone-graph",
-    "title": "Clone Graph",
-    "pattern": "Graphs",
-    "difficulty": "Medium",
-    "blind75": true,
-    "premium": false,
-    "solutions": {
-      "python": true,
-      "go": true,
-      "csharp": true,
-      "cpp": true,
-      "rust": false
-    }
-  },
-  {
-    "order": 81,
     "code": "0695-max-area-of-island",
     "slug": "max-area-of-island",
     "title": "Max Area of Island",
@@ -1394,30 +1377,13 @@
     }
   },
   {
-    "order": 82,
-    "code": "0417-pacific-atlantic-water-flow",
-    "slug": "pacific-atlantic-water-flow",
-    "title": "Pacific Atlantic Water Flow",
+    "order": 81,
+    "code": "0133-clone-graph",
+    "slug": "clone-graph",
+    "title": "Clone Graph",
     "pattern": "Graphs",
     "difficulty": "Medium",
     "blind75": true,
-    "premium": false,
-    "solutions": {
-      "python": true,
-      "go": true,
-      "csharp": true,
-      "cpp": true,
-      "rust": true
-    }
-  },
-  {
-    "order": 83,
-    "code": "0130-surrounded-regions",
-    "slug": "surrounded-regions",
-    "title": "Surrounded Regions",
-    "pattern": "Graphs",
-    "difficulty": "Medium",
-    "blind75": false,
     "premium": false,
     "solutions": {
       "python": true,
@@ -1428,7 +1394,24 @@
     }
   },
   {
-    "order": 84,
+    "order": 82,
+    "code": "0286-walls-and-gates",
+    "slug": "walls-and-gates",
+    "title": "Walls And Gates",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": true,
+    "solutions": {
+      "python": true,
+      "go": false,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 83,
     "code": "0994-rotting-oranges",
     "slug": "rotting-oranges",
     "title": "Rotting Oranges",
@@ -1445,17 +1428,34 @@
     }
   },
   {
+    "order": 84,
+    "code": "0417-pacific-atlantic-water-flow",
+    "slug": "pacific-atlantic-water-flow",
+    "title": "Pacific Atlantic Water Flow",
+    "pattern": "Graphs",
+    "difficulty": "Medium",
+    "blind75": true,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": true
+    }
+  },
+  {
     "order": 85,
-    "code": "0286-walls-and-gates",
-    "slug": "walls-and-gates",
-    "title": "Walls And Gates",
+    "code": "0130-surrounded-regions",
+    "slug": "surrounded-regions",
+    "title": "Surrounded Regions",
     "pattern": "Graphs",
     "difficulty": "Medium",
     "blind75": false,
-    "premium": true,
+    "premium": false,
     "solutions": {
       "python": true,
-      "go": false,
+      "go": true,
       "csharp": true,
       "cpp": true,
       "rust": false
@@ -1497,19 +1497,19 @@
   },
   {
     "order": 88,
-    "code": "0684-redundant-connection",
-    "slug": "redundant-connection",
-    "title": "Redundant Connection",
+    "code": "0261-graph-valid-tree",
+    "slug": "graph-valid-tree",
+    "title": "Graph Valid Tree",
     "pattern": "Graphs",
     "difficulty": "Medium",
-    "blind75": false,
-    "premium": false,
+    "blind75": true,
+    "premium": true,
     "solutions": {
       "python": true,
-      "go": true,
+      "go": false,
       "csharp": true,
       "cpp": true,
-      "rust": true
+      "rust": false
     }
   },
   {
@@ -1531,19 +1531,19 @@
   },
   {
     "order": 90,
-    "code": "0261-graph-valid-tree",
-    "slug": "graph-valid-tree",
-    "title": "Graph Valid Tree",
+    "code": "0684-redundant-connection",
+    "slug": "redundant-connection",
+    "title": "Redundant Connection",
     "pattern": "Graphs",
     "difficulty": "Medium",
-    "blind75": true,
-    "premium": true,
+    "blind75": false,
+    "premium": false,
     "solutions": {
       "python": true,
-      "go": false,
+      "go": true,
       "csharp": true,
       "cpp": true,
-      "rust": false
+      "rust": true
     }
   },
   {
@@ -1565,6 +1565,23 @@
   },
   {
     "order": 92,
+    "code": "0743-network-delay-time",
+    "slug": "network-delay-time",
+    "title": "Network Delay Time",
+    "pattern": "Advanced Graphs",
+    "difficulty": "Medium",
+    "blind75": false,
+    "premium": false,
+    "solutions": {
+      "python": true,
+      "go": true,
+      "csharp": true,
+      "cpp": true,
+      "rust": false
+    }
+  },
+  {
+    "order": 93,
     "code": "0332-reconstruct-itinerary",
     "slug": "reconstruct-itinerary",
     "title": "Reconstruct Itinerary",
@@ -1581,27 +1598,10 @@
     }
   },
   {
-    "order": 93,
+    "order": 94,
     "code": "1584-min-cost-to-connect-all-points",
     "slug": "min-cost-to-connect-all-points",
     "title": "Min Cost to Connect All Points",
-    "pattern": "Advanced Graphs",
-    "difficulty": "Medium",
-    "blind75": false,
-    "premium": false,
-    "solutions": {
-      "python": true,
-      "go": true,
-      "csharp": true,
-      "cpp": true,
-      "rust": false
-    }
-  },
-  {
-    "order": 94,
-    "code": "0743-network-delay-time",
-    "slug": "network-delay-time",
-    "title": "Network Delay Time",
     "pattern": "Advanced Graphs",
     "difficulty": "Medium",
     "blind75": false,

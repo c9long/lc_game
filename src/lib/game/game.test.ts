@@ -85,6 +85,32 @@ describe('curriculum', () => {
 		}
 		expect(problemsForNode('arrays-hashing').length).toBe(9); // Premium problems count too
 	});
+
+	it('files every problem under the pattern neetcode.io gives it', () => {
+		// neetcode.io moved Generate Parentheses to Backtracking; its GitHub data still says Stack.
+		expect(PROBLEM_BY_SLUG.get('generate-parentheses')!.nodeId).toBe('backtracking');
+		const counts = Object.fromEntries(NODES.map((n) => [n.id, problemsForNode(n.id).length]));
+		expect(counts).toEqual({
+			'arrays-hashing': 9,
+			'two-pointers': 5,
+			stack: 6,
+			'binary-search': 7,
+			'sliding-window': 6,
+			'linked-list': 11,
+			trees: 15,
+			tries: 3,
+			heap: 7,
+			backtracking: 10,
+			intervals: 6,
+			greedy: 8,
+			graphs: 13,
+			'dp-1d': 12,
+			'advanced-graphs': 6,
+			'dp-2d': 11,
+			'bit-manipulation': 7,
+			'math-geometry': 8
+		});
+	});
 });
 
 function progressFor(slugs: string[], dueAt: Date | null = null): Map<string, ProblemProgress> {

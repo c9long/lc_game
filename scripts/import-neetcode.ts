@@ -3,6 +3,10 @@
 //   git clone --depth 1 https://github.com/neetcode-gh/leetcode.git /tmp/neetcode
 //   node scripts/import-neetcode.ts /tmp/neetcode
 // Writes data/neetcode150.json and static/solutions/<lang>/<code>.<ext> (+ LICENSE).
+//
+// The repo's .problemSiteData.json lags neetcode.io: in 2026 it still filed Generate Parentheses
+// under Stack after the site had moved it to Backtracking. So each problem's pattern and its order
+// come from the problem list bundled into neetcode.io itself, and the repo supplies the rest.
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -27,7 +31,29 @@ type SiteEntry = {
 };
 
 const all: SiteEntry[] = JSON.parse(readFileSync(join(src, '.problemSiteData.json'), 'utf8'));
-const entries = all.filter((e) => e.neetcode150);
+const repo = new Map(all.filter((e) => e.neetcode150).map((e) => [e.link, e]));
+
+/** The NeetCode 150 as neetcode.io lists it, in site order: [link, pattern]. */
+async function siteList(): Promise<[string, string][]> {
+	const html = await (await fetch('https://neetcode.io/practice')).text();
+	const main = html.match(/src="(main\.[0-9a-f]+\.js)"/)?.[1];
+	if (!main) throw new Error('neetcode.io: no main bundle in /practice');
+	const js = await (await fetch(`https://neetcode.io/${main}`)).text();
+	const out: [string, string][] = [];
+	for (const m of js.matchAll(/\{problem:"(?:[^"\\]|\\.)*",pattern:"([^"]*)",link:"([^"]*)"(.*?)\}/g)) {
+		if (m[3].includes('neetcode150:!0')) out.push([m[2], m[1]]);
+	}
+	return out;
+}
+
+const site = await siteList();
+if (site.length !== 150) throw new Error(`neetcode.io lists ${site.length} NeetCode 150 problems, expected 150`);
+const entries = site.map(([link, pattern]) => {
+	const e = repo.get(link);
+	if (!e) throw new Error(`neetcode.io lists ${link}, which the repo does not mark neetcode150`);
+	if (e.pattern !== pattern) console.log(`pattern from neetcode.io: ${link} ${e.pattern} -> ${pattern}`);
+	return { ...e, pattern };
+});
 
 const problems = entries.map((e, order) => ({
 	order,
