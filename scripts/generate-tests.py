@@ -38,6 +38,7 @@ sys.path.insert(0, str(ROOT / "src" / "lib" / "pyodide"))
 import driver  # noqa: E402  (needs the path above)
 
 sys.path.insert(0, str(ROOT / "scripts"))
+import constraints  # noqa: E402
 import generators  # noqa: E402
 
 GRAPHQL = "https://leetcode.com/graphql"
@@ -166,6 +167,16 @@ def generate(slug: str, code: str, meta: dict, curation: dict) -> tuple[str, str
     inputs = parse_cases(spec, meta["exampleTestcases"])
     if not inputs:
         return "no-cases", "no example testcases published"
+    # A LeetCode example can fall outside neetcode.io's tighter constraints (Combination Sum's
+    # target = 1 where neetcode.io says 2 <= target); every case must satisfy both, so it goes.
+    kept = []
+    for args in inputs:
+        try:
+            constraints.V[slug](*args)
+            kept.append(args)
+        except constraints.Bad as e:
+            print(f"  dropped example {slug} {json.dumps(args)[:80]}: {e}")
+    inputs = kept
 
     # Example cases stay first and define exampleCount, so Run remains the quick check while
     # Submit gets everything. Hand-written cases come next (they target a specific weakness), then

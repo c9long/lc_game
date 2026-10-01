@@ -175,7 +175,7 @@ being tested. Remove the example and each near-miss scores a clean sweep:
 | `evaluate-reverse-polish-notation` | division truncates toward **zero**, so `-7 / 2` is `-3` where Python's `//` gives `-4`. Only a division with a negative quotient and a non-zero remainder tells them apart, and there were none | 24 |
 | `valid-parentheses` | random bracket strings are almost never balanced: **6** of 45 answered true, and **3** cases were empty, which the constraint `1 <= s.length` forbids | 13 true, 0 empty |
 | `daily-temperatures` | an equal later temperature is not warmer; over the full 30..100 range ties were uncommon | 26 |
-| `generate-parentheses` | 8 generated cases over `n` in 1..7. `n = 8` — 1430 strings, the only size big enough to catch a solution that is right for small `n` by luck — never appeared | 16 cases, `n = 8` weighted |
+| `generate-parentheses` | 8 generated cases over `n` in 1..7. `n = 8` — 1430 strings, the only size big enough to catch a solution that is right for small `n` by luck — never appeared | 16 cases, `n = 8` weighted. Later reverted: neetcode.io caps `n` at 7, so the suite is `n` = 1..7, once each |
 | `largest-rectangle-in-histogram` | no deliberate plateaus, the shape that defeats a prev/next-smaller pass that is strict on both sides | 15 with adjacent equal heights |
 
 #### A generator that was quietly emitting invalid inputs

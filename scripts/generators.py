@@ -843,7 +843,7 @@ def _right_side(rng):
 def _good_nodes(rng):
     # Node values may be negative, so seeding the running maximum with 0 rather than the root is a
     # real bug -- but only an all-negative tree shows it, and there were three in 43.
-    lo, hi = rng.choice([(-20, 20), (-20, 20), (-20, -1), (-10000, -1)])
+    lo, hi = rng.choice([(-20, 20), (-20, 20), (-20, -1), (-100, -1)])     # -100 <= Node.val <= 100
     return [tree(rng, rng.randint(1, 14), lo, hi)]
 
 
@@ -1604,7 +1604,7 @@ def _permutations(rng):
 
 @generator("combination-sum", count=25)
 def _combination_sum(rng):
-    return [sorted(rng.sample(range(2, 15), rng.randint(1, 5))), rng.randint(1, 20)]
+    return [sorted(rng.sample(range(2, 15), rng.randint(1, 5))), rng.randint(2, 20)]   # 2 <= target
 
 
 @generator("combination-sum-ii", count=25)
@@ -1626,10 +1626,10 @@ def _letter_combinations(rng):
 
 @generator("n-queens", count=12)
 def _n_queens(rng):
-    # 1 <= n <= 9. n = 2 and n = 3 have no solutions at all, and the largest boards are where a
-    # diagonal bookkeeping mistake shows up as a count that is merely wrong rather than empty.
-    # Drawn uniformly, twelve cases left several sizes out, so every legal n is listed.
-    return [rng.choice([1, 2, 3, 4, 5, 6, 7, 8, 9, 4, 6, 8])]
+    # 1 <= n <= 8 (neetcode.io; LeetCode allows 9). n = 2 and n = 3 have no solutions at all, and
+    # the largest boards are where a diagonal bookkeeping mistake shows up as a count that is
+    # merely wrong rather than empty. Every legal n is listed so none is left out.
+    return [rng.choice([1, 2, 3, 4, 5, 6, 7, 8])]
 
 
 def _walk_word(rng, board, length, steps=((1, 0), (-1, 0), (0, 1), (0, -1))):
@@ -1910,10 +1910,9 @@ def _min_interval(rng):
 
 @generator("generate-parentheses", count=16)
 def _generate_parens(rng):
-    # 1 <= n <= 8. n = 8 is the only case big enough (1430 strings) to catch a solution that is
-    # right for small n by luck, and it was missing entirely; drawn uniformly it stayed missing,
-    # so it is weighted.
-    return [rng.choice([1, 2, 3, 4, 5, 6, 7, 8, 8, 8])]
+    # 1 <= n <= 7 (neetcode.io; LeetCode allows 8). Every legal n is listed so none is left out;
+    # n = 7 (429 strings) is the largest legal case.
+    return [rng.choice([1, 2, 3, 4, 5, 6, 7])]
 
 
 @generator("daily-temperatures")
@@ -2111,8 +2110,10 @@ def _happy_number(rng):
     # before testing for 1; 7 -- reached directly or from numbers like 1112 whose digit squares
     # sum to 7 -- catches one that stops at the first single digit and asks whether it is 1.
     # Drawn uniformly from 1..500 they almost never came up, so both bugs scored 42/42.
-    return [rng.choice([1, 7, 1112, 2111, 70, rng.randint(1, 500), rng.randint(1, 500),
-                        rng.randint(1, 500), rng.randint(1, 10 ** 6)])]
+    # neetcode.io caps n at 1000, which rules out 1112 and 2111 (no number below 1000 has digit
+    # squares summing to 7), so 7 itself carries that trap.
+    return [rng.choice([1, 7, 7, 70, rng.randint(1, 500), rng.randint(1, 500),
+                        rng.randint(1, 1000)])]
 
 
 @generator("plus-one")

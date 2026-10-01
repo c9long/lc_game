@@ -1,0 +1,1135 @@
+{
+  "3sum": {
+    "ncLink": "three-integer-sum",
+    "constraints": [
+      "`3 <= nums.length <= 3000`",
+      "`-10^5 <= nums[i] <= 10^5`"
+    ]
+  },
+  "add-two-numbers": {
+    "ncLink": "add-two-numbers",
+    "constraints": [
+      "`1 <= l1.length, l2.length <= 100`.",
+      "`0 <= Node.val <= 9`"
+    ]
+  },
+  "alien-dictionary": {
+    "ncLink": "foreign-dictionary",
+    "constraints": [
+      "`1 <= words.length <= 100`",
+      "`1 <= words[i].length <= 100`",
+      "`words[i]` consists of only lowercase English letters."
+    ]
+  },
+  "balanced-binary-tree": {
+    "ncLink": "balanced-binary-tree",
+    "constraints": [
+      "The number of nodes in the tree is in the range `[0, 1000]`.",
+      "`-1000 <= Node.val <= 1000`"
+    ]
+  },
+  "best-time-to-buy-and-sell-stock": {
+    "ncLink": "buy-and-sell-crypto",
+    "constraints": [
+      "`1 <= prices.length <= 100`",
+      "`0 <= prices[i] <= 100`"
+    ]
+  },
+  "best-time-to-buy-and-sell-stock-with-cooldown": {
+    "ncLink": "buy-and-sell-crypto-with-cooldown",
+    "constraints": [
+      "`1 <= prices.length <= 5000`",
+      "`0 <= prices[i] <= 1000`"
+    ]
+  },
+  "binary-search": {
+    "ncLink": "binary-search",
+    "constraints": [
+      "`1 <= nums.length <= 10000`.",
+      "`-10000 < nums[i], target < 10000`",
+      "All the integers in `nums` are **unique**."
+    ]
+  },
+  "binary-tree-level-order-traversal": {
+    "ncLink": "level-order-traversal-of-binary-tree",
+    "constraints": [
+      "`0 <= The number of nodes in the tree <= 2000`.",
+      "`-1000 <= Node.val <= 1000`"
+    ]
+  },
+  "binary-tree-maximum-path-sum": {
+    "ncLink": "binary-tree-maximum-path-sum",
+    "constraints": [
+      "`1 <= The number of nodes in the tree <= 30000`.",
+      "`-1000 <= Node.val <= 1000`"
+    ]
+  },
+  "binary-tree-right-side-view": {
+    "ncLink": "binary-tree-right-side-view",
+    "constraints": [
+      "`0 <= number of nodes in the tree <= 100`",
+      "`-100 <= Node.val <= 100`"
+    ]
+  },
+  "burst-balloons": {
+    "ncLink": "burst-balloons",
+    "constraints": [
+      "`n == nums.length`",
+      "`1 <= n <= 300`",
+      "`0 <= nums[i] <= 100`"
+    ]
+  },
+  "car-fleet": {
+    "ncLink": "car-fleet",
+    "constraints": [
+      "`n == position.length == speed.length`.",
+      "`1 <= n <= 100,000`",
+      "`0 < target <= 1,000,000`",
+      "`1 <= speed[i] <= 1,000,000`",
+      "`0 <= position[i] < target`",
+      "All the values of `position` are **unique**."
+    ]
+  },
+  "cheapest-flights-within-k-stops": {
+    "ncLink": "cheapest-flight-path",
+    "constraints": [
+      "`1 <= n <= 100`",
+      "`fromi != toi`",
+      "`1 <= pricei <= 1000`",
+      "`0 <= src, dst, k < n`"
+    ]
+  },
+  "climbing-stairs": {
+    "ncLink": "climbing-stairs",
+    "constraints": [
+      "`1 <= n <= 45`"
+    ]
+  },
+  "clone-graph": {
+    "ncLink": "clone-graph",
+    "constraints": [
+      "`0 <= The number of nodes in the graph <= 100`.",
+      "`1 <= Node.val <= 100`",
+      "There are no duplicate edges and no self-loops in the graph."
+    ]
+  },
+  "coin-change": {
+    "ncLink": "coin-change",
+    "constraints": [
+      "`1 <= coins.length <= 10`",
+      "`1 <= coins[i] <= 2^31 - 1`",
+      "`0 <= amount <= 10000`"
+    ]
+  },
+  "coin-change-ii": {
+    "ncLink": "coin-change-ii",
+    "constraints": [
+      "`1 <= coins.length <= 100`",
+      "`1 <= coins[i] <= 5000`",
+      "`0 <= amount <= 5000`"
+    ]
+  },
+  "combination-sum": {
+    "ncLink": "combination-target-sum",
+    "constraints": [
+      "All elements of `nums` are **distinct**.",
+      "`1 <= nums.length <= 20`",
+      "`2 <= nums[i] <= 30`",
+      "`2 <= target <= 30`"
+    ]
+  },
+  "combination-sum-ii": {
+    "ncLink": "combination-target-sum-ii",
+    "constraints": [
+      "`1 <= candidates.length <= 100`",
+      "`1 <= candidates[i] <= 50`",
+      "`1 <= target <= 30`"
+    ]
+  },
+  "construct-binary-tree-from-preorder-and-inorder-traversal": {
+    "ncLink": "binary-tree-from-preorder-and-inorder-traversal",
+    "constraints": [
+      "`1 <= inorder.length <= 2001`.",
+      "`inorder.length == preorder.length`",
+      "`-1000 <= preorder[i], inorder[i] <= 1000`"
+    ]
+  },
+  "container-with-most-water": {
+    "ncLink": "max-water-container",
+    "constraints": [
+      "`2 <= height.length <= 100,000`",
+      "`0 <= height[i] <= 10,000`"
+    ]
+  },
+  "contains-duplicate": {
+    "ncLink": "duplicate-integer",
+    "constraints": [
+      "`0 <= nums.length <= 10^5`",
+      "`-10^9 <= nums[i] <= 10^9`"
+    ]
+  },
+  "copy-list-with-random-pointer": {
+    "ncLink": "copy-linked-list-with-random-pointer",
+    "constraints": [
+      "`0 <= n <= 100`",
+      "`-100 <= Node.val <= 100`",
+      "Node values are not guaranteed to be unique.",
+      "`random` is `null` or is pointing to some node in the linked list."
+    ]
+  },
+  "count-good-nodes-in-binary-tree": {
+    "ncLink": "count-good-nodes-in-binary-tree",
+    "constraints": [
+      "`1 <= number of nodes in the tree <= 100,000`",
+      "`-100 <= Node.val <= 100`"
+    ]
+  },
+  "counting-bits": {
+    "ncLink": "counting-bits",
+    "constraints": [
+      "`0 <= n <= 1000`"
+    ]
+  },
+  "course-schedule": {
+    "ncLink": "course-schedule",
+    "constraints": [
+      "`1 <= numCourses <= 1000`",
+      "`0 <= prerequisites.length <= 1000`",
+      "`prerequisites[i].length == 2`",
+      "`0 <= a[i], b[i] < numCourses`",
+      "All `prerequisite` pairs are **unique**."
+    ]
+  },
+  "course-schedule-ii": {
+    "ncLink": "course-schedule-ii",
+    "constraints": [
+      "`1 <= numCourses <= 1000`",
+      "`0 <= prerequisites.length <= 1000`",
+      "All `prerequisite` pairs are **unique**."
+    ]
+  },
+  "daily-temperatures": {
+    "ncLink": "daily-temperatures",
+    "constraints": [
+      "`1 <= temperatures.length <= 100,000`.",
+      "`1 <= temperatures[i] <= 100`"
+    ]
+  },
+  "decode-ways": {
+    "ncLink": "decode-ways",
+    "constraints": [
+      "`1 <= s.length <= 100`",
+      "`s` consists of digits"
+    ]
+  },
+  "design-add-and-search-words-data-structure": {
+    "ncLink": "design-word-search-data-structure",
+    "constraints": [
+      "`1 <= word.length <= 25`",
+      "`word` in `addWord` consists of lowercase English letters.",
+      "`word` in `search` consist of `'.'` or lowercase English letters.",
+      "There will be at most `2` dots in `word` for `search` queries.",
+      "At most `10,000` calls will be made to `addWord` and `search`."
+    ]
+  },
+  "design-twitter": {
+    "ncLink": "design-twitter-feed",
+    "constraints": [
+      "`1 <= userId, followerId, followeeId <= 500`",
+      "`0 <= tweetId <= 10^4`",
+      "All the tweets have **unique** IDs.",
+      "At most `3 * 10^4` calls will be made to `postTweet`, `getNewsFeed`, `follow`, and `unfollow`."
+    ]
+  },
+  "detect-squares": {
+    "ncLink": "count-squares",
+    "constraints": [
+      "`point.length == 2`",
+      "`0 <= x, y <= 1000`"
+    ]
+  },
+  "diameter-of-binary-tree": {
+    "ncLink": "binary-tree-diameter",
+    "constraints": [
+      "`1 <= number of nodes in the tree <= 100`",
+      "`-100 <= Node.val <= 100`"
+    ]
+  },
+  "distinct-subsequences": {
+    "ncLink": "count-subsequences",
+    "constraints": [
+      "`1 <= s.length, t.length <= 1000`",
+      "`s` and `t` consist of English letters."
+    ]
+  },
+  "edit-distance": {
+    "ncLink": "edit-distance",
+    "constraints": [
+      "`0 <= word1.length, word2.length <= 100`",
+      "`word1` and `word2` consist of lowercase English letters."
+    ]
+  },
+  "encode-and-decode-strings": {
+    "ncLink": "string-encode-and-decode",
+    "constraints": [
+      "`0 <= strs.length < 100`",
+      "`0 <= strs[i].length < 200`",
+      "`strs[i]` contains any possible characters out of `256` valid ASCII characters."
+    ]
+  },
+  "evaluate-reverse-polish-notation": {
+    "ncLink": "evaluate-reverse-polish-notation",
+    "constraints": [
+      "`1 <= tokens.length <= 10000`.",
+      "tokens[i] is `\\\"+\\\"`, `\\\"-\\\"`, `\\\"*\\\"`, or `\\\"/\\\"`, or a string representing an integer in the range `[-200, 200]`."
+    ]
+  },
+  "find-median-from-data-stream": {
+    "ncLink": "find-median-in-a-data-stream",
+    "constraints": [
+      "`-100,000 <= num <= 100,000`",
+      "At most `50,000` calls will be made to `addNum` and `findMedian`.",
+      "`findMedian` will only be called after adding at least one integer to the data structure."
+    ]
+  },
+  "find-minimum-in-rotated-sorted-array": {
+    "ncLink": "find-minimum-in-rotated-sorted-array",
+    "constraints": [
+      "`1 <= nums.length <= 1000`",
+      "`-1000 <= nums[i] <= 1000`"
+    ]
+  },
+  "find-the-duplicate-number": {
+    "ncLink": "find-duplicate-integer",
+    "constraints": [
+      "`1 <= n <= 10,000`",
+      "`nums.length == n + 1`",
+      "`1 <= nums[i] <= n`"
+    ]
+  },
+  "gas-station": {
+    "ncLink": "gas-station",
+    "constraints": [
+      "`1 <= gas.length == cost.length <= 100000`",
+      "`0 <= gas[i], cost[i] <= 1000`"
+    ]
+  },
+  "generate-parentheses": {
+    "ncLink": "generate-parentheses",
+    "constraints": [
+      "`1 <= n <= 7`"
+    ]
+  },
+  "graph-valid-tree": {
+    "ncLink": "valid-tree",
+    "constraints": [
+      "`1 <= n <= 2000`",
+      "`0 <= edges.length <= 5000`",
+      "`edges[i].length == 2`",
+      "`0 <= a_i, b_i < n`",
+      "`a_i != b_i`",
+      "There are no self-loops or repeated edges."
+    ]
+  },
+  "group-anagrams": {
+    "ncLink": "anagram-groups",
+    "constraints": [
+      "`1 <= strs.length <= 10000`.",
+      "`0 <= strs[i].length <= 100`",
+      "`strs[i]` is made up of lowercase English letters."
+    ]
+  },
+  "hand-of-straights": {
+    "ncLink": "hand-of-straights",
+    "constraints": [
+      "`1 <= hand.length <= 10000`",
+      "`0 <= hand[i] <= 1000`",
+      "`1 <= groupSize <= hand.length`"
+    ]
+  },
+  "happy-number": {
+    "ncLink": "non-cyclical-number",
+    "constraints": [
+      "`1 <= n <= 1000`"
+    ]
+  },
+  "house-robber": {
+    "ncLink": "house-robber",
+    "constraints": [
+      "`1 <= nums.length <= 100`",
+      "`0 <= nums[i] <= 100`"
+    ]
+  },
+  "house-robber-ii": {
+    "ncLink": "house-robber-ii",
+    "constraints": [
+      "`1 <= nums.length <= 100`",
+      "`0 <= nums[i] <= 200`"
+    ]
+  },
+  "implement-trie-prefix-tree": {
+    "ncLink": "implement-prefix-tree",
+    "constraints": [
+      "`1 <= word.length, prefix.length <= 1000`",
+      "`word` and `prefix` are made up of lowercase English letters."
+    ]
+  },
+  "insert-interval": {
+    "ncLink": "insert-new-interval",
+    "constraints": [
+      "`0 <= intervals.length <= 10000`",
+      "`newInterval.length == intervals[i].length == 2`",
+      "`0 <= start <= end <= 100000`"
+    ]
+  },
+  "interleaving-string": {
+    "ncLink": "interleaving-string",
+    "constraints": [
+      "`0 <= s1.length, s2.length <= 100`",
+      "`0 <= s3.length <= 200`"
+    ]
+  },
+  "invert-binary-tree": {
+    "ncLink": "invert-a-binary-tree",
+    "constraints": [
+      "`0 <= The number of nodes in the tree <= 100`.",
+      "`-100 <= Node.val <= 100`"
+    ]
+  },
+  "jump-game": {
+    "ncLink": "jump-game",
+    "constraints": [
+      "`1 <= nums.length <= 1000`",
+      "`0 <= nums[i] <= 1000`"
+    ]
+  },
+  "jump-game-ii": {
+    "ncLink": "jump-game-ii",
+    "constraints": [
+      "`1 <= nums.length <= 1000`",
+      "`0 <= nums[i] <= 100`"
+    ]
+  },
+  "k-closest-points-to-origin": {
+    "ncLink": "k-closest-points-to-origin",
+    "constraints": [
+      "`1 <= k <= points.length <= 1000`",
+      "`-100 <= points[i][0], points[i][1] <= 100`"
+    ]
+  },
+  "koko-eating-bananas": {
+    "ncLink": "eating-bananas",
+    "constraints": [
+      "`1 <= piles.length <= 10,000`",
+      "`piles.length <= h <= 1,000,000,000`",
+      "`1 <= piles[i] <= 1,000,000,000`"
+    ]
+  },
+  "kth-largest-element-in-a-stream": {
+    "ncLink": "kth-largest-integer-in-a-stream",
+    "constraints": [
+      "`1 <= k <= 1000`",
+      "`0 <= nums.length <= 1000`",
+      "`-1000 <= nums[i] <= 1000`",
+      "`-1000 <= val <= 1000`",
+      "There will always be at least `k` integers in the stream when you search for the `kth` integer."
+    ]
+  },
+  "kth-largest-element-in-an-array": {
+    "ncLink": "kth-largest-element-in-an-array",
+    "constraints": [
+      "`1 <= k <= nums.length <= 10000`",
+      "`-1000 <= nums[i] <= 1000`"
+    ]
+  },
+  "kth-smallest-element-in-a-bst": {
+    "ncLink": "kth-smallest-integer-in-bst",
+    "constraints": [
+      "`1 <= k <= The number of nodes in the tree <= 10,000`.",
+      "`0 <= Node.val <= 10,000`"
+    ]
+  },
+  "largest-rectangle-in-histogram": {
+    "ncLink": "largest-rectangle-in-histogram",
+    "constraints": [
+      "`1 <= heights.length <= 100,000`.",
+      "`0 <= heights[i] <= 10,000`"
+    ]
+  },
+  "last-stone-weight": {
+    "ncLink": "last-stone-weight",
+    "constraints": [
+      "`1 <= stones.length <= 20`",
+      "`1 <= stones[i] <= 100`"
+    ]
+  },
+  "letter-combinations-of-a-phone-number": {
+    "ncLink": "combinations-of-a-phone-number",
+    "constraints": [
+      "`0 <= digits.length <= 4`",
+      "`2 <= digits[i] <= 9`"
+    ]
+  },
+  "linked-list-cycle": {
+    "ncLink": "linked-list-cycle-detection",
+    "constraints": [
+      "`0 <= Length of the list <= 1000`.",
+      "`-1000 <= Node.val <= 1000`",
+      "`index` is `-1` or a valid index in the linked list."
+    ]
+  },
+  "longest-common-subsequence": {
+    "ncLink": "longest-common-subsequence",
+    "constraints": [
+      "`1 <= text1.length, text2.length <= 1000`",
+      "`text1` and `text2` consist of only lowercase English characters."
+    ]
+  },
+  "longest-consecutive-sequence": {
+    "ncLink": "longest-consecutive-sequence",
+    "constraints": [
+      "`0 <= nums.length <= 100,000`",
+      "`-10^9 <= nums[i] <= 10^9`"
+    ]
+  },
+  "longest-increasing-path-in-a-matrix": {
+    "ncLink": "longest-increasing-path-in-matrix",
+    "constraints": [
+      "`1 <= matrix.length, matrix[i].length <= 100`"
+    ]
+  },
+  "longest-increasing-subsequence": {
+    "ncLink": "longest-increasing-subsequence",
+    "constraints": [
+      "`1 <= nums.length <= 1000`",
+      "`-1000 <= nums[i] <= 1000`"
+    ]
+  },
+  "longest-palindromic-substring": {
+    "ncLink": "longest-palindromic-substring",
+    "constraints": [
+      "`1 <= s.length <= 1000`",
+      "`s` contains only digits and English letters."
+    ]
+  },
+  "longest-repeating-character-replacement": {
+    "ncLink": "longest-repeating-substring-with-replacement",
+    "constraints": [
+      "`1 <= s.length <= 100,000`",
+      "`0 <= k <= s.length`",
+      "`s` consists of only uppercase english characters."
+    ]
+  },
+  "longest-substring-without-repeating-characters": {
+    "ncLink": "longest-substring-without-duplicates",
+    "constraints": [
+      "`0 <= s.length <= 50,000`",
+      "`s` may consist of printable ASCII characters."
+    ]
+  },
+  "lowest-common-ancestor-of-a-binary-search-tree": {
+    "ncLink": "lowest-common-ancestor-in-binary-search-tree",
+    "constraints": [
+      "`2 <= The number of nodes in the tree <= 100`.",
+      "`-100 <= Node.val <= 100`",
+      "`p != q`",
+      "`p` and `q` will both exist in the BST."
+    ]
+  },
+  "lru-cache": {
+    "ncLink": "lru-cache",
+    "constraints": [
+      "`1 <= capacity <= 3000`",
+      "`0 <= key <= 10^4`",
+      "`0 <= value <= 10^5`",
+      "At most `2 * 10^5` calls will be made to `get` and `put`."
+    ]
+  },
+  "max-area-of-island": {
+    "ncLink": "max-area-of-island",
+    "constraints": [
+      "`1 <= grid.length, grid[i].length <= 50`"
+    ]
+  },
+  "maximum-depth-of-binary-tree": {
+    "ncLink": "depth-of-binary-tree",
+    "constraints": [
+      "`0 <= The number of nodes in the tree <= 100`.",
+      "`-100 <= Node.val <= 100`"
+    ]
+  },
+  "maximum-product-subarray": {
+    "ncLink": "maximum-product-subarray",
+    "constraints": [
+      "`1 <= nums.length <= 20,000`",
+      "`-10 <= nums[i] <= 10`",
+      "The product of any subarray of `nums` is **guaranteed** to fit in a **32-bit** integer."
+    ]
+  },
+  "maximum-subarray": {
+    "ncLink": "maximum-subarray",
+    "constraints": [
+      "`1 <= nums.length <= 100,000`",
+      "`-10,000 <= nums[i] <= 10,000`"
+    ]
+  },
+  "median-of-two-sorted-arrays": {
+    "ncLink": "median-of-two-sorted-arrays",
+    "constraints": [
+      "`nums1.length == m`",
+      "`nums2.length == n`",
+      "`0 <= m <= 1000`",
+      "`0 <= n <= 1000`",
+      "`1 <= m + n <= 2000`",
+      "`-10^6 <= nums1[i], nums2[i] <= 10^6`"
+    ]
+  },
+  "meeting-rooms": {
+    "ncLink": "meeting-schedule",
+    "constraints": [
+      "`0 <= intervals.length <= 500`",
+      "`0 <= intervals[i].start < intervals[i].end <= 1,000,000`"
+    ]
+  },
+  "meeting-rooms-ii": {
+    "ncLink": "meeting-schedule-ii",
+    "constraints": [
+      "`0 <= intervals.length <= 100,000`",
+      "`0 <= intervals[i].start < intervals[i].end <= 1,000,000`"
+    ]
+  },
+  "merge-intervals": {
+    "ncLink": "merge-intervals",
+    "constraints": [
+      "`1 <= intervals.length <= 1000`",
+      "`intervals[i].length == 2`",
+      "`0 <= start <= end <= 1000`"
+    ]
+  },
+  "merge-k-sorted-lists": {
+    "ncLink": "merge-k-sorted-linked-lists",
+    "constraints": [
+      "`0 <= lists.length <= 10000`",
+      "`0 <= lists[i].length <= 500`",
+      "`-10000 <= lists[i][j] <= 10000`",
+      "`lists[i]` is sorted in **ascending** order.",
+      "The sum of `lists[i].length` will not exceed `10000`."
+    ]
+  },
+  "merge-triplets-to-form-target-triplet": {
+    "ncLink": "merge-triplets-to-form-target",
+    "constraints": [
+      "`1 <= triplets.length <= 1000`",
+      "`1 <= ai, bi, ci, x, y, z <= 100`"
+    ]
+  },
+  "merge-two-sorted-lists": {
+    "ncLink": "merge-two-sorted-linked-lists",
+    "constraints": [
+      "`0 <= The length of the each list <= 100`.",
+      "`-100 <= Node.val <= 100`"
+    ]
+  },
+  "min-cost-climbing-stairs": {
+    "ncLink": "min-cost-climbing-stairs",
+    "constraints": [
+      "`2 <= cost.length <= 100`",
+      "`0 <= cost[i] <= 100`"
+    ]
+  },
+  "min-cost-to-connect-all-points": {
+    "ncLink": "min-cost-to-connect-points",
+    "constraints": [
+      "`1 <= points.length <= 1000`",
+      "`-1,000,000 <= xi, yi <= 1,000,000`",
+      "All pairs `(xi, yi)` are distinct."
+    ]
+  },
+  "min-stack": {
+    "ncLink": "minimum-stack",
+    "constraints": [
+      "`-2^31 <= val <= 2^31 - 1`.",
+      "`pop`, `top` and `getMin` will always be called on **non-empty** stacks.",
+      "At most $3 * 10^4$ calls will be made to `push`, `pop`, `top`, and `getMin`."
+    ]
+  },
+  "minimum-interval-to-include-each-query": {
+    "ncLink": "minimum-interval-including-query",
+    "constraints": [
+      "`1 <= intervals.length <= 100000`",
+      "`1 <= queries.length <= 100000`",
+      "`1 <= left_i <= right_i <= 10000000`",
+      "`1 <= queries[j] <= 10000000`"
+    ]
+  },
+  "minimum-window-substring": {
+    "ncLink": "minimum-window-with-characters",
+    "constraints": [
+      "`1 <= s.length <= 100,000`",
+      "`1 <= t.length <= 100,000`",
+      "`s` and `t` consist of uppercase and lowercase English letters."
+    ]
+  },
+  "missing-number": {
+    "ncLink": "missing-number",
+    "constraints": [
+      "`1 <= nums.length <= 1000`"
+    ]
+  },
+  "multiply-strings": {
+    "ncLink": "multiply-strings",
+    "constraints": [
+      "`1 <= num1.length, num2.length <= 200`",
+      "`num1` and `num2` consist of digits only."
+    ]
+  },
+  "n-queens": {
+    "ncLink": "n-queens",
+    "constraints": [
+      "`1 <= n <= 8`"
+    ]
+  },
+  "network-delay-time": {
+    "ncLink": "network-delay-time",
+    "constraints": [
+      "`1 <= k <= n <= 100`",
+      "`1 <= times.length <= 1000`"
+    ]
+  },
+  "non-overlapping-intervals": {
+    "ncLink": "non-overlapping-intervals",
+    "constraints": [
+      "`1 <= intervals.length <= 100,000`",
+      "`intervals[i].length == 2`",
+      "`-50000 <= starti < endi <= 50000`"
+    ]
+  },
+  "number-of-1-bits": {
+    "ncLink": "number-of-one-bits",
+    "constraints": []
+  },
+  "number-of-connected-components-in-an-undirected-graph": {
+    "ncLink": "count-connected-components",
+    "constraints": [
+      "`1 <= n <= 2000`",
+      "`1 <= edges.length <= 5000`",
+      "`edges[i].length == 2`",
+      "`0 <= aᵢ < n`",
+      "`0 <= bᵢ < n`",
+      "`aᵢ != bᵢ`",
+      "There are no repeated edges."
+    ]
+  },
+  "number-of-islands": {
+    "ncLink": "count-number-of-islands",
+    "constraints": [
+      "`1 <= grid.length, grid[i].length <= 100`",
+      "`grid[i][j]` is `'0'` or `'1'`."
+    ]
+  },
+  "pacific-atlantic-water-flow": {
+    "ncLink": "pacific-atlantic-water-flow",
+    "constraints": [
+      "`1 <= heights.length, heights[r].length <= 100`",
+      "`0 <= heights[r][c] <= 1000`"
+    ]
+  },
+  "palindrome-partitioning": {
+    "ncLink": "palindrome-partitioning",
+    "constraints": [
+      "`1 <= s.length <= 20`",
+      "`s` contains only lowercase English letters."
+    ]
+  },
+  "palindromic-substrings": {
+    "ncLink": "palindromic-substrings",
+    "constraints": [
+      "`1 <= s.length <= 1000`",
+      "`s` consists of lowercase English letters."
+    ]
+  },
+  "partition-equal-subset-sum": {
+    "ncLink": "partition-equal-subset-sum",
+    "constraints": [
+      "`1 <= nums.length <= 100`",
+      "`1 <= nums[i] <= 50`"
+    ]
+  },
+  "partition-labels": {
+    "ncLink": "partition-labels",
+    "constraints": [
+      "`1 <= s.length <= 100`"
+    ]
+  },
+  "permutation-in-string": {
+    "ncLink": "permutation-string",
+    "constraints": [
+      "`1 <= s1.length, s2.length <= 10000`"
+    ]
+  },
+  "permutations": {
+    "ncLink": "permutations",
+    "constraints": [
+      "`1 <= nums.length <= 6`",
+      "`-10 <= nums[i] <= 10`"
+    ]
+  },
+  "plus-one": {
+    "ncLink": "plus-one",
+    "constraints": [
+      "`1 <= digits.length <= 100`",
+      "`0 <= digits[i] <= 9`"
+    ]
+  },
+  "powx-n": {
+    "ncLink": "pow-x-n",
+    "constraints": [
+      "`-100.0 < x < 100.0`",
+      "`-2^31 <= n <= 2^31 - 1`",
+      "`n` is an integer.",
+      "Either `x` is not zero or `n > 0`.",
+      "`-10^4 <= x^n <= 10^4`"
+    ]
+  },
+  "product-of-array-except-self": {
+    "ncLink": "products-of-array-discluding-self",
+    "constraints": [
+      "`2 <= nums.length <= 100,000`",
+      "`-30 <= nums[i] <= 30`",
+      "The product of any prefix or suffix of `nums` is **guaranteed** to fit in a **32-bit** integer."
+    ]
+  },
+  "reconstruct-itinerary": {
+    "ncLink": "reconstruct-flight-path",
+    "constraints": [
+      "`1 <= tickets.length <= 300`",
+      "`from_i != to_i`"
+    ]
+  },
+  "redundant-connection": {
+    "ncLink": "redundant-connection",
+    "constraints": [
+      "`n == edges.length`",
+      "`3 <= n <= 1000`",
+      "`1 <= edges[i][0] < edges[i][1] <= edges.length`",
+      "There are no repeated edges and no self-loops in the input."
+    ]
+  },
+  "regular-expression-matching": {
+    "ncLink": "regular-expression-matching",
+    "constraints": [
+      "`1 <= s.length <= 20`",
+      "`1 <= p.length <= 20`",
+      "Each appearance of `'*'`, will be preceded by a valid character or `'.'`."
+    ]
+  },
+  "remove-nth-node-from-end-of-list": {
+    "ncLink": "remove-node-from-end-of-linked-list",
+    "constraints": [
+      "The number of nodes in the list is `sz`.",
+      "`1 <= sz <= 30`",
+      "`0 <= Node.val <= 100`",
+      "`1 <= n <= sz`"
+    ]
+  },
+  "reorder-list": {
+    "ncLink": "reorder-linked-list",
+    "constraints": [
+      "`1 <= Length of the list <= 1000`.",
+      "`1 <= Node.val <= 1000`"
+    ]
+  },
+  "reverse-bits": {
+    "ncLink": "reverse-bits",
+    "constraints": []
+  },
+  "reverse-integer": {
+    "ncLink": "reverse-integer",
+    "constraints": [
+      "`-2^31 <= x <= 2^31 - 1`"
+    ]
+  },
+  "reverse-linked-list": {
+    "ncLink": "reverse-a-linked-list",
+    "constraints": [
+      "`0 <= The length of the list <= 1000`.",
+      "`-1000 <= Node.val <= 1000`"
+    ]
+  },
+  "reverse-nodes-in-k-group": {
+    "ncLink": "reverse-nodes-in-k-group",
+    "constraints": [
+      "The length of the linked list is `n`.",
+      "`1 <= k <= n <= 5000`",
+      "`0 <= Node.val <= 100`"
+    ]
+  },
+  "rotate-image": {
+    "ncLink": "rotate-matrix",
+    "constraints": [
+      "`n == matrix.length == matrix[i].length`",
+      "`1 <= n <= 20`",
+      "`-1000 <= matrix[i][j] <= 1000`"
+    ]
+  },
+  "rotting-oranges": {
+    "ncLink": "rotting-fruit",
+    "constraints": [
+      "`1 <= grid.length, grid[i].length <= 10`"
+    ]
+  },
+  "same-tree": {
+    "ncLink": "same-binary-tree",
+    "constraints": [
+      "`0 <= The number of nodes in both trees <= 100`.",
+      "`-100 <= Node.val <= 100`"
+    ]
+  },
+  "search-a-2d-matrix": {
+    "ncLink": "search-2d-matrix",
+    "constraints": [
+      "`m == matrix.length`",
+      "`n == matrix[i].length`",
+      "`1 <= m, n <= 100`",
+      "`-10000 <= matrix[i][j], target <= 10000`"
+    ]
+  },
+  "search-in-rotated-sorted-array": {
+    "ncLink": "find-target-in-rotated-sorted-array",
+    "constraints": [
+      "`1 <= nums.length <= 1000`",
+      "`-1000 <= nums[i] <= 1000`",
+      "`-1000 <= target <= 1000`",
+      "All values of `nums` are **unique**.",
+      "`nums` is an ascending array that is possibly rotated."
+    ]
+  },
+  "serialize-and-deserialize-binary-tree": {
+    "ncLink": "serialize-and-deserialize-binary-tree",
+    "constraints": [
+      "`0 <= The number of nodes in the tree <= 10,000`.",
+      "`-1000 <= Node.val <= 1000`"
+    ]
+  },
+  "set-matrix-zeroes": {
+    "ncLink": "set-zeroes-in-matrix",
+    "constraints": [
+      "`m == matrix.length`",
+      "`n == matrix[0].length`",
+      "`1 <= m, n <= 200`",
+      "`-2^31 <= matrix[i][j] <= (2^31) - 1`"
+    ]
+  },
+  "single-number": {
+    "ncLink": "single-number",
+    "constraints": [
+      "`1 <= nums.length <= 10000`",
+      "`-10000 <= nums[i] <= 10000`"
+    ]
+  },
+  "sliding-window-maximum": {
+    "ncLink": "sliding-window-maximum",
+    "constraints": [
+      "`1 <= nums.length <= 100,000`",
+      "`-10,000 <= nums[i] <= 10,000`",
+      "`1 <= k <= nums.length`"
+    ]
+  },
+  "spiral-matrix": {
+    "ncLink": "spiral-matrix",
+    "constraints": [
+      "`1 <= matrix.length, matrix[i].length <= 10`",
+      "`-100 <= matrix[i][j] <= 100`"
+    ]
+  },
+  "subsets": {
+    "ncLink": "subsets",
+    "constraints": [
+      "`1 <= nums.length <= 10`",
+      "`-10 <= nums[i] <= 10`"
+    ]
+  },
+  "subsets-ii": {
+    "ncLink": "subsets-ii",
+    "constraints": [
+      "`1 <= nums.length <= 11`",
+      "`-20 <= nums[i] <= 20`"
+    ]
+  },
+  "subtree-of-another-tree": {
+    "ncLink": "subtree-of-a-binary-tree",
+    "constraints": [
+      "`1 <= The number of nodes in both trees <= 100`.",
+      "`-100 <= root.val, subRoot.val <= 100`"
+    ]
+  },
+  "sum-of-two-integers": {
+    "ncLink": "sum-of-two-integers",
+    "constraints": [
+      "`-1000 <= a, b <= 1000`"
+    ]
+  },
+  "surrounded-regions": {
+    "ncLink": "surrounded-regions",
+    "constraints": [
+      "`1 <= board.length, board[i].length <= 200`",
+      "`board[i][j]` is `'X'` or `'O'`."
+    ]
+  },
+  "swim-in-rising-water": {
+    "ncLink": "swim-in-rising-water",
+    "constraints": [
+      "`grid.length == grid[i].length`",
+      "`1 <= grid.length <= 50`",
+      "`0 <= grid[i][j] < n^2`"
+    ]
+  },
+  "target-sum": {
+    "ncLink": "target-sum",
+    "constraints": [
+      "`1 <= nums.length <= 20`",
+      "`0 <= nums[i] <= 1000`",
+      "`-1000 <= target <= 1000`"
+    ]
+  },
+  "task-scheduler": {
+    "ncLink": "task-scheduling",
+    "constraints": [
+      "`1 <= tasks.length <= 10000`",
+      "`0 <= n <= 100`"
+    ]
+  },
+  "time-based-key-value-store": {
+    "ncLink": "time-based-key-value-store",
+    "constraints": [
+      "`1 <= key.length, value.length <= 100`",
+      "`key` and `value` only include lowercase English letters and digits.",
+      "`0 <= timestamp <= 10^7`",
+      "All the timestamps of `set` are strictly increasing.",
+      "At most `2 * 10^5` calls will be made to `set` and `get`."
+    ]
+  },
+  "top-k-frequent-elements": {
+    "ncLink": "top-k-elements-in-list",
+    "constraints": [
+      "`1 <= nums.length <= 10^4`.",
+      "`-1000 <= nums[i] <= 1000`",
+      "`1 <= k <= number of distinct elements in nums`."
+    ]
+  },
+  "trapping-rain-water": {
+    "ncLink": "trapping-rain-water",
+    "constraints": [
+      "`1 <= height.length <= 20,000`",
+      "`0 <= height[i] <= 100,000`"
+    ]
+  },
+  "two-sum": {
+    "ncLink": "two-integer-sum",
+    "constraints": [
+      "`2 <= nums.length <= 1000`",
+      "`-10,000,000 <= nums[i] <= 10,000,000`",
+      "`-10,000,000 <= target <= 10,000,000`",
+      "Only one valid answer exists.**"
+    ]
+  },
+  "two-sum-ii-input-array-is-sorted": {
+    "ncLink": "two-integer-sum-ii",
+    "constraints": [
+      "`2 <= numbers.length <= 30000`",
+      "`-1000 <= numbers[i] <= 1000`",
+      "`-1000 <= target <= 1000`"
+    ]
+  },
+  "unique-paths": {
+    "ncLink": "count-paths",
+    "constraints": [
+      "`1 <= m, n <= 100`"
+    ]
+  },
+  "valid-anagram": {
+    "ncLink": "is-anagram",
+    "constraints": [
+      "`1 <= s.length, t.length <= 5 * 10^4`",
+      "`s` and `t` consist of lowercase English letters."
+    ]
+  },
+  "valid-palindrome": {
+    "ncLink": "is-palindrome",
+    "constraints": [
+      "`1 <= s.length <= 1000`",
+      "`s` is made up of only printable ASCII characters."
+    ]
+  },
+  "valid-parentheses": {
+    "ncLink": "validate-parentheses",
+    "constraints": [
+      "`1 <= s.length <= 1000`"
+    ]
+  },
+  "valid-parenthesis-string": {
+    "ncLink": "valid-parenthesis-string",
+    "constraints": [
+      "`1 <= s.length <= 100`"
+    ]
+  },
+  "valid-sudoku": {
+    "ncLink": "valid-sudoku",
+    "constraints": [
+      "`board.length == 9`",
+      "`board[i].length == 9`",
+      "`board[i][j]` is a digit `1-9` or `'.'`."
+    ]
+  },
+  "validate-binary-search-tree": {
+    "ncLink": "valid-binary-search-tree",
+    "constraints": [
+      "`1 <= The number of nodes in the tree <= 10000`.",
+      "`-1000000000 <= Node.val <= 1000000000`"
+    ]
+  },
+  "walls-and-gates": {
+    "ncLink": "islands-and-treasure",
+    "constraints": [
+      "`m == grid.length`",
+      "`n == grid[i].length`",
+      "`1 <= m, n <= 100`",
+      "`grid[i][j]` is one of `{-1, 0, 2147483647}`"
+    ]
+  },
+  "word-break": {
+    "ncLink": "word-break",
+    "constraints": [
+      "`1 <= s.length <= 200`",
+      "`1 <= wordDict.length <= 100`",
+      "`1 <= wordDict[i].length <= 20`",
+      "`s` and `wordDict[i]` consist of only lowercase English letters."
+    ]
+  },
+  "word-ladder": {
+    "ncLink": "word-ladder",
+    "constraints": [
+      "`1 <= beginWord.length <= 10`",
+      "`1 <= wordList.length <= 100`"
+    ]
+  },
+  "word-search": {
+    "ncLink": "search-for-word",
+    "constraints": [
+      "`1 <= board.length, board[i].length <= 5`",
+      "`1 <= word.length <= 10`",
+      "`board` and `word` consists of only lowercase and uppercase English letters."
+    ]
+  },
+  "word-search-ii": {
+    "ncLink": "search-for-word-ii",
+    "constraints": [
+      "`1 <= board.length, board[i].length <= 12`",
+      "`board[i]` consists only of lowercase English letter.",
+      "`1 <= words.length <= 30,000`",
+      "`1 <= words[i].length <= 10`",
+      "`words[i]` consists only of lowercase English letters.",
+      "All strings within `words` are distinct."
+    ]
+  }
+}
