@@ -8,7 +8,9 @@ Why these are Python and not a JSON spec: most problems carry preconditions the 
 express — "the array is sorted", "exactly one solution exists", "values are unique", "the tree is a
 valid BST". Random data that violates them makes the oracle produce confidently wrong expectations,
 which is worse than a thin suite. So a generator may return None to reject a draw, and the harness
-retries.
+retries. The harness also redraws anything scripts/constraints.py rejects -- an input LeetCode's
+Constraints rule out, such as an empty array where the statement says 1 <= n -- and any repeat of an
+earlier case, including the examples, so every case tests something new.
 
 Generation is seeded per slug, so regenerating produces identical files and a diff means an actual
 change.
@@ -21,8 +23,11 @@ Adding one:
 """
 from __future__ import annotations
 
+import json
 import random
 import string
+
+import constraints
 
 GENERATORS: dict[str, tuple] = {}
 MAX_DRAWS = 400
@@ -36,19 +41,34 @@ def generator(slug: str, count: int = 40):
     return register
 
 
-def build(slug: str) -> list | None:
-    """Deterministic inputs for one problem, or None if it has no generator."""
+def build(slug: str, existing: list | None = None) -> list | None:
+    """Deterministic inputs for one problem, or None if it has no generator.
+
+    `existing` are the cases already in the suite (examples and curated extras); a draw equal to one
+    of them, or to an earlier draw, is redrawn.
+    """
     entry = GENERATORS.get(slug)
     if entry is None:
         return None
     fn, count = entry
+    valid = constraints.V[slug]
     rng = random.Random(f"lc-game:{slug}")
+    seen = {json.dumps(a, sort_keys=True) for a in existing or []}
     out, draws = [], 0
     while len(out) < count and draws < MAX_DRAWS:
         draws += 1
         args = fn(rng)
-        if args is not None:
-            out.append(args)
+        if args is None:
+            continue
+        key = json.dumps(args, sort_keys=True)
+        if key in seen:
+            continue
+        try:
+            valid(*args)
+        except constraints.Bad:
+            continue
+        seen.add(key)
+        out.append(args)
     return out
 
 
@@ -109,9 +129,9 @@ def bst_values(rng, n, lo=-60, hi=60):
     return sorted(rng.sample(range(lo, hi + 1), n)) if hi - lo + 1 >= n else None
 
 
-def bst(rng, n):
+def bst(rng, n, lo=-60, hi=60):
     """A genuinely valid BST, built by balanced insertion so in-order is sorted."""
-    vals = bst_values(rng, n)
+    vals = bst_values(rng, n, lo, hi)
     if vals is None:
         return None
     nodes: dict[int, int] = {}
@@ -284,16 +304,16 @@ def _valid_anagram(rng):
 
 @generator("two-sum")
 def _two_sum(rng):
-    # A narrow value range so duplicates are COMMON. This used to reject any draw with a second
-    # valid pair, which is the same thing as rejecting duplicates, so the hardest inputs never
-    # appeared. The validator accepts any correct pair, so ambiguity is no longer a problem.
+    # "Only one valid answer exists", so a draw with a second pair is redrawn. The equal-value pair
+    # is still planted often, since refusing to pair a value with its twin is the classic bug; the
+    # filler comes from a wide range so the planted pair is usually the only one.
     n = rng.randint(2, 20)
     if rng.random() < 0.35:
         v = rng.randint(-12, 12)                     # force the answer to be a pair of equal values
-        nums = ints(rng, n - 2, -12, 12) + [v, v]
+        nums = ints(rng, n - 2, -60, 60) + [v, v]
         rng.shuffle(nums)
         return [nums, 2 * v]
-    nums = ints(rng, n, -12, 12)
+    nums = ints(rng, n, -60, 60)
     i, j = rng.sample(range(n), 2)
     return [nums, nums[i] + nums[j]]
 
@@ -400,7 +420,7 @@ def _valid_palindrome(rng):
     roll = rng.random()
 
     if roll < 0.10:
-        return [rng.choice(["", " ", ".,", "  ,  ", "!!!", "_"])]   # filters to empty -> True
+        return [rng.choice([" ", ".,", "  ,  ", "!!!", "_"])]   # filters to empty -> True
 
     core = word(rng, rng.randint(1, 4), letters)
     palindrome = core + core[::-1]
@@ -431,13 +451,14 @@ def _valid_palindrome(rng):
 @generator("two-sum-ii-input-array-is-sorted")
 def _two_sum_ii(rng):
     # Duplicates are the whole point here: a solution that refuses to pair a value with an equal
-    # value passed 43/43 while these were being filtered out.
+    # value passed 43/43 while these were being filtered out. "Exactly one solution", so the filler
+    # is wide and a draw with a second pair is redrawn.
     n = rng.randint(2, 18)
     if rng.random() < 0.35:
         v = rng.randint(-12, 12)                     # force the answer to be a pair of equal values
-        nums = sorted(ints(rng, n - 2, -12, 12) + [v, v])
+        nums = sorted(ints(rng, n - 2, -60, 60) + [v, v])
         return [nums, 2 * v]
-    nums = sorted(ints(rng, n, -12, 12))
+    nums = sorted(ints(rng, n, -60, 60))
     i, j = sorted(rng.sample(range(n), 2))
     return [nums, nums[i] + nums[j]]
 
@@ -451,7 +472,7 @@ def _three_sum(rng):
     if roll < 0.08:
         return [[0] * rng.randint(3, 6)]                     # exactly one triplet: [0, 0, 0]
     if roll < 0.14:
-        return [ints(rng, rng.randint(0, 2), -8, 8)]         # n < 3 -> []
+        return [ints(rng, 3, -8, 8)]                         # the shortest input: one triplet or none
     if roll < 0.22:
         sign = rng.choice([1, -1])
         return [[sign * rng.randint(1, 9) for _ in range(rng.randint(3, 8))]]   # all one sign -> []
@@ -506,7 +527,7 @@ def _longest_substring(rng):
 @generator("longest-repeating-character-replacement")
 def _char_replacement(rng):
     s = word(rng, rng.randint(1, 18), rng.choice(["AB", "ABC"]))
-    return [s, rng.randint(0, 4)]
+    return [s, rng.randint(0, min(4, len(s)))]              # 0 <= k <= s.length
 
 
 @generator("valid-parentheses")
@@ -537,7 +558,7 @@ def _valid_parens(rng):
 
 @generator("valid-parenthesis-string")
 def _valid_paren_string(rng):
-    return [word(rng, rng.randint(0, 12), "()*")]
+    return [word(rng, rng.randint(1, 12), "()*")]
 
 
 @generator("evaluate-reverse-polish-notation")
@@ -888,7 +909,7 @@ def _validate_bst(rng):
 @generator("kth-smallest-element-in-a-bst")
 def _kth_smallest(rng):
     n = rng.randint(1, 12)
-    t = bst(rng, n)
+    t = bst(rng, n, 0, 120)                                  # 0 <= Node.val
     if not t:
         return None
     return [t, rng.randint(1, len(tree_values(t)))]
@@ -955,13 +976,13 @@ def _merge_two(rng):
 def _reorder(rng):
     # A single node is a fixed point, and the shortest legal input: it is where a split that
     # assumes at least two nodes crashes. There were none.
-    return [linked(rng, rng.choice([1, 1, 2, 2, 3, 4, 5, 7, 9, 12]))]
+    return [linked(rng, rng.choice([1, 1, 2, 2, 3, 4, 5, 7, 9, 12]), 1, 60)]   # 1 <= Node.val
 
 
 @generator("remove-nth-node-from-end-of-list")
 def _remove_nth(rng):
     n = rng.randint(1, 12)
-    return [linked(rng, n), rng.randint(1, n)]
+    return [linked(rng, n, 0, 100), rng.randint(1, n)]      # 0 <= Node.val <= 100
 
 
 @generator("copy-list-with-random-pointer")
@@ -1024,7 +1045,7 @@ def _merge_k(rng):
 @generator("reverse-nodes-in-k-group")
 def _reverse_k(rng):
     n = rng.randint(1, 12)
-    return [linked(rng, n), rng.randint(1, n)]
+    return [linked(rng, n, 0, 60), rng.randint(1, n)]       # 0 <= Node.val
 
 
 # ---------- Graphs and grids ----------
@@ -1208,8 +1229,8 @@ def _course_schedule_ii(rng):
 
 @generator("number-of-connected-components-in-an-undirected-graph")
 def _connected_components(rng):
-    n = rng.randint(1, 8)
-    return [n, _distinct_edges(rng, n, rng.randint(0, n))]
+    n = rng.randint(2, 8)                                    # 1 <= edges.length needs two nodes
+    return [n, _distinct_edges(rng, n, rng.randint(1, n))]
 
 
 @generator("graph-valid-tree")
@@ -1250,7 +1271,7 @@ def _redundant_connection(rng):
         if u != v and tuple(sorted((u, v))) not in present:
             edges.append([u, v])
             rng.shuffle(edges)
-            return [edges]
+            return [[sorted(e) for e in edges]]              # 1 <= ai < bi
     return None
 
 
@@ -1271,8 +1292,8 @@ def _network_delay(rng):
                 times.append([k, u, rng.randint(1, 10)])
         rng.shuffle(times)
         return [times, n, k]
-    n = rng.randint(1, 7)
-    times = [[u + 1, v + 1, rng.randint(0, 20)] for u, v in _distinct_edges(rng, n, rng.randint(0, n + 3), directed=True)]
+    n = rng.randint(2, 7)                                    # 1 <= times.length needs two nodes
+    times = [[u + 1, v + 1, rng.randint(0, 20)] for u, v in _distinct_edges(rng, n, rng.randint(1, n + 3), directed=True)]
     return [times, n, rng.randint(1, n)]
 
 
@@ -1313,7 +1334,7 @@ def _cheapest_flights(rng):
     n = rng.randint(2, 7)
     flights = [[u, v, rng.randint(1, 50)] for u, v in _distinct_edges(rng, n, rng.randint(1, n + 3), directed=True)]
     src, dst = rng.sample(range(n), 2)
-    return [n, flights, src, dst, rng.randint(0, n)]
+    return [n, flights, src, dst, rng.randint(0, n - 1)]   # 0 <= k < n
 
 
 @generator("min-cost-to-connect-all-points")
@@ -1331,6 +1352,8 @@ def _word_ladder(rng):
     pool = {word(rng, length, "abc") for _ in range(rng.randint(1, 10))}
     pool.add(end)
     pool.discard(begin)
+    if begin == end:                                         # beginWord != endWord
+        return None
     return [begin, end, sorted(pool)]
 
 
@@ -1355,7 +1378,7 @@ def _itinerary(rng):
     codes = ["JFK"] + [word(rng, 3, "ABC").upper() for _ in range(rng.randint(1, 4))]
     here, tickets = "JFK", []
     for _ in range(rng.randint(1, 6)):
-        nxt = rng.choice(codes)
+        nxt = rng.choice([c for c in codes if c != here])   # fromi != toi
         tickets.append([here, nxt])
         here = nxt
     rng.shuffle(tickets)
@@ -1563,7 +1586,7 @@ def _regex_match(rng):
 
 @generator("subsets", count=25)
 def _subsets(rng):
-    return [distinct_ints(rng, rng.randint(0, 8), -20, 20)]
+    return [distinct_ints(rng, rng.randint(1, 8), -10, 10)]
 
 
 @generator("subsets-ii", count=25)
@@ -1598,7 +1621,7 @@ def _palindrome_partition(rng):
 
 @generator("letter-combinations-of-a-phone-number")
 def _letter_combinations(rng):
-    return ["".join(rng.choice("23456789") for _ in range(rng.randint(0, 3)))]
+    return ["".join(rng.choice("23456789") for _ in range(rng.randint(1, 3)))]   # 1 <= digits.length
 
 
 @generator("n-queens", count=12)
@@ -1751,8 +1774,8 @@ def _jump_game(rng):
 @generator("gas-station")
 def _gas_station(rng):
     n = rng.randint(1, 10)
-    # Several valid starting stations are fine now: the validator checks that the station returned
-    # actually completes the circuit, rather than matching whichever one the oracle found.
+    # "The input is generated such that the answer is unique": a draw where more than one station
+    # completes the circuit is redrawn.
     return [ints(rng, n, 0, 15), ints(rng, n, 0, 15)]
 
 
@@ -1818,7 +1841,8 @@ def _partition_labels(rng):
 
 @generator("k-closest-points-to-origin")
 def _k_closest(rng):
-    # Tied and repeated points are deliberate now; the validator accepts any k of the closest.
+    # "The answer is guaranteed to be unique", so a draw where the k-th and (k+1)-th distances tie
+    # is redrawn. Repeated distances elsewhere in the list are still common.
     pts = [[rng.randint(-6, 6), rng.randint(-6, 6)] for _ in range(rng.randint(1, 8))]
     return [pts, rng.randint(1, len(pts))]
 
@@ -1879,7 +1903,7 @@ def _meeting_rooms_ii(rng):
 
 @generator("minimum-interval-to-include-each-query")
 def _min_interval(rng):
-    return [intervals(rng, rng.randint(1, 7)), ints(rng, rng.randint(1, 7), 0, 45)]
+    return [intervals(rng, rng.randint(1, 7), 1, 40), ints(rng, rng.randint(1, 7), 1, 45)]   # values >= 1
 
 
 # ---------- Stack / Sliding Window / Binary Search ----------
@@ -2039,10 +2063,8 @@ def _median_two(rng):
 @generator("trapping-rain-water")
 def _trapping_rain(rng):
     roll = rng.random()
-    if roll < 0.06:
-        return [[]]
     if roll < 0.12:
-        return [ints(rng, rng.randint(1, 2), 0, 10)]         # too short to hold anything
+        return [ints(rng, rng.randint(1, 2), 0, 10)]         # too short to hold anything; 1 <= n
     if roll < 0.24:
         s = sorted(ints(rng, rng.randint(3, 12), 0, 10))
         return [s if rng.random() < 0.5 else s[::-1]]        # monotonic: traps nothing
@@ -2305,7 +2327,7 @@ def _time_map_gen(rng):
             clock += rng.randint(1, 3)             # set timestamps are strictly increasing
             steps.append(("set", [rng.choice(keys), word(rng, 3, "xyz"), clock]))
         else:
-            steps.append(("get", [rng.choice(keys), rng.randint(0, clock + 3)]))
+            steps.append(("get", [rng.choice(keys), rng.randint(1, clock + 3)]))   # 1 <= timestamp
     return _design("TimeMap", [], steps)
 
 

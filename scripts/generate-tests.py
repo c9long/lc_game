@@ -173,7 +173,7 @@ def generate(slug: str, code: str, meta: dict, curation: dict) -> tuple[str, str
     example_count = len(inputs)
     extra = curation.get("extra", {}).get(slug, [])
     inputs = inputs + [list(args) for args in extra]
-    generated = generators.build(slug)
+    generated = generators.build(slug, inputs)
     if generated:
         inputs = inputs + generated
 

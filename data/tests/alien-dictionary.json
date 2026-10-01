@@ -156,16 +156,6 @@
     {
       "args": [
         [
-          "e",
-          "ee",
-          "ee"
-        ]
-      ],
-      "expected": "e"
-    },
-    {
-      "args": [
-        [
           "ccc"
         ]
       ],
@@ -386,14 +376,6 @@
     {
       "args": [
         [
-          "ccc"
-        ]
-      ],
-      "expected": "c"
-    },
-    {
-      "args": [
-        [
           "fcd",
           "fe",
           "af",
@@ -436,7 +418,28 @@
           "d"
         ]
       ],
-      "expected": "afedc"
+      "expected": "afced"
+    },
+    {
+      "args": [
+        [
+          "b"
+        ]
+      ],
+      "expected": "b"
+    },
+    {
+      "args": [
+        [
+          "dda",
+          "daa",
+          "dc",
+          "cb",
+          "b",
+          "abd"
+        ]
+      ],
+      "expected": ""
     }
   ],
   "compare": "exact",

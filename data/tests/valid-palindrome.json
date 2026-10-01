@@ -104,12 +104,6 @@
     },
     {
       "args": [
-        ""
-      ],
-      "expected": true
-    },
-    {
-      "args": [
         "0B!00B0"
       ],
       "expected": true
@@ -128,7 +122,7 @@
     },
     {
       "args": [
-        "!!!"
+        "_"
       ],
       "expected": true
     },
@@ -224,18 +218,6 @@
     },
     {
       "args": [
-        "!!!"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "bBbB"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
         "19CC91"
       ],
       "expected": true
@@ -254,7 +236,25 @@
     },
     {
       "args": [
-        "cC"
+        "4AA"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "1:Aab!aA1"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "4BB"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "99 "
       ],
       "expected": true
     }

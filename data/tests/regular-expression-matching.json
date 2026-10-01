@@ -65,13 +65,6 @@
     },
     {
       "args": [
-        "a",
-        "a*"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
         "bb",
         "bba*"
       ],
@@ -156,13 +149,6 @@
     },
     {
       "args": [
-        "ab",
-        ".*"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
         "bab",
         ".*."
       ],
@@ -181,13 +167,6 @@
         "b"
       ],
       "expected": false
-    },
-    {
-      "args": [
-        "bb",
-        "b*"
-      ],
-      "expected": true
     },
     {
       "args": [
@@ -300,6 +279,27 @@
         "b*b"
       ],
       "expected": false
+    },
+    {
+      "args": [
+        "ba",
+        "b.*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "abb",
+        "a.*b*a*"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "b",
+        ".a*a*"
+      ],
+      "expected": true
     }
   ],
   "compare": "exact",

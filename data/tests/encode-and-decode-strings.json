@@ -318,16 +318,6 @@
     {
       "args": [
         [
-          ""
-        ]
-      ],
-      "expected": [
-        ""
-      ]
-    },
-    {
-      "args": [
-        [
           "aa",
           "#aa"
         ]
@@ -607,6 +597,22 @@
       ],
       "expected": [
         "babababaaabaab"
+      ]
+    },
+    {
+      "args": [
+        [
+          "abba#a#b#bb",
+          "#a",
+          "a#ba###a#bb",
+          "a"
+        ]
+      ],
+      "expected": [
+        "abba#a#b#bb",
+        "#a",
+        "a#ba###a#bb",
+        "a"
       ]
     }
   ],

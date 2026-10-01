@@ -218,12 +218,6 @@
     },
     {
       "args": [
-        ""
-      ],
-      "expected": 0
-    },
-    {
-      "args": [
         "edfaffefebcf"
       ],
       "expected": 4
@@ -257,6 +251,12 @@
         "AaAAaaAAAaaaAAAAaaA"
       ],
       "expected": 2
+    },
+    {
+      "args": [
+        "a1a1aa11a12b"
+      ],
+      "expected": 4
     }
   ],
   "compare": "exact",

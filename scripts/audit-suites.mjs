@@ -2097,14 +2097,7 @@ class Solution:
                     cur.append(part); go(end, cur); cur.pop()
         go(0, []); return out`],
 
-	['letter-combinations-of-a-phone-number', 'NEAR-MISS no empty-input guard', false, `class Solution:
-    def letterCombinations(self, digits):
-        m = {"2":"abc","3":"def","4":"ghi","5":"jkl","6":"mno","7":"pqrs","8":"tuv","9":"wxyz"}
-        out = []
-        def go(i, cur):
-            if i == len(digits): out.append(cur); return
-            for ch in m[digits[i]]: go(i + 1, cur + ch)
-        go(0, ""); return out`],
+	// No empty-input near-miss: LeetCode's constraints now say 1 <= digits.length.
 	['letter-combinations-of-a-phone-number', 'correct', true, `class Solution:
     def letterCombinations(self, digits):
         if not digits: return []

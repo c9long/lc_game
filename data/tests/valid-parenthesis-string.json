@@ -20,241 +20,241 @@
     },
     {
       "args": [
-        ")*((*"
+        ")*((*)"
       ],
       "expected": false
     },
     {
       "args": [
-        "*(((("
+        "(((())*()(("
       ],
       "expected": false
     },
     {
       "args": [
-        ")*()((("
+        "())*"
       ],
       "expected": false
     },
     {
       "args": [
-        ")"
+        "(*(*()*()()("
       ],
       "expected": false
     },
     {
       "args": [
-        "**(*(*"
+        "*)*)*(*))"
       ],
       "expected": true
     },
     {
       "args": [
-        ")"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "()()(**)*"
+        "((()))"
       ],
       "expected": true
     },
     {
       "args": [
-        "*(*))"
+        "*)(*****"
       ],
       "expected": true
     },
     {
       "args": [
-        "((())"
+        ")*))(((*"
       ],
       "expected": false
     },
     {
       "args": [
-        ")*)(***"
+        "()((()*)*))("
       ],
       "expected": false
     },
     {
       "args": [
-        "*))*))(((**"
+        "*)*)*)()))*"
       ],
       "expected": false
     },
     {
       "args": [
-        ")(("
+        "))*))*"
       ],
       "expected": false
     },
     {
       "args": [
-        ")"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        ")*))(**)*)"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        ")()))*)))*)"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "*(*(**"
+        "*(*"
       ],
       "expected": true
     },
     {
       "args": [
-        "*))*((((*"
+        "**))*(((("
       ],
       "expected": false
     },
     {
       "args": [
-        "("
+        "((((**(()"
       ],
       "expected": false
     },
     {
       "args": [
-        ""
+        "(*)**))*)("
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "()**(*(())"
       ],
       "expected": true
     },
     {
       "args": [
-        "(**(()*(*)**"
+        "())))("
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "**()()(*))**"
       ],
       "expected": true
     },
     {
       "args": [
-        ")*)(*"
+        "()*))*()**)"
       ],
       "expected": false
     },
     {
       "args": [
-        ")*"
+        ")*((()()*("
       ],
       "expected": false
     },
     {
       "args": [
-        "(*(()))())"
+        "()))*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "*("
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "(*)*()))*)*("
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "(**)((**)()"
       ],
       "expected": true
     },
     {
       "args": [
-        ")(***"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        ""
+        "(*())()"
       ],
       "expected": true
     },
     {
       "args": [
-        "()(*)"
+        "(**(()("
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "()()())*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "))*(*((())"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "(**())(*())("
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        ")*)(()**("
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "*(("
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "(*()"
       ],
       "expected": true
     },
     {
       "args": [
-        "***()"
+        ")))))()*())"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        ")*())(**("
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        ")*)("
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "))*(*)"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "(((()*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        ")(*()*"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "**)((**(*(*"
       ],
       "expected": true
     },
     {
       "args": [
-        "))*()**)*"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "*((()()"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "()()))*(*(*"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "*)"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "()))*)*(*("
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "*)((**)("
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "))(*())())(*"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "(()()()("
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "())**))"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "(*((())*(*"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
-        "())(*())("
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        ")*)(()**"
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        "("
+        ")*(()"
       ],
       "expected": false
     }

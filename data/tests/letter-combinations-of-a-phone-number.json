@@ -38,150 +38,178 @@
     },
     {
       "args": [
-        "9"
+        "497"
       ],
       "expected": [
-        "w",
-        "x",
-        "y",
-        "z"
+        "gwq",
+        "gwp",
+        "gwr",
+        "gws",
+        "gxq",
+        "gxp",
+        "gxr",
+        "gxs",
+        "gyq",
+        "gyp",
+        "gyr",
+        "gys",
+        "gzq",
+        "gzp",
+        "gzr",
+        "gzs",
+        "hwq",
+        "hwp",
+        "hwr",
+        "hws",
+        "hxq",
+        "hxp",
+        "hxr",
+        "hxs",
+        "hyq",
+        "hyp",
+        "hyr",
+        "hys",
+        "hzq",
+        "hzp",
+        "hzr",
+        "hzs",
+        "iwq",
+        "iwp",
+        "iwr",
+        "iws",
+        "ixq",
+        "ixp",
+        "ixr",
+        "ixs",
+        "iyq",
+        "iyp",
+        "iyr",
+        "iys",
+        "izq",
+        "izp",
+        "izr",
+        "izs"
       ]
     },
     {
       "args": [
-        "62"
+        "27"
       ],
       "expected": [
-        "ma",
-        "mb",
-        "mc",
-        "na",
-        "nb",
-        "nc",
-        "oa",
-        "ob",
-        "oc"
+        "aq",
+        "ap",
+        "ar",
+        "as",
+        "bq",
+        "bp",
+        "br",
+        "bs",
+        "cq",
+        "cp",
+        "cr",
+        "cs"
       ]
     },
     {
       "args": [
-        "34"
+        "4"
       ],
       "expected": [
-        "dg",
-        "dh",
-        "di",
-        "eg",
-        "eh",
-        "ei",
-        "fg",
-        "fh",
-        "fi"
+        "g",
+        "h",
+        "i"
       ]
     },
     {
       "args": [
-        "574"
+        "857"
       ],
       "expected": [
-        "jqg",
-        "jqh",
-        "jqi",
-        "jpg",
-        "jph",
-        "jpi",
-        "jrg",
-        "jrh",
-        "jri",
-        "jsg",
-        "jsh",
-        "jsi",
-        "kqg",
-        "kqh",
-        "kqi",
-        "kpg",
-        "kph",
-        "kpi",
-        "krg",
-        "krh",
-        "kri",
-        "ksg",
-        "ksh",
-        "ksi",
-        "lqg",
-        "lqh",
-        "lqi",
-        "lpg",
-        "lph",
-        "lpi",
-        "lrg",
-        "lrh",
-        "lri",
-        "lsg",
-        "lsh",
-        "lsi"
+        "tjq",
+        "tjp",
+        "tjr",
+        "tjs",
+        "tkq",
+        "tkp",
+        "tkr",
+        "tks",
+        "tlq",
+        "tlp",
+        "tlr",
+        "tls",
+        "ujq",
+        "ujp",
+        "ujr",
+        "ujs",
+        "ukq",
+        "ukp",
+        "ukr",
+        "uks",
+        "ulq",
+        "ulp",
+        "ulr",
+        "uls",
+        "vjq",
+        "vjp",
+        "vjr",
+        "vjs",
+        "vkq",
+        "vkp",
+        "vkr",
+        "vks",
+        "vlq",
+        "vlp",
+        "vlr",
+        "vls"
       ]
     },
     {
       "args": [
-        "73"
+        "7"
       ],
       "expected": [
-        "qd",
-        "qe",
-        "qf",
-        "pd",
-        "pe",
-        "pf",
-        "rd",
-        "re",
-        "rf",
-        "sd",
-        "se",
-        "sf"
+        "q",
+        "p",
+        "r",
+        "s"
       ]
     },
     {
       "args": [
-        "667"
+        "39"
       ],
       "expected": [
-        "mmq",
-        "mmp",
-        "mmr",
-        "mms",
-        "mnq",
-        "mnp",
-        "mnr",
-        "mns",
-        "moq",
-        "mop",
-        "mor",
-        "mos",
-        "nmq",
-        "nmp",
-        "nmr",
-        "nms",
-        "nnq",
-        "nnp",
-        "nnr",
-        "nns",
-        "noq",
-        "nop",
-        "nor",
-        "nos",
-        "omq",
-        "omp",
-        "omr",
-        "oms",
-        "onq",
-        "onp",
-        "onr",
-        "ons",
-        "ooq",
-        "oop",
-        "oor",
-        "oos"
+        "dw",
+        "dx",
+        "dy",
+        "dz",
+        "ew",
+        "ex",
+        "ey",
+        "ez",
+        "fw",
+        "fx",
+        "fy",
+        "fz"
+      ]
+    },
+    {
+      "args": [
+        "67"
+      ],
+      "expected": [
+        "mq",
+        "mp",
+        "mr",
+        "ms",
+        "nq",
+        "np",
+        "nr",
+        "ns",
+        "oq",
+        "op",
+        "or",
+        "os"
       ]
     },
     {
@@ -202,30 +230,88 @@
     },
     {
       "args": [
-        ""
-      ],
-      "expected": []
-    },
-    {
-      "args": [
-        ""
-      ],
-      "expected": []
-    },
-    {
-      "args": [
-        "64"
+        "327"
       ],
       "expected": [
-        "mg",
-        "mh",
-        "mi",
-        "ng",
-        "nh",
-        "ni",
-        "og",
-        "oh",
-        "oi"
+        "daq",
+        "dap",
+        "dar",
+        "das",
+        "dbq",
+        "dbp",
+        "dbr",
+        "dbs",
+        "dcq",
+        "dcp",
+        "dcr",
+        "dcs",
+        "eaq",
+        "eap",
+        "ear",
+        "eas",
+        "ebq",
+        "ebp",
+        "ebr",
+        "ebs",
+        "ecq",
+        "ecp",
+        "ecr",
+        "ecs",
+        "faq",
+        "fap",
+        "far",
+        "fas",
+        "fbq",
+        "fbp",
+        "fbr",
+        "fbs",
+        "fcq",
+        "fcp",
+        "fcr",
+        "fcs"
+      ]
+    },
+    {
+      "args": [
+        "649"
+      ],
+      "expected": [
+        "mgw",
+        "mgx",
+        "mgy",
+        "mgz",
+        "mhw",
+        "mhx",
+        "mhy",
+        "mhz",
+        "miw",
+        "mix",
+        "miy",
+        "miz",
+        "ngw",
+        "ngx",
+        "ngy",
+        "ngz",
+        "nhw",
+        "nhx",
+        "nhy",
+        "nhz",
+        "niw",
+        "nix",
+        "niy",
+        "niz",
+        "ogw",
+        "ogx",
+        "ogy",
+        "ogz",
+        "ohw",
+        "ohx",
+        "ohy",
+        "ohz",
+        "oiw",
+        "oix",
+        "oiy",
+        "oiz"
       ]
     },
     {
@@ -285,186 +371,267 @@
     },
     {
       "args": [
-        "756"
+        "875"
       ],
       "expected": [
-        "qjm",
-        "qjn",
-        "qjo",
-        "qkm",
-        "qkn",
-        "qko",
-        "qlm",
-        "qln",
-        "qlo",
-        "pjm",
-        "pjn",
-        "pjo",
-        "pkm",
-        "pkn",
-        "pko",
-        "plm",
-        "pln",
-        "plo",
-        "rjm",
-        "rjn",
-        "rjo",
-        "rkm",
-        "rkn",
-        "rko",
-        "rlm",
-        "rln",
-        "rlo",
-        "sjm",
-        "sjn",
-        "sjo",
-        "skm",
-        "skn",
-        "sko",
-        "slm",
-        "sln",
-        "slo"
+        "tqj",
+        "tqk",
+        "tql",
+        "tpj",
+        "tpk",
+        "tpl",
+        "trj",
+        "trk",
+        "trl",
+        "tsj",
+        "tsk",
+        "tsl",
+        "uqj",
+        "uqk",
+        "uql",
+        "upj",
+        "upk",
+        "upl",
+        "urj",
+        "urk",
+        "url",
+        "usj",
+        "usk",
+        "usl",
+        "vqj",
+        "vqk",
+        "vql",
+        "vpj",
+        "vpk",
+        "vpl",
+        "vrj",
+        "vrk",
+        "vrl",
+        "vsj",
+        "vsk",
+        "vsl"
       ]
     },
     {
       "args": [
-        ""
-      ],
-      "expected": []
-    },
-    {
-      "args": [
-        "35"
+        "636"
       ],
       "expected": [
-        "dj",
-        "dk",
-        "dl",
-        "ej",
-        "ek",
-        "el",
-        "fj",
-        "fk",
-        "fl"
+        "mdm",
+        "mdn",
+        "mdo",
+        "mem",
+        "men",
+        "meo",
+        "mfm",
+        "mfn",
+        "mfo",
+        "ndm",
+        "ndn",
+        "ndo",
+        "nem",
+        "nen",
+        "neo",
+        "nfm",
+        "nfn",
+        "nfo",
+        "odm",
+        "odn",
+        "odo",
+        "oem",
+        "oen",
+        "oeo",
+        "ofm",
+        "ofn",
+        "ofo"
       ]
     },
     {
       "args": [
-        "7"
+        "787"
       ],
       "expected": [
-        "q",
-        "p",
-        "r",
-        "s"
+        "qtq",
+        "qtp",
+        "qtr",
+        "qts",
+        "quq",
+        "qup",
+        "qur",
+        "qus",
+        "qvq",
+        "qvp",
+        "qvr",
+        "qvs",
+        "ptq",
+        "ptp",
+        "ptr",
+        "pts",
+        "puq",
+        "pup",
+        "pur",
+        "pus",
+        "pvq",
+        "pvp",
+        "pvr",
+        "pvs",
+        "rtq",
+        "rtp",
+        "rtr",
+        "rts",
+        "ruq",
+        "rup",
+        "rur",
+        "rus",
+        "rvq",
+        "rvp",
+        "rvr",
+        "rvs",
+        "stq",
+        "stp",
+        "str",
+        "sts",
+        "suq",
+        "sup",
+        "sur",
+        "sus",
+        "svq",
+        "svp",
+        "svr",
+        "svs"
       ]
     },
     {
       "args": [
-        ""
-      ],
-      "expected": []
-    },
-    {
-      "args": [
-        ""
-      ],
-      "expected": []
-    },
-    {
-      "args": [
-        "87"
+        "778"
       ],
       "expected": [
-        "tq",
-        "tp",
-        "tr",
-        "ts",
-        "uq",
-        "up",
-        "ur",
-        "us",
-        "vq",
-        "vp",
-        "vr",
-        "vs"
+        "qqt",
+        "qqu",
+        "qqv",
+        "qpt",
+        "qpu",
+        "qpv",
+        "qrt",
+        "qru",
+        "qrv",
+        "qst",
+        "qsu",
+        "qsv",
+        "pqt",
+        "pqu",
+        "pqv",
+        "ppt",
+        "ppu",
+        "ppv",
+        "prt",
+        "pru",
+        "prv",
+        "pst",
+        "psu",
+        "psv",
+        "rqt",
+        "rqu",
+        "rqv",
+        "rpt",
+        "rpu",
+        "rpv",
+        "rrt",
+        "rru",
+        "rrv",
+        "rst",
+        "rsu",
+        "rsv",
+        "sqt",
+        "squ",
+        "sqv",
+        "spt",
+        "spu",
+        "spv",
+        "srt",
+        "sru",
+        "srv",
+        "sst",
+        "ssu",
+        "ssv"
       ]
     },
     {
       "args": [
-        "78"
+        "233"
       ],
       "expected": [
-        "qt",
-        "qu",
-        "qv",
-        "pt",
-        "pu",
-        "pv",
-        "rt",
-        "ru",
-        "rv",
-        "st",
-        "su",
-        "sv"
+        "add",
+        "ade",
+        "adf",
+        "aed",
+        "aee",
+        "aef",
+        "afd",
+        "afe",
+        "aff",
+        "bdd",
+        "bde",
+        "bdf",
+        "bed",
+        "bee",
+        "bef",
+        "bfd",
+        "bfe",
+        "bff",
+        "cdd",
+        "cde",
+        "cdf",
+        "ced",
+        "cee",
+        "cef",
+        "cfd",
+        "cfe",
+        "cff"
       ]
     },
     {
       "args": [
-        ""
-      ],
-      "expected": []
-    },
-    {
-      "args": [
-        ""
-      ],
-      "expected": []
-    },
-    {
-      "args": [
-        ""
-      ],
-      "expected": []
-    },
-    {
-      "args": [
-        "7"
+        "272"
       ],
       "expected": [
-        "q",
-        "p",
-        "r",
-        "s"
+        "aqa",
+        "aqb",
+        "aqc",
+        "apa",
+        "apb",
+        "apc",
+        "ara",
+        "arb",
+        "arc",
+        "asa",
+        "asb",
+        "asc",
+        "bqa",
+        "bqb",
+        "bqc",
+        "bpa",
+        "bpb",
+        "bpc",
+        "bra",
+        "brb",
+        "brc",
+        "bsa",
+        "bsb",
+        "bsc",
+        "cqa",
+        "cqb",
+        "cqc",
+        "cpa",
+        "cpb",
+        "cpc",
+        "cra",
+        "crb",
+        "crc",
+        "csa",
+        "csb",
+        "csc"
       ]
-    },
-    {
-      "args": [
-        ""
-      ],
-      "expected": []
-    },
-    {
-      "args": [
-        "25"
-      ],
-      "expected": [
-        "aj",
-        "ak",
-        "al",
-        "bj",
-        "bk",
-        "bl",
-        "cj",
-        "ck",
-        "cl"
-      ]
-    },
-    {
-      "args": [
-        ""
-      ],
-      "expected": []
     },
     {
       "args": [
@@ -480,25 +647,6 @@
         "lg",
         "lh",
         "li"
-      ]
-    },
-    {
-      "args": [
-        "39"
-      ],
-      "expected": [
-        "dw",
-        "dx",
-        "dy",
-        "dz",
-        "ew",
-        "ex",
-        "ey",
-        "ez",
-        "fw",
-        "fx",
-        "fy",
-        "fz"
       ]
     },
     {
@@ -532,148 +680,64 @@
     },
     {
       "args": [
-        "892"
+        "89"
       ],
       "expected": [
-        "twa",
-        "twb",
-        "twc",
-        "txa",
-        "txb",
-        "txc",
-        "tya",
-        "tyb",
-        "tyc",
-        "tza",
-        "tzb",
-        "tzc",
-        "uwa",
-        "uwb",
-        "uwc",
-        "uxa",
-        "uxb",
-        "uxc",
-        "uya",
-        "uyb",
-        "uyc",
-        "uza",
-        "uzb",
-        "uzc",
-        "vwa",
-        "vwb",
-        "vwc",
-        "vxa",
-        "vxb",
-        "vxc",
-        "vya",
-        "vyb",
-        "vyc",
-        "vza",
-        "vzb",
-        "vzc"
+        "tw",
+        "tx",
+        "ty",
+        "tz",
+        "uw",
+        "ux",
+        "uy",
+        "uz",
+        "vw",
+        "vx",
+        "vy",
+        "vz"
       ]
     },
     {
       "args": [
-        "29"
+        "292"
       ],
       "expected": [
-        "aw",
-        "ax",
-        "ay",
-        "az",
-        "bw",
-        "bx",
-        "by",
-        "bz",
-        "cw",
-        "cx",
-        "cy",
-        "cz"
-      ]
-    },
-    {
-      "args": [
-        ""
-      ],
-      "expected": []
-    },
-    {
-      "args": [
-        "327"
-      ],
-      "expected": [
-        "daq",
-        "dap",
-        "dar",
-        "das",
-        "dbq",
-        "dbp",
-        "dbr",
-        "dbs",
-        "dcq",
-        "dcp",
-        "dcr",
-        "dcs",
-        "eaq",
-        "eap",
-        "ear",
-        "eas",
-        "ebq",
-        "ebp",
-        "ebr",
-        "ebs",
-        "ecq",
-        "ecp",
-        "ecr",
-        "ecs",
-        "faq",
-        "fap",
-        "far",
-        "fas",
-        "fbq",
-        "fbp",
-        "fbr",
-        "fbs",
-        "fcq",
-        "fcp",
-        "fcr",
-        "fcs"
-      ]
-    },
-    {
-      "args": [
-        "48"
-      ],
-      "expected": [
-        "gt",
-        "gu",
-        "gv",
-        "ht",
-        "hu",
-        "hv",
-        "it",
-        "iu",
-        "iv"
-      ]
-    },
-    {
-      "args": [
-        "98"
-      ],
-      "expected": [
-        "wt",
-        "wu",
-        "wv",
-        "xt",
-        "xu",
-        "xv",
-        "yt",
-        "yu",
-        "yv",
-        "zt",
-        "zu",
-        "zv"
+        "awa",
+        "awb",
+        "awc",
+        "axa",
+        "axb",
+        "axc",
+        "aya",
+        "ayb",
+        "ayc",
+        "aza",
+        "azb",
+        "azc",
+        "bwa",
+        "bwb",
+        "bwc",
+        "bxa",
+        "bxb",
+        "bxc",
+        "bya",
+        "byb",
+        "byc",
+        "bza",
+        "bzb",
+        "bzc",
+        "cwa",
+        "cwb",
+        "cwc",
+        "cxa",
+        "cxb",
+        "cxc",
+        "cya",
+        "cyb",
+        "cyc",
+        "cza",
+        "czb",
+        "czc"
       ]
     },
     {
@@ -694,9 +758,134 @@
     },
     {
       "args": [
-        ""
+        "774"
       ],
-      "expected": []
+      "expected": [
+        "qqg",
+        "qqh",
+        "qqi",
+        "qpg",
+        "qph",
+        "qpi",
+        "qrg",
+        "qrh",
+        "qri",
+        "qsg",
+        "qsh",
+        "qsi",
+        "pqg",
+        "pqh",
+        "pqi",
+        "ppg",
+        "pph",
+        "ppi",
+        "prg",
+        "prh",
+        "pri",
+        "psg",
+        "psh",
+        "psi",
+        "rqg",
+        "rqh",
+        "rqi",
+        "rpg",
+        "rph",
+        "rpi",
+        "rrg",
+        "rrh",
+        "rri",
+        "rsg",
+        "rsh",
+        "rsi",
+        "sqg",
+        "sqh",
+        "sqi",
+        "spg",
+        "sph",
+        "spi",
+        "srg",
+        "srh",
+        "sri",
+        "ssg",
+        "ssh",
+        "ssi"
+      ]
+    },
+    {
+      "args": [
+        "79"
+      ],
+      "expected": [
+        "qw",
+        "qx",
+        "qy",
+        "qz",
+        "pw",
+        "px",
+        "py",
+        "pz",
+        "rw",
+        "rx",
+        "ry",
+        "rz",
+        "sw",
+        "sx",
+        "sy",
+        "sz"
+      ]
+    },
+    {
+      "args": [
+        "73"
+      ],
+      "expected": [
+        "qd",
+        "qe",
+        "qf",
+        "pd",
+        "pe",
+        "pf",
+        "rd",
+        "re",
+        "rf",
+        "sd",
+        "se",
+        "sf"
+      ]
+    },
+    {
+      "args": [
+        "228"
+      ],
+      "expected": [
+        "aat",
+        "aau",
+        "aav",
+        "abt",
+        "abu",
+        "abv",
+        "act",
+        "acu",
+        "acv",
+        "bat",
+        "bau",
+        "bav",
+        "bbt",
+        "bbu",
+        "bbv",
+        "bct",
+        "bcu",
+        "bcv",
+        "cat",
+        "cau",
+        "cav",
+        "cbt",
+        "cbu",
+        "cbv",
+        "cct",
+        "ccu",
+        "ccv"
+      ]
     },
     {
       "args": [
@@ -739,6 +928,211 @@
         "lsj",
         "lsk",
         "lsl"
+      ]
+    },
+    {
+      "args": [
+        "338"
+      ],
+      "expected": [
+        "ddt",
+        "ddu",
+        "ddv",
+        "det",
+        "deu",
+        "dev",
+        "dft",
+        "dfu",
+        "dfv",
+        "edt",
+        "edu",
+        "edv",
+        "eet",
+        "eeu",
+        "eev",
+        "eft",
+        "efu",
+        "efv",
+        "fdt",
+        "fdu",
+        "fdv",
+        "fet",
+        "feu",
+        "fev",
+        "fft",
+        "ffu",
+        "ffv"
+      ]
+    },
+    {
+      "args": [
+        "49"
+      ],
+      "expected": [
+        "gw",
+        "gx",
+        "gy",
+        "gz",
+        "hw",
+        "hx",
+        "hy",
+        "hz",
+        "iw",
+        "ix",
+        "iy",
+        "iz"
+      ]
+    },
+    {
+      "args": [
+        "8"
+      ],
+      "expected": [
+        "t",
+        "u",
+        "v"
+      ]
+    },
+    {
+      "args": [
+        "38"
+      ],
+      "expected": [
+        "dt",
+        "du",
+        "dv",
+        "et",
+        "eu",
+        "ev",
+        "ft",
+        "fu",
+        "fv"
+      ]
+    },
+    {
+      "args": [
+        "35"
+      ],
+      "expected": [
+        "dj",
+        "dk",
+        "dl",
+        "ej",
+        "ek",
+        "el",
+        "fj",
+        "fk",
+        "fl"
+      ]
+    },
+    {
+      "args": [
+        "9"
+      ],
+      "expected": [
+        "w",
+        "x",
+        "y",
+        "z"
+      ]
+    },
+    {
+      "args": [
+        "365"
+      ],
+      "expected": [
+        "dmj",
+        "dmk",
+        "dml",
+        "dnj",
+        "dnk",
+        "dnl",
+        "doj",
+        "dok",
+        "dol",
+        "emj",
+        "emk",
+        "eml",
+        "enj",
+        "enk",
+        "enl",
+        "eoj",
+        "eok",
+        "eol",
+        "fmj",
+        "fmk",
+        "fml",
+        "fnj",
+        "fnk",
+        "fnl",
+        "foj",
+        "fok",
+        "fol"
+      ]
+    },
+    {
+      "args": [
+        "83"
+      ],
+      "expected": [
+        "td",
+        "te",
+        "tf",
+        "ud",
+        "ue",
+        "uf",
+        "vd",
+        "ve",
+        "vf"
+      ]
+    },
+    {
+      "args": [
+        "36"
+      ],
+      "expected": [
+        "dm",
+        "dn",
+        "do",
+        "em",
+        "en",
+        "eo",
+        "fm",
+        "fn",
+        "fo"
+      ]
+    },
+    {
+      "args": [
+        "3"
+      ],
+      "expected": [
+        "d",
+        "e",
+        "f"
+      ]
+    },
+    {
+      "args": [
+        "97"
+      ],
+      "expected": [
+        "wq",
+        "wp",
+        "wr",
+        "ws",
+        "xq",
+        "xp",
+        "xr",
+        "xs",
+        "yq",
+        "yp",
+        "yr",
+        "ys",
+        "zq",
+        "zp",
+        "zr",
+        "zs"
       ]
     }
   ],

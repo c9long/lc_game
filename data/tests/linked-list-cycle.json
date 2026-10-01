@@ -383,13 +383,6 @@
     },
     {
       "args": [
-        [],
-        -1
-      ],
-      "expected": false
-    },
-    {
-      "args": [
         [
           -15,
           2,
@@ -406,13 +399,6 @@
     },
     {
       "args": [
-        [],
-        -1
-      ],
-      "expected": false
-    },
-    {
-      "args": [
         [
           25,
           15,
@@ -424,13 +410,6 @@
         5
       ],
       "expected": true
-    },
-    {
-      "args": [
-        [],
-        -1
-      ],
-      "expected": false
     },
     {
       "args": [
@@ -453,13 +432,6 @@
         1
       ],
       "expected": true
-    },
-    {
-      "args": [
-        [],
-        -1
-      ],
-      "expected": false
     },
     {
       "args": [
@@ -514,13 +486,6 @@
     },
     {
       "args": [
-        [],
-        -1
-      ],
-      "expected": false
-    },
-    {
-      "args": [
         [
           -1,
           3,
@@ -545,6 +510,70 @@
         2
       ],
       "expected": true
+    },
+    {
+      "args": [
+        [
+          29,
+          -11
+        ],
+        1
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -10,
+          0
+        ],
+        -1
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          -5,
+          -18,
+          14,
+          -23,
+          5,
+          2,
+          9,
+          1,
+          10,
+          6
+        ],
+        4
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        [
+          -1,
+          7,
+          -29
+        ],
+        -1
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        [
+          25,
+          16,
+          20,
+          8,
+          3,
+          21,
+          3
+        ],
+        -1
+      ],
+      "expected": false
     }
   ],
   "compare": "exact",

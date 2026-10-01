@@ -98,14 +98,6 @@
     },
     {
       "args": [
-        "a",
-        "aba",
-        "abaa"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
         "aabb",
         "babb",
         "abbaabab"
@@ -341,6 +333,14 @@
         "a",
         "ab",
         "aba"
+      ],
+      "expected": true
+    },
+    {
+      "args": [
+        "bbaaba",
+        "aba",
+        "abbbaaaba"
       ],
       "expected": true
     }

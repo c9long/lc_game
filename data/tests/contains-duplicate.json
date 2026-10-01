@@ -86,14 +86,6 @@
     {
       "args": [
         [
-          -15
-        ]
-      ],
-      "expected": false
-    },
-    {
-      "args": [
-        [
           -595,
           890,
           -143,
@@ -575,6 +567,16 @@
         ]
       ],
       "expected": true
+    },
+    {
+      "args": [
+        [
+          -576,
+          -141,
+          883
+        ]
+      ],
+      "expected": false
     }
   ],
   "compare": "exact",

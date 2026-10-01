@@ -142,13 +142,6 @@
     },
     {
       "args": [
-        "a",
-        "a"
-      ],
-      "expected": "a"
-    },
-    {
-      "args": [
         "Abbabb",
         "Aab"
       ],
@@ -300,6 +293,13 @@
         "Aaa"
       ],
       "expected": "aABAbba"
+    },
+    {
+      "args": [
+        "cbbaacbbbbbbb",
+        "bbb"
+      ],
+      "expected": "bbb"
     }
   ],
   "compare": "exact",

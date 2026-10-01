@@ -68,13 +68,13 @@
         [
           [
             "JFK",
-            "JFK"
+            "BBA"
           ]
         ]
       ],
       "expected": [
         "JFK",
-        "JFK"
+        "BBA"
       ]
     },
     {
@@ -82,29 +82,29 @@
         [
           [
             "JFK",
-            "JFK"
+            "CAA"
           ]
         ]
       ],
       "expected": [
         "JFK",
-        "JFK"
+        "CAA"
       ]
     },
     {
       "args": [
         [
-          [
-            "CCA",
-            "ACA"
-          ],
-          [
-            "JFK",
-            "ACA"
-          ],
           [
             "ACA",
             "CCA"
+          ],
+          [
+            "JFK",
+            "ACA"
+          ],
+          [
+            "CCA",
+            "JFK"
           ]
         ]
       ],
@@ -112,7 +112,7 @@
         "JFK",
         "ACA",
         "CCA",
-        "ACA"
+        "JFK"
       ]
     },
     {
@@ -120,18 +120,410 @@
         [
           [
             "JFK",
-            "ACB"
+            "CBA"
           ],
           [
-            "JFK",
+            "CBA",
             "JFK"
           ]
         ]
       ],
       "expected": [
         "JFK",
+        "CBA",
+        "JFK"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "JFK",
+            "CCA"
+          ],
+          [
+            "JFK",
+            "BAC"
+          ],
+          [
+            "BAC",
+            "JFK"
+          ],
+          [
+            "CCA",
+            "JFK"
+          ]
+        ]
+      ],
+      "expected": [
         "JFK",
-        "ACB"
+        "BAC",
+        "JFK",
+        "CCA",
+        "JFK"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "BAC",
+            "JFK"
+          ],
+          [
+            "JFK",
+            "BAC"
+          ],
+          [
+            "BAC",
+            "JFK"
+          ],
+          [
+            "JFK",
+            "BAC"
+          ],
+          [
+            "BAC",
+            "JFK"
+          ],
+          [
+            "JFK",
+            "BAC"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "BAC",
+        "JFK",
+        "BAC",
+        "JFK",
+        "BAC",
+        "JFK"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "JFK",
+            "CBB"
+          ],
+          [
+            "CBB",
+            "JFK"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "CBB",
+        "JFK"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "BAB",
+            "JFK"
+          ],
+          [
+            "ACA",
+            "BAB"
+          ],
+          [
+            "JFK",
+            "BAB"
+          ],
+          [
+            "JFK",
+            "ACA"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "ACA",
+        "BAB",
+        "JFK",
+        "BAB"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "CBB",
+            "BBC"
+          ],
+          [
+            "JFK",
+            "BBC"
+          ],
+          [
+            "BBC",
+            "CCB"
+          ],
+          [
+            "CCB",
+            "CBB"
+          ],
+          [
+            "BBC",
+            "CBB"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "BBC",
+        "CBB",
+        "BBC",
+        "CCB",
+        "CBB"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "JFK",
+            "CAA"
+          ],
+          [
+            "CAA",
+            "JFK"
+          ],
+          [
+            "CAA",
+            "JFK"
+          ],
+          [
+            "JFK",
+            "CAA"
+          ],
+          [
+            "JFK",
+            "CAA"
+          ],
+          [
+            "CAA",
+            "JFK"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "CAA",
+        "JFK",
+        "CAA",
+        "JFK",
+        "CAA",
+        "JFK"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "JFK",
+            "BBB"
+          ],
+          [
+            "BBB",
+            "BAB"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "BBB",
+        "BAB"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "JFK",
+            "BAB"
+          ],
+          [
+            "JFK",
+            "CBB"
+          ],
+          [
+            "CBB",
+            "JFK"
+          ],
+          [
+            "JFK",
+            "CCB"
+          ],
+          [
+            "CCB",
+            "CCA"
+          ],
+          [
+            "BAB",
+            "JFK"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "BAB",
+        "JFK",
+        "CBB",
+        "JFK",
+        "CCB",
+        "CCA"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "CBB",
+            "CCA"
+          ],
+          [
+            "JFK",
+            "CBB"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "CBB",
+        "CCA"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "ABC",
+            "JFK"
+          ],
+          [
+            "ABC",
+            "CBC"
+          ],
+          [
+            "CBC",
+            "ABC"
+          ],
+          [
+            "JFK",
+            "ABC"
+          ],
+          [
+            "JFK",
+            "CBC"
+          ],
+          [
+            "CBC",
+            "JFK"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "ABC",
+        "CBC",
+        "ABC",
+        "JFK",
+        "CBC",
+        "JFK"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "BBA",
+            "CBC"
+          ],
+          [
+            "JFK",
+            "BBA"
+          ],
+          [
+            "JFK",
+            "BBA"
+          ],
+          [
+            "BBA",
+            "JFK"
+          ],
+          [
+            "CBC",
+            "JFK"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "BBA",
+        "CBC",
+        "JFK",
+        "BBA",
+        "JFK"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "JFK",
+            "CAA"
+          ],
+          [
+            "CAA",
+            "CAB"
+          ],
+          [
+            "CAB",
+            "JFK"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "CAA",
+        "CAB",
+        "JFK"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "ACB",
+            "BAC"
+          ],
+          [
+            "BCC",
+            "JFK"
+          ],
+          [
+            "JFK",
+            "ACB"
+          ],
+          [
+            "BAC",
+            "BCC"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "ACB",
+        "BAC",
+        "BCC",
+        "JFK"
       ]
     },
     {
@@ -140,15 +532,10 @@
           [
             "JFK",
             "CCC"
-          ],
-          [
-            "JFK",
-            "JFK"
           ]
         ]
       ],
       "expected": [
-        "JFK",
         "JFK",
         "CCC"
       ]
@@ -157,38 +544,33 @@
       "args": [
         [
           [
-            "BCC",
+            "JFK",
             "CBA"
           ],
           [
-            "CBA",
-            "AAB"
+            "JFK",
+            "BAA"
           ],
           [
-            "JFK",
+            "BAA",
             "JFK"
           ],
           [
-            "AAB",
-            "BCC"
-          ],
-          [
-            "AAB",
-            "CBA"
+            "CBA",
+            "JFK"
           ],
           [
             "JFK",
-            "AAB"
+            "CBA"
           ]
         ]
       ],
       "expected": [
         "JFK",
+        "BAA",
         "JFK",
-        "AAB",
-        "BCC",
         "CBA",
-        "AAB",
+        "JFK",
         "CBA"
       ]
     },
@@ -197,405 +579,13 @@
         [
           [
             "JFK",
-            "ACB"
-          ],
-          [
-            "BAB",
-            "JFK"
-          ],
-          [
-            "JFK",
-            "BAB"
+            "BAA"
           ]
         ]
       ],
       "expected": [
         "JFK",
-        "BAB",
-        "JFK",
-        "ACB"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "CAA",
-            "BCB"
-          ],
-          [
-            "JFK",
-            "CAA"
-          ],
-          [
-            "CAA",
-            "CAA"
-          ],
-          [
-            "BCB",
-            "BCB"
-          ],
-          [
-            "CCB",
-            "CCB"
-          ],
-          [
-            "BCB",
-            "CCB"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "CAA",
-        "CAA",
-        "BCB",
-        "BCB",
-        "CCB",
-        "CCB"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "ACA",
-            "ACA"
-          ],
-          [
-            "JFK",
-            "ACA"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "ACA",
-        "ACA"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "JFK",
-            "ACB"
-          ],
-          [
-            "ACB",
-            "ACB"
-          ],
-          [
-            "ACB",
-            "ACB"
-          ],
-          [
-            "ACB",
-            "ACB"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "ACB",
-        "ACB",
-        "ACB",
-        "ACB"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "JFK",
-            "ACB"
-          ],
-          [
-            "JFK",
-            "ACB"
-          ],
-          [
-            "ACB",
-            "JFK"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "ACB",
-        "JFK",
-        "ACB"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "BAB",
-            "CCB"
-          ],
-          [
-            "JFK",
-            "JFK"
-          ],
-          [
-            "JFK",
-            "BAB"
-          ],
-          [
-            "CCB",
-            "JFK"
-          ],
-          [
-            "JFK",
-            "JFK"
-          ],
-          [
-            "JFK",
-            "CCA"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "BAB",
-        "CCB",
-        "JFK",
-        "JFK",
-        "JFK",
-        "CCA"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "BBB",
-            "CCA"
-          ],
-          [
-            "JFK",
-            "BBB"
-          ],
-          [
-            "CCA",
-            "JFK"
-          ],
-          [
-            "BBB",
-            "BBB"
-          ],
-          [
-            "BBB",
-            "JFK"
-          ],
-          [
-            "JFK",
-            "BBB"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "BBB",
-        "BBB",
-        "CCA",
-        "JFK",
-        "BBB",
-        "JFK"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "CCA",
-            "CCA"
-          ],
-          [
-            "JFK",
-            "CCA"
-          ],
-          [
-            "CCA",
-            "JFK"
-          ],
-          [
-            "JFK",
-            "JFK"
-          ],
-          [
-            "JFK",
-            "JFK"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "CCA",
-        "CCA",
-        "JFK",
-        "JFK",
-        "JFK"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "JFK",
-            "ABB"
-          ],
-          [
-            "JFK",
-            "JFK"
-          ],
-          [
-            "ABB",
-            "ABB"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "JFK",
-        "ABB",
-        "ABB"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "CAB",
-            "CAA"
-          ],
-          [
-            "JFK",
-            "CAA"
-          ],
-          [
-            "CAA",
-            "CAB"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "CAA",
-        "CAB",
-        "CAA"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "BBC",
-            "BAC"
-          ],
-          [
-            "JFK",
-            "BBC"
-          ],
-          [
-            "BAC",
-            "JFK"
-          ],
-          [
-            "BBC",
-            "BBC"
-          ],
-          [
-            "BBC",
-            "BAC"
-          ],
-          [
-            "JFK",
-            "BBC"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "BBC",
-        "BAC",
-        "JFK",
-        "BBC",
-        "BBC",
-        "BAC"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "JFK",
-            "ABC"
-          ],
-          [
-            "ABC",
-            "CCC"
-          ],
-          [
-            "JFK",
-            "JFK"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "JFK",
-        "ABC",
-        "CCC"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "CAA",
-            "CAA"
-          ],
-          [
-            "JFK",
-            "JFK"
-          ],
-          [
-            "JFK",
-            "CAA"
-          ],
-          [
-            "CAA",
-            "JFK"
-          ],
-          [
-            "CAA",
-            "CAA"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "CAA",
-        "CAA",
-        "CAA",
-        "JFK",
-        "JFK"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "JFK",
-            "BCA"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "BCA"
+        "BAA"
       ]
     },
     {
@@ -606,12 +596,16 @@
             "JFK"
           ],
           [
-            "JFK",
+            "CAC",
             "JFK"
           ],
           [
             "JFK",
-            "JFK"
+            "CAC"
+          ],
+          [
+            "JFK",
+            "CAC"
           ],
           [
             "JFK",
@@ -620,10 +614,6 @@
           [
             "CAC",
             "JFK"
-          ],
-          [
-            "JFK",
-            "CAC"
           ]
         ]
       ],
@@ -633,7 +623,7 @@
         "JFK",
         "CAC",
         "JFK",
-        "JFK",
+        "CAC",
         "JFK"
       ]
     },
@@ -650,11 +640,11 @@
           ],
           [
             "JFK",
-            "JFK"
+            "CCC"
           ],
           [
-            "JFK",
-            "CCC"
+            "CCC",
+            "JFK"
           ]
         ]
       ],
@@ -662,8 +652,8 @@
         "JFK",
         "CCC",
         "JFK",
-        "JFK",
-        "CCC"
+        "CCC",
+        "JFK"
       ]
     },
     {
@@ -671,7 +661,7 @@
         [
           [
             "CBC",
-            "JFK"
+            "CAB"
           ],
           [
             "JFK",
@@ -682,75 +672,45 @@
       "expected": [
         "JFK",
         "CBC",
-        "JFK"
+        "CAB"
       ]
     },
     {
       "args": [
         [
           [
-            "ACA",
-            "ABB"
-          ],
-          [
-            "BCA",
-            "JFK"
-          ],
-          [
             "JFK",
-            "ABB"
+            "BBC"
           ],
           [
-            "ABB",
-            "BCA"
-          ],
-          [
-            "ABB",
-            "BCA"
-          ],
-          [
-            "BCA",
-            "ACA"
+            "BBC",
+            "AAC"
           ]
         ]
       ],
       "expected": [
         "JFK",
-        "ABB",
-        "BCA",
-        "ACA",
-        "ABB",
-        "BCA",
-        "JFK"
+        "BBC",
+        "AAC"
       ]
     },
     {
       "args": [
         [
           [
-            "ABC",
-            "AAB"
-          ],
-          [
-            "AAA",
-            "ABC"
-          ],
-          [
             "JFK",
-            "AAA"
+            "AAB"
           ],
           [
             "AAB",
-            "AAB"
+            "JFK"
           ]
         ]
       ],
       "expected": [
         "JFK",
-        "AAA",
-        "ABC",
         "AAB",
-        "AAB"
+        "JFK"
       ]
     },
     {
@@ -758,27 +718,41 @@
         [
           [
             "JFK",
-            "CCC"
-          ],
-          [
-            "JFK",
-            "CCC"
-          ],
-          [
-            "JFK",
-            "JFK"
-          ],
-          [
-            "CCC",
-            "JFK"
+            "AAA"
           ]
         ]
       ],
       "expected": [
         "JFK",
-        "CCC",
+        "AAA"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "BAB",
+            "CBA"
+          ],
+          [
+            "BAB",
+            "CCC"
+          ],
+          [
+            "JFK",
+            "BAB"
+          ],
+          [
+            "CBA",
+            "BAB"
+          ]
+        ]
+      ],
+      "expected": [
         "JFK",
-        "JFK",
+        "BAB",
+        "CBA",
+        "BAB",
         "CCC"
       ]
     },
@@ -791,10 +765,47 @@
           ],
           [
             "JFK",
-            "JFK"
+            "BCB"
           ],
           [
             "BBB",
+            "BCB"
+          ],
+          [
+            "BCB",
+            "JFK"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "BBB",
+        "BCB",
+        "JFK",
+        "BCB"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "JFK",
+            "BBA"
+          ],
+          [
+            "JFK",
+            "BBA"
+          ],
+          [
+            "BBB",
+            "JFK"
+          ],
+          [
+            "BBA",
+            "BBB"
+          ],
+          [
+            "BBA",
             "BBB"
           ],
           [
@@ -805,9 +816,11 @@
       ],
       "expected": [
         "JFK",
-        "BBB",
+        "BBA",
         "BBB",
         "JFK",
+        "BBA",
+        "BBB",
         "JFK"
       ]
     },
@@ -815,39 +828,82 @@
       "args": [
         [
           [
-            "JFK",
+            "BCC",
+            "AAC"
+          ],
+          [
+            "AAC",
             "JFK"
           ],
           [
             "JFK",
-            "BBB"
+            "BCC"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "BCC",
+        "AAC",
+        "JFK"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "ACA",
+            "CBB"
           ],
           [
-            "CCC",
-            "CCC"
+            "CBB",
+            "ACA"
+          ],
+          [
+            "CBB",
+            "ACA"
+          ],
+          [
+            "ACA",
+            "CBB"
           ],
           [
             "JFK",
-            "JFK"
-          ],
+            "CBB"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "CBB",
+        "ACA",
+        "CBB",
+        "ACA",
+        "CBB"
+      ]
+    },
+    {
+      "args": [
+        [
           [
-            "CCC",
-            "JFK"
+            "AAB",
+            "CAC"
           ],
           [
             "JFK",
+            "AAB"
+          ],
+          [
+            "CAC",
             "CCC"
           ]
         ]
       ],
       "expected": [
         "JFK",
-        "CCC",
-        "CCC",
-        "JFK",
-        "JFK",
-        "JFK",
-        "BBB"
+        "AAB",
+        "CAC",
+        "CCC"
       ]
     },
     {
@@ -855,17 +911,12 @@
         [
           [
             "JFK",
-            "ACA"
-          ],
-          [
-            "ACA",
             "ABA"
           ]
         ]
       ],
       "expected": [
         "JFK",
-        "ACA",
         "ABA"
       ]
     },
@@ -873,208 +924,9 @@
       "args": [
         [
           [
-            "BBC",
-            "BCC"
-          ],
-          [
-            "JFK",
-            "JFK"
-          ],
-          [
-            "BCC",
-            "BCC"
-          ],
-          [
-            "JFK",
-            "BBC"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "JFK",
-        "BBC",
-        "BCC",
-        "BCC"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "JFK",
-            "CCA"
-          ],
-          [
-            "JFK",
-            "BAC"
-          ],
-          [
-            "CCA",
-            "JFK"
-          ],
-          [
-            "BAC",
-            "JFK"
-          ],
-          [
-            "BAC",
-            "BAC"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "BAC",
-        "BAC",
-        "JFK",
-        "CCA",
-        "JFK"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "ABA",
-            "CAC"
-          ],
-          [
-            "CCA",
+            "CAC",
             "ABA"
           ],
-          [
-            "JFK",
-            "ABA"
-          ],
-          [
-            "ABA",
-            "CCA"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "ABA",
-        "CCA",
-        "ABA",
-        "CAC"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "AAA",
-            "BAC"
-          ],
-          [
-            "BAC",
-            "AAA"
-          ],
-          [
-            "JFK",
-            "AAA"
-          ],
-          [
-            "AAA",
-            "AAA"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "AAA",
-        "AAA",
-        "BAC",
-        "AAA"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "JFK",
-            "JFK"
-          ],
-          [
-            "JFK",
-            "JFK"
-          ],
-          [
-            "JFK",
-            "JFK"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "JFK",
-        "JFK",
-        "JFK"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "BBC",
-            "AAC"
-          ],
-          [
-            "AAC",
-            "BBC"
-          ],
-          [
-            "CAA",
-            "AAC"
-          ],
-          [
-            "JFK",
-            "CAA"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "CAA",
-        "AAC",
-        "BBC",
-        "AAC"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "AAA",
-            "ACA"
-          ],
-          [
-            "JFK",
-            "AAA"
-          ],
-          [
-            "JFK",
-            "JFK"
-          ],
-          [
-            "JFK",
-            "JFK"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "JFK",
-        "JFK",
-        "AAA",
-        "ACA"
-      ]
-    },
-    {
-      "args": [
-        [
           [
             "JFK",
             "CAC"
@@ -1093,30 +945,152 @@
         "JFK",
         "CAC",
         "JFK",
-        "CAC"
+        "CAC",
+        "ABA"
       ]
     },
     {
       "args": [
         [
           [
-            "AAA",
-            "BCC"
+            "BAC",
+            "AAA"
           ],
           [
             "JFK",
-            "JFK"
+            "BAC"
           ],
           [
             "JFK",
             "AAA"
+          ],
+          [
+            "AAA",
+            "JFK"
           ]
         ]
       ],
       "expected": [
         "JFK",
-        "JFK",
         "AAA",
+        "JFK",
+        "BAC",
+        "AAA"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "JFK",
+            "AAC"
+          ],
+          [
+            "AAC",
+            "BBA"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "AAC",
+        "BBA"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "BCC",
+            "AAA"
+          ],
+          [
+            "ACB",
+            "BCB"
+          ],
+          [
+            "BCB",
+            "BCC"
+          ],
+          [
+            "JFK",
+            "BCC"
+          ],
+          [
+            "BCC",
+            "ACB"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "BCC",
+        "ACB",
+        "BCB",
+        "BCC",
+        "AAA"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "CAC",
+            "CAB"
+          ],
+          [
+            "CAC",
+            "CAB"
+          ],
+          [
+            "CAB",
+            "AAB"
+          ],
+          [
+            "CAB",
+            "CAC"
+          ],
+          [
+            "CBB",
+            "CAC"
+          ],
+          [
+            "JFK",
+            "CBB"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "CBB",
+        "CAC",
+        "CAB",
+        "CAC",
+        "CAB",
+        "AAB"
+      ]
+    },
+    {
+      "args": [
+        [
+          [
+            "JFK",
+            "BAC"
+          ],
+          [
+            "JFK",
+            "BCC"
+          ],
+          [
+            "BAC",
+            "JFK"
+          ]
+        ]
+      ],
+      "expected": [
+        "JFK",
+        "BAC",
+        "JFK",
         "BCC"
       ]
     },
@@ -1124,73 +1098,19 @@
       "args": [
         [
           [
-            "CCB",
-            "AAB"
-          ],
-          [
-            "AAB",
+            "CAB",
             "JFK"
           ],
           [
             "JFK",
-            "CCB"
-          ],
-          [
-            "AAB",
-            "AAB"
-          ],
-          [
-            "CCB",
-            "AAB"
-          ],
-          [
-            "AAB",
-            "CCB"
+            "CAB"
           ]
         ]
       ],
       "expected": [
         "JFK",
-        "CCB",
-        "AAB",
-        "AAB",
-        "CCB",
-        "AAB",
+        "CAB",
         "JFK"
-      ]
-    },
-    {
-      "args": [
-        [
-          [
-            "JFK",
-            "CCC"
-          ],
-          [
-            "JFK",
-            "JFK"
-          ],
-          [
-            "JFK",
-            "BCB"
-          ],
-          [
-            "JFK",
-            "JFK"
-          ],
-          [
-            "CCC",
-            "JFK"
-          ]
-        ]
-      ],
-      "expected": [
-        "JFK",
-        "CCC",
-        "JFK",
-        "JFK",
-        "JFK",
-        "BCB"
       ]
     }
   ],

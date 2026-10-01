@@ -186,14 +186,6 @@
     },
     {
       "args": [
-        "d"
-      ],
-      "expected": [
-        1
-      ]
-    },
-    {
-      "args": [
         "bc"
       ],
       "expected": [
@@ -349,6 +341,15 @@
       ],
       "expected": [
         15
+      ]
+    },
+    {
+      "args": [
+        "caaacb"
+      ],
+      "expected": [
+        5,
+        1
       ]
     }
   ],

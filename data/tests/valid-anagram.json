@@ -142,13 +142,6 @@
     },
     {
       "args": [
-        "cc",
-        "cc"
-      ],
-      "expected": true
-    },
-    {
-      "args": [
         "acbbabbbbbbbbaacaacbabbaacaaaaccaababcba",
         "ccbbabbbbbbbbaacaacbabbaacaaaaccaababcba"
       ],
@@ -291,6 +284,13 @@
       "args": [
         "aac",
         "cac"
+      ],
+      "expected": false
+    },
+    {
+      "args": [
+        "bccca",
+        "babc"
       ],
       "expected": false
     }

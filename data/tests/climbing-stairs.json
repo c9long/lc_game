@@ -86,27 +86,9 @@
     },
     {
       "args": [
-        17
-      ],
-      "expected": 2584
-    },
-    {
-      "args": [
         37
       ],
       "expected": 39088169
-    },
-    {
-      "args": [
-        28
-      ],
-      "expected": 514229
-    },
-    {
-      "args": [
-        17
-      ],
-      "expected": 2584
     },
     {
       "args": [
@@ -128,24 +110,6 @@
     },
     {
       "args": [
-        36
-      ],
-      "expected": 24157817
-    },
-    {
-      "args": [
-        22
-      ],
-      "expected": 28657
-    },
-    {
-      "args": [
-        35
-      ],
-      "expected": 14930352
-    },
-    {
-      "args": [
         19
       ],
       "expected": 6765
@@ -155,12 +119,6 @@
         8
       ],
       "expected": 34
-    },
-    {
-      "args": [
-        17
-      ],
-      "expected": 2584
     },
     {
       "args": [
@@ -176,12 +134,6 @@
     },
     {
       "args": [
-        8
-      ],
-      "expected": 34
-    },
-    {
-      "args": [
         9
       ],
       "expected": 55
@@ -191,24 +143,6 @@
         6
       ],
       "expected": 13
-    },
-    {
-      "args": [
-        8
-      ],
-      "expected": 34
-    },
-    {
-      "args": [
-        38
-      ],
-      "expected": 63245986
-    },
-    {
-      "args": [
-        11
-      ],
-      "expected": 144
     },
     {
       "args": [
@@ -230,27 +164,81 @@
     },
     {
       "args": [
-        17
+        21
       ],
-      "expected": 2584
+      "expected": 17711
     },
     {
       "args": [
-        39
+        20
       ],
-      "expected": 102334155
+      "expected": 10946
     },
     {
       "args": [
-        24
+        13
       ],
-      "expected": 75025
+      "expected": 377
     },
     {
       "args": [
-        7
+        25
       ],
-      "expected": 21
+      "expected": 121393
+    },
+    {
+      "args": [
+        1
+      ],
+      "expected": 1
+    },
+    {
+      "args": [
+        14
+      ],
+      "expected": 610
+    },
+    {
+      "args": [
+        40
+      ],
+      "expected": 165580141
+    },
+    {
+      "args": [
+        12
+      ],
+      "expected": 233
+    },
+    {
+      "args": [
+        10
+      ],
+      "expected": 89
+    },
+    {
+      "args": [
+        30
+      ],
+      "expected": 1346269
+    },
+    {
+      "args": [
+        34
+      ],
+      "expected": 9227465
+    },
+    {
+      "args": [
+        29
+      ],
+      "expected": 832040
+    },
+    {
+      "args": [
+        32
+      ],
+      "expected": 3524578
     }
   ],
   "compare": "exact",
