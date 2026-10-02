@@ -7,7 +7,7 @@ import { requireUser } from '$lib/server/guard';
 import { getProblem } from '$lib/server/problems';
 import { LANGS } from '$lib/langs';
 import { PROBLEM_BY_SLUG } from '$lib/game/curriculum';
-import { isDue } from '$lib/game/srs';
+import { isDue, isStaleDraft } from '$lib/game/srs';
 import ownDescriptions from '../../../../data/premium-descriptions.json';
 import descriptionNotes from '../../../../data/description-notes.json';
 
@@ -48,21 +48,13 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 	for (const r of acceptedRows) if (!(r.lang in lastAccepted)) lastAccepted[r.lang] = r.code;
 
 	// A leftover draft is not work in progress: the draft is autosaved as you type, so on a solved
-	// problem it holds whatever was in the editor when the solve happened -- usually the accepted
-	// solution itself. Opening a refresh on that lets the repetition be passed without re-deriving
-	// anything. Clearing the editor on accept prevents this going forward; dropping stale drafts
-	// here covers every problem solved before that shipped.
-	//
-	// Stale means either byte-identical to an accepted submission, or written no later than the
-	// last solve. The timestamp is the load-bearing half: a draft can be leftover without matching
-	// any accepted code -- an untouched starter in a language the problem was never solved in, or a
-	// solve recorded by profile sync, which stores no attempt row to compare against. Work done
-	// since the last solve is newer than it, and is still restored.
-	const solvedAt = state?.lastSolvedAt ?? null;
+	// problem it holds whatever was in the editor around the solve -- usually the solution itself.
+	// Restoring it would let a refresh be passed without re-deriving anything. isStaleDraft has the
+	// rule: once the problem is due, nothing written before the due date comes back.
 	const acceptedCode = new Set(acceptedRows.map((r) => `${r.lang}\u0000${r.code}`));
+	const now = new Date();
 	const isStale = (r: { lang: string; code: string; createdAt: Date }) =>
-		acceptedCode.has(`${r.lang}\u0000${r.code}`) ||
-		(solvedAt !== null && r.createdAt.getTime() <= solvedAt.getTime());
+		isStaleDraft({ createdAt: r.createdAt, acceptedCopy: acceptedCode.has(`${r.lang}\u0000${r.code}`) }, state ?? null, now);
 	const drafts = Object.fromEntries(draftRows.filter((r) => !isStale(r)).map((r) => [r.lang, r.code]));
 
 	const snippets: Record<string, string> = {};

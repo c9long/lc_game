@@ -43,3 +43,25 @@ export function overdueDays(state: SrsState, now: Date): number {
 	if (!state.dueAt) return 0;
 	return Math.max(0, Math.floor((now.getTime() - state.dueAt.getTime()) / 86_400_000));
 }
+
+/** Whether an autosaved draft must NOT be restored into the editor.
+ *
+ *  A refresh has to be re-derived from the starter code. So once a solved problem is due, every
+ *  draft written before the due date is stale, whatever it holds: work typed between the last solve
+ *  and the due date (a second accept the same day, an edit after accepting, an early reattempt) is
+ *  still the old solution as far as the refresh is concerned. Top K Frequent restored one of those
+ *  on its due date. Only work typed since it fell due -- the refresh in progress -- comes back.
+ *
+ *  Before it is due, a draft is stale if it predates the last solve or is an accepted submission
+ *  byte for byte; anything newer is the player's own work in progress. */
+export function isStaleDraft(
+	draft: { createdAt: Date; acceptedCopy: boolean },
+	state: { solveCount: number; lastSolvedAt: Date | null; dueAt: Date | null } | null,
+	now: Date
+): boolean {
+	if (draft.acceptedCopy) return true;
+	if (!state || state.solveCount === 0) return false;
+	const due = state.dueAt !== null && state.dueAt.getTime() <= now.getTime();
+	const cutoff = due ? state.dueAt : state.lastSolvedAt;
+	return cutoff !== null && draft.createdAt.getTime() <= cutoff.getTime();
+}

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { addDays, daysBetween, localDate, weekStartOf } from './dates';
-import { INTERVALS, afterSolve, isDue, type SrsState } from './srs';
+import { INTERVALS, afterSolve, isDue, isStaleDraft, type SrsState } from './srs';
 import { NODES, NODE_ORDER, PROBLEM_BY_SLUG, PROBLEMS, problemsForNode } from './curriculum';
 import { computeTree, dueRefreshes, isServable, nextNewProblems, type ProblemProgress } from './tree';
 import { HAULS_BONUS, IRONWORKS_MULT, computeAward } from './awards';
@@ -72,6 +72,36 @@ describe('srs', () => {
 		// Climbing must never shorten the gap. The values are tuned by hand and expected to change;
 		// what must hold is that a clean on-time solve always buys more time than the one before it.
 		for (let i = 1; i < INTERVALS.length; i++) expect(INTERVALS[i]).toBeGreaterThan(INTERVALS[i - 1]);
+	});
+});
+
+describe('draft restore', () => {
+	// Top K Frequent: solved 09-24 14:47:57, accepted again at 14:52 (same day, so the solve time did
+	// not move), draft saved after that, due 10-01. On the due date it must open on the starter.
+	const solvedAt = new Date('2026-09-24T14:47:57Z');
+	const dueAt = new Date('2026-10-01T14:47:57Z');
+	const state = { solveCount: 5, lastSolvedAt: solvedAt, dueAt };
+	const draft = (iso: string, acceptedCopy = false) => ({ createdAt: new Date(iso), acceptedCopy });
+
+	it('restores nothing written before the due date once the problem is due', () => {
+		const now = new Date('2026-10-02T13:00:00Z');
+		expect(isStaleDraft(draft('2026-09-24T14:52:40Z'), state, now)).toBe(true);
+		expect(isStaleDraft(draft('2026-09-30T09:00:00Z'), state, now)).toBe(true); // an early reattempt
+	});
+
+	it('keeps a refresh in progress, typed since it fell due', () => {
+		expect(isStaleDraft(draft('2026-10-02T12:00:00Z'), state, new Date('2026-10-02T13:00:00Z'))).toBe(false);
+	});
+
+	it('before the due date, keeps work newer than the last solve but never an accepted copy', () => {
+		const now = new Date('2026-09-26T10:00:00Z');
+		expect(isStaleDraft(draft('2026-09-25T10:00:00Z'), state, now)).toBe(false);
+		expect(isStaleDraft(draft('2026-09-24T14:00:00Z'), state, now)).toBe(true);
+		expect(isStaleDraft(draft('2026-09-25T10:00:00Z', true), state, now)).toBe(true);
+	});
+
+	it('keeps any draft of a problem never solved', () => {
+		expect(isStaleDraft(draft('2026-09-01T00:00:00Z'), null, new Date())).toBe(false);
 	});
 });
 
