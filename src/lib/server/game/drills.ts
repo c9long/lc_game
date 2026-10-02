@@ -116,8 +116,11 @@ export async function answerDrill(
 	};
 
 	set.results[drillId] = correct;
-	const results = set.ids.map((id) => set.results[id]).filter((r): r is boolean => r !== undefined);
-	const setDone = results.length === set.ids.length;
+	// A withdrawn drill counts as answered correctly, so it costs neither the set nor its perfect bonus.
+	const results = set.ids
+		.map((id) => set.results[id] ?? (drillById(id) ? undefined : true))
+		.filter((r): r is boolean => r !== undefined);
+	const setDone = isSetComplete(set);
 	// Monuments standing in a city add +100% each to what a correct answer pays.
 	const multiplier = await ingotMultiplier(db, uid);
 	const delta = ingotsForAnswer(correct, setDone ? results : [], multiplier);
@@ -181,8 +184,11 @@ export async function loadDrillSet(db: Db, uid: string, today: string): Promise<
 	return getState<DrillSetState | null>(db, uid, key(today), null);
 }
 
+/** Every drill in the set is answered. A drill withdrawn from the bank after the set was built
+ *  (curation.json's exclude list) can no longer be served or answered, so it counts as done rather
+ *  than leaving the day's set impossible to finish. */
 export function isSetComplete(set: DrillSetState | null): boolean {
-	return Boolean(set && set.ids.length > 0 && set.ids.every((id) => id in set.results));
+	return Boolean(set && set.ids.length > 0 && set.ids.every((id) => id in set.results || !drillById(id)));
 }
 
 /** A drill for free practice: never one from today's set, and preferring ones not just seen. The

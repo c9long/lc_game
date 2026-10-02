@@ -1,7 +1,43 @@
 {
   "_comment": "Hand curation over the mined bank. exclude: drill ids to drop. maxPerModule: cap per docs page. extra: hand-written drills (same shape).",
-  "exclude": ["31f27b61f711"],
-  "_exclude_comment": "31f27b61f711 prints three lines, and the answer box is a single line, so it could never be answered correctly.",
+  "exclude": [
+    "31f27b61f711",
+    "6534bb564369",
+    "a2a9fc5024a2",
+    "78f54a1e8136",
+    "6f99d038cd4b",
+    "ccf6b82a43aa",
+    "1adf954e23fe",
+    "91297840df5d",
+    "01a975b40c57",
+    "256e5f7b299d",
+    "f6d668098b1c",
+    "2fc7d9650135",
+    "5b1e015913f7",
+    "c39b12f4c47a",
+    "a9d736a3cac6",
+    "eb099b66630e",
+    "914c8bfa686c",
+    "cbf00fa9f767",
+    "5d9c90ec84b1",
+    "e66c0da70531",
+    "3af0e5e68239",
+    "39134f154f72",
+    "ce7186584640",
+    "90892182a8fd",
+    "7ab77eab6460",
+    "3f76b79cf5ab",
+    "a811821a8838",
+    "f677e232c9d4",
+    "efc99f0dcf0c",
+    "ffae8422a542",
+    "68ecc4d8e283",
+    "177b68393c54",
+    "4ab18c771aab",
+    "14fda645f869",
+    "ec09384260b4"
+  ],
+  "_exclude_comment": "31f27b61f711 prints three lines, and the answer box is a single line, so it could never be answered correctly. The rest were excluded because more than one answer fits the blank: no shown output (so anything that runs fits), or a different method printing the same thing (strip/lstrip, split/rsplit, isdigit/isdecimal, ...). scripts/check-drill-ambiguity.py finds these, and CI runs it.",
   "maxPerModule": 60,
   "extra": [
     {
@@ -257,12 +293,12 @@
       "module": "strings",
       "kind": "cloze",
       "context": null,
-      "code": ">>> \"a,b,c\".___(\",\")",
+      "code": ">>> \"a,b,c\".___(\",\", 1)",
       "answer": "split",
-      "hint": "['a', 'b', 'c']",
+      "hint": "['a', 'b,c']",
       "api": "str.split",
       "url": "https://docs.python.org/3.12/library/stdtypes.html#text-sequence-type-str",
-      "explain": null
+      "explain": "`split(sep, 1)` splits at most once, from the left; `rsplit` would split from the right instead."
     },
     {
       "id": "hand-py-fund-join",
@@ -561,7 +597,7 @@
       "hint": null,
       "api": "range",
       "url": "https://docs.python.org/3.12/library/stdtypes.html#range",
-      "explain": "`range(n)` counts 0, 1, ... n-1 \u2014 n values, ending one before n. The exclusive end is why `range(len(xs))` covers exactly the valid indices."
+      "explain": "`range(n)` counts 0, 1, ... n-1 — n values, ending one before n. The exclusive end is why `range(len(xs))` covers exactly the valid indices."
     },
     {
       "id": "hand-py-fund-range-start",
@@ -795,7 +831,7 @@
       "hint": null,
       "api": "and",
       "url": "https://docs.python.org/3.12/library/stdtypes.html#truth",
-      "explain": "`and` returns the first falsy operand, else the last. It also short-circuits, so the right side is never evaluated when the left is falsy \u2014 which is what makes `i < len(xs) and xs[i]` safe."
+      "explain": "`and` returns the first falsy operand, else the last. It also short-circuits, so the right side is never evaluated when the left is falsy — which is what makes `i < len(xs) and xs[i]` safe."
     },
     {
       "id": "hand-py-fund-is-none",
@@ -829,9 +865,9 @@
       "module": "dicts",
       "kind": "cloze",
       "context": ">>> d = {'a': 1}",
-      "code": ">>> d.___('z', 0)",
+      "code": ">>> d.___('a', 0), d.___('z', 0), d",
       "answer": "get",
-      "hint": "0",
+      "hint": "(1, 0, {'a': 1})",
       "api": "dict.get",
       "url": "https://docs.python.org/3.12/library/stdtypes.html#dict",
       "explain": "`d.get(k, default)` returns the default when the key is missing instead of raising KeyError, so it needs no `in` check first."
@@ -1185,7 +1221,7 @@
       "hint": null,
       "api": "^",
       "url": "https://docs.python.org/3.12/library/stdtypes.html#bitwise-operations-on-integer-types",
-      "explain": "Anything XORed with itself is 0, and anything XORed with 0 is unchanged. XOR is also order-independent, so XORing a whole list cancels every value that appears twice and leaves the one that appears once \u2014 the entire trick behind Single Number."
+      "explain": "Anything XORed with itself is 0, and anything XORed with 0 is unchanged. XOR is also order-independent, so XORing a whole list cancels every value that appears twice and leaves the one that appears once — the entire trick behind Single Number."
     },
     {
       "id": "hand-py-fund-not",
@@ -1321,11 +1357,12 @@
       "module": "heapq",
       "kind": "cloze",
       "context": ">>> import heapq\n>>> h = [1, 4, 5]\n>>> heapq.___(h, 0)",
-      "code": ">>> h[0]",
+      "code": ">>> h",
       "answer": "heappush",
-      "hint": "0",
+      "hint": "[0, 1, 5, 4]",
       "api": "heapq.heappush",
-      "url": "https://docs.python.org/3.12/library/heapq.html#heapq.heappush"
+      "url": "https://docs.python.org/3.12/library/heapq.html#heapq.heappush",
+      "explain": "`heappush` adds the item and sifts it up, keeping every item. `heapreplace` would pop the 1 first."
     },
     {
       "id": "hand-py-heappushpop",
@@ -1333,11 +1370,12 @@
       "module": "heapq",
       "kind": "cloze",
       "context": ">>> import heapq\n>>> h = [1, 4, 5]",
-      "code": ">>> heapq.___(h, 3)",
+      "code": ">>> heapq.___(h, 0)",
       "answer": "heappushpop",
-      "hint": "1",
+      "hint": "0",
       "api": "heapq.heappushpop",
-      "url": "https://docs.python.org/3.12/library/heapq.html#heapq.heappushpop"
+      "url": "https://docs.python.org/3.12/library/heapq.html#heapq.heappushpop",
+      "explain": "`heappushpop` pushes first, so an item smaller than the minimum comes straight back out. `heapreplace` pops first and would return 1."
     },
     {
       "id": "hand-py-heapreplace",
@@ -1508,9 +1546,9 @@
       "module": "collections",
       "kind": "cloze",
       "context": ">>> from collections import defaultdict\n>>> d = defaultdict(___)\n>>> d['x'] += 1",
-      "code": ">>> d['x']",
+      "code": ">>> d['x'], d['y']",
       "answer": "int",
-      "hint": "1",
+      "hint": "(1, 0)",
       "api": "collections.defaultdict",
       "url": "https://docs.python.org/3.12/library/collections.html#collections.defaultdict"
     },
@@ -1519,10 +1557,10 @@
       "lang": "python",
       "module": "collections",
       "kind": "cloze",
-      "context": ">>> from collections import defaultdict\n>>> groups = defaultdict(___)\n>>> groups['a'].append(1)",
-      "code": ">>> dict(groups)",
+      "context": ">>> import json\n>>> from collections import defaultdict\n>>> groups = defaultdict(___)\n>>> groups['a'].append(1)",
+      "code": ">>> json.dumps(groups)",
       "answer": "list",
-      "hint": "{'a': [1]}",
+      "hint": "'{\"a\": [1]}'",
       "api": "collections.defaultdict",
       "url": "https://docs.python.org/3.12/library/collections.html#collections.defaultdict"
     },
@@ -2108,9 +2146,9 @@
       "module": "stdtypes",
       "kind": "cloze",
       "context": "",
-      "code": ">>> (13).___()",
+      "code": ">>> [n.___() for n in (13, 8)]",
       "answer": "bit_count",
-      "hint": "3",
+      "hint": "[3, 1]",
       "api": "int.bit_count",
       "url": "https://docs.python.org/3.12/library/stdtypes.html#int.bit_count"
     },
@@ -2120,11 +2158,12 @@
       "module": "stdtypes",
       "kind": "cloze",
       "context": "",
-      "code": ">>> 'a1'.___(), 'a-1'.isalnum()",
+      "code": ">>> [s.___() for s in ('a1', '1a', 'a-1')]",
       "answer": "isalnum",
-      "hint": "(True, False)",
+      "hint": "[True, True, False]",
       "api": "str.isalnum",
-      "url": "https://docs.python.org/3.12/library/stdtypes.html#str.isalnum"
+      "url": "https://docs.python.org/3.12/library/stdtypes.html#str.isalnum",
+      "explain": "`isalnum` is true when every character is a letter or a digit, in any order; the hyphen makes `'a-1'` false."
     },
     {
       "id": "hand-py-key-two",

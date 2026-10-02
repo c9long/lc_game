@@ -702,6 +702,28 @@
 				"answer": "'footpath'"
 			}
 		],
+		"hand-py-fund-get-default": [
+			{
+				"context": ">>> d = {'b': 2}",
+				"code": ">>> d.___('b', 0), d.___('c', 0), d",
+				"hint": "(2, 0, {'b': 2})"
+			},
+			{
+				"context": ">>> d = {'c': 3}",
+				"code": ">>> d.___('c', 0), d.___('d', 0), d",
+				"hint": "(3, 0, {'c': 3})"
+			},
+			{
+				"context": ">>> d = {'d': 4}",
+				"code": ">>> d.___('d', 0), d.___('e', 0), d",
+				"hint": "(4, 0, {'d': 4})"
+			},
+			{
+				"context": ">>> d = {'e': 5}",
+				"code": ">>> d.___('e', 0), d.___('f', 0), d",
+				"hint": "(5, 0, {'e': 5})"
+			}
+		],
 		"hand-py-fund-items": [
 			{
 				"code": ">>> list({'c': 2, 'd': 3}.items())",
@@ -1199,37 +1221,37 @@
 		"hand-py-defaultdict-int": [
 			{
 				"context": ">>> from collections import defaultdict\n>>> d = defaultdict(___)\n>>> d['x'] += 2",
-				"hint": "2"
+				"hint": "(2, 0)"
 			},
 			{
 				"context": ">>> from collections import defaultdict\n>>> d = defaultdict(___)\n>>> d['x'] += 3",
-				"hint": "3"
+				"hint": "(3, 0)"
 			},
 			{
 				"context": ">>> from collections import defaultdict\n>>> d = defaultdict(___)\n>>> d['x'] += 4",
-				"hint": "4"
+				"hint": "(4, 0)"
 			},
 			{
 				"context": ">>> from collections import defaultdict\n>>> d = defaultdict(___)\n>>> d['x'] += 5",
-				"hint": "5"
+				"hint": "(5, 0)"
 			}
 		],
 		"hand-py-defaultdict-list": [
 			{
-				"context": ">>> from collections import defaultdict\n>>> groups = defaultdict(___)\n>>> groups['a'].append(2)",
-				"hint": "{'a': [2]}"
+				"context": ">>> import json\n>>> from collections import defaultdict\n>>> groups = defaultdict(___)\n>>> groups['a'].append(2)",
+				"hint": "'{\"a\": [2]}'"
 			},
 			{
-				"context": ">>> from collections import defaultdict\n>>> groups = defaultdict(___)\n>>> groups['a'].append(3)",
-				"hint": "{'a': [3]}"
+				"context": ">>> import json\n>>> from collections import defaultdict\n>>> groups = defaultdict(___)\n>>> groups['a'].append(3)",
+				"hint": "'{\"a\": [3]}'"
 			},
 			{
-				"context": ">>> from collections import defaultdict\n>>> groups = defaultdict(___)\n>>> groups['a'].append(4)",
-				"hint": "{'a': [4]}"
+				"context": ">>> import json\n>>> from collections import defaultdict\n>>> groups = defaultdict(___)\n>>> groups['a'].append(4)",
+				"hint": "'{\"a\": [4]}'"
 			},
 			{
-				"context": ">>> from collections import defaultdict\n>>> groups = defaultdict(___)\n>>> groups['a'].append(5)",
-				"hint": "{'a': [5]}"
+				"context": ">>> import json\n>>> from collections import defaultdict\n>>> groups = defaultdict(___)\n>>> groups['a'].append(5)",
+				"hint": "'{\"a\": [5]}'"
 			}
 		],
 		"hand-py-deque-maxlen": [
@@ -1718,16 +1740,20 @@
 		],
 		"hand-py-bit-count": [
 			{
-				"code": ">>> (15).___()",
-				"hint": "4"
+				"code": ">>> [n.___() for n in (14, 9)]",
+				"hint": "[3, 2]"
 			},
 			{
-				"code": ">>> (16).___()",
-				"hint": "1"
+				"code": ">>> [n.___() for n in (15, 10)]",
+				"hint": "[4, 2]"
 			},
 			{
-				"code": ">>> (17).___()",
-				"hint": "2"
+				"code": ">>> [n.___() for n in (16, 11)]",
+				"hint": "[1, 3]"
+			},
+			{
+				"code": ">>> [n.___() for n in (17, 12)]",
+				"hint": "[2, 2]"
 			}
 		],
 		"hand-py-key-two": [
