@@ -6,11 +6,6 @@
 
 <h1>Today <span class="muted">{data.today}</span></h1>
 
-{#if !data.lc.connected}
-	<div class="banner">LeetCode is not connected. Run and Submit need your session cookie: <a href="/admin">paste it in Admin</a>.</div>
-{:else if !data.lc.ok}
-	<div class="banner">Your LeetCode cookie looks expired or invalid{data.lc.error ? ` (${data.lc.error})` : ''}. <a href="/admin">Reconnect in Admin</a>.</div>
-{/if}
 {#if data.sync.error}
 	<div class="banner">Profile sync failed: {data.sync.error}</div>
 {/if}

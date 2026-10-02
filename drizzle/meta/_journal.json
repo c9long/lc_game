@@ -22,6 +22,13 @@
       "when": 1789933757339,
       "tag": "0002_cities",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1790908937514,
+      "tag": "0003_drop_settings",
+      "breakpoints": true
     }
   ]
 }

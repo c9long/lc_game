@@ -4,7 +4,7 @@ name: Deploy
 # (data/tests/, drizzle migrations, static/solutions/) or regenerated during the build
 # (static/monaco and static/pyodide, via the prebuild hook), so a clean checkout is enough.
 #
-# Secrets are NOT deployed from here. AUTH_SECRET, SETTINGS_KEY and SETUP_TOKEN live in Cloudflare
+# Secrets are NOT deployed from here. AUTH_SECRET and SETUP_TOKEN live in Cloudflare
 # and survive redeploys; `wrangler secret put` remains a manual, deliberate act.
 
 on:

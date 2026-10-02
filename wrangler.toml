@@ -7,7 +7,7 @@ compatibility_flags = ["nodejs_compat", "nodejs_als"]
 binding = "ASSETS"
 directory = ".svelte-kit/cloudflare"
 
-# Secrets are NOT set here. Use `wrangler secret put AUTH_SECRET|SETTINGS_KEY|SETUP_TOKEN` (prod)
+# Secrets are NOT set here. Use `wrangler secret put AUTH_SECRET|SETUP_TOKEN` (prod)
 # or .dev.vars (local). See .dev.vars.example.
 
 [[d1_databases]]

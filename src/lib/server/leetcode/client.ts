@@ -1,13 +1,7 @@
-// Thin client for LeetCode's unofficial GraphQL API and judge endpoints.
-// Public queries need no cookie. Judge calls and the user's own submissions need LcAuth.
-// This module is the only code allowed to see the session cookie.
+// Thin client for LeetCode's unofficial public GraphQL API. Nothing here signs in: judging happens
+// in the browser, and every query used is one LeetCode answers anonymously.
 
-export interface LcAuth {
-	session: string;
-	csrf: string;
-}
-
-export type LcErrorKind = 'unauthenticated' | 'blocked' | 'rate_limited' | 'not_found' | 'bad_response';
+export type LcErrorKind = 'blocked' | 'rate_limited' | 'not_found' | 'bad_response';
 
 export class LeetCodeError extends Error {
 	constructor(
@@ -24,24 +18,16 @@ const GRAPHQL = 'https://leetcode.com/graphql';
 const UA =
 	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36';
 
-export function lcHeaders(auth?: LcAuth, referer = 'https://leetcode.com/'): Record<string, string> {
-	const h: Record<string, string> = {
-		'content-type': 'application/json',
-		accept: 'application/json',
-		referer,
-		origin: 'https://leetcode.com',
-		'user-agent': UA
-	};
-	if (auth) {
-		h.cookie = `LEETCODE_SESSION=${auth.session}; csrftoken=${auth.csrf}`;
-		h['x-csrftoken'] = auth.csrf;
-		h['x-requested-with'] = 'XMLHttpRequest';
-	}
-	return h;
-}
+const HEADERS: Record<string, string> = {
+	'content-type': 'application/json',
+	accept: 'application/json',
+	referer: 'https://leetcode.com/',
+	origin: 'https://leetcode.com',
+	'user-agent': UA
+};
 
-/** Parses a JSON body, turning HTML challenge pages and auth redirects into typed errors. */
-export async function parseJson(r: Response): Promise<any> {
+/** Parses a JSON body, turning HTML challenge pages and refusals into typed errors. */
+async function parseJson(r: Response): Promise<any> {
 	const text = await r.text();
 	try {
 		return JSON.parse(text);
@@ -50,26 +36,22 @@ export async function parseJson(r: Response): Promise<any> {
 		if (/cf-chl|Just a moment|challenge-platform|Attention Required/i.test(text)) {
 			throw new LeetCodeError('blocked', 'LeetCode returned a bot challenge page', r.status);
 		}
-		if (r.status === 401 || r.status === 403 || /accounts\/login/i.test(r.url)) {
-			throw new LeetCodeError('unauthenticated', 'LeetCode session rejected', r.status);
-		}
+		if (r.status === 401 || r.status === 403) throw new LeetCodeError('blocked', `LeetCode refused the request (${r.status})`, r.status);
 		if (r.status === 404) throw new LeetCodeError('not_found', 'not found', r.status);
 		throw new LeetCodeError('bad_response', `non-JSON response (${r.status})`, r.status);
 	}
 }
 
-export async function gql<T>(query: string, variables: Record<string, unknown> = {}, auth?: LcAuth): Promise<T> {
+async function gql<T>(query: string, variables: Record<string, unknown> = {}): Promise<T> {
 	const r = await fetch(GRAPHQL, {
 		method: 'POST',
-		headers: lcHeaders(auth),
+		headers: HEADERS,
 		body: JSON.stringify({ query, variables })
 	});
 	const json = await parseJson(r);
 	if (json?.errors?.length) throw new LeetCodeError('bad_response', json.errors[0].message ?? 'GraphQL error');
 	return json.data as T;
 }
-
-// ---------- public queries ----------
 
 export interface ProblemData {
 	questionId: string;
@@ -200,113 +182,13 @@ export async function fetchSolutionArticle(topicId: number): Promise<{ title: st
 	return data.ugcArticleSolutionArticle ?? null;
 }
 
-export async function fetchEditorial(slug: string, auth?: LcAuth): Promise<{ content: string | null; paidOnly: boolean } | null> {
+/** Paid editorials come back with canSeeDetail false, so their content is null. */
+export async function fetchEditorial(slug: string): Promise<{ content: string | null; paidOnly: boolean } | null> {
 	const data = await gql<{ question: any }>(
 		`query editorial($slug: String!) { question(titleSlug: $slug) { solution { canSeeDetail paidOnly content } } }`,
-		{ slug },
-		auth
+		{ slug }
 	);
 	const s = data.question?.solution;
 	if (!s) return null;
 	return { content: s.canSeeDetail ? (s.content ?? null) : null, paidOnly: Boolean(s.paidOnly) };
-}
-
-// ---------- authenticated ----------
-
-export async function fetchUserStatus(auth: LcAuth): Promise<{ isSignedIn: boolean; username: string | null }> {
-	const data = await gql<{ userStatus: any }>(`query { userStatus { isSignedIn username } }`, {}, auth);
-	return { isSignedIn: Boolean(data.userStatus?.isSignedIn), username: data.userStatus?.username ?? null };
-}
-
-// ---------- judge ----------
-
-export interface CheckResult {
-	state: string;
-	status_msg?: string;
-	status_code?: number;
-	run_success?: boolean;
-	total_correct?: number | null;
-	total_testcases?: number | null;
-	code_answer?: string[];
-	expected_code_answer?: string[];
-	std_output_list?: string[];
-	compile_error?: string;
-	full_compile_error?: string;
-	runtime_error?: string;
-	full_runtime_error?: string;
-	status_runtime?: string;
-	status_memory?: string;
-	runtime_percentile?: number | null;
-	memory_percentile?: number | null;
-	last_testcase?: string;
-	expected_output?: string;
-	code_output?: string | string[];
-	lang?: string;
-	pretty_lang?: string;
-	submission_id?: string;
-	[k: string]: unknown;
-}
-
-function judgeHeaders(auth: LcAuth, slug: string) {
-	return lcHeaders(auth, `https://leetcode.com/problems/${slug}/`);
-}
-
-function throwIfJudgeError(json: any) {
-	if (json && typeof json === 'object' && typeof json.error === 'string') {
-		const msg: string = json.error;
-		if (/too soon|too fast|rate/i.test(msg)) throw new LeetCodeError('rate_limited', msg);
-		throw new LeetCodeError('bad_response', msg);
-	}
-}
-
-export async function interpret(
-	auth: LcAuth,
-	p: { slug: string; questionId: string; lang: string; code: string; input: string }
-): Promise<string> {
-	const r = await fetch(`https://leetcode.com/problems/${p.slug}/interpret_solution/`, {
-		method: 'POST',
-		headers: judgeHeaders(auth, p.slug),
-		body: JSON.stringify({ lang: p.lang, question_id: p.questionId, typed_code: p.code, data_input: p.input })
-	});
-	const json = await parseJson(r);
-	throwIfJudgeError(json);
-	if (!json?.interpret_id) throw new LeetCodeError('bad_response', 'no interpret_id in response', r.status);
-	return String(json.interpret_id);
-}
-
-export async function submit(
-	auth: LcAuth,
-	p: { slug: string; questionId: string; lang: string; code: string }
-): Promise<string> {
-	const r = await fetch(`https://leetcode.com/problems/${p.slug}/submit/`, {
-		method: 'POST',
-		headers: judgeHeaders(auth, p.slug),
-		body: JSON.stringify({ lang: p.lang, question_id: p.questionId, typed_code: p.code })
-	});
-	const json = await parseJson(r);
-	throwIfJudgeError(json);
-	if (!json?.submission_id) throw new LeetCodeError('bad_response', 'no submission_id in response', r.status);
-	return String(json.submission_id);
-}
-
-export async function check(auth: LcAuth, id: string, slug: string): Promise<CheckResult> {
-	const r = await fetch(`https://leetcode.com/submissions/detail/${encodeURIComponent(id)}/check/`, {
-		headers: judgeHeaders(auth, slug)
-	});
-	const json = await parseJson(r);
-	throwIfJudgeError(json);
-	return json as CheckResult;
-}
-
-/** Trim a check() payload to what the UI needs and what is worth storing. */
-export function summarizeCheck(c: CheckResult): Record<string, unknown> {
-	const keep = [
-		'state', 'status_msg', 'status_code', 'run_success', 'total_correct', 'total_testcases',
-		'code_answer', 'expected_code_answer', 'std_output_list', 'compile_error', 'full_compile_error',
-		'runtime_error', 'full_runtime_error', 'status_runtime', 'status_memory', 'runtime_percentile',
-		'memory_percentile', 'last_testcase', 'expected_output', 'code_output', 'lang', 'pretty_lang', 'submission_id'
-	];
-	const out: Record<string, unknown> = {};
-	for (const k of keep) if (c[k] !== undefined) out[k] = c[k];
-	return out;
 }

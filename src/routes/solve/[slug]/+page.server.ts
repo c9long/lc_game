@@ -1,11 +1,10 @@
 import { error } from '@sveltejs/kit';
 import { and, desc, eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
-import { getDb, getEnv } from '$lib/server/db';
+import { getDb } from '$lib/server/db';
 import { attempts, problemState } from '$lib/server/db/schema';
 import { requireUser } from '$lib/server/guard';
 import { getProblem } from '$lib/server/problems';
-import { getLcAuth, getLcStatus } from '$lib/server/leetcode/auth';
 import { LANGS } from '$lib/langs';
 import { PROBLEM_BY_SLUG } from '$lib/game/curriculum';
 import { isDue } from '$lib/game/srs';
@@ -19,7 +18,6 @@ const NOTES = (descriptionNotes as { notes: Record<string, string[]> }).notes;
 export const load: PageServerLoad = async ({ params, locals, platform }) => {
 	const user = requireUser(locals);
 	const db = getDb(platform);
-	const env = getEnv(platform);
 	const slug = params.slug;
 	if (!/^[a-z0-9-]+$/.test(slug)) error(404, 'no such problem');
 
@@ -61,7 +59,6 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 		(solvedAt !== null && r.createdAt.getTime() <= solvedAt.getTime());
 	const drafts = Object.fromEntries(draftRows.filter((r) => !isStale(r)).map((r) => [r.lang, r.code]));
 
-	const status = await getLcStatus(db);
 	const snippets: Record<string, string> = {};
 	for (const l of LANGS) if (problem.snippets[l.slug]) snippets[l.slug] = problem.snippets[l.slug];
 	// Premium withholds codeSnippets as well as the statement, so the editor opened empty. The
@@ -85,7 +82,6 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 		snippets,
 		drafts,
 		lastAccepted,
-		lc: { connected: Boolean(await getLcAuth(db, env)), ok: status?.ok ?? false },
 		solved: (state?.solveCount ?? 0) > 0,
 		solveCount: state?.solveCount ?? 0,
 		lastLang: state?.lastLang ?? null,

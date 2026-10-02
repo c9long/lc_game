@@ -46,14 +46,6 @@ export const challenges = sqliteTable('challenges', {
 	expiresAt: ts('expires_at').notNull()
 });
 
-/** Key/value settings. Rows with encrypted=true hold AES-GCM ciphertext (see settings.ts). */
-export const settings = sqliteTable('settings', {
-	key: text('key').primaryKey(),
-	value: text('value').notNull(),
-	encrypted: bool('encrypted').notNull().default(false),
-	updatedAt: ts('updated_at').notNull()
-});
-
 /** Cache of LeetCode problem content so the API is hit once per problem. */
 export const problems = sqliteTable('problems', {
 	slug: text('slug').primaryKey(),

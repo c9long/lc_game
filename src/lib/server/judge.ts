@@ -4,26 +4,22 @@ import type { Db } from './db';
 import { attempts, problemState, solutionViews } from './db/schema';
 import { randomId } from './crypto';
 import { LeetCodeError } from './leetcode/client';
-import { markLcStatus } from './leetcode/auth';
 import { LANG_BY_SLUG } from '$lib/langs';
 
 export function validLang(lang: unknown): lang is string {
 	return typeof lang === 'string' && LANG_BY_SLUG.has(lang);
 }
 
-/** Maps LeetCode client failures to JSON responses and records cookie problems. */
+/** Maps LeetCode client failures to JSON responses. */
 export async function judgeErrorResponse(db: Db, e: unknown): Promise<Response> {
 	if (e instanceof LeetCodeError) {
-		if (e.kind === 'unauthenticated') await markLcStatus(db, { ok: false, error: e.message });
-		const status = e.kind === 'unauthenticated' ? 424 : e.kind === 'rate_limited' ? 429 : 502;
+		const status = e.kind === 'rate_limited' ? 429 : 502;
 		const message =
-			e.kind === 'unauthenticated'
-				? 'LeetCode rejected the session cookie; reconnect it in Admin.'
-				: e.kind === 'rate_limited'
-					? 'LeetCode asked us to slow down; wait a few seconds.'
-					: e.kind === 'blocked'
-						? 'LeetCode served a bot-challenge page to the server. See docs/06-merged-design.md Phase 0.'
-						: e.message;
+			e.kind === 'rate_limited'
+				? 'LeetCode asked us to slow down; wait a few seconds.'
+				: e.kind === 'blocked'
+					? 'LeetCode served a bot-challenge page to the server. See docs/06-merged-design.md Phase 0.'
+					: e.message;
 		return json({ error: e.kind, message }, { status });
 	}
 	return json({ error: 'unknown', message: e instanceof Error ? e.message : String(e) }, { status: 500 });

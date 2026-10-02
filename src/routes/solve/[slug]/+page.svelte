@@ -242,9 +242,6 @@
 {#if data.ownDescription}
 	<div class="banner">LeetCode Premium withholds this problem's statement, so the description below is the app's own, written from the published signature and examples.</div>
 {/if}
-{#if !data.lc.connected || !data.lc.ok}
-	<div class="banner">LeetCode is not connected ({data.lc.connected ? 'the cookie looks expired' : 'no cookie configured'}), so community solutions, editorials and profile sync are unavailable. <a href="/admin">Fix in Admin</a>. Solving still works.</div>
-{/if}
 
 <div class="solve">
 	<section class="card prose desc">

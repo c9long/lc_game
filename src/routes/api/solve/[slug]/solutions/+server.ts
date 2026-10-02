@@ -1,9 +1,8 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { getDb, getEnv } from '$lib/server/db';
+import { getDb } from '$lib/server/db';
 import { requireUser } from '$lib/server/guard';
 import { getProblem } from '$lib/server/problems';
-import { getLcAuth } from '$lib/server/leetcode/auth';
 import { fetchEditorial, fetchSolutionArticle, fetchSolutionArticles } from '$lib/server/leetcode/client';
 import { judgeErrorResponse, recordSolutionView } from '$lib/server/judge';
 import { localDate } from '$lib/game/dates';
@@ -36,8 +35,7 @@ export const GET: RequestHandler = async (event) => {
 			return json({ data: await fetchSolutionArticle(topicId) });
 		}
 		if (kind === 'editorial') {
-			const auth = await getLcAuth(db, getEnv(event.platform));
-			return json({ data: await fetchEditorial(slug, problem.editorialFree ? undefined : (auth ?? undefined)) });
+			return json({ data: await fetchEditorial(slug) });
 		}
 		return json({ error: 'bad_request' }, { status: 400 });
 	} catch (e) {
