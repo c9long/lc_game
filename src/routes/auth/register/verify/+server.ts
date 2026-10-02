@@ -2,10 +2,11 @@ import { json } from '@sveltejs/kit';
 import type { RegistrationResponseJSON } from '@simplewebauthn/server';
 import type { RequestHandler } from './$types';
 import { getDb } from '$lib/server/db';
-import { passkeys, users } from '$lib/server/db/schema';
+import { eq } from 'drizzle-orm';
+import { invites, passkeys, users } from '$lib/server/db/schema';
 import { randomId } from '$lib/server/crypto';
 import { rateLimit } from '$lib/server/auth/ratelimit';
-import { registrationAllowed } from '$lib/server/auth/register';
+import { claimInvite, registrationFor } from '$lib/server/auth/register';
 import { SESSION_COOKIE, createSession, sessionCookieOptions } from '$lib/server/auth/session';
 import { CHALLENGE_COOKIE, finishRegistration, relyingParty } from '$lib/server/auth/webauthn';
 import { isValidTimeZone } from '$lib/game/dates';
@@ -14,8 +15,9 @@ export const POST: RequestHandler = async (event) => {
 	if (!rateLimit(`register:${event.getClientAddress()}`, 10, 10 * 60 * 1000)) {
 		return json({ error: 'too many attempts' }, { status: 429 });
 	}
-	if (!registrationAllowed(event)) return json({ error: 'registration closed' }, { status: 403 });
 	const db = getDb(event.platform);
+	const reg = await registrationFor(event, db);
+	if (!reg) return json({ error: 'registration closed' }, { status: 403 });
 	const challengeId = event.cookies.get(CHALLENGE_COOKIE);
 	event.cookies.delete(CHALLENGE_COOKIE, { path: '/auth' });
 	if (!challengeId) return json({ error: 'missing challenge; reload and try again' }, { status: 400 });
@@ -32,30 +34,41 @@ export const POST: RequestHandler = async (event) => {
 		const cred = await finishRegistration(db, { challengeId, response: body.attestation, rpID, origin });
 		const now = new Date();
 
-		let userId = event.locals.user?.id;
-		if (!userId) {
-			const existing = await db.select({ id: users.id }).from(users).get();
-			if (existing) userId = existing.id;
-			else {
-				userId = randomId();
-				const tz = body.timezone && isValidTimeZone(body.timezone) ? body.timezone : 'UTC';
-				await db.insert(users).values({ id: userId, timezone: tz, createdAt: now });
+		const passkey = (userId: string) =>
+			db.insert(passkeys).values({
+				id: cred.id,
+				userId,
+				publicKey: cred.publicKey,
+				counter: cred.counter,
+				transports: cred.transports,
+				deviceName: (body.deviceName ?? '').slice(0, 60) || null,
+				createdAt: now
+			});
+
+		let userId: string;
+		if (reg.mode === 'device') {
+			userId = reg.userId;
+			await passkey(userId);
+		} else {
+			// A new player. An invite is claimed atomically, so a link opened twice makes one account.
+			if (reg.mode === 'invite' && !(await claimInvite(db, reg.tokenHash, now))) {
+				return json({ error: 'this invite has already been used or has expired' }, { status: 403 });
 			}
+			userId = randomId();
+			const tz = body.timezone && isValidTimeZone(body.timezone) ? body.timezone : 'UTC';
+			await db.batch([
+				db.insert(users).values({ id: userId, name: reg.name, timezone: tz, isAdmin: reg.mode === 'setup', createdAt: now }),
+				passkey(userId),
+				...(reg.mode === 'invite'
+					? [db.update(invites).set({ usedBy: userId }).where(eq(invites.tokenHash, reg.tokenHash))]
+					: [])
+			]);
 		}
-		await db.insert(passkeys).values({
-			id: cred.id,
-			userId,
-			publicKey: cred.publicKey,
-			counter: cred.counter,
-			transports: cred.transports,
-			deviceName: (body.deviceName ?? '').slice(0, 60) || null,
-			createdAt: now
-		});
 		if (!event.locals.user) {
 			const { token } = await createSession(db, userId);
 			event.cookies.set(SESSION_COOKIE, token, sessionCookieOptions(event.url.protocol === 'https:'));
 		}
-		return json({ ok: true });
+		return json({ ok: true, mode: reg.mode });
 	} catch (e) {
 		return json({ error: e instanceof Error ? e.message : 'registration failed' }, { status: 400 });
 	}

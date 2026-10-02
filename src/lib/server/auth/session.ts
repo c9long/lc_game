@@ -45,8 +45,14 @@ export async function deleteSession(db: Db, sessionId: string): Promise<void> {
 	await db.delete(sessions).where(eq(sessions.id, sessionId));
 }
 
+/** Signs out every player on every device. Admin only. */
 export async function deleteAllSessions(db: Db): Promise<void> {
 	await db.delete(sessions);
+}
+
+/** Signs one player out of every device. */
+export async function deleteUserSessions(db: Db, userId: string): Promise<void> {
+	await db.delete(sessions).where(eq(sessions.userId, userId));
 }
 
 export function sessionCookieOptions(secure: boolean) {

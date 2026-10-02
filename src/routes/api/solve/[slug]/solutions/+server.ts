@@ -20,7 +20,7 @@ export const GET: RequestHandler = async (event) => {
 	// editor is as much a peek as opening the NeetCode reference, so on a refresh it must count as
 	// assisted in exactly the same way. The code itself never leaves the page loader; this call
 	// exists only to leave the record.
-	await recordSolutionView(db, slug, localDate(new Date(), user.timezone));
+	await recordSolutionView(db, user.id, slug, localDate(new Date(), user.timezone));
 
 	try {
 		if (kind === 'reference' || kind === 'own') return json({ ok: true });

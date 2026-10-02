@@ -21,9 +21,10 @@ const VERDICTS = new Set([
  * award.
  *
  * The verdict is asserted by the client because execution happens in the browser under Pyodide
- * (docs/07-pyodide-judge.md). That is acceptable for a single-user app — the only person who can
- * be cheated is Chris — but it is why the code and the per-case counts are stored alongside: a
- * future server-side runner can re-verify the history rather than making him re-earn it.
+ * (docs/07-pyodide-judge.md). That is acceptable because every player's progress is their own: a
+ * forged verdict cheats only the player who sent it. It is still why the code and the per-case
+ * counts are stored alongside: a future server-side runner can re-verify the history rather than
+ * making anyone re-earn it.
  */
 export const POST: RequestHandler = async (event) => {
 	const user = requireUser(event.locals);
@@ -57,6 +58,7 @@ export const POST: RequestHandler = async (event) => {
 	const id = randomId();
 	await db.insert(attempts).values({
 		id: randomId(),
+		userId: user.id,
 		slug: problem.slug,
 		lang: body.lang,
 		kind,

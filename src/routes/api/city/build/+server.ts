@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
 import { getDb } from '$lib/server/db';
 import { buildings } from '$lib/server/db/schema';
@@ -25,8 +25,8 @@ export const POST: RequestHandler = async (event) => {
 		const cost = costAtLevel(kind, placed.level + 1, placed.city);
 		if (!canAfford(snap.resources, cost)) return json({ error: 'poor', message: 'not enough resources' }, { status: 400 });
 		await db.batch([
-			db.update(buildings).set({ level: placed.level + 1 }).where(eq(buildings.id, placed.id)),
-			...Object.entries(cost).map(([k, v]) => addResourceStatement(db, k, -v))
+			db.update(buildings).set({ level: placed.level + 1 }).where(and(eq(buildings.userId, user.id), eq(buildings.id, placed.id))),
+			...Object.entries(cost).map(([k, v]) => addResourceStatement(db, user.id, k, -v))
 		]);
 		return json({ ok: true });
 	}
@@ -47,8 +47,8 @@ export const POST: RequestHandler = async (event) => {
 	const cost = costAtLevel(kind, 1, body.city);
 	if (!canAfford(snap.resources, cost)) return json({ error: 'poor', message: 'not enough resources' }, { status: 400 });
 	await db.batch([
-		db.insert(buildings).values({ id: randomId(), kind: kind.id, city: body.city, x: body.x, y: body.y, level: 1, builtAt: new Date() }),
-		...Object.entries(cost).map(([k, v]) => addResourceStatement(db, k, -v))
+		db.insert(buildings).values({ id: randomId(), userId: user.id, kind: kind.id, city: body.city, x: body.x, y: body.y, level: 1, builtAt: new Date() }),
+		...Object.entries(cost).map(([k, v]) => addResourceStatement(db, user.id, k, -v))
 	]);
 	return json({ ok: true });
 };

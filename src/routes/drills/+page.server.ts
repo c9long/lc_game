@@ -11,8 +11,8 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 	const user = requireUser(locals);
 	const db = getDb(platform);
 	const snap = await loadSnapshot(db, user);
-	const set = await getOrCreateDrillSet(db, snap.today, snap.now);
-	const progress = await loadDrillProgress(db);
+	const set = await getOrCreateDrillSet(db, user.id, snap.today, snap.now);
+	const progress = await loadDrillProgress(db, user.id);
 
 	const drills = (set?.ids ?? [])
 		.map((id) => {
@@ -54,7 +54,7 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 		drills,
 		setIngots: set?.ingots ?? 0,
 		ingots: snap.resources.ingots ?? 0,
-		ingotMultiplier: await ingotMultiplier(db),
+		ingotMultiplier: await ingotMultiplier(db, user.id),
 		modules: Object.entries(modules).map(([k, v]) => ({ key: k, ...v })),
 		dueCount: [...progress.values()].filter((p) => p.dueAt && p.dueAt.getTime() <= snap.now.getTime()).length
 	};

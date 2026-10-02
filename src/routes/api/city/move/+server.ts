@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
 import { getDb } from '$lib/server/db';
 import { buildings } from '$lib/server/db/schema';
@@ -42,8 +42,8 @@ export const POST: RequestHandler = async (event) => {
 	if (!canAfford(snap.resources, cost)) return json({ error: 'poor', message: 'not enough resources to move it up a tier' }, { status: 400 });
 
 	await db.batch([
-		db.update(buildings).set({ city: body.city, x: body.x, y: body.y }).where(eq(buildings.id, placed.id)),
-		...Object.entries(cost).map(([k, v]) => addResourceStatement(db, k, -v))
+		db.update(buildings).set({ city: body.city, x: body.x, y: body.y }).where(and(eq(buildings.userId, user.id), eq(buildings.id, placed.id))),
+		...Object.entries(cost).map(([k, v]) => addResourceStatement(db, user.id, k, -v))
 	]);
 	return json({ ok: true, charged: cost });
 };

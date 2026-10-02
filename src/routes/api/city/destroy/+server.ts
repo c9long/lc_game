@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
 import { getDb } from '$lib/server/db';
 import { buildings } from '$lib/server/db/schema';
@@ -28,8 +28,8 @@ export const POST: RequestHandler = async (event) => {
 
 	const refund = costAtLevel(kind, 1, placed.city);
 	await db.batch([
-		db.delete(buildings).where(eq(buildings.id, placed.id)),
-		...Object.entries(refund).map(([k, v]) => addResourceStatement(db, k, v))
+		db.delete(buildings).where(and(eq(buildings.userId, user.id), eq(buildings.id, placed.id))),
+		...Object.entries(refund).map(([k, v]) => addResourceStatement(db, user.id, k, v))
 	]);
 	return json({ ok: true, refunded: refund });
 };

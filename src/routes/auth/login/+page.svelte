@@ -34,7 +34,7 @@
 		<p>Sign in with your passkey.</p>
 		<button class="primary" onclick={signIn} disabled={busy}>{busy ? 'Waiting for passkey…' : 'Sign in'}</button>
 	{:else}
-		<p>No passkey is registered yet. Open <code>/auth/register?token=SETUP_TOKEN</code> using the token you set as a secret.</p>
+		<p>No passkey is registered yet. Open <code>/auth/register?token=SETUP_TOKEN</code> using the token you set as a secret, or the invite link you were sent.</p>
 	{/if}
 	{#if message}<p class="muted">{message}</p>{/if}
 </div>

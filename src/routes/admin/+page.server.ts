@@ -1,52 +1,53 @@
 import { fail } from '@sveltejs/kit';
-import { count, eq } from 'drizzle-orm';
+import { and, desc, eq, gt, isNull } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
 import { getDb, getEnv } from '$lib/server/db';
-import { passkeys, users } from '$lib/server/db/schema';
-import { requireUser } from '$lib/server/guard';
+import { invites, users } from '$lib/server/db/schema';
+import { requireAdmin } from '$lib/server/guard';
 import { deleteAllSessions } from '$lib/server/auth/session';
-import { fetchUserExists } from '$lib/server/leetcode/client';
-import { syncRecentAc } from '$lib/server/game/sync';
-import { getState } from '$lib/server/game/state';
-import { isValidTimeZone } from '$lib/game/dates';
+import { createInvite } from '$lib/server/auth/register';
 
+/** Instance-wide settings: who can play, and everyone's sessions. Admin only; each player's own
+ *  settings are in /settings. */
 export const load: PageServerLoad = async ({ locals, platform }) => {
-	const user = requireUser(locals);
+	requireAdmin(locals);
 	const db = getDb(platform);
 	const env = getEnv(platform);
-	const [{ n }] = await db.select({ n: count() }).from(passkeys);
-	return {
-		user: { lcUsername: user.lcUsername ?? '', timezone: user.timezone, hasPremium: user.hasPremium },
-		passkeyCount: n,
-		setupTokenPresent: Boolean(env.SETUP_TOKEN),
-		lastSyncAt: await getState<number>(db, 'lastSyncAt', 0)
-	};
+	const players = await db
+		.select({ id: users.id, name: users.name, isAdmin: users.isAdmin, createdAt: users.createdAt })
+		.from(users)
+		.orderBy(users.createdAt)
+		.all();
+	const pending = await db
+		.select({ tokenHash: invites.tokenHash, name: invites.name, expiresAt: invites.expiresAt })
+		.from(invites)
+		.where(and(isNull(invites.usedAt), gt(invites.expiresAt, new Date())))
+		.orderBy(desc(invites.createdAt))
+		.all();
+	return { players, pending, setupTokenPresent: Boolean(env.SETUP_TOKEN) };
 };
 
 export const actions: Actions = {
-	profile: async ({ request, locals, platform }) => {
-		const user = requireUser(locals);
-		const db = getDb(platform);
-		const form = await request.formData();
-		const lcUsername = String(form.get('lcUsername') ?? '').trim();
-		const timezone = String(form.get('timezone') ?? '').trim();
-		if (!isValidTimeZone(timezone)) return fail(400, { profile: 'unknown timezone' });
-		if (lcUsername && !/^[\w.-]{1,40}$/.test(lcUsername)) return fail(400, { profile: 'username looks wrong' });
-		if (lcUsername && lcUsername !== user.lcUsername) {
-			const exists = await fetchUserExists(lcUsername).catch(() => true);
-			if (!exists) return fail(400, { profile: `LeetCode has no user "${lcUsername}"` });
-		}
-		await db.update(users).set({ lcUsername: lcUsername || null, timezone }).where(eq(users.id, user.id));
-		return { profile: 'saved' };
+	invite: async ({ request, locals, platform, url }) => {
+		const admin = requireAdmin(locals);
+		const name = String((await request.formData()).get('name') ?? '').trim();
+		if (!/^[\w .'-]{1,40}$/.test(name)) return fail(400, { invite: 'give the player a name (letters, digits, spaces)' });
+		const token = await createInvite(getDb(platform), admin.id, name);
+		// Shown once: only the hash is stored, so a lost link is revoked and reissued, not recovered.
+		return { invite: `${url.origin}/auth/register?invite=${token}`, inviteName: name };
 	},
-	sync: async ({ locals, platform }) => {
-		const user = requireUser(locals);
-		const r = await syncRecentAc(getDb(platform), user, new Date(), true);
-		return { sync: r.error ? `failed: ${r.error}` : `synced ${r.synced} new accepted submission(s)` };
+	revoke: async ({ request, locals, platform }) => {
+		requireAdmin(locals);
+		const tokenHash = String((await request.formData()).get('tokenHash') ?? '');
+		await getDb(platform)
+			.update(invites)
+			.set({ expiresAt: new Date(0) })
+			.where(and(eq(invites.tokenHash, tokenHash), isNull(invites.usedAt)));
+		return { revoked: true };
 	},
 	signOutEverywhere: async ({ locals, platform }) => {
-		requireUser(locals);
+		requireAdmin(locals);
 		await deleteAllSessions(getDb(platform));
-		return { sessions: 'all sessions revoked; you will be signed out on the next request' };
+		return { sessions: 'every player signed out on every device; you too, on the next request' };
 	}
 };

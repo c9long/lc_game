@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import type { Db } from '../db';
 import { ledger, planItems, plans } from '../db/schema';
 import { fetchDaily, type Daily } from '../leetcode/client';
@@ -19,10 +19,10 @@ export interface PlanItem {
 	pattern: string | null;
 }
 
-/** Today's LeetCode daily challenge, looked up once per local date. */
-export async function getDaily(db: Db, today: string): Promise<Daily | null> {
+/** Today's LeetCode daily challenge, looked up once per player per local date. */
+export async function getDaily(db: Db, uid: string, today: string): Promise<Daily | null> {
 	const key = `daily:${today}`;
-	const cached = await getState<Daily | null | undefined>(db, key, undefined);
+	const cached = await getState<Daily | null | undefined>(db, uid, key, undefined);
 	if (cached !== undefined) return cached;
 	let daily: Daily | null = null;
 	try {
@@ -30,7 +30,7 @@ export async function getDaily(db: Db, today: string): Promise<Daily | null> {
 	} catch {
 		daily = null;
 	}
-	await setState(db, key, daily);
+	await setState(db, uid, key, daily);
 	return daily;
 }
 
@@ -153,17 +153,26 @@ export function chooseSlots(
 /** Today's expedition: two problem slots from chooseSlots plus the Forge drill slot, persisted on
  *  first read so the day's plan is stable. */
 export async function getOrCreatePlan(db: Db, snap: Snapshot): Promise<PlanItem[]> {
-	const doneRows = await db.select({ slug: ledger.slug }).from(ledger).where(eq(ledger.date, snap.today)).all();
+	const uid = snap.user.id;
+	const doneRows = await db
+		.select({ slug: ledger.slug })
+		.from(ledger)
+		.where(and(eq(ledger.userId, uid), eq(ledger.date, snap.today)))
+		.all();
 	const doneToday = new Set(doneRows.map((r) => r.slug));
 
 	// The day's drill set is the source of truth for the Forge slot, exactly as the ledger is for
 	// problem slots. Reading it here means a plan regenerated mid-day reflects work already done.
-	const drillsDone = isSetComplete(await loadDrillSet(db, snap.today));
+	const drillsDone = isSetComplete(await loadDrillSet(db, uid, snap.today));
 
-	const existing = await db.select().from(planItems).where(eq(planItems.planDate, snap.today)).all();
+	const existing = await db
+		.select()
+		.from(planItems)
+		.where(and(eq(planItems.userId, uid), eq(planItems.planDate, snap.today)))
+		.all();
 	if (existing.length > 0) return decorate(existing, doneToday, drillsDone);
 
-	const daily = await getDaily(db, snap.today);
+	const daily = await getDaily(db, uid, snap.today);
 	const chosen = chooseSlots(snap, daily);
 
 	if (DRILL_LANGS.length > 0) {
@@ -172,11 +181,11 @@ export async function getOrCreatePlan(db: Db, snap: Snapshot): Promise<PlanItem[
 
 	if (chosen.length > 0) {
 		await db.batch([
-			db.insert(plans).values({ date: snap.today, createdAt: snap.now }).onConflictDoNothing(),
+			db.insert(plans).values({ userId: uid, date: snap.today, createdAt: snap.now }).onConflictDoNothing(),
 			...chosen.map((c) =>
 				db
 					.insert(planItems)
-					.values({ planDate: snap.today, slot: c.slot, slug: c.slug, kind: c.kind, done: c.done })
+					.values({ userId: uid, planDate: snap.today, slot: c.slot, slug: c.slug, kind: c.kind, done: c.done })
 					.onConflictDoNothing()
 			)
 		]);

@@ -1,4 +1,4 @@
-// In-memory fixed-window limiter. Per isolate, which is plenty for a single-user app;
+// In-memory fixed-window limiter. Per isolate, which is plenty for an app with a handful of players;
 // its purpose is to slow down credential guessing and judge spam, not to be exact.
 const buckets = new Map<string, { count: number; resetAt: number }>();
 

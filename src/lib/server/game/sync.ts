@@ -14,9 +14,9 @@ export async function syncRecentAc(
 	force = false
 ): Promise<{ synced: number; skipped: boolean; error?: string }> {
 	if (!user.lcUsername) return { synced: 0, skipped: true };
-	const last = await getState<number>(db, 'lastSyncAt', 0);
+	const last = await getState<number>(db, user.id, 'lastSyncAt', 0);
 	if (!force && now.getTime() - last < MIN_INTERVAL_MS) return { synced: 0, skipped: true };
-	await setState(db, 'lastSyncAt', now.getTime());
+	await setState(db, user.id, 'lastSyncAt', now.getTime());
 
 	let list;
 	try {

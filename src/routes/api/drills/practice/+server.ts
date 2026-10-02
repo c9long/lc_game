@@ -15,7 +15,7 @@ const LOCKED = {
 async function requireUnlocked(event: Parameters<RequestHandler>[0]): Promise<DrillSetState | Response> {
 	const user = requireUser(event.locals);
 	const db = getDb(event.platform);
-	const set = await loadDrillSet(db, localDate(new Date(), user.timezone));
+	const set = await loadDrillSet(db, user.id, localDate(new Date(), user.timezone));
 	if (!isSetComplete(set)) return json(LOCKED, { status: 403 });
 	return set!;
 }

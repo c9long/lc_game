@@ -25,22 +25,19 @@ export async function judgeErrorResponse(db: Db, e: unknown): Promise<Response> 
 	return json({ error: 'unknown', message: e instanceof Error ? e.message : String(e) }, { status: 500 });
 }
 
-export async function recordAttempt(
-	db: Db,
-	a: { slug: string; lang: string; kind: 'run' | 'submit'; code: string; lcId: string }
-): Promise<void> {
-	await db.insert(attempts).values({ id: randomId(), ...a, createdAt: new Date() });
-}
-
-export async function upsertDraft(db: Db, slug: string, lang: string, code: string): Promise<void> {
+export async function upsertDraft(db: Db, uid: string, slug: string, lang: string, code: string): Promise<void> {
 	const existing = await db
 		.select({ id: attempts.id })
 		.from(attempts)
-		.where(and(eq(attempts.slug, slug), eq(attempts.lang, lang), eq(attempts.kind, 'draft')))
+		.where(and(eq(attempts.userId, uid), eq(attempts.slug, slug), eq(attempts.lang, lang), eq(attempts.kind, 'draft')))
 		.get();
 	const now = new Date();
-	if (existing) await db.update(attempts).set({ code, createdAt: now }).where(eq(attempts.id, existing.id));
-	else await db.insert(attempts).values({ id: randomId(), slug, lang, kind: 'draft', code, createdAt: now });
+	if (existing)
+		await db
+			.update(attempts)
+			.set({ code, createdAt: now })
+			.where(and(eq(attempts.userId, uid), eq(attempts.id, existing.id)));
+	else await db.insert(attempts).values({ id: randomId(), userId: uid, slug, lang, kind: 'draft', code, createdAt: now });
 }
 
 /** Records that solutions were looked at, once per problem per day -- but only when it matters.
@@ -57,12 +54,12 @@ export async function upsertDraft(db: Db, slug: string, lang: string, code: stri
  *  the due date on); skipping the write here as well is what closes the same-day gap, since the
  *  table keeps one row per problem per day.
  */
-export async function recordSolutionView(db: Db, slug: string, date: string): Promise<void> {
+export async function recordSolutionView(db: Db, uid: string, slug: string, date: string): Promise<void> {
 	const now = new Date();
 	const state = await db
 		.select({ solveCount: problemState.solveCount, dueAt: problemState.dueAt })
 		.from(problemState)
-		.where(eq(problemState.slug, slug))
+		.where(and(eq(problemState.userId, uid), eq(problemState.slug, slug)))
 		.get();
 	const dueAt = state && state.solveCount > 0 ? state.dueAt : null;
 	if (dueAt && dueAt.getTime() > now.getTime()) return; // solved and not due: a free look
@@ -70,10 +67,10 @@ export async function recordSolutionView(db: Db, slug: string, date: string): Pr
 	const existing = await db
 		.select({ createdAt: solutionViews.createdAt })
 		.from(solutionViews)
-		.where(and(eq(solutionViews.slug, slug), eq(solutionViews.date, date)))
+		.where(and(eq(solutionViews.userId, uid), eq(solutionViews.slug, slug), eq(solutionViews.date, date)))
 		.get();
 	if (!existing) {
-		await db.insert(solutionViews).values({ slug, date, createdAt: now });
+		await db.insert(solutionViews).values({ userId: uid, slug, date, createdAt: now });
 		return;
 	}
 	// One row per day: a row left from earlier today, before the problem fell due (only possible
@@ -82,7 +79,7 @@ export async function recordSolutionView(db: Db, slug: string, date: string): Pr
 		await db
 			.update(solutionViews)
 			.set({ createdAt: now })
-			.where(and(eq(solutionViews.slug, slug), eq(solutionViews.date, date)));
+			.where(and(eq(solutionViews.userId, uid), eq(solutionViews.slug, slug), eq(solutionViews.date, date)));
 	}
 }
 

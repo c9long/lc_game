@@ -4,13 +4,14 @@
 	import { beforeNavigate } from '$app/navigation';
 	import ResourceBar from '$lib/components/ResourceBar.svelte';
 	let { data, children } = $props();
-	const links = [
+	const links = $derived([
 		['/', 'Today'],
 		['/tree', 'Tech tree'],
 		['/drills', 'Drills'],
 		['/city', 'City'],
-		['/admin', 'Admin']
-	];
+		['/settings', 'Settings'],
+		...(data.user?.isAdmin ? [['/admin', 'Admin']] : [])
+	]);
 	// Once a new version is deployed, the next navigation loads it properly rather than carrying
 	// on with client code that no longer matches the server and the judge worker.
 	beforeNavigate(({ willUnload, to }) => {

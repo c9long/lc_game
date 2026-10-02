@@ -1,4 +1,4 @@
-import { eq, gte, sql } from 'drizzle-orm';
+import { and, eq, gte, sql } from 'drizzle-orm';
 import type { Db } from '../db';
 import { awards, buildings, gameState, ledger, problemState, resources, type User } from '../db/schema';
 import { weeklyCount } from '$lib/game/budget';
@@ -30,24 +30,33 @@ export interface Snapshot {
 	tickCoins: number;
 }
 
-export async function getState<T>(db: Db, key: string, fallback: T): Promise<T> {
-	const row = await db.select().from(gameState).where(eq(gameState.key, key)).get();
+// Every game table is per player: each helper here takes the player's id (`uid`) and scopes to it.
+
+export async function getState<T>(db: Db, uid: string, key: string, fallback: T): Promise<T> {
+	const row = await db
+		.select()
+		.from(gameState)
+		.where(and(eq(gameState.userId, uid), eq(gameState.key, key)))
+		.get();
 	return row ? (row.value as T) : fallback;
 }
 
-export async function setState(db: Db, key: string, value: unknown): Promise<void> {
+export async function setState(db: Db, uid: string, key: string, value: unknown): Promise<void> {
 	const now = new Date();
 	await db
 		.insert(gameState)
-		.values({ key, value, updatedAt: now })
-		.onConflictDoUpdate({ target: gameState.key, set: { value, updatedAt: now } });
+		.values({ userId: uid, key, value, updatedAt: now })
+		.onConflictDoUpdate({ target: [gameState.userId, gameState.key], set: { value, updatedAt: now } });
 }
 
-export function addResourceStatement(db: Db, kind: string, amount: number) {
+export function addResourceStatement(db: Db, uid: string, kind: string, amount: number) {
 	return db
 		.insert(resources)
-		.values({ kind, amount })
-		.onConflictDoUpdate({ target: resources.kind, set: { amount: sql`${resources.amount} + excluded.amount` } });
+		.values({ userId: uid, kind, amount })
+		.onConflictDoUpdate({
+			target: [resources.userId, resources.kind],
+			set: { amount: sql`${resources.amount} + excluded.amount` }
+		});
 }
 
 /** The grid shrank to 6x6 and grew terrain, so buildings from the old open 8x8 can be standing
@@ -60,12 +69,13 @@ export function addResourceStatement(db: Db, kind: string, amount: number) {
  *  every load after the first. */
 const SCRATCH_CITY = STORAGE - 1;
 
-async function applyRelocations(db: Db, placed: PlacedBuilding[]): Promise<void> {
+async function applyRelocations(db: Db, uid: string, placed: PlacedBuilding[]): Promise<void> {
 	const moves = relocate(placed);
 	if (moves.length === 0) return;
+	const mine = (id: string) => and(eq(buildings.userId, uid), eq(buildings.id, id));
 	const statements = [
-		...moves.map((m, i) => db.update(buildings).set({ city: SCRATCH_CITY, x: i, y: 0 }).where(eq(buildings.id, m.id))),
-		...moves.map((m) => db.update(buildings).set({ city: m.city, x: m.x, y: m.y }).where(eq(buildings.id, m.id)))
+		...moves.map((m, i) => db.update(buildings).set({ city: SCRATCH_CITY, x: i, y: 0 }).where(mine(m.id))),
+		...moves.map((m) => db.update(buildings).set({ city: m.city, x: m.x, y: m.y }).where(mine(m.id)))
 	] as unknown as Parameters<typeof db.batch>[0];
 	await db.batch(statements);
 	for (const m of moves) {
@@ -76,8 +86,9 @@ async function applyRelocations(db: Db, placed: PlacedBuilding[]): Promise<void>
 
 export async function loadSnapshot(db: Db, user: User, now = new Date()): Promise<Snapshot> {
 	const today = localDate(now, user.timezone);
+	const uid = user.id;
 
-	const stateRows = await db.select().from(problemState).all();
+	const stateRows = await db.select().from(problemState).where(eq(problemState.userId, uid)).all();
 	const progress = new Map<string, Progress>();
 	let totalSolves = 0;
 	let hardSolves = 0;
@@ -96,23 +107,31 @@ export async function loadSnapshot(db: Db, user: User, now = new Date()): Promis
 		}
 	}
 
-	const awardRows = await db.select({ slug: awards.slug, research: awards.research }).from(awards).all();
+	const awardRows = await db
+		.select({ slug: awards.slug, research: awards.research })
+		.from(awards)
+		.where(eq(awards.userId, uid))
+		.all();
 	const research = new Map<string, number>();
 	for (const a of awardRows) {
 		const nodeId = PROBLEM_BY_SLUG.get(a.slug)?.nodeId;
 		if (nodeId) research.set(nodeId, (research.get(nodeId) ?? 0) + a.research);
 	}
 
-	const resRows = await db.select().from(resources).all();
+	const resRows = await db.select().from(resources).where(eq(resources.userId, uid)).all();
 	const res: Record<string, number> = {};
 	for (const r of resRows) res[r.kind] = r.amount;
 
-	const bRows = await db.select().from(buildings).all();
+	const bRows = await db.select().from(buildings).where(eq(buildings.userId, uid)).all();
 	const placed: PlacedBuilding[] = bRows.map((b) => ({ id: b.id, kind: b.kind, city: b.city, x: b.x, y: b.y, level: b.level }));
-	await applyRelocations(db, placed);
+	await applyRelocations(db, uid, placed);
 
 	const since = addDays(today, -70);
-	const ledgerRows = await db.select({ date: ledger.date }).from(ledger).where(gte(ledger.date, since)).all();
+	const ledgerRows = await db
+		.select({ date: ledger.date })
+		.from(ledger)
+		.where(and(eq(ledger.userId, uid), gte(ledger.date, since)))
+		.all();
 	const ledgerDates = ledgerRows.map((r) => r.date);
 
 	const tree = computeTree({ progress, research, now });
@@ -120,7 +139,7 @@ export async function loadSnapshot(db: Db, user: User, now = new Date()): Promis
 	// Coins accrue lazily: every unpaid active day since the last settlement is paid now, at the
 	// city's current rate. There is no other tick left -- morale used to advance here as well.
 	const active = new Set(ledgerDates);
-	const settledThrough = await getState<string>(db, 'coinsAsOf', addDays(today, -1));
+	const settledThrough = await getState<string>(db, uid, 'coinsAsOf', addDays(today, -1));
 	const settled = settleProduction({
 		coinsAsOf: settledThrough,
 		today,
@@ -130,9 +149,9 @@ export async function loadSnapshot(db: Db, user: User, now = new Date()): Promis
 		addDays
 	});
 	const tickCoins = settled.coins;
-	if (settled.coinsAsOf !== settledThrough) await setState(db, 'coinsAsOf', settled.coinsAsOf);
+	if (settled.coinsAsOf !== settledThrough) await setState(db, uid, 'coinsAsOf', settled.coinsAsOf);
 	if (tickCoins > 0) {
-		await addResourceStatement(db, 'coins', tickCoins);
+		await addResourceStatement(db, uid, 'coins', tickCoins);
 		res.coins = (res.coins ?? 0) + tickCoins;
 	}
 

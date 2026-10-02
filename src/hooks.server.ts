@@ -2,7 +2,7 @@ import { error, redirect, type Handle } from '@sveltejs/kit';
 import { getDb } from '$lib/server/db';
 import { SESSION_COOKIE, validateSession } from '$lib/server/auth/session';
 
-// Paths reachable without a session. Everything else requires the single registered user.
+// Paths reachable without a session. Everything else requires a signed-in player.
 // /pyodide/ carries the judge worker, the WASM runtime and driver.py. The worker and the fetches
 // it makes are same-origin and would normally carry the session cookie, but static runtime assets
 // have no business going through the auth redirect — same reasoning as /monaco/.

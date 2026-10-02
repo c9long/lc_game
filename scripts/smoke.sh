@@ -17,13 +17,16 @@ fi
 
 TOKEN="smoke-$(openssl rand -hex 8)"
 HASH=$(printf '%s' "$TOKEN" | sha256sum | cut -d' ' -f1)
+# A second, non-admin player, for the isolation checks at the end.
+TOKEN2="smoke-$(openssl rand -hex 8)"
+HASH2=$(printf '%s' "$TOKEN2" | sha256sum | cut -d' ' -f1)
 NOW=$(date +%s000)
 EXP=$((NOW + 2592000000))
 
 $W migrations apply lc-game --local --persist-to "$STATE" >/dev/null
 $W execute lc-game --local --persist-to "$STATE" --command \
-  "INSERT INTO users (id, lc_username, timezone, has_premium, created_at) VALUES ('smoke-user', NULL, 'UTC', 0, $NOW);
-   INSERT INTO sessions (id, user_id, expires_at, created_at) VALUES ('$HASH', 'smoke-user', $EXP, $NOW);" >/dev/null
+  "INSERT INTO users (id, name, lc_username, timezone, is_admin, created_at) VALUES ('smoke-user', 'admin', NULL, 'UTC', 1, $NOW), ('smoke-friend', 'friend', NULL, 'UTC', 0, $((NOW + 1)));
+   INSERT INTO sessions (id, user_id, expires_at, created_at) VALUES ('$HASH', 'smoke-user', $EXP, $NOW), ('$HASH2', 'smoke-friend', $EXP, $NOW);" >/dev/null
 
 # Own process group so cleanup kills vite and workerd, not just the pnpm wrapper.
 setsid pnpm dev --port "$PORT" --strictPort >"$LOG" 2>&1 &
@@ -58,6 +61,7 @@ check 200 -H "cookie: lc_session=$TOKEN" "$B/tree"
 check 200 -H "cookie: lc_session=$TOKEN" "$B/tree/arrays-hashing"
 check 200 -H "cookie: lc_session=$TOKEN" "$B/city"
 check 200 -H "cookie: lc_session=$TOKEN" "$B/admin"
+check 200 -H "cookie: lc_session=$TOKEN" "$B/settings"
 check 200 -H "cookie: lc_session=$TOKEN" "$B/solve/two-sum"
 check 404 -H "cookie: lc_session=$TOKEN" "$B/tree/no-such-node"
 check 200 -H "cookie: lc_session=$TOKEN" "$B/api/solve/two-sum/tests"
@@ -167,7 +171,7 @@ fi
 # load of the day, when today's ledger is still empty — so a day with buildings and solves earned
 # nothing, and never got another chance. Two huts must yield two coins.
 $W execute lc-game --local --persist-to "$STATE" --command \
-  "INSERT OR IGNORE INTO buildings (id, kind, x, y, level, built_at) VALUES ('smoke-hut-a','hut',0,0,1,$NOW), ('smoke-hut-b','hut',1,0,1,$NOW);" >/dev/null
+  "INSERT OR IGNORE INTO buildings (id, user_id, kind, x, y, level, built_at) VALUES ('smoke-hut-a','smoke-user','hut',0,0,1,$NOW), ('smoke-hut-b','smoke-user','hut',1,0,1,$NOW);" >/dev/null
 curl -s -o /dev/null -H "cookie: lc_session=$TOKEN" "$B/"   # first load of the day: nothing solved yet
 COINS_BEFORE=$($W execute lc-game --local --persist-to "$STATE" --json --command "SELECT amount FROM resources WHERE kind='coins'" 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s)[0].results;console.log(r.length?r[0].amount:0)})')
 curl -s -o /dev/null -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" \
@@ -204,8 +208,8 @@ for spec in "contains-duplicate:$((NOW - 5 * DAY)):1:a look before the due date 
             "valid-anagram:$((NOW - DAY / 2)):0:a look after the due date marks the refresh assisted"; do
   IFS=: read -r SLUG VIEW_AT WANT_STEP LABEL <<<"$spec"
   $W execute lc-game --local --persist-to "$STATE" --command \
-    "INSERT INTO problem_state (slug, first_solved_at, last_solved_at, solve_count, last_lang, srs_step, due_at) VALUES ('$SLUG', $((NOW - 10 * DAY)), $((NOW - 10 * DAY)), 1, 'python3', 0, $((NOW - DAY)));
-     INSERT INTO solution_views (slug, date, created_at) VALUES ('$SLUG', '2000-01-01', $VIEW_AT);" >/dev/null
+    "INSERT INTO problem_state (user_id, slug, first_solved_at, last_solved_at, solve_count, last_lang, srs_step, due_at) VALUES ('smoke-user', '$SLUG', $((NOW - 10 * DAY)), $((NOW - 10 * DAY)), 1, 'python3', 0, $((NOW - DAY)));
+     INSERT INTO solution_views (user_id, slug, date, created_at) VALUES ('smoke-user', '$SLUG', '2000-01-01', $VIEW_AT);" >/dev/null
   curl -s -o /dev/null -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" \
     -d '{"lang":"python3","code":"x","kind":"submit","verdict":"Accepted","passed":3,"total":3}' "$B/api/solve/$SLUG/verdict"
   STEP=$(q "SELECT srs_step FROM problem_state WHERE slug='$SLUG'")
@@ -230,7 +234,7 @@ fi
 # Cities and terrain. A building left over from the old open 8x8 is moved onto a tile that exists
 # and that its kind is allowed to stand on, the first time the city is loaded.
 $W execute lc-game --local --persist-to "$STATE" --command \
-  "INSERT OR IGNORE INTO buildings (id, kind, city, x, y, level, built_at) VALUES ('smoke-far','hut',0,7,7,2,$NOW), ('smoke-wet','pointer-bridge',0,4,0,1,$NOW), ('smoke-clock','interval-clock',0,3,1,1,$NOW), ('smoke-mill','window-mill',0,5,0,1,$NOW);" >/dev/null
+  "INSERT OR IGNORE INTO buildings (id, user_id, kind, city, x, y, level, built_at) VALUES ('smoke-far','smoke-user','hut',0,7,7,2,$NOW), ('smoke-wet','smoke-user','pointer-bridge',0,4,0,1,$NOW), ('smoke-clock','smoke-user','interval-clock',0,3,1,1,$NOW), ('smoke-mill','smoke-user','window-mill',0,5,0,1,$NOW);" >/dev/null
 curl -s -o /dev/null -H "cookie: lc_session=$TOKEN" "$B/city"
 FAR=$(q "SELECT x || ',' || y AS at FROM buildings WHERE id='smoke-far'")
 WET=$(q "SELECT x || ',' || y AS at FROM buildings WHERE id='smoke-wet'")
@@ -273,6 +277,49 @@ done
 for route in /tree /drills /solve/two-sum; do
   [ "$(has_bar $route)" = "no" ] && echo "ok   resource bar hidden on $route" || { echo "FAIL resource bar should be hidden on $route"; fail=1; }
 done
+
+
+# Two players. Everything above was the admin; the friend must start from nothing, see none of it,
+# change none of it, and be kept out of /admin.
+A_STATE() { q "SELECT (SELECT group_concat(kind || '=' || amount) FROM (SELECT * FROM resources WHERE user_id='smoke-user' ORDER BY kind)) || '|' || (SELECT count(*) FROM buildings WHERE user_id='smoke-user') || '|' || (SELECT count(*) FROM problem_state WHERE user_id='smoke-user') || '|' || (SELECT count(*) FROM plan_items WHERE user_id='smoke-user') || '|' || (SELECT count(*) FROM drill_state WHERE user_id='smoke-user') AS s"; }
+A_BEFORE=$(A_STATE)
+check 200 -H "cookie: lc_session=$TOKEN2" "$B/"
+check 200 -H "cookie: lc_session=$TOKEN2" "$B/city"
+check 200 -H "cookie: lc_session=$TOKEN2" "$B/drills"
+check 200 -H "cookie: lc_session=$TOKEN2" "$B/settings"
+check 200 -H "cookie: lc_session=$TOKEN2" "$B/solve/two-sum"
+check 403 -H "cookie: lc_session=$TOKEN2" "$B/admin"
+check 403 -X POST -H "cookie: lc_session=$TOKEN2" -H "origin: $B" -H "content-type: application/x-www-form-urlencoded" -d 'name=mallory' "$B/admin?/invite"
+check 403 -X POST -H "cookie: lc_session=$TOKEN2" -H "origin: $B" -H "content-type: application/x-www-form-urlencoded" -d "" "$B/admin?/signOutEverywhere"
+check 404 -X POST -H "cookie: lc_session=$TOKEN2" -H "content-type: application/json" -d '{"id":"smoke-far"}' "$B/api/city/destroy"
+case "$(curl -s -X POST -H "cookie: lc_session=$TOKEN2" -H "content-type: application/json" -d '{"id":"smoke-clock","city":0,"x":5,"y":5}' "$B/api/city/move")" in
+  *not_found*) echo "ok   the friend cannot move the admin's building" ;; *) echo "FAIL the friend reached the admin's building"; fail=1 ;; esac
+curl -s -o /dev/null -X POST -H "cookie: lc_session=$TOKEN2" -H "content-type: application/json" \
+  -d '{"lang":"python3","code":"x","kind":"submit","verdict":"Accepted","passed":3,"total":3}' "$B/api/solve/two-sum/verdict"
+curl -s -o /dev/null -X POST -H "cookie: lc_session=$TOKEN2" -H "content-type: application/json" -d '{"lang":"python3","code":"friend draft"}' "$B/api/solve/two-sum/draft"
+A_AFTER=$(A_STATE)
+if [ "$A_BEFORE" = "$A_AFTER" ]; then echo "ok   the friend's play left the admin's state untouched"; else echo "FAIL admin state changed: $A_BEFORE -> $A_AFTER"; fail=1; fi
+F_SOLVES=$(q "SELECT count(*) AS n FROM problem_state WHERE user_id='smoke-friend'")
+F_BUILDINGS=$(q "SELECT count(*) AS n FROM buildings WHERE user_id='smoke-friend'")
+F_SET=$(q "SELECT count(*) AS n FROM game_state WHERE user_id='smoke-friend' AND key LIKE 'drillset:%'")
+if [ "$F_SOLVES" = "1" ] && [ "$F_BUILDINGS" = "0" ] && [ "$F_SET" = "1" ]; then
+  echo "ok   the friend has their own solve, no buildings and their own drill set"
+else
+  echo "FAIL friend state: solves $F_SOLVES (want 1), buildings $F_BUILDINGS (want 0), drill sets $F_SET (want 1)"; fail=1
+fi
+if curl -s -H "cookie: lc_session=$TOKEN" "$B/solve/two-sum" | grep -q 'friend draft'; then
+  echo "FAIL the admin's editor loaded the friend's draft"; fail=1
+else
+  echo "ok   drafts are per player"
+fi
+
+# Invites: the admin makes one, the link opens registration for a new player, and only the admin can.
+INV_PAGE=$(curl -s -X POST -H "cookie: lc_session=$TOKEN" -H "origin: $B" -H "content-type: application/x-www-form-urlencoded" -H "accept: application/json" -d 'name=Pat' "$B/admin?/invite")
+INV_URL=$(printf '%s' "$INV_PAGE" | grep -o 'auth/register?invite=[A-Za-z0-9_-]*' | head -1)
+if [ -z "$INV_URL" ]; then echo "FAIL no invite link: $INV_PAGE"; fail=1; else
+  if curl -s "$B/$INV_URL" | grep -q 'invited as'; then echo "ok   an invite link opens registration"; else echo "FAIL the invite link did not open registration"; fail=1; fi
+  if curl -s "$B/auth/register?invite=nope" | grep -q 'Registration is closed'; then echo "ok   a bad invite is refused"; else echo "FAIL a bad invite was accepted"; fail=1; fi
+fi
 
 if [ "$fail" = 1 ]; then echo "--- dev server log tail"; tail -40 "$LOG"; exit 1; fi
 echo "smoke test passed"

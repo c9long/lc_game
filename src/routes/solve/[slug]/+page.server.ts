@@ -25,16 +25,22 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 	if (!problem) error(404, 'problem not found on LeetCode (or LeetCode is unreachable)');
 	const cur = PROBLEM_BY_SLUG.get(slug) ?? null;
 
-	const state = await db.select().from(problemState).where(eq(problemState.slug, slug)).get();
+	const state = await db
+		.select()
+		.from(problemState)
+		.where(and(eq(problemState.userId, user.id), eq(problemState.slug, slug)))
+		.get();
 	const draftRows = await db
 		.select({ lang: attempts.lang, code: attempts.code, createdAt: attempts.createdAt })
 		.from(attempts)
-		.where(and(eq(attempts.slug, slug), eq(attempts.kind, 'draft')))
+		.where(and(eq(attempts.userId, user.id), eq(attempts.slug, slug), eq(attempts.kind, 'draft')))
 		.all();
 	const acceptedRows = await db
 		.select({ lang: attempts.lang, code: attempts.code, createdAt: attempts.createdAt })
 		.from(attempts)
-		.where(and(eq(attempts.slug, slug), eq(attempts.kind, 'submit'), eq(attempts.accepted, true)))
+		.where(
+			and(eq(attempts.userId, user.id), eq(attempts.slug, slug), eq(attempts.kind, 'submit'), eq(attempts.accepted, true))
+		)
 		.orderBy(desc(attempts.createdAt))
 		.limit(20)
 		.all();

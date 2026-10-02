@@ -23,12 +23,13 @@ export interface DrillSetState {
 
 const key = (date: string) => `drillset:${date}`;
 
-export async function loadDrillProgress(db: Db, ids?: string[]): Promise<Map<string, DrillProgress>> {
+export async function loadDrillProgress(db: Db, uid: string, ids?: string[]): Promise<Map<string, DrillProgress>> {
+	const mine = eq(drillState.userId, uid);
 	const rows = ids
 		? ids.length
-			? await db.select().from(drillState).where(inArray(drillState.drillId, ids)).all()
+			? await db.select().from(drillState).where(and(mine, inArray(drillState.drillId, ids))).all()
 			: []
-		: await db.select().from(drillState).all();
+		: await db.select().from(drillState).where(mine).all();
 	return new Map(rows.map((r) => [r.drillId, { srsStep: r.srsStep, dueAt: r.dueAt, correct: r.correct, wrong: r.wrong }]));
 }
 
@@ -39,13 +40,13 @@ export function langForDate(date: string): string {
 	return DRILL_LANGS[dayNum % DRILL_LANGS.length];
 }
 
-export async function getOrCreateDrillSet(db: Db, today: string, now: Date): Promise<DrillSetState | null> {
-	const existing = await getState<DrillSetState | null>(db, key(today), null);
+export async function getOrCreateDrillSet(db: Db, uid: string, today: string, now: Date): Promise<DrillSetState | null> {
+	const existing = await getState<DrillSetState | null>(db, uid, key(today), null);
 	if (existing) return existing;
 	const lang = langForDate(today);
 	const bank = DRILL_BANKS[lang] ?? [];
 	if (bank.length === 0) return null;
-	const progress = await loadDrillProgress(db);
+	const progress = await loadDrillProgress(db, uid);
 	const set = buildDrillSet(bank, progress, now);
 	if (set.length === 0) return null;
 	// Which instance of each drill to serve. Answering correctly moves to the next one, so a drill
@@ -61,7 +62,7 @@ export async function getOrCreateDrillSet(db: Db, today: string, now: Date): Pro
 		ingots: 0,
 		bonusPaid: false
 	};
-	await setState(db, key(today), state);
+	await setState(db, uid, key(today), state);
 	return state;
 }
 
@@ -87,7 +88,8 @@ export async function answerDrill(
 	drillId: string,
 	answer: string
 ): Promise<AnswerResult | { error: string }> {
-	const set = await getState<DrillSetState | null>(db, key(today), null);
+	const uid = user.id;
+	const set = await getState<DrillSetState | null>(db, uid, key(today), null);
 	if (!set || !set.ids.includes(drillId)) return { error: 'that drill is not in today\'s set' };
 	if (drillId in set.results) return { error: 'already answered' };
 	const base: Drill | undefined = drillById(drillId);
@@ -96,9 +98,14 @@ export async function answerDrill(
 	const drill = drillInstance(base, set.variants?.[drillId] ?? 0);
 
 	const correct = checkAnswer(drill, answer);
-	const prev = await db.select().from(drillState).where(eq(drillState.drillId, drillId)).get();
+	const prev = await db
+		.select()
+		.from(drillState)
+		.where(and(eq(drillState.userId, uid), eq(drillState.drillId, drillId)))
+		.get();
 	const srs = afterDrill(prev ? { srsStep: prev.srsStep, dueAt: prev.dueAt } : null, correct, now);
 	const nextState = {
+		userId: uid,
 		drillId,
 		lang: base.lang,
 		srsStep: srs.srsStep,
@@ -112,26 +119,31 @@ export async function answerDrill(
 	const results = set.ids.map((id) => set.results[id]).filter((r): r is boolean => r !== undefined);
 	const setDone = results.length === set.ids.length;
 	// Monuments standing in a city add +100% each to what a correct answer pays.
-	const multiplier = await ingotMultiplier(db);
+	const multiplier = await ingotMultiplier(db, uid);
 	const delta = ingotsForAnswer(correct, setDone ? results : [], multiplier);
 	set.ingots += delta;
 	set.bonusPaid = setDone;
 
 	const statements: BatchItem<'sqlite'>[] = [
-		db.insert(drillState).values(nextState).onConflictDoUpdate({ target: drillState.drillId, set: nextState }),
-		db.insert(drillAttempts).values({ id: randomId(), drillId, date: today, correct, answer: answer.slice(0, 500), createdAt: now })
+		db
+			.insert(drillState)
+			.values(nextState)
+			.onConflictDoUpdate({ target: [drillState.userId, drillState.drillId], set: nextState }),
+		db
+			.insert(drillAttempts)
+			.values({ id: randomId(), userId: uid, drillId, date: today, correct, answer: answer.slice(0, 500), createdAt: now })
 	];
-	if (delta > 0) statements.push(addResourceStatement(db, 'ingots', delta));
+	if (delta > 0) statements.push(addResourceStatement(db, uid, 'ingots', delta));
 	if (setDone) {
 		statements.push(
 			db
 				.update(planItems)
 				.set({ done: true })
-				.where(and(eq(planItems.planDate, today), eq(planItems.kind, 'drills')))
+				.where(and(eq(planItems.userId, uid), eq(planItems.planDate, today), eq(planItems.kind, 'drills')))
 		);
 	}
 	await db.batch(statements as [BatchItem<'sqlite'>, ...BatchItem<'sqlite'>[]]);
-	await setState(db, key(today), set);
+	await setState(db, uid, key(today), set);
 
 	return {
 		correct,
@@ -156,13 +168,17 @@ export async function answerDrill(
 // schedule it is meant to support. Keeping it ephemeral means "no rewards" has no asterisk.
 
 /** The Ingot multiplier from Monuments currently standing in a city. */
-export async function ingotMultiplier(db: Db): Promise<number> {
-	const rows = await db.select({ kind: buildings.kind, city: buildings.city }).from(buildings).where(eq(buildings.kind, 'monument')).all();
+export async function ingotMultiplier(db: Db, uid: string): Promise<number> {
+	const rows = await db
+		.select({ kind: buildings.kind, city: buildings.city })
+		.from(buildings)
+		.where(and(eq(buildings.userId, uid), eq(buildings.kind, 'monument')))
+		.all();
 	return drillIngotMultiplier(rows);
 }
 
-export async function loadDrillSet(db: Db, today: string): Promise<DrillSetState | null> {
-	return getState<DrillSetState | null>(db, key(today), null);
+export async function loadDrillSet(db: Db, uid: string, today: string): Promise<DrillSetState | null> {
+	return getState<DrillSetState | null>(db, uid, key(today), null);
 }
 
 export function isSetComplete(set: DrillSetState | null): boolean {

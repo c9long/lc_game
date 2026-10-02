@@ -34,10 +34,11 @@ export interface ApplyResult {
 /** Turns an accepted LeetCode submission into research, resources, a ledger credit and a new SRS schedule. Idempotent on submissionId. */
 export async function applyAccepted(db: Db, user: User, input: AcceptedInput): Promise<ApplyResult> {
 	const date = localDate(input.acceptedAt, user.timezone);
+	const uid = user.id;
 	const existing = await db
 		.select({ id: awards.submissionId })
 		.from(awards)
-		.where(eq(awards.submissionId, input.submissionId))
+		.where(and(eq(awards.userId, uid), eq(awards.submissionId, input.submissionId)))
 		.get();
 	if (existing) return { duplicate: true, counted: false, date };
 
@@ -47,16 +48,21 @@ export async function applyAccepted(db: Db, user: User, input: AcceptedInput): P
 	const tags = cached?.tags ?? [];
 	const title = cur?.title ?? cached?.title;
 
-	const prev = await db.select().from(problemState).where(eq(problemState.slug, input.slug)).get();
+	const prev = await db
+		.select()
+		.from(problemState)
+		.where(and(eq(problemState.userId, uid), eq(problemState.slug, input.slug)))
+		.get();
 	const alreadyToday = await db
 		.select({ id: ledger.id })
 		.from(ledger)
-		.where(and(eq(ledger.slug, input.slug), eq(ledger.date, date)))
+		.where(and(eq(ledger.userId, uid), eq(ledger.slug, input.slug), eq(ledger.date, date)))
 		.get();
 	const now = input.acceptedAt;
 
 	if (alreadyToday) {
 		await db.insert(awards).values({
+			userId: uid,
 			submissionId: input.submissionId,
 			slug: input.slug,
 			lang: input.lang,
@@ -86,6 +92,7 @@ export async function applyAccepted(db: Db, user: User, input: AcceptedInput): P
 		.from(solutionViews)
 		.where(
 			and(
+				eq(solutionViews.userId, uid),
 				eq(solutionViews.slug, input.slug),
 				dueFrom ? gte(solutionViews.createdAt, dueFrom) : eq(solutionViews.date, date)
 			)
@@ -93,8 +100,8 @@ export async function applyAccepted(db: Db, user: User, input: AcceptedInput): P
 		.get();
 	const isRefresh = Boolean(prev && prev.solveCount > 0);
 	const assisted = isRefresh && Boolean(viewed);
-	const daily = await getState<Daily | null>(db, `daily:${date}`, null);
-	const placed: PlacedBuilding[] = (await db.select().from(buildings).all()).map((b) => ({
+	const daily = await getState<Daily | null>(db, uid, `daily:${date}`, null);
+	const placed: PlacedBuilding[] = (await db.select().from(buildings).where(eq(buildings.userId, uid)).all()).map((b) => ({
 		id: b.id, kind: b.kind, city: b.city, x: b.x, y: b.y, level: b.level
 	}));
 
@@ -113,6 +120,7 @@ export async function applyAccepted(db: Db, user: User, input: AcceptedInput): P
 		now
 	);
 	const nextState = {
+		userId: uid,
 		slug: input.slug,
 		firstSolvedAt: prev?.firstSolvedAt ?? now,
 		lastSolvedAt: now,
@@ -124,6 +132,7 @@ export async function applyAccepted(db: Db, user: User, input: AcceptedInput): P
 
 	await db.batch([
 		db.insert(awards).values({
+			userId: uid,
 			submissionId: input.submissionId,
 			slug: input.slug,
 			lang: input.lang,
@@ -133,16 +142,16 @@ export async function applyAccepted(db: Db, user: User, input: AcceptedInput): P
 			date,
 			createdAt: now
 		}),
-		db.insert(ledger).values({ id: randomId(), slug: input.slug, date, kind: award.kind, createdAt: now }),
+		db.insert(ledger).values({ id: randomId(), userId: uid, slug: input.slug, date, kind: award.kind, createdAt: now }),
 		db
 			.insert(problemState)
 			.values(nextState)
-			.onConflictDoUpdate({ target: problemState.slug, set: nextState }),
-		...Object.entries(award.resources).map(([kind, amount]) => addResourceStatement(db, kind, amount)),
+			.onConflictDoUpdate({ target: [problemState.userId, problemState.slug], set: nextState }),
+		...Object.entries(award.resources).map(([kind, amount]) => addResourceStatement(db, uid, kind, amount)),
 		db
 			.update(planItems)
 			.set({ done: true })
-			.where(and(eq(planItems.planDate, date), eq(planItems.slug, input.slug)))
+			.where(and(eq(planItems.userId, uid), eq(planItems.planDate, date), eq(planItems.slug, input.slug)))
 	]);
 
 	return { duplicate: false, counted: true, award, date, nodeId: cur?.nodeId, title };
