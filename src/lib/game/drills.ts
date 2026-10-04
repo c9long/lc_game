@@ -36,13 +36,13 @@ export interface DrillVariant {
 	alternatives?: string[];
 }
 
-export const DRILL_SET_SIZE = 5;
+export const DRILL_SET_SIZE = 8;
 /** How many of a set may be reviews. The rest introduce new material, when any is left.
  *
  *  Without this the day is filled purely by what is due, most overdue first, and a backlog in one
  *  module owns every slot: nine heapq drills started early meant a set of five heapq drills, then
  *  another, indefinitely, because the set never reached the new-material stage at all. */
-export const MAX_DUE_PER_SET = 3;
+export const MAX_DUE_PER_SET = 5;
 export const INGOT_PER_CORRECT = 1;
 export const PERFECT_SET_BONUS = 2;
 /** Faster ladder than problems: drills are cheap to repeat. Days. */
@@ -152,11 +152,13 @@ export function buildDrillSet(
 	return out;
 }
 
-/** Ingots for a whole set. `multiplier` applies to each correct answer (Monuments); the perfect-set
- *  bonus is a flat reward for the set and is not multiplied. */
+/** Ingots for a whole, finished set. `multiplier` applies to each correct answer (Monuments); the
+ *  perfect-set bonus is a flat reward for the set and is not multiplied. A set's size is whatever it
+ *  was built with -- sets built before DRILL_SET_SIZE grew, or short because the bank ran low, still
+ *  earn the bonus when every answer is right. */
 export function ingotsFor(results: boolean[], multiplier = 1): number {
 	const correct = results.filter(Boolean).length;
-	const bonus = results.length >= DRILL_SET_SIZE && correct === results.length ? PERFECT_SET_BONUS : 0;
+	const bonus = results.length > 0 && correct === results.length ? PERFECT_SET_BONUS : 0;
 	return correct * INGOT_PER_CORRECT * multiplier + bonus;
 }
 
@@ -165,7 +167,8 @@ export function ingotsFor(results: boolean[], multiplier = 1): number {
  *  up mid-set. */
 export function ingotsForAnswer(correct: boolean, setResults: boolean[], multiplier = 1): number {
 	let n = correct ? INGOT_PER_CORRECT * multiplier : 0;
-	const done = setResults.length >= DRILL_SET_SIZE;
+	// The caller passes the set's results only once the set is finished, and [] before that.
+	const done = setResults.length > 0;
 	if (done && setResults.every(Boolean)) n += PERFECT_SET_BONUS;
 	return n;
 }

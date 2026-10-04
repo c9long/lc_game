@@ -81,22 +81,34 @@ function decorate(
 		});
 }
 
-/** How many due refreshes make the expedition drop new problems and work the backlog instead. */
-export const REFRESH_BACKLOG_TAKEOVER = 3;
+/** At most this many refreshes go into one expedition. */
+export const MAX_REFRESH_SLOTS = 2;
+/** The Forge row's slot: fixed, after the most problem slots a plan can hold (slotCounts tops out
+ *  at three), so two first loads of the day that see different due counts still agree on it and
+ *  cannot each insert a drills row. The home page numbers rows by position, not by slot. */
+export const DRILLS_SLOT = 4;
 
-/** The two problem slots, chosen from the tree, the SRS schedule and the day's daily challenge.
+/** How many problem slots of each kind the expedition gets, given how many refreshes are due.
  *
- *  Slot 1 is the earliest due refresh in curriculum order, else a new problem. Slot 2 is the daily challenge when it
- *  sits in a node the tree has actually opened, else a new problem, else another refresh. The daily
- *  is gated on the node because otherwise LeetCode's pick decides the difficulty: one day's was
- *  distinct-subsequences, a 2-D DP problem, offered while 1-D DP was still locked.
+ *  Progression is the point: every day introduces at least one untouched problem. Two or more due
+ *  refreshes take two slots and leave one for a new problem; one due refresh leaves two new; none
+ *  due means two new. (Until 2026-10-03 three due refreshes took both slots and no new problem was
+ *  served at all, which stalled the tree whenever the backlog stood.) */
+export function slotCounts(due: number): { refresh: number; fresh: number } {
+	const refresh = Math.min(due, MAX_REFRESH_SLOTS);
+	return { refresh, fresh: refresh >= MAX_REFRESH_SLOTS ? 1 : 2 };
+}
+
+/** The problem slots, chosen from the tree, the SRS schedule and the day's daily challenge.
  *
- *  Once the backlog reaches REFRESH_BACKLOG_TAKEOVER both slots become refreshes and the daily is
- *  skipped along with new problems, since it is itself a problem that has never been solved. One
- *  refresh slot a day cannot keep pace with a growing set of due problems, so the backlog only ever
- *  grew: every repetition then arrived far past its interval, held its SRS step instead of
- *  advancing, and rescheduled at the same short interval, pinning the whole curriculum to the
- *  bottom rung and the city to permanent rusting. Two refreshes let the backlog drain.
+ *  Refreshes come first, earliest due in curriculum order; then the new problems (slotCounts says how
+ *  many of each). The daily challenge takes the first new slot when it sits in a node the tree has
+ *  actually opened and has never been solved. The daily is gated on the node because otherwise
+ *  LeetCode's pick decides the difficulty: one day's was distinct-subsequences, a 2-D DP problem,
+ *  offered while 1-D DP was still locked.
+ *
+ *  A kind that runs short (the curriculum has no new problem left, say) is made up with the other,
+ *  so the expedition keeps its size while there is anything to serve.
  *
  *  Pure so the slot rules can be tested without a database.
  */
@@ -109,49 +121,46 @@ export function chooseSlots(
 	const refreshes = dueRefreshes(snap.tree, snap.progress, snap.now);
 	const exclude = new Set<string>();
 	const chosen: { slot: number; slug: string; kind: PlanItem['kind']; done: boolean }[] = [];
+	const next = () => chosen.length + 1;
 
-	const takeNew = (slot: number) => {
+	const takeNew = () => {
 		const [n] = nextNewProblems(snap.tree, snap.progress, 1, exclude);
 		if (!n) return false;
-		chosen.push({ slot, slug: n.slug, kind: 'new', done: false });
+		chosen.push({ slot: next(), slug: n.slug, kind: 'new', done: false });
 		exclude.add(n.slug);
 		return true;
 	};
-	const takeRefresh = (slot: number) => {
+	const takeRefresh = () => {
 		const r = refreshes.find((x) => !exclude.has(x.slug));
 		if (!r) return false;
-		chosen.push({ slot, slug: r.slug, kind: 'refresh', done: false });
+		chosen.push({ slot: next(), slug: r.slug, kind: 'refresh', done: false });
 		exclude.add(r.slug);
 		return true;
 	};
-
-	if (!takeRefresh(1)) takeNew(1);
-
-	const backlog = refreshes.length >= REFRESH_BACKLOG_TAKEOVER;
-
-	const dailyNode = daily ? PROBLEM_BY_SLUG.get(daily.slug)?.nodeId : undefined;
-	const dailyNodeView = dailyNode ? snap.tree.get(dailyNode) : undefined;
-	const dailyIsCandidate =
-		!backlog &&
-		daily &&
-		dailyNodeView &&
-		isServable(dailyNodeView) &&
-		dailyNodeView.status !== 'complete' &&
-		!exclude.has(daily.slug) &&
-		!(snap.progress.get(daily.slug)?.solveCount ?? 0);
-	if (dailyIsCandidate) {
-		chosen.push({ slot: 2, slug: daily!.slug, kind: 'daily', done: false });
+	const takeDaily = () => {
+		const node = daily ? PROBLEM_BY_SLUG.get(daily.slug)?.nodeId : undefined;
+		const view = node ? snap.tree.get(node) : undefined;
+		const ok =
+			daily &&
+			view &&
+			isServable(view) &&
+			view.status !== 'complete' &&
+			!exclude.has(daily.slug) &&
+			!(snap.progress.get(daily.slug)?.solveCount ?? 0);
+		if (!ok) return false;
+		chosen.push({ slot: next(), slug: daily!.slug, kind: 'daily', done: false });
 		exclude.add(daily!.slug);
-	} else if (backlog) {
-		if (!takeRefresh(2)) takeNew(2);
-	} else if (!takeNew(2)) {
-		takeRefresh(2);
-	}
+		return true;
+	};
+
+	const want = slotCounts(refreshes.length);
+	for (let i = 0; i < want.refresh; i++) if (!takeRefresh()) takeNew();
+	for (let i = 0; i < want.fresh; i++) if (!(i === 0 && takeDaily()) && !takeNew()) takeRefresh();
 	return chosen;
 }
 
-/** Today's expedition: two problem slots from chooseSlots plus the Forge drill slot, persisted on
- *  first read so the day's plan is stable. */
+/** Today's expedition: the problem slots from chooseSlots plus the Forge drill slot after them,
+ *  persisted on first read so the day's plan is stable. */
 export async function getOrCreatePlan(db: Db, snap: Snapshot): Promise<PlanItem[]> {
 	const uid = snap.user.id;
 	const doneRows = await db
@@ -176,7 +185,7 @@ export async function getOrCreatePlan(db: Db, snap: Snapshot): Promise<PlanItem[
 	const chosen = chooseSlots(snap, daily);
 
 	if (DRILL_LANGS.length > 0) {
-		chosen.push({ slot: 3, slug: langForDate(snap.today), kind: 'drills', done: drillsDone });
+		chosen.push({ slot: DRILLS_SLOT, slug: langForDate(snap.today), kind: 'drills', done: drillsDone });
 	}
 
 	if (chosen.length > 0) {

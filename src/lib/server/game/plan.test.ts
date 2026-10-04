@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { REFRESH_BACKLOG_TAKEOVER, chooseSlots, planItemDone } from './plan';
+import { DRILLS_SLOT, chooseSlots, planItemDone, slotCounts } from './plan';
 import { NODE_ORDER, problemsForNode } from '$lib/game/curriculum';
 import { computeTree, type ProblemProgress } from '$lib/game/tree';
 
@@ -45,17 +45,39 @@ describe('expedition slot choice', () => {
 		return { progress, now, tree: computeTree({ progress, research: new Map(), now }) };
 	}
 
-	it('pairs a refresh with a new problem below the backlog threshold', () => {
-		const chosen = chooseSlots(snapFor(progressWith(root.slice(0, 6), 2)), null);
-		expect(chosen.map((c) => c.kind)).toEqual(['refresh', 'new']);
+	it('serves 2 new with no refresh due, 1 refresh + 2 new with one due, 2 refresh + 1 new with two or more', () => {
+		expect(slotCounts(0)).toEqual({ refresh: 0, fresh: 2 });
+		expect(slotCounts(1)).toEqual({ refresh: 1, fresh: 2 });
+		expect(slotCounts(2)).toEqual({ refresh: 2, fresh: 1 });
+		expect(slotCounts(7)).toEqual({ refresh: 2, fresh: 1 });
+		const kinds = (due: number) => chooseSlots(snapFor(progressWith(root.slice(0, 6), due)), null).map((c) => c.kind);
+		expect(kinds(0)).toEqual(['new', 'new']);
+		expect(kinds(1)).toEqual(['refresh', 'new', 'new']);
+		expect(kinds(2)).toEqual(['refresh', 'refresh', 'new']);
+		expect(kinds(5)).toEqual(['refresh', 'refresh', 'new']);
 	});
 
-	it('gives both slots to refreshes once the backlog is reached', () => {
-		const progress = progressWith(root.slice(0, 6), REFRESH_BACKLOG_TAKEOVER);
-		const chosen = chooseSlots(snapFor(progress), null);
-		expect(chosen.map((c) => c.kind)).toEqual(['refresh', 'refresh']);
-		// Never the same problem twice.
-		expect(new Set(chosen.map((c) => c.slug)).size).toBe(2);
+	it('numbers slots in order and never serves a problem twice', () => {
+		for (const due of [0, 1, 2, 5]) {
+			const chosen = chooseSlots(snapFor(progressWith(root.slice(0, 6), due)), null);
+			expect(chosen.map((c) => c.slot)).toEqual(chosen.map((_, i) => i + 1));
+			expect(new Set(chosen.map((c) => c.slug)).size).toBe(chosen.length);
+		}
+	});
+
+	it('keeps problem slots below the fixed Forge slot', () => {
+		// The Forge row's slot must not depend on the day's due count (see DRILLS_SLOT).
+		for (const due of [0, 1, 2, 5]) {
+			const chosen = chooseSlots(snapFor(progressWith(root.slice(0, 6), due)), null);
+			expect(Math.max(...chosen.map((c) => c.slot))).toBeLessThan(DRILLS_SLOT);
+		}
+	});
+
+	it('serves untouched problems as the new ones', () => {
+		const progress = progressWith(root.slice(0, 6), 1);
+		for (const c of chooseSlots(snapFor(progress), null).filter((c) => c.kind === 'new')) {
+			expect(progress.has(c.slug)).toBe(false);
+		}
 	});
 
 	it('serves the shallower node first, however long the deeper one has waited', () => {
@@ -88,30 +110,28 @@ describe('expedition slot choice', () => {
 		expect(chosen.map((c) => c.kind)).toEqual(['new', 'new']);
 		expect(chosen.some((c) => window.includes(c.slug))).toBe(false);
 
-		// Once Two Pointers unlocks, the backlog takes over as normal.
+		// Once Two Pointers unlocks, its due refreshes are served, still with a new problem.
 		const pointers = problemsForNode('two-pointers').map((p) => p.slug);
 		for (const slug of pointers.slice(0, Math.ceil(pointers.length / 2)))
 			progress.set(slug, { solveCount: 1, srsStep: 0, dueAt: new Date(now.getTime() + DAY) });
 		const opened = chooseSlots(snapFor(progress), null);
-		expect(opened.map((c) => c.kind)).toEqual(['refresh', 'refresh']);
-		expect(opened.every((c) => window.includes(c.slug))).toBe(true);
+		expect(opened.map((c) => c.kind)).toEqual(['refresh', 'refresh', 'new']);
+		expect(opened.filter((c) => c.kind === 'refresh').every((c) => window.includes(c.slug))).toBe(true);
 	});
 
-	it('drops the daily challenge while the backlog stands', () => {
-		// The daily is a problem never solved before, so serving it works against draining.
+	it('lets the daily challenge take the first new slot, whatever is due', () => {
 		const daily = { slug: root[6], title: 'x', difficulty: 'Easy', date: '2026-09-09' } as never;
-		const fresh = snapFor(progressWith(root.slice(0, 6), 2));
-		expect(chooseSlots(fresh, daily).map((c) => c.kind)).toEqual(['refresh', 'daily']);
-		const backed = snapFor(progressWith(root.slice(0, 6), REFRESH_BACKLOG_TAKEOVER));
-		expect(chooseSlots(backed, daily).map((c) => c.kind)).toEqual(['refresh', 'refresh']);
+		expect(chooseSlots(snapFor(progressWith(root.slice(0, 6), 0)), daily).map((c) => c.kind)).toEqual(['daily', 'new']);
+		expect(chooseSlots(snapFor(progressWith(root.slice(0, 6), 1)), daily).map((c) => c.kind)).toEqual(['refresh', 'daily', 'new']);
+		expect(chooseSlots(snapFor(progressWith(root.slice(0, 6), 3)), daily).map((c) => c.kind)).toEqual(['refresh', 'refresh', 'daily']);
 	});
 
-	it('falls back to a new problem when the backlog runs dry mid-plan', () => {
-		// Exactly REFRESH_BACKLOG_TAKEOVER due, two taken; a later day with fewer left must still
-		// fill slot 2 rather than returning a one-slot expedition.
-		const progress = progressWith(root.slice(0, 6), 1);
-		const chosen = chooseSlots(snapFor(progress), null);
-		expect(chosen).toHaveLength(2);
-		expect(chosen[1].kind).toBe('new');
+	it('makes up a short kind with the other, keeping the expedition its size', () => {
+		// Every problem in the tree solved, three due: no new problem exists, so refreshes fill in.
+		const all = NODE_ORDER.flatMap((id) => problemsForNode(id)).map((p) => p.slug);
+		const progress = new Map<string, ProblemProgress>(
+			all.map((slug, i) => [slug, { solveCount: 1, srsStep: 0, dueAt: new Date(now.getTime() + (i < 3 ? -DAY : DAY)) }])
+		);
+		expect(chooseSlots(snapFor(progress), null).map((c) => c.kind)).toEqual(['refresh', 'refresh', 'refresh']);
 	});
 });

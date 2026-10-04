@@ -34,7 +34,7 @@ import {
 	wellPlaced,
 	type PlacedBuilding
 } from './city';
-import { DRILL_INTERVALS, MAX_DUE_PER_SET, afterDrill, buildDrillSet, checkAnswer, ingotsFor, ingotsForAnswer, normalizeOutput, type Drill, type DrillProgress } from './drills';
+import { DRILL_INTERVALS, DRILL_SET_SIZE, MAX_DUE_PER_SET, afterDrill, buildDrillSet, checkAnswer, ingotsFor, ingotsForAnswer, normalizeOutput, type Drill, type DrillProgress } from './drills';
 
 const DAY = 86_400_000;
 const t0 = new Date('2026-09-04T12:00:00Z');
@@ -262,7 +262,7 @@ describe('weekly budget', () => {
 		const dates = ['2026-08-28', '2026-08-29', '2026-09-03', '2026-09-04', '2026-09-04'];
 		expect(weeklyCount(dates, '2026-09-04')).toBe(4);
 		expect(weeklyCount(dates, '2026-09-03')).toBe(3);
-		expect(WEEKLY_BUDGET).toBe(14);
+		expect(WEEKLY_BUDGET).toBe(21);
 	});
 });
 
@@ -546,8 +546,8 @@ describe('drill set composition', () => {
 		// while the fundamentals sat untouched behind them.
 		const progress = new Map<string, DrillProgress>();
 		for (let i = 0; i < 9; i++) progress.set(`heapq-${i}`, { srsStep: 0, dueAt: overdue, correct: 0, wrong: 1 });
-		const set = buildDrillSet(bank, progress, now, 5);
-		expect(set).toHaveLength(5);
+		const set = buildDrillSet(bank, progress, now, DRILL_SET_SIZE);
+		expect(set).toHaveLength(DRILL_SET_SIZE);
 		expect(set.filter((d) => progress.has(d.id)).length).toBe(MAX_DUE_PER_SET);
 		expect(set.filter((d) => d.module === 'heapq').length).toBeLessThanOrEqual(MAX_DUE_PER_SET);
 		expect(set.some((d) => !progress.has(d.id))).toBe(true); // new material got in
@@ -768,6 +768,10 @@ describe('monuments', () => {
 		expect(ingotsForAnswer(true, [], 3)).toBe(3);
 		expect(ingotsForAnswer(false, [], 3)).toBe(0);
 		expect(ingotsForAnswer(true, [true, true, true, true, true], 3)).toBe(3 + 2);
+		// A finished set earns the bonus at whatever size it was built: an 8-drill set, and a 5-drill
+		// set built before DRILL_SET_SIZE grew and finished after.
+		expect(ingotsForAnswer(true, Array(8).fill(true), 1)).toBe(1 + 2);
+		expect(ingotsFor(Array(8).fill(true))).toBe(8 + 2);
 		expect(ingotsForAnswer(true, [true, false, true, true, true], 3)).toBe(3);
 		expect(ingotsFor([true, true, true, true, true], 2)).toBe(10 + 2);
 	});

@@ -19,9 +19,9 @@
 		{#if data.plan.length === 0}
 			<p class="muted">Nothing to plan yet. Solve anything from the <a href="/tree">tech tree</a>.</p>
 		{/if}
-		{#each data.plan as item (item.slot)}
+		{#each data.plan as item, i (item.slot)}
 			<div class="row plan-item" class:done={item.done}>
-				<span class="slot">{item.slot}</span>
+				<span class="slot">{i + 1}</span>
 				{#if item.difficulty}<span class="pill {item.difficulty}">{item.difficulty}</span>{/if}
 				<span class="pill">{kindLabel[item.kind]}</span>
 				<a href={item.kind === 'drills' ? '/drills' : `/solve/${item.slug}`}><strong>{item.title}</strong></a>

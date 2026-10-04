@@ -8,7 +8,7 @@ This is the option being built. It merges [01-commit-city.md](01-commit-city.md)
 |---|---|---|
 | Curriculum | NeetCode 150, as a tech tree of its 18 patterns | Finite, ordered, community-maintained; reference solutions exist in every language |
 | Refreshing techs | Per-problem spaced repetition; a node's freshness is the share of its solved problems not overdue | "Unlocked" must not mean "done forever" |
-| Pace | 2 problems/day as a rolling weekly budget of 14, shown but not enforced | Absence is already penalised through refresh freshness; morale (a second, city-wide penalty) was removed 2026-09-16 |
+| Pace | 3 problems/day as a rolling weekly budget of 21 (2 and 14 until 2026-10-03), shown but not enforced | Absence is already penalised through refresh freshness; morale (a second, city-wide penalty) was removed 2026-09-16 |
 | IDE | Monaco in the browser | Self-contained, VS Code keybindings, no coding on leetcode.com |
 | Execution | ~~LeetCode's judge, driven through the session cookie~~ → **Pyodide in the browser**, see [07-pyodide-judge.md](07-pyodide-judge.md) | Superseded 2026-09-06: LeetCode's judge is Cloudflare-blocked to all server callers. Still no server executes code |
 | Languages | Python, Go, C# front-line; C++ and Rust selectable | The judge supports all of them; non-Python solves earn x1.5 |
@@ -31,7 +31,7 @@ Phases 1 to 8 are implemented in one pass: repo hygiene, passkey auth, admin/coo
 
 ## How a solve flows
 
-1. Home shows today's two plan slots. Click one to open `/solve/<slug>`.
+1. Home shows today's plan: two or three problems and the Forge drills. Click one to open `/solve/<slug>`.
 2. Monaco loads the starter code for the chosen language from LeetCode's `codeSnippets`. Drafts autosave.
 3. **Run** posts the code and the example input to the Worker, which forwards to LeetCode's `interpret_solution` with your cookie and returns an id. The browser polls `/api/check/<id>` once a second until `state` is `SUCCESS`, then shows expected vs actual per case.
 4. **Submit** does the same through LeetCode's `submit` endpoint. On `Accepted` the Worker records the attempt and awards research, resources and a weekly-budget credit, idempotently on the submission id.
@@ -48,9 +48,9 @@ Phases 1 to 8 are implemented in one pass: repo hygiene, passkey auth, admin/coo
 
 ### Weekly budget and daily plan
 
-- Every accepted solve (new or refresh, one per problem per day) is a ledger entry. The home page shows the count against 14 per rolling 7 days; nothing scales with it.
+- Every accepted solve (new or refresh, one per problem per day) is a ledger entry. The home page shows the count against 21 per rolling 7 days (14 until 2026-10-03); nothing scales with it.
 - **Morale removed 2026-09-16.** It was a 0–100 multiplier on all income that chased `100 * min(1, weekly / 14)` by 15 points a day, with a Granary holding up to 3 purchasable freeze days and Walls halving the daily loss. The refresh system already penalises absence — every overdue problem lowers its node's freshness, and with it that node's buildings — so a second penalty for the same thing only made income harder to read. Production is now `base × freshness × adjacency`, on days with at least one solve.
-- The daily plan has two slots: the earliest due refresh in curriculum order if any (else a new problem), and the next new problem in roadmap order from the lowest available incomplete node. If LeetCode's daily challenge is in the NeetCode 150 it takes slot two with x2. At three or more due refreshes both slots become refreshes and the daily is skipped, until the backlog drains.
+- The daily plan's problem slots depend on how many refreshes are due (`slotCounts`, 2026-10-03): two or more due → 2 refreshes + 1 new; one due → 1 refresh + 2 new; none due → 2 new. Refreshes come first, earliest due in curriculum order; new problems are untouched ones in roadmap order from the lowest available incomplete node. LeetCode's daily challenge takes the first new slot (×2) when it is in a node the tree has opened and was never solved. A kind that runs short is made up with the other. Until 2026-10-03 the plan had two slots and three due refreshes took both, which served no new problem at all while a backlog stood; progression now always moves. The Forge drill slot follows the problems.
   - Changed 2026-09-16: refreshes were most-overdue-first, which let a deep node's refresh pre-empt a root node's simply by having waited longer. Now refreshes walk the tree exactly as new problems do, so foundations stay fresh before deeper material is revisited.
 
 ### City
@@ -122,13 +122,13 @@ Phases 1 to 8 are implemented in one pass: repo hygiene, passkey auth, admin/coo
 
 - `data/drills/curation.json` holds hand-written drills (`extra`, verified by `scripts/verify-drills.py`), ids to exclude, and a per-module cap. Hand-written drills are served first. `data/drills/variants.json` is generated and is its own module (`$lib/game/drillvariants`) rather than part of the bank, so the home page's cold start does not parse it.
 - **Language fundamentals (added 2026-09-06).** Mining the library docs could only ever produce stdlib-API trivia — `heapreplace`, `bisect_right` — because those docs have no page on what a `for` loop does. 87 hand-authored fundamentals now lead the bank: variables and numbers, strings and slicing, lists, loops, conditionals, dicts, sets and tuples, comprehensions, functions. They are pitched above an intro course, each targeting a semantic that actually bites in a solution: `-7 // 2`, list aliasing, the `[[0]*n]*m` trap, mutable default arguments, `sort()` returning `None`. Every one is executed by `verify-drills.py` before it ships.
-- `buildDrillSet` round-robins across modules as well as alternating kinds, and **at most 3 of the 5 slots are reviews** (`MAX_DUE_PER_SET`). Round-robin alone was not enough: it applied only to the new-material stage, and a set filled entirely from the due backlog never reached that stage. Nine heapq drills started early meant a set of five heapq drills, then another, indefinitely. Reviews still come first and are still spread across modules; the remaining slots introduce new material, falling back to the backlog only when none is left.
+- `buildDrillSet` round-robins across modules as well as alternating kinds, and **at most 5 of the 8 slots are reviews** (`MAX_DUE_PER_SET`; 3 of 5 until the set grew on 2026-10-03). Round-robin alone was not enough: it applied only to the new-material stage, and a set filled entirely from the due backlog never reached that stage. Nine heapq drills started early meant a set of five heapq drills, then another, indefinitely. Reviews still come first and are still spread across modules; the remaining slots introduce new material, falling back to the backlog only when none is left.
 - Drills carry an optional **`explain`**: a couple of sentences on *why*, behind a "Why?" toggle, initially collapsed. A documentation link says where to read; this says what is going on, which is the part worth having for something like `n & (n - 1)`. 48 fundamentals and all 12 bitwise drills have one; mined drills fall back to the link.
 - **Bitwise drills** were added 2026-09-08 — the bank had none, though Bit Manipulation is a tech-tree node. Operators, plus the two idioms those problems lean on: `n & (n - 1)` to clear the lowest set bit, and `n & -n` to isolate it.
-- Each day gets a set of 5 (`buildDrillSet`): due drills first on a 1, 3, 7, 21, 60 day ladder, then unseen drills alternating kinds. A wrong answer resets the drill to 1 day.
+- Each day gets a set of 8 (`buildDrillSet`; 5 until 2026-10-03, and a set keeps the size it was built with, perfect bonus included): due drills first on a 1, 3, 7, 21, 60 day ladder, then unseen drills alternating kinds. A wrong answer resets the drill to 1 day.
 - Rewards: 1 **Ingot** per correct answer, +2 for a perfect set. Upgrading any building past level 1 costs 3 Ingots per level on top of the scaled resource cost, so drills are the only route to a prosperous city.
 - **Unlimited practice** (added 2026-09-06) unlocks once every drill in the day's set has been answered, and runs as long as you like over the rest of the bank. It earns **nothing**: no Ingots, and no writes to `drill_state` or `drill_attempts`. That is deliberate — the daily set is drawn from the spaced-repetition ladder, so letting practice advance `srsStep` would let an evening of practice empty tomorrow's set, consuming the schedule it is meant to support. The unlock is enforced in `/api/drills/practice`, not just in the page, and answers are checked server-side there as they are for the daily set.
-- The daily plan has a third slot pointing at `/drills`; it does not count toward the weekly budget, which remains about problems.
+- The daily plan has a Forge slot after the problems (`DRILLS_SLOT`) pointing at `/drills`; it does not count toward the weekly budget, which remains about problems.
 - Go and C# banks are future work: Go's `example_test.go` files with `// Output:` comments and the dotnet API docs snippets are the analogous sources.
 
 ### Solutions

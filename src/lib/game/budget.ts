@@ -5,8 +5,9 @@ import { addDays } from './dates';
  *  by 15 points a day, with purchasable freeze days to hold it on idle days -- but the refresh
  *  system already penalises absence through node freshness, and a second, city-wide penalty for
  *  the same thing only made income harder to read. Removed 2026-09-16. */
-export const WEEKLY_BUDGET = 14;
-export const DAILY_TARGET = 2;
+export const WEEKLY_BUDGET = 21;
+/** Matches the expedition: up to three problems a day since 2026-10-03 (was 2 a day, 14 a week). */
+export const DAILY_TARGET = 3;
 
 /** Credits in the 7-day window ending on `today` (inclusive). */
 export function weeklyCount(ledgerDates: Iterable<string>, today: string): number {
