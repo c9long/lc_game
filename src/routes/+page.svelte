@@ -1,6 +1,6 @@
 <script lang="ts">
 	let { data } = $props();
-	const pct = $derived(Math.min(100, Math.round((data.weekly / data.budget) * 100)));
+	const pct = (t: { done: number; offered: number }) => (t.offered ? Math.min(100, Math.round((t.done / t.offered) * 100)) : 0);
 	const kindLabel: Record<string, string> = { new: 'New', refresh: 'Refresh', daily: 'Daily ×2', drills: 'Forge' };
 </script>
 
@@ -33,9 +33,12 @@
 	</section>
 
 	<section class="card">
-		<h2>Weekly budget</h2>
-		<div class="bar"><span style="width: {pct}%"></span></div>
-		<p><strong>{data.weekly}</strong> / {data.budget} solves in the last 7 days</p>
+		<h2>Last 7 days</h2>
+		<div class="bar"><span style="width: {pct(data.expedition.fresh)}%"></span></div>
+		<p><strong>{data.expedition.fresh.done}</strong> / {data.expedition.fresh.offered} new problems</p>
+		<div class="bar"><span style="width: {pct(data.expedition.refresh)}%"></span></div>
+		<p><strong>{data.expedition.refresh.done}</strong> / {data.expedition.refresh.offered} refreshes</p>
+		<p class="muted">Out of what your expeditions offered. {data.weekly} solve{data.weekly === 1 ? '' : 's'} in all, extras included.</p>
 		<p class="muted">City produces {data.production} coins per active day. Total solved: {data.totalSolves}.</p>
 		<div class="row">
 			{#each Object.entries(data.resources).filter(([k]) => !k.startsWith('essence:')) as [k, v] (k)}

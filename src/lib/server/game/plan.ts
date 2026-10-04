@@ -1,9 +1,11 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, gte } from 'drizzle-orm';
 import type { Db } from '../db';
 import { ledger, planItems, plans } from '../db/schema';
 import { fetchDaily, type Daily } from '../leetcode/client';
 import { getState, setState, type Snapshot } from './state';
 import { PROBLEM_BY_SLUG } from '$lib/game/curriculum';
+import { expeditionTally } from '$lib/game/budget';
+import { addDays } from '$lib/game/dates';
 import { dueRefreshes, isServable, nextNewProblems, type NodeView, type ProblemProgress } from '$lib/game/tree';
 import { DRILL_LANGS } from '$lib/game/drillbank';
 import { isSetComplete, langForDate, loadDrillSet } from './drills';
@@ -157,6 +159,22 @@ export function chooseSlots(
 	for (let i = 0; i < want.refresh; i++) if (!takeRefresh()) takeNew();
 	for (let i = 0; i < want.fresh; i++) if (!(i === 0 && takeDaily()) && !takeNew()) takeRefresh();
 	return chosen;
+}
+
+/** The last 7 days of expeditions: new problems and refreshes offered, and how many were done. */
+export async function weeklyExpedition(db: Db, uid: string, today: string) {
+	const since = addDays(today, -6);
+	const offers = await db
+		.select({ date: planItems.planDate, slug: planItems.slug, kind: planItems.kind })
+		.from(planItems)
+		.where(and(eq(planItems.userId, uid), gte(planItems.planDate, since)))
+		.all();
+	const solves = await db
+		.select({ date: ledger.date, slug: ledger.slug })
+		.from(ledger)
+		.where(and(eq(ledger.userId, uid), gte(ledger.date, since)))
+		.all();
+	return expeditionTally(offers, solves, today);
 }
 
 /** Today's expedition: the problem slots from chooseSlots plus the Forge drill slot after them,

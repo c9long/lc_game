@@ -2,9 +2,8 @@ import type { PageServerLoad } from './$types';
 import { getDb } from '$lib/server/db';
 import { requireUser } from '$lib/server/guard';
 import { loadSnapshot } from '$lib/server/game/state';
-import { getOrCreatePlan } from '$lib/server/game/plan';
+import { getOrCreatePlan, weeklyExpedition } from '$lib/server/game/plan';
 import { syncRecentAc } from '$lib/server/game/sync';
-import { WEEKLY_BUDGET } from '$lib/game/budget';
 import { dailyCoins } from '$lib/game/city';
 import { dueRefreshes } from '$lib/game/tree';
 
@@ -25,7 +24,8 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 		today: snap.today,
 		plan,
 		weekly: snap.weekly,
-		budget: WEEKLY_BUDGET,
+		// After getOrCreatePlan, so today's offers count.
+		expedition: await weeklyExpedition(db, user.id, snap.today),
 		resources: snap.resources,
 		production: dailyCoins(snap.buildings, snap.tree),
 		tickCoins: snap.tickCoins,

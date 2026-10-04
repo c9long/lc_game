@@ -4,7 +4,7 @@ import { INTERVALS, afterSolve, isDue, isStaleDraft, type SrsState } from './srs
 import { NODES, NODE_ORDER, PROBLEM_BY_SLUG, PROBLEMS, problemsForNode } from './curriculum';
 import { computeTree, dueRefreshes, isServable, nextNewProblems, type ProblemProgress } from './tree';
 import { HAULS_BONUS, IRONWORKS_MULT, computeAward } from './awards';
-import { WEEKLY_BUDGET, weeklyCount } from './budget';
+import { expeditionTally, weeklyCount } from './budget';
 import {
 	BUILDINGS,
 	CITIES,
@@ -262,7 +262,31 @@ describe('weekly budget', () => {
 		const dates = ['2026-08-28', '2026-08-29', '2026-09-03', '2026-09-04', '2026-09-04'];
 		expect(weeklyCount(dates, '2026-09-04')).toBe(4);
 		expect(weeklyCount(dates, '2026-09-03')).toBe(3);
-		expect(WEEKLY_BUDGET).toBe(21);
+	});
+
+	it('tallies what the expedition offered, new and refresh apart, per distinct problem', () => {
+		const today = '2026-10-10';
+		const offers = [
+			{ date: '2026-10-03', slug: 'old', kind: 'new' }, // outside the window
+			{ date: '2026-10-04', slug: 'a', kind: 'new' },
+			{ date: '2026-10-05', slug: 'a', kind: 'new' }, // re-offered: still one problem
+			{ date: '2026-10-05', slug: 'b', kind: 'daily' },
+			{ date: '2026-10-06', slug: 'c', kind: 'new' },
+			{ date: '2026-10-06', slug: 'r1', kind: 'refresh' },
+			{ date: '2026-10-07', slug: 'r2', kind: 'refresh' },
+			{ date: '2026-10-07', slug: 'python', kind: 'drills' } // not a problem
+		];
+		const solves = [
+			{ date: '2026-10-05', slug: 'a' }, // done the day after it was first offered
+			{ date: '2026-10-05', slug: 'b' },
+			{ date: '2026-10-05', slug: 'c' }, // solved BEFORE it was offered: not this offer done
+			{ date: '2026-10-06', slug: 'r1' },
+			{ date: '2026-10-03', slug: 'r2' } // outside the window
+		];
+		expect(expeditionTally(offers, solves, today)).toEqual({
+			fresh: { offered: 3, done: 2 },
+			refresh: { offered: 2, done: 1 }
+		});
 	});
 });
 
