@@ -25,7 +25,7 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 		plan,
 		weekly: snap.weekly,
 		// After getOrCreatePlan, so today's offers count.
-		expedition: await weeklyExpedition(db, user.id, snap.today),
+		expedition: await weeklyExpedition(db, snap),
 		resources: snap.resources,
 		production: dailyCoins(snap.buildings, snap.tree),
 		tickCoins: snap.tickCoins,

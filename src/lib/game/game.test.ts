@@ -287,6 +287,11 @@ describe('weekly budget', () => {
 			fresh: { offered: 3, done: 2 },
 			refresh: { offered: 2, done: 1 }
 		});
+		// Days without a plan add offers that were never done.
+		expect(expeditionTally(offers, solves, today, { fresh: 4, refresh: 1 })).toEqual({
+			fresh: { offered: 7, done: 2 },
+			refresh: { offered: 3, done: 1 }
+		});
 	});
 });
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DRILLS_SLOT, chooseSlots, planItemDone, slotCounts } from './plan';
+import { DRILLS_SLOT, chooseSlots, missedOffers, planItemDone, slotCounts } from './plan';
 import { NODE_ORDER, problemsForNode } from '$lib/game/curriculum';
 import { computeTree, type ProblemProgress } from '$lib/game/tree';
 
@@ -63,6 +63,13 @@ describe('expedition slot choice', () => {
 			expect(chosen.map((c) => c.slot)).toEqual(chosen.map((_, i) => i + 1));
 			expect(new Set(chosen.map((c) => c.slug)).size).toBe(chosen.length);
 		}
+	});
+
+	it('counts a day the app was never opened as the slots it would have offered', () => {
+		// Steve: two days away with nothing due -> 2 new each; one with a refresh due -> 1 + 2.
+		expect(missedOffers(['2026-10-03', '2026-10-04'], () => 0)).toEqual({ fresh: 4, refresh: 0 });
+		expect(missedOffers(['2026-10-05'], () => 1)).toEqual({ fresh: 2, refresh: 1 });
+		expect(missedOffers([], () => 9)).toEqual({ fresh: 0, refresh: 0 });
 	});
 
 	it('keeps problem slots below the fixed Forge slot', () => {

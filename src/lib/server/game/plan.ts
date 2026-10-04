@@ -5,7 +5,7 @@ import { fetchDaily, type Daily } from '../leetcode/client';
 import { getState, setState, type Snapshot } from './state';
 import { PROBLEM_BY_SLUG } from '$lib/game/curriculum';
 import { expeditionTally } from '$lib/game/budget';
-import { addDays } from '$lib/game/dates';
+import { addDays, localDate } from '$lib/game/dates';
 import { dueRefreshes, isServable, nextNewProblems, type NodeView, type ProblemProgress } from '$lib/game/tree';
 import { DRILL_LANGS } from '$lib/game/drillbank';
 import { isSetComplete, langForDate, loadDrillSet } from './drills';
@@ -161,8 +161,24 @@ export function chooseSlots(
 	return chosen;
 }
 
-/** The last 7 days of expeditions: new problems and refreshes offered, and how many were done. */
-export async function weeklyExpedition(db: Db, uid: string, today: string) {
+/** Slots the expedition would have held on days with no plan, because the app was not opened.
+ *  `dueOn` says how many refreshes were due that day; slotCounts turns it into slots. */
+export function missedOffers(days: string[], dueOn: (day: string) => number): { fresh: number; refresh: number } {
+	let fresh = 0;
+	let refresh = 0;
+	for (const d of days) {
+		const c = slotCounts(dueOn(d));
+		fresh += c.fresh;
+		refresh += c.refresh;
+	}
+	return { fresh, refresh };
+}
+
+/** The last 7 days of expeditions: new problems and refreshes offered, and how many were done.
+ *  Days since the account was created with no plan count as missed (see expeditionTally). */
+export async function weeklyExpedition(db: Db, snap: Snapshot) {
+	const uid = snap.user.id;
+	const today = snap.today;
 	const since = addDays(today, -6);
 	const offers = await db
 		.select({ date: planItems.planDate, slug: planItems.slug, kind: planItems.kind })
@@ -174,7 +190,17 @@ export async function weeklyExpedition(db: Db, uid: string, today: string) {
 		.from(ledger)
 		.where(and(eq(ledger.userId, uid), gte(ledger.date, since)))
 		.all();
-	return expeditionTally(offers, solves, today);
+	const joined = localDate(snap.user.createdAt, snap.user.timezone);
+	const planned = new Set(offers.map((o) => o.date));
+	const missedDays: string[] = [];
+	for (let d = joined > since ? joined : since; d <= today; d = addDays(d, 1)) if (!planned.has(d)) missedDays.push(d);
+	// What was due on a missed day, from the current schedule. Exact while nothing has been solved
+	// since (the usual case for a day away); a refresh solved after it has moved on and is not
+	// counted. Measured at noon UTC, morning in the Americas, when a plan is usually first built.
+	const missed = missedOffers(missedDays, (d) =>
+		dueRefreshes(snap.tree, snap.progress, new Date(`${d}T12:00:00Z`)).length
+	);
+	return expeditionTally(offers, solves, today, missed);
 }
 
 /** Today's expedition: the problem slots from chooseSlots plus the Forge drill slot after them,

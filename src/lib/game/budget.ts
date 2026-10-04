@@ -29,11 +29,17 @@ export interface Tally {
  *  next day, and counting both rows would make one problem look like two missed. An offer is done
  *  when the problem was solved on or after the day it was first offered in the window -- the same
  *  day or later, since a problem finished the next morning was still done. The daily challenge is
- *  a new problem; the Forge drill slot is not a problem and is left out. */
+ *  a new problem; the Forge drill slot is not a problem and is left out.
+ *
+ *  A day the app was never opened has no plan, but it still counts: `missed` carries the slots that
+ *  day's expedition would have held, as offered and not done. Staying away is not a way to keep the
+ *  ratio clean. */
 export function expeditionTally(
 	offers: Iterable<{ date: string; slug: string; kind: string }>,
 	solves: Iterable<{ date: string; slug: string }>,
-	today: string
+	today: string,
+	/** Slots the expedition would have offered on days the app was never opened; never done. */
+	missed: { fresh: number; refresh: number } = { fresh: 0, refresh: 0 }
 ): { fresh: Tally; refresh: Tally } {
 	const start = addDays(today, -6);
 	const inWindow = (d: string) => d >= start && d <= today;
@@ -47,9 +53,9 @@ export function expeditionTally(
 	}
 	const solvedOn = new Map<string, string[]>();
 	for (const s of solves) if (inWindow(s.date)) (solvedOn.get(s.slug) ?? solvedOn.set(s.slug, []).get(s.slug)!).push(s.date);
-	const tally = (m: Map<string, string>): Tally => ({
-		offered: m.size,
+	const tally = (m: Map<string, string>, extra: number): Tally => ({
+		offered: m.size + extra,
 		done: [...m].filter(([slug, from]) => (solvedOn.get(slug) ?? []).some((d) => d >= from)).length
 	});
-	return { fresh: tally(first.fresh), refresh: tally(first.refresh) };
+	return { fresh: tally(first.fresh, missed.fresh), refresh: tally(first.refresh, missed.refresh) };
 }
