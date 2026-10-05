@@ -307,8 +307,14 @@
 
 		{#if result}
 			<div class="card result" class:pass={passed} class:fail={!passed}>
-				<h3>{kindLabel}: {result.status_msg ?? result.state}</h3>
-				{#if result.total_testcases != null}<p>{result.total_correct ?? 0} / {result.total_testcases} test cases passed <span class="muted">· {result.elapsedMs} ms</span></p>{/if}
+				<!-- A Run checks only the published examples, which a wrong solution can pass by luck (sorting
+				     Top K Frequent by value passes all three). "Accepted" is kept for a Submit, which is the
+				     only thing that counts. -->
+				<h3>{kindLabel}: {resultKind === 'run' && passed ? 'examples pass' : (result.status_msg ?? result.state)}</h3>
+				{#if result.total_testcases != null}<p>{result.total_correct ?? 0} / {result.total_testcases} {resultKind === 'run' ? 'example' : 'test'} cases passed <span class="muted">· {result.elapsedMs} ms</span></p>{/if}
+				{#if resultKind === 'run' && passed && suite && suite.cases.length > suite.exampleCount}
+					<p class="muted">Not accepted yet: Submit judges all {suite.cases.length} cases.</p>
+				{/if}
 
 				{#if result.cases?.[0]?.fatal}
 					<pre>{result.cases[0].error}</pre>

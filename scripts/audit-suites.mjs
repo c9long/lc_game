@@ -76,6 +76,13 @@ const cases = [
         for i in range(len(nums) - 1, -1, -1):
             for j in range(i - 1, -1, -1):
                 if nums[i] + nums[j] == target: return [j, i]`],
+  // Sorts by VALUE, not frequency: passes all three published examples, so it must fail on Submit.
+  ['top-k-frequent-elements', 'NEAR-MISS returns the k smallest values, not the k most frequent', false, `class Solution:
+    def topKFrequent(self, nums, k):
+        seen = {}
+        for i in nums:
+            seen[i] = seen.get(i, 0) + 1
+        return sorted(seen)[:k]`],
   ['top-k-frequent-elements', 'correct Counter', true, `class Solution:
     def topKFrequent(self, nums, k):
         from collections import Counter
