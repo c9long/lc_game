@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `show_tags` integer DEFAULT false NOT NULL;

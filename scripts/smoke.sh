@@ -279,6 +279,14 @@ for route in /tree /drills /solve/two-sum; do
 done
 
 
+# Categories and topic tags are clues: hidden by default, and then not even sent in the page data.
+has_clue() { curl -s -H "cookie: lc_session=$TOKEN" "$B$1" | grep -qE 'Arrays (&amp;|&|\\u0026) Hashing|"pattern":"Arrays' && echo yes || echo no; }
+[ "$(has_clue /solve/two-sum)" = "no" ] && echo "ok   the solve page hides the category by default" || { echo "FAIL the solve page shows the category by default"; fail=1; }
+check 200 -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" -d '{"show":true}' "$B/api/settings/tags"
+[ "$(has_clue /solve/two-sum)" = "yes" ] && echo "ok   showing tags brings the category back" || { echo "FAIL showing tags did not bring the category back"; fail=1; }
+check 200 -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" -d '{"show":false}' "$B/api/settings/tags"
+[ "$(has_clue /solve/two-sum)" = "no" ] && echo "ok   hiding tags again hides it" || { echo "FAIL hiding tags again left the category"; fail=1; }
+
 # Two players. Everything above was the admin; the friend must start from nothing, see none of it,
 # change none of it, and be kept out of /admin.
 A_STATE() { q "SELECT (SELECT group_concat(kind || '=' || amount) FROM (SELECT * FROM resources WHERE user_id='smoke-user' ORDER BY kind)) || '|' || (SELECT count(*) FROM buildings WHERE user_id='smoke-user') || '|' || (SELECT count(*) FROM problem_state WHERE user_id='smoke-user') || '|' || (SELECT count(*) FROM plan_items WHERE user_id='smoke-user') || '|' || (SELECT count(*) FROM drill_state WHERE user_id='smoke-user') AS s"; }

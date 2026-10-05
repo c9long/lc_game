@@ -73,7 +73,9 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 		contentHtml: problem.contentHtml ?? OWN_DESCRIPTIONS[problem.slug]?.html ?? null,
 		ownDescription: !problem.contentHtml && Boolean(OWN_DESCRIPTIONS[problem.slug]),
 		notes: NOTES[problem.slug] ?? [],
-		tags: problem.tags,
+		// Categories and topic tags are clues; while the player hides them they are not sent at all.
+		showTags: user.showTags,
+		tags: user.showTags ? problem.tags : [],
 		exampleTestcases: problem.exampleTestcases ?? '',
 		isPaidOnly: problem.isPaidOnly,
 		editorialFree: problem.editorialFree,
@@ -88,7 +90,13 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 		// Only a solved problem that has fallen due: before that a look is free (awards.ts).
 		due: Boolean(state && state.solveCount > 0 && isDue(state, new Date())),
 		cur: cur
-			? { code: cur.code, nodeId: cur.nodeId, pattern: cur.pattern, premium: cur.premium, solutions: cur.solutions }
+			? {
+					code: cur.code,
+					nodeId: user.showTags ? cur.nodeId : null,
+					pattern: user.showTags ? cur.pattern : null,
+					premium: cur.premium,
+					solutions: cur.solutions
+				}
 			: null,
 		langs: LANGS.map((l) => ({ slug: l.slug, name: l.name, monaco: l.monaco, dir: l.dir, ext: l.ext, bonus: l.bonus }))
 	};

@@ -3,6 +3,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import Editor from '$lib/components/Editor.svelte';
 	import CustomTests from '$lib/components/CustomTests.svelte';
+	import TagToggle from '$lib/components/TagToggle.svelte';
 	import { judge, warmUp, exampleCases, stop, STOPPED, type Suite } from '$lib/pyodide/client';
 	let { data } = $props();
 
@@ -228,10 +229,11 @@
 <div class="head row">
 	<h1>{data.title}</h1>
 	<span class="pill {data.difficulty}">{data.difficulty}</span>
-	{#if data.cur}<span class="pill">{data.cur.pattern}</span>{/if}
+	{#if data.cur?.pattern}<span class="pill">{data.cur.pattern}</span>{/if}
 	{#if data.solved}<span class="pill" style="color: var(--good)">solved ×{data.solveCount}</span>{/if}
 	{#if data.dueAt}<span class="muted">due {new Date(data.dueAt).toLocaleDateString()}</span>{/if}
 	<a class="muted" href="https://leetcode.com/problems/{data.slug}/" target="_blank" rel="noreferrer">on LeetCode ↗</a>
+	<TagToggle show={data.showTags} />
 </div>
 
 {#if suiteError}
@@ -255,7 +257,7 @@
 				<ul>{#each data.notes as n (n)}<li>{n}</li>{/each}</ul>
 			</aside>
 		{/if}
-		<p class="row">{#each data.tags as t (t)}<span class="pill">{t}</span>{/each}</p>
+		{#if data.tags.length}<p class="row">{#each data.tags as t (t)}<span class="pill">{t}</span>{/each}</p>{/if}
 	</section>
 
 	<section class="work">

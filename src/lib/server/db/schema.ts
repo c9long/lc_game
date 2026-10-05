@@ -12,6 +12,9 @@ export const users = sqliteTable('users', {
 	lcUsername: text('lc_username'),
 	timezone: text('timezone').notNull().default('UTC'),
 	isAdmin: bool('is_admin').notNull().default(false),
+	/** Whether problem categories and topic tags are shown. Hidden by default: naming the pattern is
+	 *  a clue, and on a refresh recognising it is half the exercise. */
+	showTags: bool('show_tags').notNull().default(false),
 	createdAt: ts('created_at').notNull()
 });
 

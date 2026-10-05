@@ -22,7 +22,9 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 
 	return {
 		today: snap.today,
-		plan,
+		// Categories are clues; hidden unless the player shows them (the Forge slot is not a category).
+		plan: user.showTags ? plan : plan.map((p) => (p.kind === 'drills' ? p : { ...p, pattern: null, nodeId: null })),
+		showTags: user.showTags,
 		weekly: snap.weekly,
 		// After getOrCreatePlan, so today's offers count.
 		expedition: await weeklyExpedition(db, snap),

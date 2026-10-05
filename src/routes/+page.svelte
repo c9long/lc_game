@@ -1,4 +1,5 @@
 <script lang="ts">
+	import TagToggle from '$lib/components/TagToggle.svelte';
 	let { data } = $props();
 	const pct = (t: { done: number; offered: number }) => (t.offered ? Math.min(100, Math.round((t.done / t.offered) * 100)) : 0);
 	const kindLabel: Record<string, string> = { new: 'New', refresh: 'Refresh', daily: 'Daily ×2', drills: 'Forge' };
@@ -15,7 +16,7 @@
 
 <div class="grid two">
 	<section class="card">
-		<h2>Expedition</h2>
+		<h2 class="row">Expedition <TagToggle show={data.showTags} /></h2>
 		{#if data.plan.length === 0}
 			<p class="muted">Nothing to plan yet. Solve anything from the <a href="/tree">tech tree</a>.</p>
 		{/if}
