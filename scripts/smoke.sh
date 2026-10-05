@@ -25,7 +25,7 @@ EXP=$((NOW + 2592000000))
 
 $W migrations apply lc-game --local --persist-to "$STATE" >/dev/null
 $W execute lc-game --local --persist-to "$STATE" --command \
-  "INSERT INTO users (id, name, lc_username, timezone, is_admin, created_at) VALUES ('smoke-user', 'admin', NULL, 'UTC', 1, $NOW), ('smoke-friend', 'friend', NULL, 'UTC', 0, $((NOW + 1)));
+  "INSERT INTO users (id, name, timezone, is_admin, created_at) VALUES ('smoke-user', 'admin', 'UTC', 1, $NOW), ('smoke-friend', 'friend', 'UTC', 0, $((NOW + 1)));
    INSERT INTO sessions (id, user_id, expires_at, created_at) VALUES ('$HASH', 'smoke-user', $EXP, $NOW), ('$HASH2', 'smoke-friend', $EXP, $NOW);" >/dev/null
 
 # Own process group so cleanup kills vite and workerd, not just the pnpm wrapper.
@@ -55,7 +55,8 @@ B="http://localhost:$PORT"
 check 200 "$B/auth/login"
 check 303 "$B/"
 check 401 "$B/api/solve/two-sum/tests"
-check 403 -X POST -H "origin: https://evil.example" -H "cookie: lc_session=$TOKEN" "$B/api/sync"
+check 403 -X POST -H "origin: https://evil.example" -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" -d '{"show":true}' "$B/api/settings/tags"
+check 404 -H "cookie: lc_session=$TOKEN" "$B/api/sync"   # LeetCode profile sync was removed
 check 200 -H "cookie: lc_session=$TOKEN" "$B/"
 check 200 -H "cookie: lc_session=$TOKEN" "$B/tree"
 check 200 -H "cookie: lc_session=$TOKEN" "$B/tree/arrays-hashing"

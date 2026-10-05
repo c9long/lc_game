@@ -27,7 +27,7 @@ The fallback ladder in [runbook.md](runbook.md) does not apply, because it assum
 
 ## Build status (2026-09-04)
 
-Phases 1 to 8 are implemented in one pass: repo hygiene, passkey auth, admin/cookie management, LeetCode client, Monaco solve page with Run/Submit/check, tech tree with freshness, weekly budget and morale, daily plan, city with buildings, solutions drawer, profile sync, runbook. Unit tests cover the pure rules; a curl smoke test covers every route. Not yet exercised: a real browser session (passkey ceremony, Monaco rendering) and a real LeetCode round-trip, both of which need Chris's device and cookie.
+Phases 1 to 8 are implemented in one pass: repo hygiene, passkey auth, admin/cookie management, LeetCode client, Monaco solve page with Run/Submit/check, tech tree with freshness, weekly budget and morale, daily plan, city with buildings, solutions drawer, profile sync, runbook. Unit tests cover the pure rules; a curl smoke test covers every route. Not yet exercised: a real browser session (passkey ceremony, Monaco rendering) and a real LeetCode round-trip, both of which need Chris's device and cookie. (Profile sync was later removed, on 2026-10-05.)
 
 ## How a solve flows
 
@@ -146,7 +146,7 @@ Browser (SvelteKit + Monaco)
   /tree/<id>   node problems and state
   /solve/<slug> editor, run/submit, results, solutions drawer
   /city        grid, buildings, resources
-  /admin       username, timezone, cookie paste + validate
+  /admin       timezone, passkeys (/settings); invites (/admin)
   /auth/*      passkey register (setup-token gated), login, logout
 
 Worker
@@ -156,7 +156,7 @@ Worker
   /api/solve/<slug>/draft      autosaved editor drafts
   /api/solve/<slug>/solutions  community / article / editorial proxy; records solution views while due (kind=own for "Last accepted")
   /api/city/build, /api/city/destroy  server-validated placement, upgrade, demolition
-  /api/sync                    recentAcSubmissionList fallback (also runs on Today, throttled to 5 min)
+  /api/sync                    removed 2026-10-05: progress is the app's own, not LeetCode's
   /drills, /api/drills/answer  daily drill set (stored in game_state), server-side answer checking, ingots
   No cron: loadSnapshot() accrues coins for elapsed active days on each request; the daily plan is created on first load of the day.
 

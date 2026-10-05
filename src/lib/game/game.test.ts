@@ -182,7 +182,7 @@ describe('tree', () => {
 	});
 
 	it('never schedules a refresh for a problem outside the curriculum', () => {
-		// Profile sync records solves made on leetcode.com so they count towards the weekly budget,
+		// The former profile sync (removed 2026-10-05) recorded solves made on leetcode.com, so they count towards the weekly budget,
 		// which puts non-curriculum slugs into progress. They previously surfaced as refresh tasks
 		// linking to a solve page with no test suite, because expected outputs only exist for the
 		// vendored NeetCode 150.
@@ -218,7 +218,7 @@ describe('tree', () => {
 	});
 
 	it('treats a node unlocked by solve count alone as unservable while its path is locked', () => {
-		// Profile sync can record enough solves on a deep node to mark it `unlocked` long before the
+		// Rows imported by the former profile sync (removed 2026-10-05) can record enough solves on a deep node to mark it `unlocked` long before the
 		// path to it opens, which would otherwise let the expedition serve from it.
 		const t0 = new Date('2026-09-06T12:00:00Z');
 		const dp2d = problemsForNode('dp-2d');

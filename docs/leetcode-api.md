@@ -1,3 +1,5 @@
+> **2026-10-05:** the app no longer syncs from LeetCode or validates usernames; progress is its own. The `recentAcSubmissionList` / `matchedUser` notes below are kept as API reference only.
+
 # LeetCode API reference (unofficial)
 
 LeetCode has no official public API. `https://leetcode.com/graphql` is the endpoint the site itself uses, and it answers unauthenticated requests for public data. The community wrappers (`leetcode-query` on npm, `alfa-leetcode-api`) use the same endpoint. Every query below was run with curl from this machine on 2026-09-04 and returned the data shown.

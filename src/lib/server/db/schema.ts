@@ -9,7 +9,6 @@ export const users = sqliteTable('users', {
 	id: text('id').primaryKey(),
 	/** Shown in Admin and used as the WebAuthn user name. */
 	name: text('name').notNull().default(''),
-	lcUsername: text('lc_username'),
 	timezone: text('timezone').notNull().default('UTC'),
 	isAdmin: bool('is_admin').notNull().default(false),
 	/** Whether problem categories and topic tags are shown. Hidden by default: naming the pattern is

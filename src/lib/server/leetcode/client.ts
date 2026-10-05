@@ -96,32 +96,6 @@ export async function fetchProblem(slug: string): Promise<ProblemData | null> {
 	};
 }
 
-export interface RecentAc {
-	id: string;
-	title: string;
-	titleSlug: string;
-	timestamp: number;
-	lang: string;
-}
-
-export async function fetchRecentAc(username: string, limit = 20): Promise<RecentAc[]> {
-	const data = await gql<{ recentAcSubmissionList: any[] | null }>(
-		`query recentAc($username: String!, $limit: Int!) {
-      recentAcSubmissionList(username: $username, limit: $limit) { id title titleSlug timestamp lang }
-    }`,
-		{ username, limit }
-	);
-	return (data.recentAcSubmissionList ?? []).map((s) => ({ ...s, id: String(s.id), timestamp: Number(s.timestamp) }));
-}
-
-export async function fetchUserExists(username: string): Promise<boolean> {
-	const data = await gql<{ matchedUser: { username: string } | null }>(
-		`query u($username: String!) { matchedUser(username: $username) { username } }`,
-		{ username }
-	);
-	return Boolean(data.matchedUser);
-}
-
 export interface Daily {
 	date: string;
 	slug: string;

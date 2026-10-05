@@ -81,8 +81,7 @@ export const POST: RequestHandler = async (event) => {
 				submissionId: id,
 				slug: problem.slug,
 				lang: body.lang,
-				acceptedAt: new Date(),
-				external: false
+				acceptedAt: new Date()
 			})
 		: null;
 

@@ -26,7 +26,7 @@ export interface NodeView {
 	status: NodeStatus;
 	/** Whether every prerequisite node is unlocked or complete and itself has its prerequisites
 	 *  met, all the way back to the root. Kept separate from `status` because a node reaches
-	 *  `unlocked` on solve count alone: profile sync can record solves for a deep node long before
+	 *  `unlocked` on solve count alone: rows imported by the former profile sync (removed 2026-10-05) can record solves for a deep node long before
 	 *  the path to it is open. Transitive for the same reason: a synced-open Two Pointers must not
 	 *  open Sliding Window while Arrays & Hashing is still short of unlocking. */
 	prereqsMet: boolean;
@@ -88,7 +88,7 @@ export function isOpen(status: NodeStatus): boolean {
 
 /** Whether the expedition may hand out problems from this node.
  *
- *  Being open is not enough. A node reaches `unlocked` on solve count alone, so profile sync of
+ *  Being open is not enough. A node reaches `unlocked` on solve count alone, so the former profile sync (removed 2026-10-05) of
  *  solves made on leetcode.com can open a node deep in the tree while the path to it is still
  *  locked. Serving from there means offering 2-D DP before 1-D DP is unlocked.
  */
@@ -122,7 +122,7 @@ export function nextNewProblems(
  *  within the node, skipping nodes the expedition may not serve from.
  *
  *  Gated on isServable exactly as new problems are. Practice solves (on leetcode.com, picked up
- *  by profile sync) put problems from deep nodes on the SRS schedule long before the path there
+ *  by the former profile sync) put problems from deep nodes on the SRS schedule long before the path there
  *  opens, and those used to come due as refreshes: Sliding Window reviews while Two Pointers was
  *  still locked. They stay on the schedule and are served once the path opens.
  *
@@ -131,7 +131,7 @@ export function nextNewProblems(
  *  waited longer: a due 1-D DP problem was served ahead of a due Two Pointers one.
  *
  *  Walking the curriculum, rather than the progress map, is also what keeps non-curriculum
- *  problems out. Profile sync records every accepted submission so solves made on leetcode.com
+ *  problems out. The former profile sync (removed 2026-10-05) recorded accepted submissions made on leetcode.com, so solves there
  *  still count towards the weekly budget, which means progress holds problems outside the 150.
  *  Those must never become refresh tasks: the tree does not track them and, since expected
  *  outputs come from the vendored reference solutions, there is no suite to judge them with.

@@ -7,9 +7,6 @@
 
 <h1>Today <span class="muted">{data.today}</span></h1>
 
-{#if data.sync.error}
-	<div class="banner">Profile sync failed: {data.sync.error}</div>
-{/if}
 {#if data.tickCoins > 0}
 	<div class="toast">🪙 +{data.tickCoins} coins produced while you were away</div>
 {/if}

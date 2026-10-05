@@ -16,8 +16,6 @@ export interface AcceptedInput {
 	slug: string;
 	lang: string;
 	acceptedAt: Date;
-	/** true when discovered via profile sync rather than an in-app submit. */
-	external: boolean;
 }
 
 export interface ApplyResult {

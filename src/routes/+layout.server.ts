@@ -11,7 +11,6 @@ export const load: LayoutServerLoad = async ({ locals, platform, url }) => {
 		? {
 				id: locals.user.id,
 				name: locals.user.name,
-				lcUsername: locals.user.lcUsername,
 				timezone: locals.user.timezone,
 				isAdmin: locals.user.isAdmin
 			}

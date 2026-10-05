@@ -9,17 +9,10 @@
 	<section class="card">
 		<h2>Profile</h2>
 		<form method="POST" action="?/profile" use:enhance>
-			<label>LeetCode username <input name="lcUsername" value={data.profile.lcUsername} placeholder="for profile sync" /></label>
 			<label>Timezone <input name="timezone" value={data.profile.timezone} /></label>
 			<button class="primary">Save</button>
 			{#if form?.profile}<span class="muted">{form.profile}</span>{/if}
 		</form>
-	</section>
-
-	<section class="card">
-		<h2>Sync</h2>
-		<p class="muted">Pulls your last 20 accepted submissions from your public LeetCode profile so solves made elsewhere still count. Runs automatically every 5 minutes when you open Today.{#if data.lastSyncAt} Last: {new Date(data.lastSyncAt).toLocaleString()}.{/if}</p>
-		<form method="POST" action="?/sync" use:enhance><button>Sync now</button> {#if form?.sync}<span class="muted">{form.sync}</span>{/if}</form>
 	</section>
 
 	<section class="card">

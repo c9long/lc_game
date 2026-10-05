@@ -46,7 +46,7 @@ Then:
 
 1. Open `https://<your-url>/auth/register?token=<SETUP_TOKEN>` and create a passkey on the device you are using. This first account is the admin. Add your phone later from Settings while signed in.
 2. `pnpm exec wrangler secret delete SETUP_TOKEN`. The Admin page nags until you do.
-3. Settings: set your LeetCode username and timezone.
+3. Settings: set your timezone.
 4. Open Today and click a plan slot. **This is the Phase 0 egress check:** the problem statement is fetched from LeetCode's public API by the Worker. If it loads, LeetCode accepts calls from Workers. If it fails with "bot-challenge page", see Fallbacks below. Run and Submit are judged in the browser and do not depend on it.
 
 Redeploy after code changes with `pnpm deploy`. Schema changes: edit `src/lib/server/db/schema.ts`, `pnpm db:generate`, `pnpm db:migrate:local`, test, `pnpm db:migrate:remote`, deploy.
@@ -62,12 +62,12 @@ Nothing secret lives in `wrangler.toml`, the repo, or the browser. The pre-commi
 
 ## Operating
 
-- **Solves made outside the app** (LeetCode mobile, etc.): Today syncs the last 20 accepted submissions from your public profile every 5 minutes; Settings has a "Sync now" button.
+- **Solves made outside the app do not count.** Progress is the app's own: LeetCode profile sync was removed on 2026-10-05. Awards it imported earlier are still in the `awards` table, recognisable by a numeric `submission_id` (in-app ones are random base64url).
 - **Backups**: `pnpm exec wrangler d1 export lc-game --remote --output backup-$(date +%F).sql`. Restore with `wrangler d1 execute lc-game --remote --file backup.sql` on a fresh database.
 - **Drill bank updates**: `python3 scripts/mine-python-docs.py` downloads the CPython 3.12 docs into `.cache/` (git-ignored), executes every example, and rewrites `data/drills/python.json`. Then `pnpm drills:generate` rewrites `data/drills/variants.json` (add `--report` to see why a drill did not vary), and `pnpm drills:verify` executes every hand-written drill and every generated instance, and `pnpm drills:ambiguity` fails if any other token in a blank shows the same output (exclude a mined drill that fails it; rewrite a hand-written one) — run both after any edit to `curation.json`, since a reworded `explain` can make a drill stop varying or start failing the stale-explanation check. Add ids to `exclude` in `curation.json` to drop bad mined drills. Redeploy afterwards; drill ids are content hashes and instances hang off them, so progress survives regeneration.
 - **Test-case constraints**: `python3 scripts/fetch-neetcode-constraints.py` refreshes `data/neetcode-constraints.json` from neetcode.io's problem pages. `scripts/constraints.py` holds one validator per problem at the stricter of neetcode.io's and LeetCode's bounds; edit it when either site changes, then `python3 scripts/generate-tests.py --modes all`. CI fails on any case outside the constraints.
 - **Curriculum updates**: `git clone --depth 1 https://github.com/neetcode-gh/leetcode.git /tmp/neetcode && pnpm import:neetcode /tmp/neetcode` regenerates `data/neetcode150.json` and `static/solutions/`. It needs network access: each problem's pattern and order come from neetcode.io's own bundle, because the repo's `.problemSiteData.json` lags the site (it still filed Generate Parentheses under Stack). Edit `data/roadmap.json` by hand for the tree's edges.
-- **Inviting a player**: Admin → Invite a player → give a name → send the link. It works once, for 7 days, and creates a new account with its own progress, city and drills; the player gets Settings (their LeetCode username, timezone, passkeys, signing out their own devices) but not Admin. Unused links can be revoked from the same card. Only the token's hash is stored, so a lost link is revoked and reissued.
+- **Inviting a player**: Admin → Invite a player → give a name → send the link. It works once, for 7 days, and creates a new account with its own progress, city and drills; the player gets Settings (their timezone, passkeys, signing out their own devices) but not Admin. Unused links can be revoked from the same card. Only the token's hash is stored, so a lost link is revoked and reissued.
 - **Sign out**: Settings → Sign out all my devices (one player). Admin → Sign out every player (truncates sessions).
 - **Logs**: `pnpm exec wrangler tail`.
 
@@ -78,7 +78,7 @@ Nothing secret lives in `wrangler.toml`, the repo, or the browser. The pre-commi
 
 ## Fallbacks if LeetCode blocks Workers egress
 
-Code is judged in the browser, so LeetCode is needed only for problem statements, community solutions, editorials, the daily problem and profile sync, all through its public API. Statements are cached in D1 after the first fetch. If those calls return a "bot-challenge page" error from the deployed app:
+Code is judged in the browser, so LeetCode is needed only for problem statements, community solutions, editorials, and the daily problem, all through its public API. Statements are cached in D1 after the first fetch. If those calls return a "bot-challenge page" error from the deployed app:
 
 1. Try the isolated spike in `spike/leetcode-egress/` to confirm it is egress.
 2. Deploy the same app to Vercel: swap `@sveltejs/adapter-cloudflare` for `@sveltejs/adapter-vercel`, replace the D1 driver with Turso (`@libsql/client`) in `src/lib/server/db/index.ts`, and move secrets to Vercel env vars. Everything else is unchanged.

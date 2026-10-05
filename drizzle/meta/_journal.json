@@ -43,6 +43,13 @@
       "when": 1791205091964,
       "tag": "0005_show_tags",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1791207077660,
+      "tag": "0006_drop_leetcode_sync",
+      "breakpoints": true
     }
   ]
 }
