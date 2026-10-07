@@ -310,7 +310,10 @@
 				<!-- A Run checks only the published examples, which a wrong solution can pass by luck (sorting
 				     Top K Frequent by value passes all three). "Accepted" is kept for a Submit, which is the
 				     only thing that counts. -->
-				<h3>{kindLabel}: {resultKind === 'run' && passed ? 'examples pass' : (result.status_msg ?? result.state)}</h3>
+				<div class="row result-head">
+					<h3>{kindLabel}: {resultKind === 'run' && passed ? 'examples pass' : (result.status_msg ?? result.state)}</h3>
+					<button class="clear" onclick={() => (result = null)} title="Hide this output">Clear</button>
+				</div>
 				{#if result.total_testcases != null}<p>{result.total_correct ?? 0} / {result.total_testcases} {resultKind === 'run' ? 'example' : 'test'} cases passed <span class="muted">· {result.elapsedMs} ms</span></p>{/if}
 				{#if resultKind === 'run' && passed && suite && suite.cases.length > suite.exampleCount}
 					<p class="muted">Not accepted yet: Submit judges all {suite.cases.length} cases.</p>
@@ -396,6 +399,9 @@
 	button.stop { border-color: var(--bad); color: var(--bad); }
 	.result table { width: 100%; table-layout: fixed; }
 	.result td code { overflow-wrap: anywhere; }
+	.result-head { justify-content: space-between; }
+	.result-head h3 { margin: 0; }
+	.result .clear { font-size: 0.8rem; padding: 0.15rem 0.6rem; }
 	.result.pass { border-color: var(--good); }
 	.result.fail { border-color: var(--bad); }
 	tr.bad td { color: var(--bad); }
