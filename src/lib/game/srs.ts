@@ -1,12 +1,13 @@
 /** Spaced-repetition ladder in days. A freshly solved problem is due again after INTERVALS[0].
  *
- *  Capped at 30 days deliberately. A longer tail (the ladder previously ran to 240) means a problem
- *  at the top contributes to its node's freshness, and so to that node's income, for most of a year
- *  without ever being re-derived. Thirty days keeps every solved problem in circulation while still
- *  rewarding the climb: four clean on-time solves take a problem from returning twice a week to
- *  returning monthly.
+ *  Capped at 60 days deliberately. A longer tail (the ladder once ran to 240) means a problem at the
+ *  top contributes to its node's freshness, and so to that node's income, for most of a year without
+ *  ever being re-derived. Sixty days keeps every solved problem in circulation while still rewarding
+ *  the climb: four clean solves take a problem from returning twice a week to returning every two
+ *  months. (3, 7, 14, 21, 30 until 2026-10-13.) A new ladder applies from each problem's next solve;
+ *  due dates already set stay as they are.
  */
-export const INTERVALS = [3, 7, 14, 21, 30];
+export const INTERVALS = [3, 7, 14, 30, 60];
 
 export interface SrsState {
 	/** Index into INTERVALS; -1 means never solved. */
