@@ -78,7 +78,6 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 		tags: user.showTags ? problem.tags : [],
 		exampleTestcases: problem.exampleTestcases ?? '',
 		isPaidOnly: problem.isPaidOnly,
-		editorialFree: problem.editorialFree,
 		snippets,
 		drafts,
 		lastAccepted,

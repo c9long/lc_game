@@ -63,7 +63,6 @@ export interface ProblemData {
 	tags: string[];
 	snippets: Record<string, string>;
 	exampleTestcases: string | null;
-	editorialFree: boolean;
 }
 
 const PROBLEM_QUERY = `query problem($slug: String!) {
@@ -72,7 +71,6 @@ const PROBLEM_QUERY = `query problem($slug: String!) {
     topicTags { name slug }
     codeSnippets { lang langSlug code }
     exampleTestcases
-    solution { id canSeeDetail paidOnly }
   }
 }`;
 
@@ -92,7 +90,6 @@ export async function fetchProblem(slug: string): Promise<ProblemData | null> {
 		tags: (q.topicTags ?? []).map((t: any) => t.name),
 		snippets,
 		exampleTestcases: q.exampleTestcases ?? null,
-		editorialFree: Boolean(q.solution && q.solution.canSeeDetail && !q.solution.paidOnly)
 	};
 }
 
@@ -154,15 +151,4 @@ export async function fetchSolutionArticle(topicId: number): Promise<{ title: st
 		{ topicId }
 	);
 	return data.ugcArticleSolutionArticle ?? null;
-}
-
-/** Paid editorials come back with canSeeDetail false, so their content is null. */
-export async function fetchEditorial(slug: string): Promise<{ content: string | null; paidOnly: boolean } | null> {
-	const data = await gql<{ question: any }>(
-		`query editorial($slug: String!) { question(titleSlug: $slug) { solution { canSeeDetail paidOnly content } } }`,
-		{ slug }
-	);
-	const s = data.question?.solution;
-	if (!s) return null;
-	return { content: s.canSeeDetail ? (s.content ?? null) : null, paidOnly: Boolean(s.paidOnly) };
 }

@@ -81,7 +81,6 @@ export const problems = sqliteTable('problems', {
 	snippets: text('snippets', { mode: 'json' }).$type<Record<string, string>>().notNull(),
 	exampleTestcases: text('example_testcases'),
 	isPaidOnly: bool('is_paid_only').notNull().default(false),
-	editorialFree: bool('editorial_free').notNull().default(false),
 	fetchedAt: ts('fetched_at').notNull()
 });
 

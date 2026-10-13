@@ -3,7 +3,7 @@ import type { RequestHandler } from './$types';
 import { getDb } from '$lib/server/db';
 import { requireUser } from '$lib/server/guard';
 import { getProblem } from '$lib/server/problems';
-import { fetchEditorial, fetchSolutionArticle, fetchSolutionArticles } from '$lib/server/leetcode/client';
+import { fetchSolutionArticle, fetchSolutionArticles } from '$lib/server/leetcode/client';
 import { judgeErrorResponse, recordSolutionView } from '$lib/server/judge';
 import { localDate } from '$lib/game/dates';
 import { LANG_BY_SLUG } from '$lib/langs';
@@ -13,6 +13,9 @@ export const GET: RequestHandler = async (event) => {
 	const db = getDb(event.platform);
 	const slug = event.params.slug;
 	const kind = event.url.searchParams.get('kind') ?? 'list';
+	// Refuse an unknown kind before recording anything: a page still running an older build could
+	// ask for 'editorial' (removed 2026-10-13), and that must not mark the refresh assisted.
+	if (!['reference', 'own', 'community', 'article'].includes(kind)) return json({ error: 'bad_request' }, { status: 400 });
 	const problem = await getProblem(db, slug);
 	if (!problem) return json({ error: 'not_found' }, { status: 404 });
 
@@ -33,9 +36,6 @@ export const GET: RequestHandler = async (event) => {
 			const topicId = Number(event.url.searchParams.get('topicId'));
 			if (!Number.isInteger(topicId)) return json({ error: 'bad_request' }, { status: 400 });
 			return json({ data: await fetchSolutionArticle(topicId) });
-		}
-		if (kind === 'editorial') {
-			return json({ data: await fetchEditorial(slug) });
 		}
 		return json({ error: 'bad_request' }, { status: 400 });
 	} catch (e) {

@@ -26,7 +26,6 @@ export async function getProblem(db: Db, slug: string): Promise<ProblemRow | nul
 		snippets: fresh.snippets,
 		exampleTestcases: fresh.exampleTestcases,
 		isPaidOnly: fresh.isPaidOnly,
-		editorialFree: fresh.editorialFree,
 		fetchedAt: new Date()
 	};
 	await db

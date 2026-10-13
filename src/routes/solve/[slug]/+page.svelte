@@ -27,11 +27,10 @@
 	 *  briefly unreachable from the very page that just accepted it. */
 	let justAccepted = $state<Record<string, string>>({});
 
-	let drawer = $state<'closed' | 'reference' | 'community' | 'editorial'>('closed');
+	let drawer = $state<'closed' | 'reference' | 'community'>('closed');
 	let reference = $state('');
 	let community = $state<{ total: number; articles: any[] } | null>(null);
 	let article = $state<{ title: string; content: string } | null>(null);
-	let editorial = $state<{ content: string | null; paidOnly: boolean } | null>(null);
 	let drawerBusy = $state(false);
 
 	const langMeta = $derived(data.langs.find((l) => l.slug === lang) ?? data.langs[0]);
@@ -174,7 +173,7 @@
 		}
 	}
 
-	async function openDrawer(tab: 'reference' | 'community' | 'editorial') {
+	async function openDrawer(tab: 'reference' | 'community') {
 		drawer = tab;
 		drawerBusy = true;
 		try {
@@ -187,11 +186,9 @@
 					const file = await fetch(`/solutions/${langMeta.dir}/${data.cur!.code}.${langMeta.ext}`);
 					reference = file.ok ? await file.text() : 'No reference solution for this language.';
 				} else reference = 'No NeetCode reference solution for this language.';
-			} else if (tab === 'community') {
+			} else {
 				community = j.data;
 				article = null;
-			} else {
-				editorial = j.data;
 			}
 		} catch (e) {
 			message = e instanceof Error ? e.message : String(e);
@@ -358,7 +355,6 @@
 				{#if data.due}<span class="muted">Due for a refresh: opening a solution or loading "Last accepted" now marks this refresh as assisted, so it comes back in 3 days.</span>{:else}<span class="muted">Free to open.</span>{/if}
 				<button onclick={() => openDrawer('reference')} disabled={drawerBusy}>NeetCode reference</button>
 				<button onclick={() => openDrawer('community')} disabled={drawerBusy}>Community ({langMeta.name})</button>
-				<button onclick={() => openDrawer('editorial')} disabled={drawerBusy}>Editorial</button>
 				{#if drawer !== 'closed'}<button onclick={() => (drawer = 'closed')}>Close</button>{/if}
 			</div>
 			{#if drawer === 'reference'}
@@ -375,12 +371,6 @@
 							<li><button class="link" onclick={() => a.topicId && openArticle(a.topicId)}>{a.title}</button> <span class="muted">{a.hitCount} views</span></li>
 						{/each}
 					</ul>
-				{:else if drawerBusy}<p>Loading…</p>{/if}
-			{:else if drawer === 'editorial'}
-				{#if editorial?.content}
-					<pre class="md">{editorial.content}</pre>
-				{:else if editorial}
-					<p>The editorial is {editorial.paidOnly ? 'Premium-only' : 'not available in-app'}. <a href="https://leetcode.com/problems/{data.slug}/editorial/" target="_blank" rel="noreferrer">Open on LeetCode ↗</a></p>
 				{:else if drawerBusy}<p>Loading…</p>{/if}
 			{/if}
 		</div>

@@ -78,7 +78,7 @@ Nothing secret lives in `wrangler.toml`, the repo, or the browser. The pre-commi
 
 ## Fallbacks if LeetCode blocks Workers egress
 
-Code is judged in the browser, so LeetCode is needed only for problem statements, community solutions, editorials, and the daily problem, all through its public API. Statements are cached in D1 after the first fetch. If those calls return a "bot-challenge page" error from the deployed app:
+Code is judged in the browser, so LeetCode is needed only for problem statements, community solutions and the daily problem, all through its public API. Statements are cached in D1 after the first fetch. If those calls return a "bot-challenge page" error from the deployed app:
 
 1. Try the isolated spike in `spike/leetcode-egress/` to confirm it is egress.
 2. Deploy the same app to Vercel: swap `@sveltejs/adapter-cloudflare` for `@sveltejs/adapter-vercel`, replace the D1 driver with Turso (`@libsql/client`) in `src/lib/server/db/index.ts`, and move secrets to Vercel env vars. Everything else is unchanged.
