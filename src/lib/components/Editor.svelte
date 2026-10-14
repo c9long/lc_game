@@ -5,9 +5,24 @@
 	let {
 		value = $bindable(''),
 		language = 'python',
+		completion = true,
 		onrun,
 		onsubmit
-	}: { value?: string; language?: string; onrun?: () => void; onsubmit?: () => void } = $props();
+	}: { value?: string; language?: string; completion?: boolean; onrun?: () => void; onsubmit?: () => void } = $props();
+
+	/** Everything Monaco offers that writes or suggests code for you. Hover and syntax colouring stay. */
+	function completionOptions(on: boolean): Monaco.editor.IEditorOptions & Monaco.editor.IGlobalEditorOptions {
+		return {
+			quickSuggestions: on,
+			suggestOnTriggerCharacters: on,
+			wordBasedSuggestions: on ? 'currentDocument' : 'off',
+			parameterHints: { enabled: on },
+			acceptSuggestionOnEnter: on ? 'on' : 'off',
+			tabCompletion: on ? 'on' : 'off',
+			snippetSuggestions: on ? 'inline' : 'none',
+			inlineSuggest: { enabled: on }
+		};
+	}
 
 	let host: HTMLDivElement;
 	let editor: Monaco.editor.IStandaloneCodeEditor | undefined;
@@ -54,7 +69,8 @@
 					fontSize: 14,
 					tabSize: 4,
 					insertSpaces: language !== 'go',
-					scrollBeyondLastLine: false
+					scrollBeyondLastLine: false,
+					...completionOptions(completion)
 				});
 				editor.onDidChangeModelContent(() => {
 					if (applying || !editor) return;
@@ -68,6 +84,12 @@
 			disposed = true;
 			editor?.dispose();
 		};
+	});
+
+	// The autocomplete toggle applies live, without recreating the editor or losing its state.
+	$effect(() => {
+		const on = completion;
+		editor?.updateOptions(completionOptions(on));
 	});
 
 	// External value changes (language switch, reset to starter) flow into the editor.

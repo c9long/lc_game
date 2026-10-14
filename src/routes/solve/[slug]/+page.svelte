@@ -28,6 +28,16 @@
 	let justAccepted = $state<Record<string, string>>({});
 
 	let drawer = $state<'closed' | 'reference' | 'community'>('closed');
+	// Saved per player. Flipped locally first so the editor responds at once, then persisted.
+	let completion = $derived(data.codeCompletion);
+	async function toggleCompletion() {
+		completion = !completion;
+		await fetch('/api/settings/completion', {
+			method: 'POST',
+			headers: { 'content-type': 'application/json' },
+			body: JSON.stringify({ on: completion })
+		}).catch(() => {});
+	}
 	let reference = $state('');
 	let community = $state<{ total: number; articles: any[] } | null>(null);
 	let article = $state<{ title: string; content: string } | null>(null);
@@ -266,6 +276,7 @@
 			</select>
 			<button onclick={resetToStarter}>Starter</button>
 			{#if lastAcceptedFor}<button onclick={loadLastAccepted}>Last accepted</button>{/if}
+			<button onclick={toggleCompletion} title="Editor suggestions, parameter hints and snippets; saved for your account">Autocomplete: {completion ? 'on' : 'off'}</button>
 			<span class="spacer"></span>
 			<button onclick={() => execute('run')} disabled={busy !== null || customBusy || !canJudge} title="Ctrl+Enter">{busy === 'run' ? 'Running…' : 'Run'}</button>
 			{#if busy !== null || customBusy}
@@ -274,7 +285,7 @@
 			<button class="primary" onclick={() => execute('submit')} disabled={busy !== null || customBusy || !canJudge} title="Ctrl+Shift+Enter">{busy === 'submit' ? 'Judging…' : 'Submit'}</button>
 		</div>
 
-		<Editor bind:value={code} language={monacoLang} onrun={() => execute('run')} onsubmit={() => execute('submit')} />
+		<Editor bind:value={code} language={monacoLang} {completion} onrun={() => execute('run')} onsubmit={() => execute('submit')} />
 
 		{#if suite}
 			<p class="muted">

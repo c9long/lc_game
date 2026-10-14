@@ -288,6 +288,13 @@ check 200 -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/j
 check 200 -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" -d '{"show":false}' "$B/api/settings/tags"
 [ "$(has_clue /solve/two-sum)" = "no" ] && echo "ok   hiding tags again hides it" || { echo "FAIL hiding tags again left the category"; fail=1; }
 
+# Editor autocomplete: on by default, and turning it off is remembered for the player.
+completion() { curl -s -H "cookie: lc_session=$TOKEN" "$B/solve/two-sum" | grep -oE 'codeCompletion:(true|false)' | head -1; }
+[ "$(completion)" = "codeCompletion:true" ] && echo "ok   autocomplete is on by default" || { echo "FAIL autocomplete default: $(completion)"; fail=1; }
+check 200 -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" -d '{"on":false}' "$B/api/settings/completion"
+[ "$(completion)" = "codeCompletion:false" ] && echo "ok   turning autocomplete off is saved" || { echo "FAIL autocomplete off not saved: $(completion)"; fail=1; }
+check 200 -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" -d '{"on":true}' "$B/api/settings/completion"
+
 # Two players. Everything above was the admin; the friend must start from nothing, see none of it,
 # change none of it, and be kept out of /admin.
 A_STATE() { q "SELECT (SELECT group_concat(kind || '=' || amount) FROM (SELECT * FROM resources WHERE user_id='smoke-user' ORDER BY kind)) || '|' || (SELECT count(*) FROM buildings WHERE user_id='smoke-user') || '|' || (SELECT count(*) FROM problem_state WHERE user_id='smoke-user') || '|' || (SELECT count(*) FROM plan_items WHERE user_id='smoke-user') || '|' || (SELECT count(*) FROM drill_state WHERE user_id='smoke-user') AS s"; }

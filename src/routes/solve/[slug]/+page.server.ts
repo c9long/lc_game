@@ -75,6 +75,7 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 		notes: NOTES[problem.slug] ?? [],
 		// Categories and topic tags are clues; while the player hides them they are not sent at all.
 		showTags: user.showTags,
+		codeCompletion: user.codeCompletion,
 		tags: user.showTags ? problem.tags : [],
 		exampleTestcases: problem.exampleTestcases ?? '',
 		isPaidOnly: problem.isPaidOnly,

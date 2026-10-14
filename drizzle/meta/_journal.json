@@ -57,6 +57,13 @@
       "when": 1791899809690,
       "tag": "0007_drop_editorial",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1791985606806,
+      "tag": "0008_code_completion",
+      "breakpoints": true
     }
   ]
 }

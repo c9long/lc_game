@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `code_completion` integer DEFAULT true NOT NULL;
