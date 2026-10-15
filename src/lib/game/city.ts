@@ -201,8 +201,9 @@ export function gateSatisfied(gate: Gate | undefined, ctx: GateContext): boolean
 
 export const INGOTS_PER_UPGRADE_LEVEL = 3;
 /** Upgrades also cost coins, so daily production — and therefore finishing the expedition — is
- *  what funds a growing city, rather than coins having nothing to be spent on. */
-export const COINS_PER_UPGRADE_LEVEL = 15;
+ *  what funds a growing city, rather than coins having nothing to be spent on. Tripled from 15 on
+ *  2026-10-15: coins were piling up unspent. */
+export const COINS_PER_UPGRADE_LEVEL = 45;
 
 /** Upgrades cost the base resources scaled up, plus Ingots (earned only from syntax drills). The
  *  whole price is then multiplied by the city's tier — after rounding, so a Knolls price is exactly

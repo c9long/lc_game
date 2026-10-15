@@ -303,10 +303,10 @@ describe('city', () => {
 		expect(gateSatisfied({ node: 'arrays-hashing', status: 'unlocked' }, ctx)).toBe(false);
 		expect(gateSatisfied({ hard: 3 }, { ...ctx, hardSolves: 3 })).toBe(true);
 		const hut = BUILDINGS.find((b) => b.id === 'hut')!;
-		expect(costAtLevel(hut, 2)).toEqual({ timber: 8, ingots: 3, coins: 15 });
+		expect(costAtLevel(hut, 2)).toEqual({ timber: 8, ingots: 3, coins: 45 });
 		expect(canAfford({ timber: 8 }, costAtLevel(hut, 2))).toBe(false);
 		expect(canAfford({ timber: 8, ingots: 3 }, costAtLevel(hut, 2))).toBe(false); // coins now count too
-		expect(canAfford({ timber: 8, ingots: 3, coins: 15 }, costAtLevel(hut, 2))).toBe(true);
+		expect(canAfford({ timber: 8, ingots: 3, coins: 45 }, costAtLevel(hut, 2))).toBe(true);
 		const placed = [
 			{ id: 'a', kind: 'hut', city: 0, x: 0, y: 0, level: 2 },
 			{ id: 'r', kind: 'graph-roads', city: 0, x: 1, y: 0, level: 1 },
@@ -410,8 +410,8 @@ describe('city economy', () => {
 	it('charges coins as well as materials and ingots to upgrade', () => {
 		const hut = BUILDINGS.find((b) => b.id === 'hut')!;
 		expect(costAtLevel(hut, 1).coins).toBeUndefined(); // building it costs no coins
-		expect(costAtLevel(hut, 2)).toMatchObject({ ingots: 3, coins: 15 });
-		expect(costAtLevel(hut, 3)).toMatchObject({ ingots: 6, coins: 30 });
+		expect(costAtLevel(hut, 2)).toMatchObject({ ingots: 3, coins: 45 });
+		expect(costAtLevel(hut, 3)).toMatchObject({ ingots: 6, coins: 90 });
 	});
 
 	it('pays nothing for an idle day', () => {
@@ -834,7 +834,7 @@ describe('city tiers', () => {
 			}
 		}
 		// Ingots and coins on an upgrade scale too, not just materials.
-		expect(costAtLevel(market, 3, 2)).toEqual({ timber: 23 * 16, stone: 12 * 16, ingots: 96, coins: 480 });
+		expect(costAtLevel(market, 3, 2)).toEqual({ timber: 23 * 16, stone: 12 * 16, ingots: 96, coins: 90 * 16 });
 		expect(costAtLevel(market, 1, STORAGE)).toEqual(costAtLevel(market, 1, 0));
 	});
 
@@ -859,7 +859,7 @@ describe('city tiers', () => {
 		const knolls = investedCost(market, 2, 1);
 		const hamlet = investedCost(market, 2, 0);
 		expect(up).toEqual(Object.fromEntries(Object.entries(knolls).map(([k, v]) => [k, v - hamlet[k]])));
-		expect(up).toEqual({ timber: 3 * (10 + 15), stone: 3 * (5 + 8), ingots: 9, coins: 45 });
+		expect(up).toEqual({ timber: 3 * (10 + 15), stone: 3 * (5 + 8), ingots: 9, coins: 3 * 45 });
 		expect(moveCost(market, 2, 1, 0)).toEqual({});
 		expect(moveCost(market, 2, 1, 1)).toEqual({});
 		expect(moveCost(market, 1, 0, 0)).toEqual({});
