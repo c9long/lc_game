@@ -1,7 +1,9 @@
 <script lang="ts">
 	import '../app.css';
-	import { page, updated } from '$app/state';
+	import { onMount } from 'svelte';
+	import { page } from '$app/state';
 	import { beforeNavigate } from '$app/navigation';
+	import { build, fmtBuild } from '$lib/version.svelte';
 	import ResourceBar from '$lib/components/ResourceBar.svelte';
 	let { data, children } = $props();
 	const links = $derived([
@@ -15,8 +17,9 @@
 	// Once a new version is deployed, the next navigation loads it properly rather than carrying
 	// on with client code that no longer matches the server and the judge worker.
 	beforeNavigate(({ willUnload, to }) => {
-		if (updated.current && !willUnload && to?.url) location.href = to.url.href;
+		if (build.outdated && !willUnload && to?.url) location.href = to.url.href;
 	});
+	onMount(() => build.start());
 	const current = (href: string) =>
 		href === '/' ? page.url.pathname === '/' : page.url.pathname.startsWith(href);
 </script>
@@ -33,9 +36,10 @@
 			<form method="POST" action="/auth/logout"><button type="submit">Log out</button></form>
 		</nav>
 	{/if}
-	{#if updated.current}
+	{#if build.outdated}
 		<div class="banner updated">
-			A new version of the app is out, and this page is still running the old one.
+			A new version of the app is out, and this page is still running the old one
+			<span class="muted">(this page: built {fmtBuild(build.page)} · server: built {fmtBuild(build.server)})</span>.
 			<button onclick={() => location.reload()}>Reload</button>
 		</div>
 	{/if}
