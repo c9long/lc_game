@@ -40,12 +40,14 @@ import driver  # noqa: E402  (needs the path above)
 sys.path.insert(0, str(ROOT / "scripts"))
 import constraints  # noqa: E402
 import generators  # noqa: E402
+import tle  # noqa: E402
 
 GRAPHQL = "https://leetcode.com/graphql"
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
 META_CACHE = ROOT / "data" / "problems-meta.json"
 CURATION = ROOT / "data" / "tests-curation.json"
 OUT_DIR = ROOT / "data" / "tests"
+TLE_DIR = ROOT / "static" / "tle"
 SOLUTIONS = ROOT / "static" / "solutions" / "python"
 TIMEOUT_S = 15
 
@@ -187,6 +189,11 @@ def generate(slug: str, code: str, meta: dict, curation: dict) -> tuple[str, str
     generated = generators.build(slug, inputs)
     if generated:
         inputs = inputs + generated
+    # Large inputs a too-slow solution cannot finish in time (scripts/tle/). Judged on Submit only,
+    # and stored apart from the suite: see scripts/tle/__init__.py.
+    big = tle.build(slug, inputs)
+    regular = len(inputs)
+    inputs = inputs + big
 
     source = usable_source(solution_file.read_text())
     signal.signal(signal.SIGALRM, _alarm)
@@ -199,6 +206,17 @@ def generate(slug: str, code: str, meta: dict, curation: dict) -> tuple[str, str
         signal.alarm(0)
 
     # An expectation must survive a round trip through JSON or the browser cannot store it.
+    tle_path = TLE_DIR / f"{slug}.json"
+    if big:
+        TLE_DIR.mkdir(parents=True, exist_ok=True)
+        cases = [{"args": a, "expected": o} for a, o in zip(inputs[regular:], outputs[regular:])]
+        tle_text = json.dumps({"cases": cases}, separators=(",", ":")) + "\n"
+        json.loads(tle_text)
+        tle_path.write_text(tle_text)
+    else:
+        tle_path.unlink(missing_ok=True)
+    inputs, outputs = inputs[:regular], outputs[:regular]
+
     payload = dict(spec)
     payload["cases"] = [{"args": a, "expected": o} for a, o in zip(inputs, outputs)]
     payload["source"] = "examples" if len(inputs) == example_count else "examples+generated"
@@ -209,7 +227,7 @@ def generate(slug: str, code: str, meta: dict, curation: dict) -> tuple[str, str
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     (OUT_DIR / f"{slug}.json").write_text(text)
-    return "ok", f"{spec['mode']}, {len(inputs)} case(s)"
+    return "ok", f"{spec['mode']}, {len(inputs)} case(s)" + (f" + {len(big)} TLE" if big else "")
 
 
 def main() -> int:

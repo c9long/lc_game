@@ -65,6 +65,12 @@ jobs:
       - name: Check suites against problem constraints
         run: python3 scripts/constraints.py
 
+      # TLE cases (static/tle/) must not time out the reference: the whole Submit has to finish
+      # in Pyodide well inside the judge's 15 s. The naive-must-time-out half is too slow for CI;
+      # run `node scripts/audit-tle.mjs --naive` after changing scripts/tle/.
+      - name: Reference solutions stay fast on the TLE cases
+        run: node scripts/audit-tle.mjs --reference
+
       # verify-tests re-runs the reference that produced the expectations, so it cannot tell whether
       # a suite is strong. This runs the near-miss solutions that must fail (docs/08-test-hardening.md).
       - name: Audit suite strength

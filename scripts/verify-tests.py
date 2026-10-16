@@ -25,6 +25,7 @@ sys.path.insert(0, str(ROOT / "src" / "lib" / "pyodide"))
 import driver  # noqa: E402
 
 TESTS = ROOT / "data" / "tests"
+TLE = ROOT / "static" / "tle"
 SOLUTIONS = ROOT / "static" / "solutions" / "python"
 TIMEOUT_S = 20
 
@@ -72,7 +73,11 @@ def main() -> int:
             raw = source_file.read_text()
             source = driver.usable_source(raw)
             with contextlib.redirect_stdout(io.StringIO()):
-                results = driver.judge(source, suite, suite["cases"])
+                # TLE cases (static/tle/) are checked for correctness too; their speed is
+                # scripts/audit-tle.mjs's job.
+                tle_file = TLE / f"{slug}.json"
+                big = json.loads(tle_file.read_text())["cases"] if tle_file.exists() else []
+                results = driver.judge(source, suite, suite["cases"] + big)
                 # Custom testcases take the other path through the driver: the reference is the
                 # oracle, fetched raw by the browser. Judging the reference against itself on its own
                 # examples has to come back clean for every problem shape.

@@ -79,6 +79,38 @@ def sorted_nondec(xs, what):
     need(all(a <= b for a, b in zip(xs, xs[1:])), f"{what} not sorted")
 
 
+def count_pairs(nums, target):
+    """How many index pairs i < j have nums[i] + nums[j] == target, in O(n)."""
+    seen, pairs = {}, 0
+    for v in nums:
+        pairs += seen.get(target - v, 0)
+        seen[v] = seen.get(v, 0) + 1
+    return pairs
+
+
+def valid_starts(gas, cost):
+    """Stations a full circuit can start from, in O(n). With S_k the sum of gas - cost over the
+    first k stations, starting at s never runs dry iff S_s <= S_k for every k after s, and
+    S_s <= S_k + total for every k before it (those are reached after wrapping round)."""
+    n = len(gas)
+    S = [0] * (n + 1)
+    for i in range(n):
+        S[i + 1] = S[i] + gas[i] - cost[i]
+    total = S[n]
+    if total < 0:
+        return []
+    suffix = [0] * (n + 1)  # min of S[k] for k in s+1..n
+    suffix[n] = float("inf")
+    for k in range(n - 1, -1, -1):
+        suffix[k] = min(suffix[k + 1], S[k + 1])
+    out, prefix = [], float("inf")  # prefix: min of S[k] for k in 0..s-1
+    for s_ in range(n):
+        if S[s_] <= suffix[s_] and S[s_] <= prefix + total:
+            out.append(s_)
+        prefix = min(prefix, S[s_])
+    return out
+
+
 def ops(args):
     names, params = args
     return list(zip(names[1:], params[1:])), params[0]
@@ -99,7 +131,7 @@ def _(s, t):
 @check("two-sum")
 def _(nums, target):
     length(nums, 2, 1000, "nums"); each(nums, -10**7, 10**7, "nums"); rng(target, -10**7, 10**7, "target")
-    pairs = sum(1 for i in range(len(nums)) for j in range(i + 1, len(nums)) if nums[i] + nums[j] == target)
+    pairs = count_pairs(nums, target)
     need(pairs == 1, f"{pairs} valid answers, expected exactly one")
 
 
@@ -154,7 +186,7 @@ def _(s):
 def _(numbers, target):
     length(numbers, 2, 3 * 10**4, "numbers"); each(numbers, -1000, 1000, "numbers"); sorted_nondec(numbers, "numbers")
     rng(target, -1000, 1000, "target")
-    pairs = sum(1 for i in range(len(numbers)) for j in range(i + 1, len(numbers)) if numbers[i] + numbers[j] == target)
+    pairs = count_pairs(numbers, target)
     need(pairs == 1, f"{pairs} solutions, expected exactly one")
 
 
@@ -911,7 +943,7 @@ def _(gas, cost):
     length(gas, 1, 10**5, "gas"); need(len(cost) == len(gas), "lengths differ")
     each(gas + cost, 0, 1000, "gas/cost")
     n = len(gas)
-    starts = [s for s in range(n) if all(sum(gas[(s + j) % n] - cost[(s + j) % n] for j in range(i + 1)) >= 0 for i in range(n))]
+    starts = valid_starts(gas, cost)
     need(len(starts) <= 1, "answer is not unique")
 
 
@@ -1090,6 +1122,13 @@ def main() -> int:
                 bad += 1
                 where = "example" if i < suite.get("exampleCount", 0) else "generated"
                 print(f"{slug} case {i} ({where}): {e}  args={json.dumps(args)[:120]}")
+        big = ROOT / "static" / "tle" / f"{slug}.json"
+        for i, case in enumerate(json.loads(big.read_text())["cases"] if big.exists() else []):
+            try:
+                V[slug](*case["args"])
+            except Bad as e:
+                bad += 1
+                print(f"{slug} TLE case {i}: {e}  args={json.dumps(case['args'])[:120]}")
     print(f"\n{bad} case(s) violate their problem's constraints")
     return 1 if bad else 0
 

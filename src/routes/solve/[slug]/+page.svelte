@@ -4,7 +4,7 @@
 	import Editor from '$lib/components/Editor.svelte';
 	import CustomTests from '$lib/components/CustomTests.svelte';
 	import TagToggle from '$lib/components/TagToggle.svelte';
-	import { judge, warmUp, exampleCases, stop, STOPPED, type Suite } from '$lib/pyodide/client';
+	import { judge, warmUp, exampleCases, stop, STOPPED, type Suite, type TestCase } from '$lib/pyodide/client';
 	let { data } = $props();
 
 	const STORAGE_LANG = 'lc-game:lang';
@@ -64,6 +64,28 @@
 		void warmUp();
 		void loadSuite();
 	});
+
+	/** Large inputs a too-slow solution cannot finish in time (scripts/tle/), judged on Submit only.
+	 *  A static file rather than part of the suite, because they are big; fetched once, on first
+	 *  Submit. Most problems have one; a 404 means this one does not. */
+	let tleCases: TestCase[] | null = null;
+	async function loadTleCases(): Promise<TestCase[]> {
+		if (tleCases) return tleCases;
+		try {
+			const r = await fetch(`/tle/${data.slug}.json`);
+			tleCases = r.ok ? ((await r.json()) as { cases: TestCase[] }).cases : [];
+		} catch {
+			// Judging without them would pass a too-slow solution; better to say so than to guess.
+			throw new Error('Could not load the large test cases for Submit; check your connection and try again.');
+		}
+		return tleCases;
+	}
+
+	/** A failing TLE case holds 10^5 values; the table shows the start and how much was cut. */
+	function clip(v: unknown): string {
+		const s = JSON.stringify(v) ?? String(v);
+		return s.length > 300 ? `${s.slice(0, 300)}… (${s.length.toLocaleString()} characters)` : s;
+	}
 
 	async function loadSuite() {
 		try {
@@ -131,7 +153,7 @@
 		try {
 			// Run shows only the cases derived from LeetCode's published examples; Submit is judged
 			// against the whole suite.
-			const cases = kind === 'run' ? exampleCases(suite) : suite.cases;
+			const cases = kind === 'run' ? exampleCases(suite) : [...suite.cases, ...(await loadTleCases())];
 			const outcome = await judge(code, suite, cases);
 			result = {
 				status_msg: outcome.verdict,
@@ -339,9 +361,9 @@
 								{#each shown as c, i (i)}
 									<tr class:bad={!c.ok}>
 										<td>{result.cases.indexOf(c) + 1}</td>
-										<td><code>{JSON.stringify(c.args)}</code></td>
-										<td><code>{JSON.stringify(c.expected)}</code></td>
-										<td><code>{c.error ? c.error : JSON.stringify(c.actual)}</code></td>
+										<td><code>{clip(c.args)}</code></td>
+										<td><code>{clip(c.expected)}</code></td>
+										<td><code>{c.error ? c.error : clip(c.actual)}</code></td>
 									</tr>
 								{/each}
 							</tbody>
