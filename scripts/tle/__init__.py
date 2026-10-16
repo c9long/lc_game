@@ -24,6 +24,7 @@ import importlib
 import json
 import pkgutil
 import random
+from pathlib import Path
 
 import constraints
 
@@ -52,6 +53,7 @@ def no_tle(slug: str, why: str) -> None:
 
 
 def load() -> None:
+    """Import every node's module (audits want the whole registry)."""
     global _loaded
     if _loaded:
         return
@@ -60,9 +62,25 @@ def load() -> None:
     _loaded = True
 
 
+def _module_for(slug: str) -> str | None:
+    """The node module a problem's TLE cases live in: its roadmap node id, '-' as '_'."""
+    root = Path(__file__).resolve().parents[2] / "data"
+    pattern = next((p["pattern"] for p in json.loads((root / "neetcode150.json").read_text()) if p["slug"] == slug), None)
+    node = next((n["id"] for n in json.loads((root / "roadmap.json").read_text())["nodes"] if n["pattern"] == pattern), None)
+    return node.replace("-", "_") if node else None
+
+
+def load_for(slug: str) -> None:
+    """Import only the module that owns `slug`, so a broken module for one node cannot break
+    generating another node's problems."""
+    name = _module_for(slug)
+    if name and (Path(__file__).parent / f"{name}.py").exists():
+        importlib.import_module(f"{__name__}.{name}")
+
+
 def build(slug: str, existing: list | None = None) -> list:
     """The TLE inputs for one problem: deterministic, inside the constraints, never a repeat."""
-    load()
+    load_for(slug)
     entry = CASES.get(slug)
     if entry is None:
         return []
