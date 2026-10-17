@@ -85,17 +85,49 @@ no_tle("add-two-numbers", "each list has <= 100 digits: any digit-by-digit or bi
 
 # ---------- Find the Duplicate Number ----------
 
-@tle("find-the-duplicate-number")
+FIND_DUP_COUNT = 17
+
+
+@tle("find-the-duplicate-number", count=FIND_DUP_COUNT)
 def _find_duplicate(rng):
     # n = 10^4, the one repeated value occupying the last two slots, so a pairwise scan does all
     # ~5 * 10^7 comparisons, and the repeated value is n, so counting candidates 1..n finds it last.
+    # One case cannot time out a correct solution: the slowest natural O(n^2) scans are ~3-8 s
+    # each here (count-candidates ~2.8 s, pairwise ~3.3 s, n x n ~8 s). But the 15 s budget covers
+    # the whole Submit, so 17 distinct maximal cases (a fresh shuffle each) add up to ~47 s, ~56 s
+    # and ~136 s, at least 3x the budget, while Floyd's O(n) cycle detection, the reference, stays
+    # at a few ms per case (~0.1-0.2 s for the whole Submit).
     n = 10**4
     nums = list(range(1, n))
     rng.shuffle(nums)
     return [nums + [n, n]]
 
 
-no_tle("find-the-duplicate-number", "n <= 10^4: the slowest common naive, the full n x n double loop with i != j (~10^8 comparisons), measured ~11 s in Pyodide under load on this case; the pairwise j > i scan and counting each candidate are ~5 s. All stay under the 15 s budget, so none can be killed reliably")
+naive("find-the-duplicate-number", "pairwise scan over j > i O(n^2)", """class Solution:
+    def findDuplicate(self, nums):
+        n = len(nums)
+        for i in range(n):
+            for j in range(i + 1, n):
+                if nums[i] == nums[j]:
+                    return nums[i]""")
+
+naive("find-the-duplicate-number", "full n x n double loop with i != j O(n^2)", """class Solution:
+    def findDuplicate(self, nums):
+        n = len(nums)
+        for i in range(n):
+            for j in range(n):
+                if i != j and nums[i] == nums[j]:
+                    return nums[i]""")
+
+naive("find-the-duplicate-number", "count each candidate 1..n by a scan O(n^2)", """class Solution:
+    def findDuplicate(self, nums):
+        for c in range(1, len(nums)):
+            seen = 0
+            for x in nums:
+                if x == c:
+                    seen += 1
+            if seen > 1:
+                return c""")
 
 
 # ---------- LRU Cache ----------
@@ -179,23 +211,25 @@ naive("lru-cache", "dict + timestamps, scan for the oldest on eviction O(capacit
 
 # ---------- Merge k Sorted Lists ----------
 
-# BLOCKED, not no_tle: the constraints allow 10^4 one-node lists (10^4 nodes in all), enough to
-# time out both naives in MERGE_K_NAIVE (merging into the result one list at a time walks
-# ~N k / 2 = 5 * 10^7 nodes; scanning every head for the minimum is N k = 10^8). But the judge
-# cannot take a list that long yet: freeing a chain of ~4000+ ListNodes recurses through
-# CPython's dealloc and overflows Pyodide's stack ("RangeError: Maximum call stack size
-# exceeded"), killing the worker. That needs a fix in src/lib/pyodide (unlink chains
-# iteratively, or a larger stack). Until then the case stays at 3000 nodes, where neither naive
-# is near the budget, so they are kept here but not registered, and no no_tle claim is made.
-# Once the driver is fixed: raise LONG_LIST_SAFE to 10**4 and register MERGE_K_NAIVE.
-LONG_LIST_SAFE = 3000
+# Max size: 10^4 one-node lists (10^4 nodes in all, k = 10^4). Lists this long used to crash the
+# judge on deallocation; commit e053880 frees them node by node, so the case is full size. One case
+# cannot time anything out: every natural slow merge is bounded by N k = 10^8 node steps, and was
+# measured here at ~4 s per case for merging into the result one list at a time (~N k / 2 hops)
+# and ~7.5 s per case for scanning every head for the minimum (N k head checks). But the 15 s
+# budget covers the whole Submit, so MERGE_K_COUNT distinct maximal cases add up: ~40 s and ~75 s.
+# The count is a balance: the reference costs ~80 ms per case (building and walking 10^4 nodes),
+# so the per-case naive / reference ratio is fixed at ~50 by the constraints, and 10 cases split
+# it evenly, ~2.6x over the judge's 15 s for the faster naive and ~2.5x under the 2 s reference
+# budget (~0.8 s), so neither audit flakes on a loaded or slower machine.
+MERGE_K_COUNT = 10
+MERGE_K_TOTAL = 10**4
 
 
-@tle("merge-k-sorted-lists")
+@tle("merge-k-sorted-lists", count=MERGE_K_COUNT)
 def _merge_k_sorted_lists(rng):
     # One-node lists, strictly increasing from list to list: merging into the result one list at a
     # time walks the whole result for every list, and every head is scanned for every node.
-    vals = sorted(rng.sample(range(-10**4, 10**4 + 1), LONG_LIST_SAFE))
+    vals = sorted(rng.sample(range(-10**4, 10**4 + 1), MERGE_K_TOTAL))
     return [[[v] for v in vals]]
 
 
@@ -230,16 +264,19 @@ MERGE_K_NAIVE = [("merge one list at a time into the result O(N k)", """class So
             lists[best] = lists[best].next
         return dummy.next""")]
 
+for _label, _source in MERGE_K_NAIVE:
+    naive("merge-k-sorted-lists", _label, _source)
+
 
 # ---------- Reverse Nodes in k-Group ----------
 
 @tle("reverse-nodes-in-k-group")
 def _reverse_k_group(rng):
-    # k = n: one group spanning the whole list, the worst case for reversing a group by walking
-    # from its start to each position (O(k^2)). n is capped below the 5000 max: see LONG_LIST_SAFE;
-    # once the driver is fixed this should be the full 5000 (min(5000, LONG_LIST_SAFE)).
-    n = min(5000, LONG_LIST_SAFE)
+    # Max size, n = 5000 (the judge frees long lists node by node since commit e053880), and k = n:
+    # one group spanning the whole list, the worst case for reversing a group by walking to its
+    # tail for every node (O(k^2), ~1.25 * 10^7 hops).
+    n = 5000
     return [[rng.randint(0, 100) for _ in range(n)], n]
 
 
-no_tle("reverse-nodes-in-k-group", "n <= 5000: even O(n^2) re-walking is ~1.25 * 10^7 node hops at the max, about a second in Pyodide. The case is not max-size yet: it is capped at 3000 nodes until the judge stops overflowing its stack freeing long lists (see LONG_LIST_SAFE)")
+no_tle("reverse-nodes-in-k-group", "n <= 5000: the slowest natural correct solution, reversing each group by walking to its tail for every node (O(k^2), ~1.25 * 10^7 hops at k = n = 5000), measured ~0.8 s per maximal case in Pyodide, so one case cannot time it out. Adding cases up against the whole-Submit budget does not work either: the O(n) reference costs ~20 ms per case (building, walking and serializing 5000 nodes), a fixed ratio of only ~35-40, so the >= 3x margin needs ~58 cases (more than tle.MAX_DRAWS = 50), and even 50 cases (~39 s for the naive, 2.6x) put the reference at 1.1-1.8 s quiet and 2.07-2.22 s under load, over its 2 s budget. No case set both kills the O(k^2) walk reliably and keeps the reference within budget")
