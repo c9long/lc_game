@@ -1,0 +1,1 @@
+{"cases":[{"args":["xxxxxxxxxxxxxxxxxxxg","x*x*x*x*x*x*x*x*x*x*"],"expected":false},{"args":["ffffffffffffffffffft","f*f*f*f*f*f*f*f*f*f*"],"expected":false},{"args":["pppppppppppppppppppx","p*p*p*p*p*p*p*p*p*p*"],"expected":false}]}
