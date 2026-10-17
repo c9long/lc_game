@@ -85,9 +85,16 @@ if (mode === '--reference') {
 		const suite = suiteOf(slug);
 		const source = usable(readFileSync(join(ROOT, 'static/solutions/python', `${codeOf(slug)}.py`), 'utf8'));
 		const cases = [...suite.cases, ...big];
-		const t0 = performance.now();
-		const r = summarize(JSON.parse(judge(source, JSON.stringify(suite), JSON.stringify(cases))));
-		const ms = Math.round(performance.now() - t0);
+		// Timing noise only ever makes a run slower, so an over-budget run is re-measured (up to three
+		// runs in all) and the fastest kept: a busy CI runner must not fail a deploy on a reference
+		// that is comfortably fast.
+		let r, ms = Infinity;
+		for (let attempt = 0; attempt < 3 && ms > REFERENCE_BUDGET_MS; attempt++) {
+			const t0 = performance.now();
+			r = summarize(JSON.parse(judge(source, JSON.stringify(suite), JSON.stringify(cases))));
+			ms = Math.min(ms, Math.round(performance.now() - t0));
+			if (r.passed !== r.total) break;
+		}
 		const ok = r.passed === r.total && ms <= REFERENCE_BUDGET_MS;
 		if (!ok) failed++;
 		const why = r.passed !== r.total ? ` WRONG on ${r.total - r.passed} case(s): ${JSON.stringify(r.bad).slice(0, 160)}` : ms > REFERENCE_BUDGET_MS ? ` over the ${REFERENCE_BUDGET_MS} ms budget` : '';
