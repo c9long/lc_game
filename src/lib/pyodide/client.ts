@@ -19,6 +19,8 @@ export interface Suite {
 	compare: string;
 	cases: TestCase[];
 	exampleCount: number;
+	/** This problem's limit for a whole Run or Submit; TIME_LIMIT_MS when absent. */
+	timeLimitMs?: number;
 }
 
 export interface CaseResult {
@@ -46,8 +48,10 @@ export interface JudgeOutcome {
 	total: number;
 }
 
-/** Total budget for one Run or Submit. Pyodide is 3-5x slower than native CPython, so this is
- *  deliberately generous rather than a mirror of LeetCode's per-case limits. */
+/** Default budget for one Run or Submit, and the cap on any problem's own limit. Each problem has
+ *  its own, tighter limit (Suite.timeLimitMs, from data/time-limits.json): about six times what the
+ *  reference solution needs for the whole Submit, at least 3 s. Pyodide's start-up is never counted:
+ *  judge() waits for the worker to be ready before the clock starts. */
 export const TIME_LIMIT_MS = 15_000;
 
 let worker: Worker | null = null;
@@ -137,9 +141,12 @@ export async function judge(
 	source: string,
 	suite: Suite,
 	cases: TestCase[],
-	timeoutMs = TIME_LIMIT_MS
+	timeoutMs = suite.timeLimitMs ?? TIME_LIMIT_MS
 ): Promise<JudgeOutcome> {
 	let response: { results: CaseResult[]; stdout: string; elapsedMs: number };
+	// Boot first, outside the time limit: a worker still starting up, or a fresh one after the last
+	// run was killed, would otherwise spend the code's budget loading Pyodide. A no-op once booted.
+	await call({ type: 'boot' }, 120_000);
 	try {
 		// Serialise here rather than posting the objects. `suite` is usually a Svelte $state proxy,
 		// which structured clone refuses ("could not be cloned"), and the worker needs JSON anyway.

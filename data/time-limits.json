@@ -1,0 +1,602 @@
+{
+	"3sum": {
+		"limitMs": 5000,
+		"referenceMs": 828
+	},
+	"add-two-numbers": {
+		"limitMs": 3000,
+		"referenceMs": 5
+	},
+	"alien-dictionary": {
+		"limitMs": 3000,
+		"referenceMs": 5
+	},
+	"balanced-binary-tree": {
+		"limitMs": 3000,
+		"referenceMs": 8
+	},
+	"best-time-to-buy-and-sell-stock": {
+		"limitMs": 3000,
+		"referenceMs": 1
+	},
+	"best-time-to-buy-and-sell-stock-with-cooldown": {
+		"limitMs": 3000,
+		"referenceMs": 6
+	},
+	"binary-search": {
+		"limitMs": 3000,
+		"referenceMs": 9
+	},
+	"binary-tree-level-order-traversal": {
+		"limitMs": 3000,
+		"referenceMs": 11
+	},
+	"binary-tree-maximum-path-sum": {
+		"limitMs": 3000,
+		"referenceMs": 91
+	},
+	"binary-tree-right-side-view": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"burst-balloons": {
+		"limitMs": 3000,
+		"referenceMs": 301
+	},
+	"car-fleet": {
+		"limitMs": 3000,
+		"referenceMs": 193
+	},
+	"cheapest-flights-within-k-stops": {
+		"limitMs": 3000,
+		"referenceMs": 104
+	},
+	"climbing-stairs": {
+		"limitMs": 3000,
+		"referenceMs": 1
+	},
+	"clone-graph": {
+		"limitMs": 3000,
+		"referenceMs": 28
+	},
+	"coin-change": {
+		"limitMs": 3000,
+		"referenceMs": 28
+	},
+	"coin-change-ii": {
+		"limitMs": 3000,
+		"referenceMs": 122
+	},
+	"combination-sum": {
+		"limitMs": 3000,
+		"referenceMs": 79
+	},
+	"combination-sum-ii": {
+		"limitMs": 3000,
+		"referenceMs": 38
+	},
+	"construct-binary-tree-from-preorder-and-inorder-traversal": {
+		"limitMs": 3000,
+		"referenceMs": 44
+	},
+	"container-with-most-water": {
+		"limitMs": 3000,
+		"referenceMs": 64
+	},
+	"contains-duplicate": {
+		"limitMs": 3000,
+		"referenceMs": 66
+	},
+	"copy-list-with-random-pointer": {
+		"limitMs": 3000,
+		"referenceMs": 6
+	},
+	"count-good-nodes-in-binary-tree": {
+		"limitMs": 3000,
+		"referenceMs": 315
+	},
+	"counting-bits": {
+		"limitMs": 3000,
+		"referenceMs": 3
+	},
+	"course-schedule": {
+		"limitMs": 3000,
+		"referenceMs": 5
+	},
+	"course-schedule-ii": {
+		"limitMs": 3000,
+		"referenceMs": 7
+	},
+	"daily-temperatures": {
+		"limitMs": 3000,
+		"referenceMs": 126
+	},
+	"decode-ways": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"design-add-and-search-words-data-structure": {
+		"limitMs": 3000,
+		"referenceMs": 130
+	},
+	"design-twitter": {
+		"limitMs": 3500,
+		"referenceMs": 519
+	},
+	"detect-squares": {
+		"limitMs": 3000,
+		"referenceMs": 439
+	},
+	"diameter-of-binary-tree": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"distinct-subsequences": {
+		"limitMs": 3000,
+		"referenceMs": 4
+	},
+	"edit-distance": {
+		"limitMs": 3000,
+		"referenceMs": 4
+	},
+	"encode-and-decode-strings": {
+		"limitMs": 3000,
+		"referenceMs": 4
+	},
+	"evaluate-reverse-polish-notation": {
+		"limitMs": 3000,
+		"referenceMs": 8
+	},
+	"find-median-from-data-stream": {
+		"limitMs": 3000,
+		"referenceMs": 232
+	},
+	"find-minimum-in-rotated-sorted-array": {
+		"limitMs": 3000,
+		"referenceMs": 4
+	},
+	"find-the-duplicate-number": {
+		"limitMs": 3000,
+		"referenceMs": 89
+	},
+	"gas-station": {
+		"limitMs": 3000,
+		"referenceMs": 123
+	},
+	"generate-parentheses": {
+		"limitMs": 3000,
+		"referenceMs": 5
+	},
+	"graph-valid-tree": {
+		"limitMs": 3000,
+		"referenceMs": 8
+	},
+	"group-anagrams": {
+		"limitMs": 3000,
+		"referenceMs": 327
+	},
+	"hand-of-straights": {
+		"limitMs": 3000,
+		"referenceMs": 11
+	},
+	"happy-number": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"house-robber": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"house-robber-ii": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"implement-trie-prefix-tree": {
+		"limitMs": 3000,
+		"referenceMs": 315
+	},
+	"insert-interval": {
+		"limitMs": 3000,
+		"referenceMs": 47
+	},
+	"interleaving-string": {
+		"limitMs": 3000,
+		"referenceMs": 4
+	},
+	"invert-binary-tree": {
+		"limitMs": 3000,
+		"referenceMs": 3
+	},
+	"jump-game": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"jump-game-ii": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"k-closest-points-to-origin": {
+		"limitMs": 3000,
+		"referenceMs": 23
+	},
+	"koko-eating-bananas": {
+		"limitMs": 3000,
+		"referenceMs": 138
+	},
+	"kth-largest-element-in-a-stream": {
+		"limitMs": 3000,
+		"referenceMs": 49
+	},
+	"kth-largest-element-in-an-array": {
+		"limitMs": 3000,
+		"referenceMs": 7
+	},
+	"kth-smallest-element-in-a-bst": {
+		"limitMs": 3000,
+		"referenceMs": 30
+	},
+	"largest-rectangle-in-histogram": {
+		"limitMs": 3000,
+		"referenceMs": 130
+	},
+	"last-stone-weight": {
+		"limitMs": 3000,
+		"referenceMs": 1
+	},
+	"letter-combinations-of-a-phone-number": {
+		"limitMs": 3000,
+		"referenceMs": 7
+	},
+	"linked-list-cycle": {
+		"limitMs": 3000,
+		"referenceMs": 4
+	},
+	"longest-common-subsequence": {
+		"limitMs": 3000,
+		"referenceMs": 277
+	},
+	"longest-consecutive-sequence": {
+		"limitMs": 3000,
+		"referenceMs": 81
+	},
+	"longest-increasing-path-in-a-matrix": {
+		"limitMs": 3000,
+		"referenceMs": 27
+	},
+	"longest-increasing-subsequence": {
+		"limitMs": 3000,
+		"referenceMs": 106
+	},
+	"longest-palindromic-substring": {
+		"limitMs": 3000,
+		"referenceMs": 106
+	},
+	"longest-repeating-character-replacement": {
+		"limitMs": 3000,
+		"referenceMs": 37
+	},
+	"longest-substring-without-repeating-characters": {
+		"limitMs": 3000,
+		"referenceMs": 18
+	},
+	"lowest-common-ancestor-of-a-binary-search-tree": {
+		"limitMs": 3000,
+		"referenceMs": 3
+	},
+	"lru-cache": {
+		"limitMs": 3500,
+		"referenceMs": 525
+	},
+	"max-area-of-island": {
+		"limitMs": 3000,
+		"referenceMs": 8
+	},
+	"maximum-depth-of-binary-tree": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"maximum-product-subarray": {
+		"limitMs": 3000,
+		"referenceMs": 25
+	},
+	"maximum-subarray": {
+		"limitMs": 3000,
+		"referenceMs": 62
+	},
+	"median-of-two-sorted-arrays": {
+		"limitMs": 3000,
+		"referenceMs": 3
+	},
+	"meeting-rooms": {
+		"limitMs": 3000,
+		"referenceMs": 4
+	},
+	"meeting-rooms-ii": {
+		"limitMs": 4000,
+		"referenceMs": 615
+	},
+	"merge-intervals": {
+		"limitMs": 3000,
+		"referenceMs": 7
+	},
+	"merge-k-sorted-lists": {
+		"limitMs": 5000,
+		"referenceMs": 817
+	},
+	"merge-triplets-to-form-target-triplet": {
+		"limitMs": 3000,
+		"referenceMs": 6
+	},
+	"merge-two-sorted-lists": {
+		"limitMs": 3000,
+		"referenceMs": 5
+	},
+	"min-cost-climbing-stairs": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"min-cost-to-connect-all-points": {
+		"limitMs": 4000,
+		"referenceMs": 660
+	},
+	"min-stack": {
+		"limitMs": 3000,
+		"referenceMs": 112
+	},
+	"minimum-interval-to-include-each-query": {
+		"limitMs": 4500,
+		"referenceMs": 688
+	},
+	"minimum-window-substring": {
+		"limitMs": 3000,
+		"referenceMs": 56
+	},
+	"missing-number": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"multiply-strings": {
+		"limitMs": 3000,
+		"referenceMs": 19
+	},
+	"n-queens": {
+		"limitMs": 3000,
+		"referenceMs": 9
+	},
+	"network-delay-time": {
+		"limitMs": 3000,
+		"referenceMs": 5
+	},
+	"non-overlapping-intervals": {
+		"limitMs": 3500,
+		"referenceMs": 526
+	},
+	"number-of-1-bits": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"number-of-connected-components-in-an-undirected-graph": {
+		"limitMs": 3000,
+		"referenceMs": 23
+	},
+	"number-of-islands": {
+		"limitMs": 3000,
+		"referenceMs": 18
+	},
+	"pacific-atlantic-water-flow": {
+		"limitMs": 3000,
+		"referenceMs": 25
+	},
+	"palindrome-partitioning": {
+		"limitMs": 3000,
+		"referenceMs": 345
+	},
+	"palindromic-substrings": {
+		"limitMs": 3000,
+		"referenceMs": 106
+	},
+	"partition-equal-subset-sum": {
+		"limitMs": 3000,
+		"referenceMs": 17
+	},
+	"partition-labels": {
+		"limitMs": 3000,
+		"referenceMs": 1
+	},
+	"permutation-in-string": {
+		"limitMs": 3000,
+		"referenceMs": 5
+	},
+	"permutations": {
+		"limitMs": 3000,
+		"referenceMs": 121
+	},
+	"plus-one": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"powx-n": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"product-of-array-except-self": {
+		"limitMs": 3000,
+		"referenceMs": 133
+	},
+	"reconstruct-itinerary": {
+		"limitMs": 3000,
+		"referenceMs": 3
+	},
+	"redundant-connection": {
+		"limitMs": 3000,
+		"referenceMs": 5
+	},
+	"regular-expression-matching": {
+		"limitMs": 3000,
+		"referenceMs": 3
+	},
+	"remove-nth-node-from-end-of-list": {
+		"limitMs": 3000,
+		"referenceMs": 3
+	},
+	"reorder-list": {
+		"limitMs": 3000,
+		"referenceMs": 6
+	},
+	"reverse-bits": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"reverse-integer": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"reverse-linked-list": {
+		"limitMs": 3000,
+		"referenceMs": 7
+	},
+	"reverse-nodes-in-k-group": {
+		"limitMs": 3000,
+		"referenceMs": 22
+	},
+	"rotate-image": {
+		"limitMs": 3000,
+		"referenceMs": 3
+	},
+	"rotting-oranges": {
+		"limitMs": 3000,
+		"referenceMs": 3
+	},
+	"same-tree": {
+		"limitMs": 3000,
+		"referenceMs": 3
+	},
+	"search-a-2d-matrix": {
+		"limitMs": 3000,
+		"referenceMs": 12
+	},
+	"search-in-rotated-sorted-array": {
+		"limitMs": 3000,
+		"referenceMs": 4
+	},
+	"serialize-and-deserialize-binary-tree": {
+		"limitMs": 3000,
+		"referenceMs": 81
+	},
+	"set-matrix-zeroes": {
+		"limitMs": 3000,
+		"referenceMs": 43
+	},
+	"single-number": {
+		"limitMs": 3000,
+		"referenceMs": 7
+	},
+	"sliding-window-maximum": {
+		"limitMs": 3000,
+		"referenceMs": 105
+	},
+	"spiral-matrix": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"subsets": {
+		"limitMs": 3000,
+		"referenceMs": 106
+	},
+	"subsets-ii": {
+		"limitMs": 3000,
+		"referenceMs": 82
+	},
+	"subtree-of-another-tree": {
+		"limitMs": 3000,
+		"referenceMs": 3
+	},
+	"sum-of-two-integers": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"surrounded-regions": {
+		"limitMs": 3000,
+		"referenceMs": 50
+	},
+	"swim-in-rising-water": {
+		"limitMs": 3000,
+		"referenceMs": 8
+	},
+	"target-sum": {
+		"limitMs": 3000,
+		"referenceMs": 51
+	},
+	"task-scheduler": {
+		"limitMs": 3000,
+		"referenceMs": 6
+	},
+	"time-based-key-value-store": {
+		"limitMs": 3000,
+		"referenceMs": 333
+	},
+	"top-k-frequent-elements": {
+		"limitMs": 3000,
+		"referenceMs": 12
+	},
+	"trapping-rain-water": {
+		"limitMs": 3000,
+		"referenceMs": 13
+	},
+	"two-sum": {
+		"limitMs": 3000,
+		"referenceMs": 3
+	},
+	"two-sum-ii-input-array-is-sorted": {
+		"limitMs": 3000,
+		"referenceMs": 16
+	},
+	"unique-paths": {
+		"limitMs": 3000,
+		"referenceMs": 1
+	},
+	"valid-anagram": {
+		"limitMs": 3000,
+		"referenceMs": 14
+	},
+	"valid-palindrome": {
+		"limitMs": 3000,
+		"referenceMs": 1
+	},
+	"valid-parentheses": {
+		"limitMs": 3000,
+		"referenceMs": 1
+	},
+	"valid-parenthesis-string": {
+		"limitMs": 3000,
+		"referenceMs": 2
+	},
+	"valid-sudoku": {
+		"limitMs": 3000,
+		"referenceMs": 5
+	},
+	"validate-binary-search-tree": {
+		"limitMs": 3000,
+		"referenceMs": 83
+	},
+	"walls-and-gates": {
+		"limitMs": 3000,
+		"referenceMs": 42
+	},
+	"word-break": {
+		"limitMs": 3000,
+		"referenceMs": 12
+	},
+	"word-ladder": {
+		"limitMs": 3000,
+		"referenceMs": 3
+	},
+	"word-search": {
+		"limitMs": 3000,
+		"referenceMs": 4
+	},
+	"word-search-ii": {
+		"limitMs": 3000,
+		"referenceMs": 266
+	}
+}

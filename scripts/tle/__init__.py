@@ -1,6 +1,9 @@
 """TLE cases: inputs at the top of a problem's constraints that a correct but too-slow solution
-cannot get through within the judge's budget (TIME_LIMIT_MS in src/lib/pyodide/client.ts: 15 s
-for a whole Submit, in Pyodide), while the reference solution finishes in well under a second.
+cannot get through within the problem's time limit for a whole Submit, in Pyodide, while the
+reference solution finishes in well under a second. Each problem's limit is in
+data/time-limits.json (`node scripts/audit-tle.mjs --set-limits`): about 6x the reference's
+measured whole-Submit time, at least 3 s, at most 15 s (TIME_LIMIT_MS in src/lib/pyodide/client.ts).
+Re-run --set-limits after changing a problem's TLE cases or its reference.
 
 Each tech-tree node has its own module here (scripts/tle/<node-id>.py) registering, per problem:
   @tle(slug, count=1)          a generator of the large input(s), seeded per slug like

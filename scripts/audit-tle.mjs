@@ -23,8 +23,18 @@ import { fileURLToPath } from 'node:url';
 import { spawnSync, execFileSync } from 'node:child_process';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const JUDGE_LIMIT_MS = 15_000; // TIME_LIMIT_MS in src/lib/pyodide/client.ts
-const REFERENCE_BUDGET_MS = 2_000;
+const JUDGE_CAP_MS = 15_000; // TIME_LIMIT_MS in src/lib/pyodide/client.ts: the default and the cap
+// Per-problem limits (data/time-limits.json, written by --set-limits): LIMIT_FACTOR x the reference's
+// whole-Submit time here, rounded up to 500 ms, at least LIMIT_FLOOR_MS -- so a laptop several times
+// slower than this machine still passes the reference, while slow solutions meet a tight wall.
+const LIMIT_FACTOR = 6;
+const LIMIT_FLOOR_MS = 3_000;
+// CI's check that a reference still fits: within a quarter of its limit, leaving room for a CI runner
+// somewhat slower than the machine that set the limits.
+const REFERENCE_SHARE = 4;
+const LIMITS_FILE = 'data/time-limits.json';
+const limits = existsSync(join(ROOT, LIMITS_FILE)) ? JSON.parse(readFileSync(join(ROOT, LIMITS_FILE), 'utf8')) : {};
+const limitOf = (slug) => limits[slug]?.limitMs ?? JUDGE_CAP_MS;
 
 async function bootJudge() {
 	const { loadPyodide } = await import('pyodide');
@@ -67,21 +77,22 @@ if (process.argv[2] === '--child') {
 
 const mode = process.argv[2];
 let slugs = process.argv.slice(3);
-if (mode !== '--reference' && mode !== '--naive') {
-	console.error('usage: node scripts/audit-tle.mjs --reference|--naive [slug ...]');
+if (mode !== '--reference' && mode !== '--naive' && mode !== '--set-limits') {
+	console.error('usage: node scripts/audit-tle.mjs --reference|--naive|--set-limits [slug ...]');
 	process.exit(2);
 }
 
 let failed = 0;
 
-if (mode === '--reference') {
+if (mode === '--reference' || mode === '--set-limits') {
 	if (!slugs.length) slugs = problems.map((p) => p.slug);
 	const { judge, usable } = await bootJudge();
 	let checked = 0;
 	for (const slug of slugs) {
 		const big = tleOf(slug);
-		if (!big.length) continue;
+		if (!big.length && mode === '--reference') continue;
 		checked++;
+		const budget = mode === '--set-limits' ? Infinity : Math.floor(limitOf(slug) / REFERENCE_SHARE);
 		const suite = suiteOf(slug);
 		const source = usable(readFileSync(join(ROOT, 'static/solutions/python', `${codeOf(slug)}.py`), 'utf8'));
 		const cases = [...suite.cases, ...big];
@@ -89,18 +100,36 @@ if (mode === '--reference') {
 		// runs in all) and the fastest kept: a busy CI runner must not fail a deploy on a reference
 		// that is comfortably fast.
 		let r, ms = Infinity;
-		for (let attempt = 0; attempt < 3 && ms > REFERENCE_BUDGET_MS; attempt++) {
+		// --set-limits always takes the best of three, to set the limit from a clean measurement.
+		for (let attempt = 0; attempt < 3 && (ms > budget || (mode === '--set-limits' && attempt < 3)); attempt++) {
 			const t0 = performance.now();
 			r = summarize(JSON.parse(judge(source, JSON.stringify(suite), JSON.stringify(cases))));
 			ms = Math.min(ms, Math.round(performance.now() - t0));
 			if (r.passed !== r.total) break;
 		}
-		const ok = r.passed === r.total && ms <= REFERENCE_BUDGET_MS;
+		if (mode === '--set-limits') {
+			if (r.passed !== r.total) {
+				failed++;
+				console.log(`FAIL ${slug}: reference WRONG on ${r.total - r.passed} case(s)`);
+				continue;
+			}
+			const limitMs = Math.min(JUDGE_CAP_MS, Math.max(LIMIT_FLOOR_MS, Math.ceil((ms * LIMIT_FACTOR) / 500) * 500));
+			limits[slug] = { limitMs, referenceMs: ms };
+			console.log(`${slug.padEnd(58)} reference ${String(ms).padStart(5)} ms -> limit ${limitMs} ms`);
+			continue;
+		}
+		const ok = r.passed === r.total && ms <= budget;
 		if (!ok) failed++;
-		const why = r.passed !== r.total ? ` WRONG on ${r.total - r.passed} case(s): ${JSON.stringify(r.bad).slice(0, 160)}` : ms > REFERENCE_BUDGET_MS ? ` over the ${REFERENCE_BUDGET_MS} ms budget` : '';
-		console.log(`${ok ? 'ok  ' : 'FAIL'} ${slug.padEnd(58)} reference ${String(ms).padStart(5)} ms for ${cases.length} cases (${big.length} TLE)${why}`);
+		const why = r.passed !== r.total ? ` WRONG on ${r.total - r.passed} case(s): ${JSON.stringify(r.bad).slice(0, 160)}` : ms > budget ? ` over ${budget} ms, a quarter of its ${limitOf(slug)} ms limit` : '';
+		console.log(`${ok ? 'ok  ' : 'FAIL'} ${slug.padEnd(58)} reference ${String(ms).padStart(5)} ms of a ${limitOf(slug)} ms limit, ${cases.length} cases (${big.length} TLE)${why}`);
 	}
-	console.log(`\n${checked - failed}/${checked} problems with TLE cases: reference within ${REFERENCE_BUDGET_MS} ms`);
+	if (mode === '--set-limits') {
+		const sorted = Object.fromEntries(Object.keys(limits).sort().map((k) => [k, limits[k]]));
+		writeFileSync(join(ROOT, LIMITS_FILE), JSON.stringify(sorted, null, '\t') + '\n');
+		console.log(`\nwrote ${LIMITS_FILE}: limits for ${Object.keys(sorted).length} problems`);
+	} else {
+		console.log(`\n${checked - failed}/${checked} problems with TLE cases: reference within a quarter of its limit`);
+	}
 }
 
 if (mode === '--naive') {
@@ -144,10 +173,11 @@ if (mode === '--naive') {
 				continue;
 			}
 			// Boot is excluded from the judge's budget, so allow for it on top of the limit.
-			const r = runChild({ source, suite, cases: big }, JUDGE_LIMIT_MS + 10_000);
-			const ok = r.timedOut || (r.ms ?? 0) > JUDGE_LIMIT_MS;
+			const limit = limitOf(slug);
+			const r = runChild({ source, suite, cases: big }, limit + 10_000);
+			const ok = r.timedOut || (r.ms ?? 0) > limit;
 			if (!ok) failed++;
-			console.log(`${ok ? 'ok  ' : 'FAIL'} ${slug.padEnd(58)} [${label}] ${r.timedOut ? `killed after ${r.wall} ms` : `finished the TLE cases in ${r.ms} ms`}`);
+			console.log(`${ok ? 'ok  ' : 'FAIL'} ${slug.padEnd(58)} [${label}] ${r.timedOut ? `killed after ${r.wall} ms` : `took ${r.ms} ms`} against a ${limit} ms limit`);
 		}
 	}
 	const none = Object.entries(registry.none);

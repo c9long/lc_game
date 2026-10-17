@@ -4,7 +4,7 @@
 	import Editor from '$lib/components/Editor.svelte';
 	import CustomTests from '$lib/components/CustomTests.svelte';
 	import TagToggle from '$lib/components/TagToggle.svelte';
-	import { judge, warmUp, exampleCases, stop, STOPPED, type Suite, type TestCase } from '$lib/pyodide/client';
+	import { judge, warmUp, exampleCases, stop, STOPPED, TIME_LIMIT_MS, type Suite, type TestCase } from '$lib/pyodide/client';
 	let { data } = $props();
 
 	const STORAGE_LANG = 'lc-game:lang';
@@ -312,7 +312,8 @@
 		{#if suite}
 			<p class="muted">
 				{suite.exampleCount} example case{suite.exampleCount === 1 ? '' : 's'}
-				{#if suite.cases.length > suite.exampleCount}· {suite.cases.length} in total on Submit{/if}
+				{#if suite.cases.length > suite.exampleCount}· {suite.cases.length}+ in total on Submit, large inputs included{/if}
+				· time limit {((suite.timeLimitMs ?? TIME_LIMIT_MS) / 1000).toLocaleString()} s
 				{#if suite.compare !== 'exact'}· order-insensitive ({suite.compare}){/if}
 			</p>
 		{/if}
@@ -373,7 +374,7 @@
 						<p class="muted">and {result.cases.filter((c: any) => !c.ok).length - 5} more failing case(s)</p>
 					{/if}
 				{:else if result.status_msg === 'Time Limit Exceeded'}
-					<p>Your code did not finish within the time limit, so the run was stopped.</p>
+					<p>Your code did not finish within this problem's {((suite?.timeLimitMs ?? TIME_LIMIT_MS) / 1000).toLocaleString()} s limit, so the run was stopped. The limit is about six times what an efficient solution needs, so a correct answer that times out usually needs a better algorithm, not micro-tuning.</p>
 				{/if}
 
 				{#if result.stdout}

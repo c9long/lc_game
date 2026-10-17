@@ -2,6 +2,7 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { requireUser } from '$lib/server/guard';
 import neetcode from '../../../../../../data/neetcode150.json';
+import timeLimits from '../../../../../../data/time-limits.json';
 
 // Suites are generated offline by scripts/generate-tests.py and committed under data/tests/.
 // Lazy glob so each problem is its own chunk rather than the whole corpus in the bundle.
@@ -23,6 +24,9 @@ export const GET: RequestHandler = async (event) => {
 		return json({ error: 'no_tests', message, inCurriculum: IN_CURRICULUM.has(slug) }, { status: 404 });
 	}
 
-	const mod = (await load()) as { default: unknown };
-	return json(mod.default);
+	const mod = (await load()) as { default: Record<string, unknown> };
+	// The problem's own time limit (scripts/audit-tle.mjs --set-limits): ~6x the reference's whole
+	// Submit, at least 3 s. The client falls back to its 15 s default without one.
+	const limit = (timeLimits as Record<string, { limitMs: number }>)[slug]?.limitMs;
+	return json(limit ? { ...mod.default, timeLimitMs: limit } : mod.default);
 };

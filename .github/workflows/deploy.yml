@@ -65,9 +65,10 @@ jobs:
       - name: Check suites against problem constraints
         run: python3 scripts/constraints.py
 
-      # TLE cases (static/tle/) must not time out the reference: the whole Submit has to finish
-      # in Pyodide well inside the judge's 15 s. The naive-must-time-out half is too slow for CI;
-      # run `node scripts/audit-tle.mjs --naive` after changing scripts/tle/.
+      # Each problem has its own time limit (data/time-limits.json, ~6x its reference). The reference
+      # must still finish the whole Submit, TLE cases included, within a quarter of it. The
+      # naive-must-time-out half is too slow for CI; run `node scripts/audit-tle.mjs --naive` after
+      # changing scripts/tle/, and `--set-limits` to re-derive the limits.
       - name: Reference solutions stay fast on the TLE cases
         run: node scripts/audit-tle.mjs --reference
 
