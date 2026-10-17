@@ -39,12 +39,14 @@ class ListNode:
     def __init__(self, val=0, next=None):
         self.val = val
         self.next = next
+        _lc_live.append(self)
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
         self.left = left
         self.right = right
+        _lc_live.append(self)
 
 """
 
@@ -54,10 +56,33 @@ class TreeNode:
 # adapter that needs one installs it, and never overrides a Node the solution defines itself.
 
 
+# Every node a case creates or touches, so the judge can unlink them one at a time afterwards
+# (_release). Freeing a long chain the normal way recurses once per node inside CPython's
+# deallocator, and under Pyodide that overflows the JavaScript stack at about 4000 nodes --
+# "Maximum call stack size exceeded" -- which kills the worker. Holding every node here until the
+# case is over means nothing is freed mid-chain; _release then breaks each node's links before
+# letting it go, so each one frees on its own.
+_LIVE: list = []
+
+
+def _release() -> None:
+    while _LIVE:
+        node = _LIVE.pop()
+        for attr in ("next", "left", "right", "random"):
+            try:
+                if getattr(node, attr, None) is not None:
+                    setattr(node, attr, None)
+            except Exception:
+                pass
+        if isinstance(getattr(node, "neighbors", None), list):
+            node.neighbors = []
+
+
 class _GraphNode:
     def __init__(self, val=0, neighbors=None):
         self.val = val
         self.neighbors = neighbors if neighbors is not None else []
+        _LIVE.append(self)
 
 
 class _RandomNode:
@@ -65,6 +90,7 @@ class _RandomNode:
         self.val = val
         self.next = next
         self.random = random
+        _LIVE.append(self)
 
 SCALARS = {"integer", "double", "float", "string", "boolean", "character", "long", "void"}
 
@@ -79,9 +105,11 @@ def to_linked(vals, ns):
     if not vals:
         return None
     node = head = ns["ListNode"](vals[0])
+    _LIVE.append(head)  # a solution's own ListNode class does not register itself
     for v in vals[1:]:
         node.next = ns["ListNode"](v)
         node = node.next
+        _LIVE.append(node)
     return head
 
 
@@ -105,6 +133,7 @@ def from_linked(head):
             out.append(CYCLE_MARK)
             break
         seen.add(id(head))
+        _LIVE.append(head)  # including nodes the solution built with its own class
         out.append(head.val)
         head = head.next
     return out
@@ -116,6 +145,7 @@ def to_tree(vals, ns):
         return None
     node_cls = ns["TreeNode"]
     root = node_cls(vals[0])
+    _LIVE.append(root)  # a solution's own TreeNode class does not register itself
     q = deque([root])
     i = 1
     while q and i < len(vals):
@@ -125,12 +155,14 @@ def to_tree(vals, ns):
             i += 1
             if v is not None:
                 node.left = node_cls(v)
+                _LIVE.append(node.left)
                 q.append(node.left)
         if i < len(vals):
             v = vals[i]
             i += 1
             if v is not None:
                 node.right = node_cls(v)
+                _LIVE.append(node.right)
                 q.append(node.right)
     return root
 
@@ -144,6 +176,7 @@ def from_tree(root):
         if node is None:
             out.append(None)
             continue
+        _LIVE.append(node)
         out.append(node.val)
         q.append(node.left)
         q.append(node.right)
@@ -213,7 +246,7 @@ def encode(type_name: str, value):
 # ---------- execution ----------
 
 def namespace(source: str) -> dict:
-    ns: dict = {}
+    ns: dict = {"_lc_live": _LIVE}
     exec(compile(PREAMBLE, "<preamble>", "exec"), ns)
     exec(compile(source, "<solution>", "exec"), ns)
     return ns
@@ -589,7 +622,13 @@ def run_case(ns, spec, raw_args):
 def produce(source: str, spec: dict, inputs: list) -> list:
     """Run `source` over every input and return the encoded outputs. Used to build expectations."""
     ns = namespace(source)
-    return [json_safe(run_case(ns, spec, args)) for args in inputs]
+    out = []
+    for args in inputs:
+        try:
+            out.append(json_safe(run_case(ns, spec, args)))
+        finally:
+            _release()
+    return out
 
 
 # ---------- comparison ----------
@@ -660,6 +699,8 @@ def judge(source: str, spec: dict, cases: list) -> list:
         except Exception as e:
             entry["ok"] = False
             entry["error"] = f"{type(e).__name__}: {e}"
+        finally:
+            _release()
         results.append(entry)
     return results
 
@@ -730,6 +771,8 @@ def custom(source: str, ref_source, spec: dict, inputs: list) -> list:
                         expected[i] = json_safe(run_case(ref_ns, spec, args))
                 except Exception as e:
                     ref_errors[i] = f"{type(e).__name__}: {e}"
+                finally:
+                    _release()
 
     # A print at the top of the file runs while the file is loaded, before any case, so it is
     # captured separately rather than being lost or blamed on the first case.
@@ -752,8 +795,11 @@ def custom(source: str, ref_source, spec: dict, inputs: list) -> list:
                 entry["refError"] = ref_errors[i]
         out = io.StringIO()
         try:
-            with contextlib.redirect_stdout(out), contextlib.redirect_stderr(out):
-                actual = json_safe(run_case(ns, spec, args))
+            try:
+                with contextlib.redirect_stdout(out), contextlib.redirect_stderr(out):
+                    actual = json_safe(run_case(ns, spec, args))
+            finally:
+                _release()
             entry["actual"] = actual
             if ref_source is None or ref_errors[i]:
                 entry["ok"] = None
