@@ -286,7 +286,6 @@
 				<ul>{#each data.notes as n (n)}<li>{n}</li>{/each}</ul>
 			</aside>
 		{/if}
-		{#if data.tags.length}<p class="row">{#each data.tags as t (t)}<span class="pill">{t}</span>{/each}</p>{/if}
 	</section>
 
 	<section class="work">

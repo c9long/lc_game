@@ -285,6 +285,8 @@ has_clue() { curl -s -H "cookie: lc_session=$TOKEN" "$B$1" | grep -qE 'Arrays (&
 [ "$(has_clue /solve/two-sum)" = "no" ] && echo "ok   the solve page hides the category by default" || { echo "FAIL the solve page shows the category by default"; fail=1; }
 check 200 -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" -d '{"show":true}' "$B/api/settings/tags"
 [ "$(has_clue /solve/two-sum)" = "yes" ] && echo "ok   showing tags brings the category back" || { echo "FAIL showing tags did not bring the category back"; fail=1; }
+# LeetCode's topic tags are never sent, even with the category shown: "Hash Table" names the technique.
+if curl -s -H "cookie: lc_session=$TOKEN" "$B/solve/two-sum" | grep -q 'Hash Table'; then echo "FAIL LeetCode topic tags reached the page"; fail=1; else echo "ok   LeetCode topic tags never reach the page"; fi
 check 200 -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" -d '{"show":false}' "$B/api/settings/tags"
 [ "$(has_clue /solve/two-sum)" = "no" ] && echo "ok   hiding tags again hides it" || { echo "FAIL hiding tags again left the category"; fail=1; }
 

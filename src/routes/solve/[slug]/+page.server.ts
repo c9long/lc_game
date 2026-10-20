@@ -73,10 +73,12 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 		contentHtml: problem.contentHtml ?? OWN_DESCRIPTIONS[problem.slug]?.html ?? null,
 		ownDescription: !problem.contentHtml && Boolean(OWN_DESCRIPTIONS[problem.slug]),
 		notes: NOTES[problem.slug] ?? [],
-		// Categories and topic tags are clues; while the player hides them they are not sent at all.
+		// The NeetCode category is a clue, so it is sent only while the player shows it. LeetCode's
+		// topic tags are never sent: they name the technique outright ("Two Pointers", "Monotonic
+		// Stack"), and with LeetCode integration gone they have no place on the page. They are still
+		// used server-side, to pay essence for an award.
 		showTags: user.showTags,
 		codeCompletion: user.codeCompletion,
-		tags: user.showTags ? problem.tags : [],
 		exampleTestcases: problem.exampleTestcases ?? '',
 		isPaidOnly: problem.isPaidOnly,
 		snippets,
