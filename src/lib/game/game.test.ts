@@ -11,6 +11,7 @@ import {
 	DIVERSITY_BONUS_PER_KIND,
 	GRID_SIZE,
 	STORAGE,
+	TIMBER_PER_UPGRADE_LEVEL,
 	BUILDING_BY_ID,
 	baseProduction,
 	buildingYield,
@@ -303,10 +304,10 @@ describe('city', () => {
 		expect(gateSatisfied({ node: 'arrays-hashing', status: 'unlocked' }, ctx)).toBe(false);
 		expect(gateSatisfied({ hard: 3 }, { ...ctx, hardSolves: 3 })).toBe(true);
 		const hut = BUILDINGS.find((b) => b.id === 'hut')!;
-		expect(costAtLevel(hut, 2)).toEqual({ timber: 8, ingots: 3, coins: 45 });
-		expect(canAfford({ timber: 8 }, costAtLevel(hut, 2))).toBe(false);
-		expect(canAfford({ timber: 8, ingots: 3 }, costAtLevel(hut, 2))).toBe(false); // coins now count too
-		expect(canAfford({ timber: 8, ingots: 3, coins: 45 }, costAtLevel(hut, 2))).toBe(true);
+		expect(costAtLevel(hut, 2)).toEqual({ timber: 8 + 6, ingots: 3, coins: 45 });
+		expect(canAfford({ timber: 14 }, costAtLevel(hut, 2))).toBe(false);
+		expect(canAfford({ timber: 14, ingots: 3 }, costAtLevel(hut, 2))).toBe(false); // coins now count too
+		expect(canAfford({ timber: 14, ingots: 3, coins: 45 }, costAtLevel(hut, 2))).toBe(true);
 		const placed = [
 			{ id: 'a', kind: 'hut', city: 0, x: 0, y: 0, level: 2 },
 			{ id: 'r', kind: 'graph-roads', city: 0, x: 1, y: 0, level: 1 },
@@ -405,6 +406,18 @@ describe('city economy', () => {
 		expect(weekStartOf('2026-09-07')).toBe('2026-09-07'); // Monday itself
 		expect(weekStartOf('2026-09-13')).toBe('2026-09-07'); // the Sunday after
 		expect(weekStartOf('2026-09-06')).toBe('2026-08-31'); // Sunday belongs to the week before
+	});
+
+	it('charges timber for every upgrade, whatever the building is made of', () => {
+		for (const kind of BUILDINGS.filter((b) => b.maxLevel > 1)) {
+			const base = Math.ceil((kind.cost.timber ?? 0) * 1.5);
+			expect(costAtLevel(kind, 2).timber, kind.id).toBe(base + TIMBER_PER_UPGRADE_LEVEL);
+			expect(costAtLevel(kind, 3).timber, kind.id).toBe(Math.ceil((kind.cost.timber ?? 0) * 2.25) + 2 * TIMBER_PER_UPGRADE_LEVEL);
+		}
+		// Building one costs only its own materials; the timber surcharge is for upgrades.
+		const tower = BUILDINGS.find((b) => b.id === 'stack-tower')!;
+		expect(costAtLevel(tower, 1).timber).toBeUndefined();
+		expect(costAtLevel(tower, 2, 1).timber).toBe(TIMBER_PER_UPGRADE_LEVEL * 4); // x4 in the Knolls
 	});
 
 	it('charges coins as well as materials and ingots to upgrade', () => {
@@ -834,7 +847,7 @@ describe('city tiers', () => {
 			}
 		}
 		// Ingots and coins on an upgrade scale too, not just materials.
-		expect(costAtLevel(market, 3, 2)).toEqual({ timber: 23 * 16, stone: 12 * 16, ingots: 96, coins: 90 * 16 });
+		expect(costAtLevel(market, 3, 2)).toEqual({ timber: (23 + 12) * 16, stone: 12 * 16, ingots: 96, coins: 90 * 16 });
 		expect(costAtLevel(market, 1, STORAGE)).toEqual(costAtLevel(market, 1, 0));
 	});
 
@@ -859,7 +872,7 @@ describe('city tiers', () => {
 		const knolls = investedCost(market, 2, 1);
 		const hamlet = investedCost(market, 2, 0);
 		expect(up).toEqual(Object.fromEntries(Object.entries(knolls).map(([k, v]) => [k, v - hamlet[k]])));
-		expect(up).toEqual({ timber: 3 * (10 + 15), stone: 3 * (5 + 8), ingots: 9, coins: 3 * 45 });
+		expect(up).toEqual({ timber: 3 * (10 + 15 + 6), stone: 3 * (5 + 8), ingots: 9, coins: 3 * 45 });
 		expect(moveCost(market, 2, 1, 0)).toEqual({});
 		expect(moveCost(market, 2, 1, 1)).toEqual({});
 		expect(moveCost(market, 1, 0, 0)).toEqual({});

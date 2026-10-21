@@ -204,14 +204,21 @@ export const INGOTS_PER_UPGRADE_LEVEL = 3;
  *  what funds a growing city, rather than coins having nothing to be spent on. Tripled from 15 on
  *  2026-10-15: coins were piling up unspent. */
 export const COINS_PER_UPGRADE_LEVEL = 45;
+/** Every upgrade also costs timber, whatever the building is made of, so the stone- and iron-built
+ *  buildings draw on Medium solves too (3 timber each) rather than leaving timber with little to
+ *  buy once the timber-built buildings are up. Added on top of any timber the building's own cost
+ *  scales to. Since 2026-10-21. */
+export const TIMBER_PER_UPGRADE_LEVEL = 6;
 
-/** Upgrades cost the base resources scaled up, plus Ingots (earned only from syntax drills). The
+/** Upgrades cost the base resources scaled up, plus timber, Ingots (earned only from syntax drills)
+ *  and coins. The
  *  whole price is then multiplied by the city's tier — after rounding, so a Knolls price is exactly
  *  four Hamlet prices. */
 export function costAtLevel(kind: BuildingKind, level: number, city: number = CITIES[0].id): Record<string, number> {
 	const out: Record<string, number> = {};
 	for (const [k, v] of Object.entries(kind.cost)) out[k] = Math.ceil(v * Math.pow(UPGRADE_COST_MULT, level - 1));
 	if (level > 1) {
+		out.timber = (out.timber ?? 0) + TIMBER_PER_UPGRADE_LEVEL * (level - 1);
 		out.ingots = INGOTS_PER_UPGRADE_LEVEL * (level - 1);
 		out.coins = COINS_PER_UPGRADE_LEVEL * (level - 1);
 	}
