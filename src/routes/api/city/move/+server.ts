@@ -3,7 +3,7 @@ import { sql } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
 import { getDb, getEnv } from '$lib/server/db';
 import { readJson, requireUser } from '$lib/server/guard';
-import { addResourceAfter, rawBatch, canPaySql, changedRows, loadSnapshot } from '$lib/server/game/state';
+import { addResourceAfter, isTileTaken, rawBatch, canPaySql, changedRows, loadSnapshot } from '$lib/server/game/state';
 import { totalEssence } from '$lib/game/resources';
 import { BUILDING_BY_ID, canAfford, moveCost, placementError } from '$lib/game/city';
 
@@ -50,7 +50,8 @@ export const POST: RequestHandler = async (event) => {
 				AND ${canPaySql(user.id, cost)}`,
 			...Object.entries(cost).map(([k, v]) => addResourceAfter(user.id, k, -v))
 		]);
-	} catch {
+	} catch (e) {
+		if (!isTileTaken(e)) throw e;
 		return json({ error: 'conflict', message: 'That tile was taken while this was being done, probably from another tab. Nothing was charged; the city now shows its current state.' }, { status: 409 });
 	}
 	if (changedRows(moved) !== 1) return json({ error: 'conflict', message: 'That building changed while this was being done, probably from another tab. Nothing was charged; the city now shows its current state.' }, { status: 409 });

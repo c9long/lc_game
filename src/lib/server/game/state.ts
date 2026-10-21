@@ -86,6 +86,19 @@ export function canPaySql(uid: string, cost: Record<string, number>) {
 	return parts.length ? sql.join(parts, sql` AND `) : sql`1`;
 }
 
+/** Whether a batch failed only because a tile was already taken: the (user, city, x, y) unique
+ *  index. Any other error -- an outage, a timeout, a SQL bug -- is not a conflict, may even have
+ *  committed, and must surface as a real error rather than a reassuring 409. */
+export function isTileTaken(e: unknown): boolean {
+	const seen = new Set<unknown>();
+	for (let cur: unknown = e; cur && typeof cur === 'object' && !seen.has(cur); cur = (cur as { cause?: unknown }).cause) {
+		seen.add(cur);
+		const msg = (cur as { message?: unknown }).message;
+		if (typeof msg === 'string' && /UNIQUE constraint failed: buildings\./.test(msg)) return true;
+	}
+	return false;
+}
+
 /** How many rows a batch statement changed (D1 reports it in meta.changes). */
 export function changedRows(result: unknown): number {
 	return (result as { meta?: { changes?: number } })?.meta?.changes ?? 0;

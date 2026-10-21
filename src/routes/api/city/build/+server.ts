@@ -4,7 +4,7 @@ import type { RequestHandler } from './$types';
 import { getDb, getEnv } from '$lib/server/db';
 import { randomId } from '$lib/server/crypto';
 import { readJson, requireUser } from '$lib/server/guard';
-import { addResourceAfter, rawBatch, canPaySql, changedRows, loadSnapshot } from '$lib/server/game/state';
+import { addResourceAfter, isTileTaken, rawBatch, canPaySql, changedRows, loadSnapshot } from '$lib/server/game/state';
 import { totalEssence } from '$lib/game/resources';
 import { BUILDING_BY_ID, canAfford, costAtLevel, gateSatisfied, placementError } from '$lib/game/city';
 
@@ -52,7 +52,8 @@ export const POST: RequestHandler = async (event) => {
 	// Inserted only if still affordable (and, for a one-of-a-kind building, still absent) inside the
 	// transaction, with the charge chained behind it. Two builds on one tile at once fail on the
 	// (user, city, x, y) unique index, which rolls the whole batch back.
-	const unique = kind.maxLevel === 1 && kind.effect
+	const oneOfAKind = Boolean(kind.maxLevel === 1 && kind.effect);
+	const unique = oneOfAKind
 		? sql` AND NOT EXISTS (SELECT 1 FROM buildings WHERE user_id = ${user.id} AND kind = ${kind.id})`
 		: sql``;
 	let built;
@@ -63,9 +64,10 @@ export const POST: RequestHandler = async (event) => {
 				WHERE ${canPaySql(user.id, cost)}${unique}`,
 			...Object.entries(cost).map(([k, v]) => addResourceAfter(user.id, k, -v))
 		]);
-	} catch {
+	} catch (e) {
+		if (!isTileTaken(e)) throw e;
 		return json({ error: 'conflict', message: 'That tile was taken while this was being done, probably from another tab. Nothing was charged; the city now shows its current state.' }, { status: 409 });
 	}
-	if (changedRows(built) !== 1) return json({ error: 'conflict', message: 'Your resources changed while this was being done, probably from another tab. Nothing was charged; the city now shows its current state.' }, { status: 409 });
+	if (changedRows(built) !== 1) return json({ error: 'conflict', message: oneOfAKind ? `A ${kind.name} was built while this was being done, probably from another tab, and only one is allowed. Nothing was charged; the city now shows its current state.` : 'Your resources changed while this was being done, probably from another tab. Nothing was charged; the city now shows its current state.' }, { status: 409 });
 	return json({ ok: true });
 };

@@ -33,6 +33,6 @@ export const POST: RequestHandler = async (event) => {
 			AND level = ${placed.level} AND city = ${placed.city} AND x = ${placed.x} AND y = ${placed.y}`,
 		...Object.entries(refund).map(([k, v]) => addResourceAfter(user.id, k, v))
 	]);
-	if (changedRows(deleted) !== 1) return json({ error: 'conflict', message: 'That building changed while this was being done, probably from another tab. Nothing was charged; the city now shows its current state.' }, { status: 409 });
+	if (changedRows(deleted) !== 1) return json({ error: 'conflict', message: 'That building changed while this was being done, probably from another tab. Nothing was demolished or refunded; the city now shows its current state.' }, { status: 409 });
 	return json({ ok: true, refunded: refund });
 };
