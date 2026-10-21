@@ -113,9 +113,10 @@
 			<p><strong>Coins per active day</strong> = rate × level × city × freshness × roads × neighbours.</p>
 			<ul>
 				<li>
-					<strong>City</strong> — each city past the first costs ×4 the one before it, in everything
-					including upgrades, and produces ×3 the coins: ×4 and ×3 in Knuth's Knolls, ×16 and ×9 in
-					Dijkstra's Delta.
+					<strong>City</strong> — each city past the first produces ×3 the coins of the one before it,
+					and charges ×4 the coins: ×3 and ×4 in Knuth's Knolls, ×9 and ×16 in Dijkstra's Delta.
+					Only coins: materials and Ingots cost the same in every city. Building in a later city
+					also costs a coin build fee; building in the Hamlet does not.
 				</li>
 				<li><strong>Freshness</strong> — the share of that building's node that is not overdue. Refreshing restores it.</li>
 				<li>
