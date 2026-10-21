@@ -1,10 +1,9 @@
 import { json } from '@sveltejs/kit';
-import { and, eq } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
-import { getDb } from '$lib/server/db';
-import { buildings } from '$lib/server/db/schema';
+import { getDb, getEnv } from '$lib/server/db';
 import { readJson, requireUser } from '$lib/server/guard';
-import { addResourceStatement, loadSnapshot } from '$lib/server/game/state';
+import { addResourceAfter, rawBatch, changedRows, loadSnapshot } from '$lib/server/game/state';
 import { BUILDING_BY_ID, costAtLevel } from '$lib/game/city';
 
 /**
@@ -27,9 +26,13 @@ export const POST: RequestHandler = async (event) => {
 	if (!kind) return json({ error: 'bad_request', message: 'unknown building' }, { status: 400 });
 
 	const refund = costAtLevel(kind, 1, placed.city);
-	await db.batch([
-		db.delete(buildings).where(and(eq(buildings.userId, user.id), eq(buildings.id, placed.id))),
-		...Object.entries(refund).map(([k, v]) => addResourceStatement(db, user.id, k, v))
+	// The delete only matches the building as this request saw it, and the refund is chained behind
+	// it: a second destroy of the same building (a double click) deletes nothing and refunds nothing.
+	const [deleted] = await rawBatch(getEnv(event.platform).DB, [
+		sql`DELETE FROM buildings WHERE user_id = ${user.id} AND id = ${placed.id}
+			AND level = ${placed.level} AND city = ${placed.city} AND x = ${placed.x} AND y = ${placed.y}`,
+		...Object.entries(refund).map(([k, v]) => addResourceAfter(user.id, k, v))
 	]);
+	if (changedRows(deleted) !== 1) return json({ error: 'conflict', message: 'That building changed while this was being done, probably from another tab. Nothing was charged; the city now shows its current state.' }, { status: 409 });
 	return json({ ok: true, refunded: refund });
 };

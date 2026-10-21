@@ -1,10 +1,9 @@
 import { json } from '@sveltejs/kit';
-import { and, eq } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
-import { getDb } from '$lib/server/db';
-import { buildings } from '$lib/server/db/schema';
+import { getDb, getEnv } from '$lib/server/db';
 import { readJson, requireUser } from '$lib/server/guard';
-import { addResourceStatement, loadSnapshot } from '$lib/server/game/state';
+import { addResourceAfter, rawBatch, canPaySql, changedRows, loadSnapshot } from '$lib/server/game/state';
 import { totalEssence } from '$lib/game/resources';
 import { BUILDING_BY_ID, canAfford, moveCost, placementError } from '$lib/game/city';
 
@@ -41,9 +40,19 @@ export const POST: RequestHandler = async (event) => {
 	const cost = moveCost(kind, placed.level, placed.city, body.city);
 	if (!canAfford(snap.resources, cost)) return json({ error: 'poor', message: 'not enough resources to move it up a tier' }, { status: 400 });
 
-	await db.batch([
-		db.update(buildings).set({ city: body.city, x: body.x, y: body.y }).where(and(eq(buildings.userId, user.id), eq(buildings.id, placed.id))),
-		...Object.entries(cost).map(([k, v]) => addResourceStatement(db, user.id, k, -v))
-	]);
+	// Only from the tile this request saw, only if still affordable, with any charge chained behind it.
+	// A move into an occupied tile fails on the unique index and rolls back.
+	let moved;
+	try {
+		[moved] = await rawBatch(getEnv(event.platform).DB, [
+			sql`UPDATE buildings SET city = ${body.city}, x = ${body.x}, y = ${body.y}
+				WHERE user_id = ${user.id} AND id = ${placed.id} AND city = ${placed.city} AND x = ${placed.x} AND y = ${placed.y}
+				AND ${canPaySql(user.id, cost)}`,
+			...Object.entries(cost).map(([k, v]) => addResourceAfter(user.id, k, -v))
+		]);
+	} catch {
+		return json({ error: 'conflict', message: 'That tile was taken while this was being done, probably from another tab. Nothing was charged; the city now shows its current state.' }, { status: 409 });
+	}
+	if (changedRows(moved) !== 1) return json({ error: 'conflict', message: 'That building changed while this was being done, probably from another tab. Nothing was charged; the city now shows its current state.' }, { status: 409 });
 	return json({ ok: true, charged: cost });
 };

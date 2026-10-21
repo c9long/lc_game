@@ -1,11 +1,10 @@
 import { json } from '@sveltejs/kit';
-import { and, eq } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
-import { getDb } from '$lib/server/db';
-import { buildings } from '$lib/server/db/schema';
+import { getDb, getEnv } from '$lib/server/db';
 import { randomId } from '$lib/server/crypto';
 import { readJson, requireUser } from '$lib/server/guard';
-import { addResourceStatement, loadSnapshot } from '$lib/server/game/state';
+import { addResourceAfter, rawBatch, canPaySql, changedRows, loadSnapshot } from '$lib/server/game/state';
 import { totalEssence } from '$lib/game/resources';
 import { BUILDING_BY_ID, canAfford, costAtLevel, gateSatisfied, placementError } from '$lib/game/city';
 
@@ -24,10 +23,14 @@ export const POST: RequestHandler = async (event) => {
 		if (placed.level >= kind.maxLevel) return json({ error: 'max_level', message: 'already at max level' }, { status: 400 });
 		const cost = costAtLevel(kind, placed.level + 1, placed.city);
 		if (!canAfford(snap.resources, cost)) return json({ error: 'poor', message: 'not enough resources' }, { status: 400 });
-		await db.batch([
-			db.update(buildings).set({ level: placed.level + 1 }).where(and(eq(buildings.userId, user.id), eq(buildings.id, placed.id))),
-			...Object.entries(cost).map(([k, v]) => addResourceStatement(db, user.id, k, -v))
+		// Only from the level this request saw, and only if the price is still affordable inside the
+		// transaction; the charge is chained behind it, so a double click upgrades once and charges once.
+		const [upgraded] = await rawBatch(getEnv(event.platform).DB, [
+			sql`UPDATE buildings SET level = ${placed.level + 1}
+				WHERE user_id = ${user.id} AND id = ${placed.id} AND level = ${placed.level} AND ${canPaySql(user.id, cost)}`,
+			...Object.entries(cost).map(([k, v]) => addResourceAfter(user.id, k, -v))
 		]);
+		if (changedRows(upgraded) !== 1) return json({ error: 'conflict', message: 'That building changed while this was being done, probably from another tab. Nothing was charged; the city now shows its current state.' }, { status: 409 });
 		return json({ ok: true });
 	}
 
@@ -46,9 +49,23 @@ export const POST: RequestHandler = async (event) => {
 	}
 	const cost = costAtLevel(kind, 1, body.city);
 	if (!canAfford(snap.resources, cost)) return json({ error: 'poor', message: 'not enough resources' }, { status: 400 });
-	await db.batch([
-		db.insert(buildings).values({ id: randomId(), userId: user.id, kind: kind.id, city: body.city, x: body.x, y: body.y, level: 1, builtAt: new Date() }),
-		...Object.entries(cost).map(([k, v]) => addResourceStatement(db, user.id, k, -v))
-	]);
+	// Inserted only if still affordable (and, for a one-of-a-kind building, still absent) inside the
+	// transaction, with the charge chained behind it. Two builds on one tile at once fail on the
+	// (user, city, x, y) unique index, which rolls the whole batch back.
+	const unique = kind.maxLevel === 1 && kind.effect
+		? sql` AND NOT EXISTS (SELECT 1 FROM buildings WHERE user_id = ${user.id} AND kind = ${kind.id})`
+		: sql``;
+	let built;
+	try {
+		[built] = await rawBatch(getEnv(event.platform).DB, [
+			sql`INSERT INTO buildings (id, user_id, kind, city, x, y, level, built_at)
+				SELECT ${randomId()}, ${user.id}, ${kind.id}, ${body.city}, ${body.x}, ${body.y}, 1, ${Date.now()}
+				WHERE ${canPaySql(user.id, cost)}${unique}`,
+			...Object.entries(cost).map(([k, v]) => addResourceAfter(user.id, k, -v))
+		]);
+	} catch {
+		return json({ error: 'conflict', message: 'That tile was taken while this was being done, probably from another tab. Nothing was charged; the city now shows its current state.' }, { status: 409 });
+	}
+	if (changedRows(built) !== 1) return json({ error: 'conflict', message: 'Your resources changed while this was being done, probably from another tab. Nothing was charged; the city now shows its current state.' }, { status: 409 });
 	return json({ ok: true });
 };

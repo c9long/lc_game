@@ -232,6 +232,39 @@ else
 fi
 
 
+# Races: the same city action sent twice at once (a double click) must happen once and be paid once.
+# smoke-hut-b is a level-1 Hut; give enough to upgrade it twice over, then fire two upgrades together.
+$W execute lc-game --local --persist-to "$STATE" --command \
+  "INSERT INTO resources (user_id, kind, amount) VALUES ('smoke-user','timber',500),('smoke-user','ingots',50),('smoke-user','coins',500) ON CONFLICT (user_id, kind) DO UPDATE SET amount = resources.amount + excluded.amount;" >/dev/null
+race() { for _ in 1 2; do curl -s -o /dev/null -w '%{http_code}\n' -X POST -H "cookie: lc_session=$TOKEN" -H "content-type: application/json" -d "$2" "$B/api/city/$1" & done; wait; }
+COINS0=$(count_state "SELECT amount FROM resources WHERE user_id='smoke-user' AND kind='coins'")
+CODES=$(race build '{"id":"smoke-hut-b"}' | sort | tr '\n' ' ')
+LVL=$(q "SELECT level AS n FROM buildings WHERE id='smoke-hut-b'")
+COINS1=$(count_state "SELECT amount FROM resources WHERE user_id='smoke-user' AND kind='coins'")
+if [ "$LVL" = "2" ] && [ "$((COINS0 - COINS1))" -lt "$((COINS0))" ] && [ "$CODES" = "200 409 " ]; then
+  echo "ok   two simultaneous upgrades: one applied, one refused (409), charged once ($COINS0 -> $COINS1 coins)"
+else
+  echo "FAIL simultaneous upgrades: level $LVL, codes [$CODES], coins $COINS0 -> $COINS1"; fail=1
+fi
+TIMBER0=$(count_state "SELECT amount FROM resources WHERE user_id='smoke-user' AND kind='timber'")
+CODES=$(race destroy '{"id":"smoke-hut-b"}' | sort | tr '\n' ' ')
+TIMBER1=$(count_state "SELECT amount FROM resources WHERE user_id='smoke-user' AND kind='timber'")
+if [ "$((TIMBER1 - TIMBER0))" = "5" ] && [ "$CODES" = "200 409 " ]; then
+  echo "ok   two simultaneous destroys: one refund of 5 timber, the other refused (409)"
+else
+  echo "FAIL simultaneous destroys: timber $TIMBER0 -> $TIMBER1 (want +5), codes [$CODES]"; fail=1
+fi
+TIMBER0=$TIMBER1
+CODES=$(race build '{"kind":"hut","city":0,"x":5,"y":4}' | sort | tr '\n' ' ')
+TIMBER1=$(count_state "SELECT amount FROM resources WHERE user_id='smoke-user' AND kind='timber'")
+HUTS=$(q "SELECT count(*) AS n FROM buildings WHERE user_id='smoke-user' AND city=0 AND x=5 AND y=4")
+if [ "$HUTS" = "1" ] && [ "$((TIMBER0 - TIMBER1))" = "5" ] && [ "$CODES" = "200 409 " ]; then
+  echo "ok   two simultaneous builds on one tile: one built and charged 5 timber, the other refused (409)"
+else
+  echo "FAIL simultaneous builds: huts $HUTS, timber $TIMBER0 -> $TIMBER1 (want -5), codes [$CODES]"; fail=1
+fi
+
+
 # Cities and terrain. A building left over from the old open 8x8 is moved onto a tile that exists
 # and that its kind is allowed to stand on, the first time the city is loaded.
 $W execute lc-game --local --persist-to "$STATE" --command \
