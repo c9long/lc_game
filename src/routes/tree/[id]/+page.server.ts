@@ -22,9 +22,13 @@ export const load: PageServerLoad = async ({ params, locals, platform }) => {
 			solveCount: s?.solveCount ?? 0,
 			lastLang: s?.lastLang ?? null,
 			dueAt: s?.dueAt ?? null,
-			due: s ? s.solveCount > 0 && isDue(s, snap.now) : false,
-			solutions: Object.entries(p.solutions).filter(([, v]) => v).map(([k]) => k)
+			due: s ? s.solveCount > 0 && isDue(s, snap.now) : false
 		};
 	});
-	return { view, problems, requires: node.requires.map((r) => ({ id: r, pattern: NODE_BY_ID.get(r)!.pattern })) };
+	// `done`: the prerequisite is unlocked with its own line open, so it no longer holds this one back.
+	const requires = node.requires.map((r) => {
+		const v = snap.tree.get(r)!;
+		return { id: r, pattern: v.pattern, done: (v.status === 'unlocked' || v.status === 'complete') && v.prereqsMet };
+	});
+	return { view, problems, requires };
 };
