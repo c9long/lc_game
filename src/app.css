@@ -14,6 +14,15 @@
 	--medium: #f2b544;
 	--hard: #ff5b6e;
 	--radius: 10px;
+	/* The game's metals and type, shared by Today and the Tech tree: brass for progress and open
+	   track, verdigris for refreshes, rust for anything due or rusting, steel for what is locked. */
+	--brass: var(--accent);
+	--verdigris: #5fb3a1;
+	--rust: #c9683c;
+	--steel: var(--muted);
+	--ember: var(--warn);
+	--display: 'Big Shoulders Display Variable', 'Big Shoulders Display', 'Arial Narrow', sans-serif;
+	--body: 'Atkinson Hyperlegible', ui-sans-serif, system-ui, sans-serif;
 	font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 	color-scheme: dark;
 }

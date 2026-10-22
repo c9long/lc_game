@@ -142,13 +142,6 @@
 
 <style>
 	.today {
-		--brass: var(--accent);
-		--verdigris: #5fb3a1;
-		--rust: #c9683c;
-		--steel: var(--muted);
-		--ember: var(--warn);
-		--display: 'Big Shoulders Display Variable', 'Big Shoulders Display', 'Arial Narrow', sans-serif;
-		--body: 'Atkinson Hyperlegible', ui-sans-serif, system-ui, sans-serif;
 		font-family: var(--body);
 		font-size: 1rem;
 		line-height: 1.5;
