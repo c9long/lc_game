@@ -26,6 +26,8 @@ export default defineConfig({
 			})
 		})
 	],
+	// Font packages ship only CSS: bundle them for the server render instead of letting Node import them.
+	ssr: { noExternal: [/^@fontsource/] },
 	test: {
 		include: ['src/**/*.test.ts']
 	}

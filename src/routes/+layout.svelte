@@ -1,4 +1,9 @@
 <script lang="ts">
+	// Self-hosted fonts (Fontsource): Big Shoulders Display for display type, Atkinson Hyperlegible
+	// for reading. vite.config.ts keeps them out of SSR externalization so Node never imports a .css.
+	import '@fontsource-variable/big-shoulders-display/wght';
+	import '@fontsource/atkinson-hyperlegible/400';
+	import '@fontsource/atkinson-hyperlegible/700';
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
