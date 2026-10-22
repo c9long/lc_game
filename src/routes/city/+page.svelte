@@ -58,6 +58,9 @@
 		try {
 			const r = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
 			const j = (await r.json()) as any;
+			// A 409 means the city changed under this page (another tab or device got there first):
+			// show the city as it now is, alongside the message.
+			if (r.status === 409) await invalidateAll();
 			if (!r.ok) throw new Error(j.message ?? j.error ?? 'failed');
 			await invalidateAll();
 			selected = null;

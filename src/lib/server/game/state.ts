@@ -1,4 +1,5 @@
-import { and, eq, gte, sql } from 'drizzle-orm';
+import { and, eq, gte, sql, type SQL } from 'drizzle-orm';
+import { SQLiteSyncDialect } from 'drizzle-orm/sqlite-core';
 import type { Db } from '../db';
 import { awards, buildings, gameState, ledger, problemState, resources, type User } from '../db/schema';
 import { weeklyCount } from '$lib/game/budget';
@@ -47,6 +48,60 @@ export async function setState(db: Db, uid: string, key: string, value: unknown)
 		.insert(gameState)
 		.values({ userId: uid, key, value, updatedAt: now })
 		.onConflictDoUpdate({ target: [gameState.userId, gameState.key], set: { value, updatedAt: now } });
+}
+
+/** A resource change that runs only if the statement just before it in the same batch changed
+ *  exactly one row. City actions chain their charges or refunds behind the guarded building write
+ *  (see the api/city endpoints): if the building was no longer as the request saw it -- a second click
+ *  that lost the race, say -- the write changes nothing, and every chained change skips as well
+ *  (each one, when it runs, changes exactly one row, so the chain holds). D1 runs a batch as one
+ *  transaction and batches one at a time, so `changes()` always refers to the previous statement. */
+export function addResourceAfter(uid: string, kind: string, amount: number): SQL {
+	return sql`INSERT INTO resources (user_id, kind, amount)
+		SELECT ${uid}, ${kind}, ${amount} WHERE changes() = 1
+		ON CONFLICT (user_id, kind) DO UPDATE SET amount = resources.amount + excluded.amount`;
+}
+
+const dialect = new SQLiteSyncDialect();
+
+/** Runs raw statements as ONE D1 batch: a single transaction, in order, on one connection, which
+ *  the changes() chaining above depends on. Drizzle's own batch() only takes query builders --
+ *  db.run(sql) executes on the spot -- so these go to D1 directly. Returns D1's results, whose
+ *  meta.changes changedRows() reads. */
+export function rawBatch(d1: D1Database, statements: SQL[]) {
+	return d1.batch(
+		statements.map((s) => {
+			const q = dialect.sqlToQuery(s);
+			return d1.prepare(q.sql).bind(...q.params);
+		})
+	);
+}
+
+/** SQL that holds while the player can pay `cost` from what they have right now -- checked inside
+ *  the transaction, where the snapshot check before it may have gone stale. */
+export function canPaySql(uid: string, cost: Record<string, number>) {
+	const parts = Object.entries(cost)
+		.filter(([, v]) => v > 0)
+		.map(([k, v]) => sql`(SELECT COALESCE(MAX(amount), 0) FROM resources WHERE user_id = ${uid} AND kind = ${k}) >= ${v}`);
+	return parts.length ? sql.join(parts, sql` AND `) : sql`1`;
+}
+
+/** Whether a batch failed only because a tile was already taken: the (user, city, x, y) unique
+ *  index. Any other error -- an outage, a timeout, a SQL bug -- is not a conflict, may even have
+ *  committed, and must surface as a real error rather than a reassuring 409. */
+export function isTileTaken(e: unknown): boolean {
+	const seen = new Set<unknown>();
+	for (let cur: unknown = e; cur && typeof cur === 'object' && !seen.has(cur); cur = (cur as { cause?: unknown }).cause) {
+		seen.add(cur);
+		const msg = (cur as { message?: unknown }).message;
+		if (typeof msg === 'string' && /UNIQUE constraint failed: buildings\./.test(msg)) return true;
+	}
+	return false;
+}
+
+/** How many rows a batch statement changed (D1 reports it in meta.changes). */
+export function changedRows(result: unknown): number {
+	return (result as { meta?: { changes?: number } })?.meta?.changes ?? 0;
 }
 
 export function addResourceStatement(db: Db, uid: string, kind: string, amount: number) {
