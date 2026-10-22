@@ -73,7 +73,7 @@ export interface City {
 	honoree: string;
 	/** Lifetime essence needed to found it. Zero for the first city. */
 	essence: number;
-	/** 0 for the first city. Each tier multiplies costs by TIER_COST_MULT and coins by TIER_COIN_MULT. */
+	/** 0 for the first city. Each tier multiplies coin costs by TIER_COST_MULT and coin production by TIER_COIN_MULT; materials and Ingots cost the same in every city. */
 	tier: number;
 	/** GRID_SIZE rows of GRID_SIZE characters, indexed [y][x]. */
 	terrain: string[];
@@ -116,15 +116,14 @@ export const CITIES: City[] = [
 
 export const CITY_BY_ID = new Map(CITIES.map((c) => [c.id, c]));
 
-/** Each city tier costs four times the one below it, in everything — materials, Ingots and the
- *  coins an upgrade takes — and produces three times the coins. So a building pays for itself a
- *  third more slowly per tier: the later cities are less efficient, and are wanted anyway because
- *  the Hamlet runs out of tiles and their absolute income is larger.
+/** City tiers. Each city past the first produces TIER_COIN_MULT times the coins, and costs
+ *  TIER_COST_MULT times as many COINS -- only coins (2026-10-21). Materials come from solves and
+ *  Ingots from drills, and neither grows as the city does; coins are what buildings produce, so
+ *  coins are what a richer city charges. Materials and Ingots cost the same in every city.
  *
- *  Coins are scaled on the cost side too, deliberately. Base buildings are paid in materials, which
- *  only solves produce; coins buy nothing but upgrades. Scaling materials alone would charge the
- *  scarce currency and pay out the plentiful one. With upgrade coins scaled as well, a higher
- *  tier's larger income meets a larger sink. */
+ *  Building normally costs no coins, so a later city also charges a coin BUILD FEE (BUILD_FEE_PER_UNIT
+ *  per unit of the building's material cost, times the tier factor). Without it a level-1 building
+ *  would cost the same everywhere and earn nine times as much in the Delta. The Hamlet has no fee. */
 export const TIER_COST_MULT = 4;
 export const TIER_COIN_MULT = 3;
 
@@ -133,6 +132,7 @@ function tierOf(city: number): number {
 	return CITY_BY_ID.get(city)?.tier ?? 0;
 }
 
+/** The factor a city applies to coin costs (upgrade coins and the build fee). */
 export function cityCostMult(city: number): number {
 	return TIER_COST_MULT ** tierOf(city);
 }
@@ -204,19 +204,32 @@ export const INGOTS_PER_UPGRADE_LEVEL = 3;
  *  what funds a growing city, rather than coins having nothing to be spent on. Tripled from 15 on
  *  2026-10-15: coins were piling up unspent. */
 export const COINS_PER_UPGRADE_LEVEL = 45;
+/** Every upgrade also costs timber, whatever the building is made of, so the stone- and iron-built
+ *  buildings draw on Medium solves too (3 timber each) rather than leaving timber with little to
+ *  buy once the timber-built buildings are up. Added on top of any timber the building's own cost
+ *  scales to. Since 2026-10-21. */
+export const TIMBER_PER_UPGRADE_LEVEL = 6;
 
-/** Upgrades cost the base resources scaled up, plus Ingots (earned only from syntax drills). The
- *  whole price is then multiplied by the city's tier — after rounding, so a Knolls price is exactly
- *  four Hamlet prices. */
+/** Coins per unit of a building's material cost, charged to build it in a later city (times the
+ *  tier factor): a Hash Market (15 units) costs 300 coins to build in the Knolls, 1200 in the Delta. */
+export const BUILD_FEE_PER_UNIT = 5;
+
+/** What building (level 1) or upgrading to `level` costs in `city`. Materials scale by
+ *  UPGRADE_COST_MULT per level; an upgrade adds timber, Ingots (earned only from syntax drills) and
+ *  coins. Only the coins depend on the city: upgrade coins and, in a later city, the build fee are
+ *  multiplied by the tier factor. Materials and Ingots cost the same everywhere. */
 export function costAtLevel(kind: BuildingKind, level: number, city: number = CITIES[0].id): Record<string, number> {
 	const out: Record<string, number> = {};
 	for (const [k, v] of Object.entries(kind.cost)) out[k] = Math.ceil(v * Math.pow(UPGRADE_COST_MULT, level - 1));
-	if (level > 1) {
-		out.ingots = INGOTS_PER_UPGRADE_LEVEL * (level - 1);
-		out.coins = COINS_PER_UPGRADE_LEVEL * (level - 1);
-	}
 	const mult = cityCostMult(city);
-	for (const k of Object.keys(out)) out[k] *= mult;
+	if (level > 1) {
+		out.timber = (out.timber ?? 0) + TIMBER_PER_UPGRADE_LEVEL * (level - 1);
+		out.ingots = INGOTS_PER_UPGRADE_LEVEL * (level - 1);
+		out.coins = COINS_PER_UPGRADE_LEVEL * (level - 1) * mult;
+	} else if (mult > 1) {
+		const units = Object.values(kind.cost).reduce((a, b) => a + b, 0);
+		out.coins = BUILD_FEE_PER_UNIT * units * mult;
+	}
 	return out;
 }
 
@@ -230,9 +243,11 @@ export function investedCost(kind: BuildingKind, level: number, city: number): R
 }
 
 /** What moving a building up a tier costs: the difference between what it would have cost where it
- *  is going and what it cost where it stands. Without this, moving is a way round the tiers — build
- *  in the Hamlet, move to the Delta, earn nine times as much for a Hamlet price. Moving within a
- *  tier or down one is free and refunds nothing, as spent upgrades are not refunded either. */
+ *  is going and what it cost where it stands -- in coins only now, the build fee plus the scaled
+ *  upgrade coins, since materials and Ingots cost the same everywhere. Without this, moving is a way
+ *  round the tiers: build in the Hamlet, move to the Delta, earn nine times as much for a Hamlet
+ *  price. Moving within a tier or down one is free and refunds nothing, as spent upgrades are not
+ *  refunded either. */
 export function moveCost(kind: BuildingKind, level: number, from: number, to: number): Record<string, number> {
 	if (tierOf(to) <= tierOf(from)) return {};
 	const there = investedCost(kind, level, to);
