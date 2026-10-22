@@ -23,7 +23,7 @@
 	--ember: var(--warn);
 	--display: 'Big Shoulders Display Variable', 'Big Shoulders Display', 'Arial Narrow', sans-serif;
 	--body: 'Atkinson Hyperlegible', ui-sans-serif, system-ui, sans-serif;
-	font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	font-family: var(--body);
 	color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -42,11 +42,6 @@ button.destructive { background: var(--bad); color: #fff; border-color: var(--ba
 input, select, textarea { font: inherit; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 0.45rem 0.6rem; }
 textarea { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 .shell { max-width: 1400px; margin: 0 auto; padding: 0 1rem 3rem; }
-nav.top { display: flex; gap: 1rem; align-items: center; padding: 0.8rem 0; border-bottom: 1px solid var(--border); margin-bottom: 1.2rem; flex-wrap: wrap; }
-nav.top .brand { font-weight: 700; color: var(--accent); margin-right: 0.5rem; }
-nav.top a { color: var(--text); padding: 0.2rem 0.4rem; border-radius: 6px; }
-nav.top a[aria-current='page'] { background: var(--panel-2); }
-nav.top form { margin-left: auto; }
 .card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.2rem; }
 .grid { display: grid; gap: 1rem; }
 .grid.two { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
