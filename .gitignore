@@ -42,3 +42,6 @@ static/pyodide/
 
 # python bytecode from the drill/test generators
 __pycache__/
+
+# Claude Code personal settings (the shared .claude/settings.json is committed)
+.claude/settings.local.json
