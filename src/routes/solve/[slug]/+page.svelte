@@ -4,20 +4,21 @@
 	import Editor from '$lib/components/Editor.svelte';
 	import CustomTests from '$lib/components/CustomTests.svelte';
 	import TagToggle from '$lib/components/TagToggle.svelte';
-	import { judge, warmUp, exampleCases, stop, STOPPED, TIME_LIMIT_MS, type Suite, type TestCase } from '$lib/pyodide/client';
+	import { judge, warmUp, stop, STOPPED, TIME_LIMIT_MS, type Suite, type TestCase } from '$lib/pyodide/client';
 	let { data } = $props();
 
 	const STORAGE_LANG = 'lc-game:lang';
 	// svelte-ignore state_referenced_locally
 	let lang = $state(data.lastLang ?? 'python3');
 	let code = $state('');
-	let busy = $state<'run' | 'submit' | null>(null);
-	/** A custom testcase run holds the worker; Run and Submit wait for it. */
+	/** A submission holds the worker; Run waits for it. */
+	let busy = $state<'submit' | null>(null);
+	/** A test-case run holds the worker; Submit waits for it. */
 	let customBusy = $state(false);
+	let tests = $state<CustomTests>();
 	let suite = $state<Suite | null>(null);
 	let suiteError = $state('');
 	let result = $state<Record<string, any> | null>(null);
-	let resultKind = $state<'run' | 'submit' | null>(null);
 	let message = $state('');
 	let award = $state<Record<string, any> | null>(null);
 	let saveTimer: ReturnType<typeof setTimeout> | undefined;
@@ -143,7 +144,16 @@
 		scheduleSave();
 	});
 
-	async function execute(kind: 'run' | 'submit') {
+	/** Run: your test cases, judged against the reference, in the panel below the editor. */
+	function runTests() {
+		if (busy || customBusy || !canJudge) return;
+		flushSave();
+		void tests?.run();
+	}
+
+	/** Submit: the whole suite, large inputs included. The only judgement that counts. */
+	async function submit() {
+		const kind = 'submit';
 		if (busy || customBusy || !suite || !canJudge) return;
 		busy = kind;
 		message = '';
@@ -151,9 +161,7 @@
 		result = null;
 		flushSave();
 		try {
-			// Run shows only the cases derived from LeetCode's published examples; Submit is judged
-			// against the whole suite.
-			const cases = kind === 'run' ? exampleCases(suite) : [...suite.cases, ...(await loadTleCases())];
+			const cases = [...suite.cases, ...(await loadTleCases())];
 			const outcome = await judge(code, suite, cases);
 			result = {
 				status_msg: outcome.verdict,
@@ -163,7 +171,6 @@
 				stdout: outcome.stdout,
 				elapsedMs: outcome.elapsedMs
 			};
-			resultKind = kind;
 
 			const r = await fetch(`/api/solve/${data.slug}/verdict`, {
 				method: 'POST',
@@ -188,7 +195,7 @@
 			// Gated on the server's verdict, not the worker's: the server additionally requires a
 			// non-empty suite, so a problem with no cases reports Accepted here while storing no
 			// accepted attempt. Clearing on that would discard the only copy of the code.
-			if (kind === 'submit' && r.ok && j.accepted) {
+			if (r.ok && j.accepted) {
 				justAccepted[lang] = code;
 				code = data.snippets[lang] ?? '';
 				flushSave();
@@ -198,7 +205,7 @@
 			}
 		} catch (e) {
 			// A stopped run has no verdict, so nothing was posted and nothing is recorded.
-			if (e instanceof Error && e.message === STOPPED) message = `${kind === 'run' ? 'Run' : 'Submission'} stopped.`;
+			if (e instanceof Error && e.message === STOPPED) message = 'Submission stopped.';
 			else message = e instanceof Error ? e.message : String(e);
 		} finally {
 			busy = null;
@@ -242,7 +249,10 @@
 	}
 
 	const passed = $derived(result?.status_msg === 'Accepted');
-	const kindLabel = $derived(resultKind === 'submit' ? 'Submission' : 'Run');
+	const failures = $derived((result?.cases ?? []).filter((c: any) => !c.ok));
+	const shortDate = (d: Date | string) => new Date(d).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+	const times = (n: number) => (n === 1 ? 'once' : n === 2 ? 'twice' : `${n} times`);
+	const seconds = $derived(((suite?.timeLimitMs ?? TIME_LIMIT_MS) / 1000).toLocaleString());
 	// The in-browser judge is Pyodide, so only Python can be executed (docs/07-pyodide-judge.md).
 	const canJudge = $derived(lang === 'python3' && suite !== null);
 	/** The Python reference, the oracle for custom testcases. Fetched from the public static path by
@@ -253,183 +263,232 @@
 	});
 </script>
 
-<svelte:head><title>{data.title} · LC Game</title></svelte:head>
+<svelte:head><title>{data.title} · Commit City</title></svelte:head>
 
-<div class="head row">
-	<h1>{data.title}</h1>
-	<span class="pill {data.difficulty}">{data.difficulty}</span>
-	{#if data.cur?.pattern}<span class="pill">{data.cur.pattern}</span>{/if}
-	{#if data.solved}<span class="pill" style="color: var(--good)">solved ×{data.solveCount}</span>{/if}
-	{#if data.dueAt}<span class="muted">due {new Date(data.dueAt).toLocaleDateString()}</span>{/if}
-	<a class="muted" href="https://leetcode.com/problems/{data.slug}/" target="_blank" rel="noreferrer">on LeetCode ↗</a>
-	<TagToggle show={data.showTags} />
-</div>
+<div class="solve-page">
+	<header class="head">
+		<h1>{data.title}</h1>
+		<p class="status">
+			<span class="difficulty {data.difficulty}">{data.difficulty}.</span>
+			{#if data.due}<span class="due">Due for a refresh.</span>
+			{:else if data.solved}Solved {times(data.solveCount)}{#if data.dueAt}, next refresh {shortDate(data.dueAt)}{/if}.
+			{:else}Not solved yet.{/if}
+			{#if data.cur?.pattern}<span class="pattern">{data.cur.pattern}.</span>{/if}
+			<a href="https://leetcode.com/problems/{data.slug}/" target="_blank" rel="noreferrer">Open on LeetCode</a>
+		</p>
+		<TagToggle show={data.showTags} />
+	</header>
 
-{#if suiteError}
-	<div class="banner">{suiteError} You can still edit and save drafts here.</div>
-{:else if lang !== 'python3'}
-	<div class="banner">The in-browser judge runs Python only. Switch to Python 3 to run and submit; other languages are editable but cannot be judged yet.</div>
-{/if}
-{#if data.ownDescription}
-	<div class="banner">LeetCode Premium withholds this problem's statement, so the description below is the app's own, written from the published signature and examples.</div>
-{/if}
+	{#if suiteError}
+		<div class="banner">{suiteError} You can still edit and save drafts here.</div>
+	{:else if lang !== 'python3'}
+		<div class="banner">The in-browser judge runs Python only. Switch to Python 3 to run and submit; other languages are editable but cannot be judged yet.</div>
+	{/if}
 
-<div class="solve">
-	<section class="card prose desc">
-		{@html data.contentHtml ?? '<p>No description available.</p>'}
-		{#if data.notes.length}
-			<!-- LeetCode has dropped the definitions its statements used to carry, so a problem can use
-			     its central term without ever defining it. The statement stays verbatim; this says what
-			     the term means. -->
-			<aside class="notes">
-				<strong>Clarification</strong>
-				<ul>{#each data.notes as n (n)}<li>{n}</li>{/each}</ul>
-			</aside>
-		{/if}
-		{#if data.tags.length}<p class="row">{#each data.tags as t (t)}<span class="pill">{t}</span>{/each}</p>{/if}
-	</section>
-
-	<section class="work">
-		<div class="row toolbar">
-			<select value={lang} onchange={(e) => switchLang((e.target as HTMLSelectElement).value)}>
-				{#each data.langs as l (l.slug)}
-					<option value={l.slug} disabled={!data.snippets[l.slug]}>{l.name}{l.bonus ? ' ×1.5' : ''}</option>
-				{/each}
-			</select>
-			<button onclick={resetToStarter}>Starter</button>
-			{#if lastAcceptedFor}<button onclick={loadLastAccepted}>Last accepted</button>{/if}
-			<button onclick={toggleCompletion} title="Editor suggestions, parameter hints and snippets; saved for your account">Autocomplete: {completion ? 'on' : 'off'}</button>
-			<span class="spacer"></span>
-			<button onclick={() => execute('run')} disabled={busy !== null || customBusy || !canJudge} title="Ctrl+Enter">{busy === 'run' ? 'Running…' : 'Run'}</button>
-			{#if busy !== null || customBusy}
-				<button class="stop" onclick={stop} title="Stop the code that is running now">■ Stop</button>
+	<div class="solve">
+		<section class="statement prose">
+			{#if data.ownDescription}
+				<p class="own">LeetCode Premium withholds this statement, so this one is the app's own, written from the published signature and examples.</p>
 			{/if}
-			<button class="primary" onclick={() => execute('submit')} disabled={busy !== null || customBusy || !canJudge} title="Ctrl+Shift+Enter">{busy === 'submit' ? 'Judging…' : 'Submit'}</button>
-		</div>
+			{@html data.contentHtml ?? '<p>No description available.</p>'}
+			{#if data.notes.length}
+				<!-- LeetCode has dropped the definitions its statements used to carry, so a problem can use
+				     its central term without ever defining it. The statement stays verbatim; this says what
+				     the term means. -->
+				<aside class="notes">
+					<strong>Clarification</strong>
+					<ul>{#each data.notes as n (n)}<li>{n}</li>{/each}</ul>
+				</aside>
+			{/if}
+			{#if data.tags.length}<p class="tags">Topics: {data.tags.join(', ')}</p>{/if}
+		</section>
 
-		<Editor bind:value={code} language={monacoLang} {completion} onrun={() => execute('run')} onsubmit={() => execute('submit')} />
-
-		{#if suite}
-			<p class="muted">
-				{suite.exampleCount} example case{suite.exampleCount === 1 ? '' : 's'}
-				{#if suite.cases.length > suite.exampleCount}· {suite.cases.length}+ in total on Submit, large inputs included{/if}
-				· time limit {((suite.timeLimitMs ?? TIME_LIMIT_MS) / 1000).toLocaleString()} s
-				{#if suite.compare !== 'exact'}· order-insensitive ({suite.compare}){/if}
-			</p>
-		{/if}
-
-		{#if canJudge && suite}
-			<CustomTests {suite} slug={data.slug} {code} {refUrl} blocked={busy !== null} onrunning={(r) => (customBusy = r)} />
-		{/if}
-
-		{#if message}<div class="banner">{message}</div>{/if}
-
-		{#if award}
-			<div class="banner ok">
-				{#if award.counted}
-					🎉 {award.kind} solve: +{award.award.research} research, {Object.entries(award.award.resources).map(([k, v]) => `${k} +${v}`).join(', ')}
-				{:else if award.duplicate}
-					Already rewarded.
-				{:else}
-					Accepted again today; this problem already earned its credit for {award.date}.
+		<section class="work">
+			<div class="toolbar">
+				<select value={lang} onchange={(e) => switchLang((e.target as HTMLSelectElement).value)} aria-label="Language">
+					{#each data.langs as l (l.slug)}
+						<option value={l.slug} disabled={!data.snippets[l.slug]}>{l.name}{l.bonus ? ' ×1.5' : ''}</option>
+					{/each}
+				</select>
+				<button class="quiet" onclick={resetToStarter}>Starter code</button>
+				{#if lastAcceptedFor}<button class="quiet" onclick={loadLastAccepted}>Last accepted</button>{/if}
+				<button class="quiet" onclick={toggleCompletion} aria-pressed={completion} title="Editor suggestions, parameter hints and snippets; saved for your account">
+					Autocomplete {completion ? 'on' : 'off'}
+				</button>
+				<span class="spacer"></span>
+				{#if busy !== null || customBusy}
+					<button class="stop" onclick={stop} title="Stop the code that is running now">Stop</button>
 				{/if}
+				<button onclick={runTests} disabled={busy !== null || customBusy || !canJudge} title="Run your test cases (Ctrl+Enter)">{customBusy ? 'Running…' : 'Run'}</button>
+				<button class="primary" onclick={submit} disabled={busy !== null || customBusy || !canJudge} title="Judge every case (Ctrl+Shift+Enter)">{busy === 'submit' ? 'Judging…' : 'Submit'}</button>
 			</div>
-		{/if}
 
-		{#if result}
-			<div class="card result" class:pass={passed} class:fail={!passed}>
-				<!-- A Run checks only the published examples, which a wrong solution can pass by luck (sorting
-				     Top K Frequent by value passes all three). "Accepted" is kept for a Submit, which is the
-				     only thing that counts. -->
-				<div class="row result-head">
-					<h3>{kindLabel}: {resultKind === 'run' && passed ? 'examples pass' : (result.status_msg ?? result.state)}</h3>
-					<button class="clear" onclick={() => (result = null)} title="Hide this output">Clear</button>
-				</div>
-				{#if result.total_testcases != null}<p>{result.total_correct ?? 0} / {result.total_testcases} {resultKind === 'run' ? 'example' : 'test'} cases passed <span class="muted">· {result.elapsedMs} ms</span></p>{/if}
-				{#if resultKind === 'run' && passed && suite && suite.cases.length > suite.exampleCount}
-					<p class="muted">Not accepted yet: Submit judges all {suite.cases.length} cases.</p>
-				{/if}
+			<Editor bind:value={code} language={monacoLang} {completion} onrun={runTests} onsubmit={submit} />
 
-				{#if result.cases?.[0]?.fatal}
-					<pre>{result.cases[0].error}</pre>
-				{:else if result.cases?.length}
-					<!-- Submit can run a long suite, so only the failures are worth listing once past the examples. -->
-					{@const shown = resultKind === 'run' ? result.cases : result.cases.filter((c: any) => !c.ok).slice(0, 5)}
-					{#if shown.length}
+			{#if suite}
+				<p class="limits">
+					Run checks your test cases against the reference solution. Submit judges all {suite.cases.length}{suite.cases.length > suite.exampleCount ? '+' : ''}
+					cases{suite.cases.length > suite.exampleCount ? ', large inputs included,' : ''} with a {seconds}&nbsp;s limit{suite.compare !== 'exact' ? `, in any order (${suite.compare})` : ''}.
+				</p>
+			{/if}
+
+			{#if message}<div class="banner">{message}</div>{/if}
+
+			{#if result}
+				<div class="verdict" class:pass={passed}>
+					<div class="verdict-head">
+						<p class="call">{passed ? 'Accepted.' : `${result.status_msg ?? result.state}.`}</p>
+						<button class="quiet" onclick={() => (result = null)} title="Hide this output">Clear</button>
+					</div>
+					{#if result.total_testcases != null}
+						<p class="note">{result.total_correct ?? 0} of {result.total_testcases} cases passed in {result.elapsedMs} ms.</p>
+					{/if}
+					{#if award}
+						<p class="reward">
+							{#if award.counted}
+								A {award.kind} solve: +{award.award.research} research{#each Object.entries(award.award.resources) as [k, v] (k)}, +{v} {k}{/each}.
+							{:else if award.duplicate}
+								Already rewarded.
+							{:else}
+								Accepted again today; this problem already earned its credit for {award.date}.
+							{/if}
+						</p>
+					{/if}
+
+					{#if result.cases?.[0]?.fatal}
+						<pre>{result.cases[0].error}</pre>
+					{:else if failures.length}
+						<!-- A long suite: only the first few failures are worth listing. -->
 						<table>
-							<thead><tr><th>#</th><th>Input</th><th>Expected</th><th>Got</th></tr></thead>
+							<thead><tr><th>Case</th><th>Input</th><th>Expected</th><th>Got</th></tr></thead>
 							<tbody>
-								{#each shown as c, i (i)}
-									<tr class:bad={!c.ok}>
+								{#each failures.slice(0, 5) as c, i (i)}
+									<tr>
 										<td>{result.cases.indexOf(c) + 1}</td>
 										<td><code>{clip(c.args)}</code></td>
 										<td><code>{clip(c.expected)}</code></td>
-										<td><code>{c.error ? c.error : clip(c.actual)}</code></td>
+										<td class="got"><code>{c.error ? c.error : clip(c.actual)}</code></td>
 									</tr>
 								{/each}
 							</tbody>
 						</table>
+						{#if failures.length > 5}<p class="note">And {failures.length - 5} more failing {failures.length - 5 === 1 ? 'case' : 'cases'}.</p>{/if}
+					{:else if result.status_msg === 'Time Limit Exceeded'}
+						<p>
+							Your code did not finish within this problem's {seconds} s limit, so it was stopped. The limit is about six times
+							what an efficient solution needs, so a correct answer that times out usually needs a better algorithm, not
+							micro-tuning.
+						</p>
 					{/if}
-					{#if resultKind === 'submit' && !passed && result.cases.filter((c: any) => !c.ok).length > 5}
-						<p class="muted">and {result.cases.filter((c: any) => !c.ok).length - 5} more failing case(s)</p>
+
+					{#if result.stdout}
+						<p class="note">Printed:</p>
+						<pre>{result.stdout}</pre>
 					{/if}
-				{:else if result.status_msg === 'Time Limit Exceeded'}
-					<p>Your code did not finish within this problem's {((suite?.timeLimitMs ?? TIME_LIMIT_MS) / 1000).toLocaleString()} s limit, so the run was stopped. The limit is about six times what an efficient solution needs, so a correct answer that times out usually needs a better algorithm, not micro-tuning.</p>
-				{/if}
-
-				{#if result.stdout}
-					<p>stdout:</p><pre>{result.stdout}</pre>
-				{/if}
-			</div>
-		{/if}
-
-		<div class="card">
-			<div class="row">
-				<strong>Solutions</strong>
-				{#if data.due}<span class="muted">Due for a refresh: opening a solution or loading "Last accepted" now marks this refresh as assisted, so it comes back in 3 days.</span>{:else}<span class="muted">Free to open.</span>{/if}
-				<button onclick={() => openDrawer('reference')} disabled={drawerBusy}>NeetCode reference</button>
-				<button onclick={() => openDrawer('community')} disabled={drawerBusy}>Community ({langMeta.name})</button>
-				{#if drawer !== 'closed'}<button onclick={() => (drawer = 'closed')}>Close</button>{/if}
-			</div>
-			{#if drawer === 'reference'}
-				<pre>{reference || (drawerBusy ? 'Loading…' : '')}</pre>
-			{:else if drawer === 'community'}
-				{#if article}
-					<button onclick={() => (article = null)}>← back to list</button>
-					<h3>{article.title}</h3>
-					<pre class="md">{article.content}</pre>
-				{:else if community}
-					<p class="muted">{community.total} solutions tagged {langMeta.name}, hottest first.</p>
-					<ul>
-						{#each community.articles as a (a.uuid)}
-							<li><button class="link" onclick={() => a.topicId && openArticle(a.topicId)}>{a.title}</button> <span class="muted">{a.hitCount} views</span></li>
-						{/each}
-					</ul>
-				{:else if drawerBusy}<p>Loading…</p>{/if}
+				</div>
 			{/if}
-		</div>
-	</section>
+
+			{#if canJudge && suite}
+				<CustomTests bind:this={tests} {suite} slug={data.slug} {code} {refUrl} blocked={busy !== null} onrunning={(r) => (customBusy = r)} />
+			{/if}
+
+			<section class="solutions">
+				<h2>Solutions</h2>
+				{#if data.due}
+					<p class="due">This problem is due for a refresh: opening a solution or loading your last accepted one marks the refresh as assisted, so it comes back in 3 days.</p>
+				{:else}
+					<p class="note">Free to open.</p>
+				{/if}
+				<div class="actions">
+					<button onclick={() => openDrawer('reference')} disabled={drawerBusy}>NeetCode reference</button>
+					<button onclick={() => openDrawer('community')} disabled={drawerBusy}>Community, {langMeta.name}</button>
+					{#if drawer !== 'closed'}<button class="quiet" onclick={() => (drawer = 'closed')}>Close</button>{/if}
+				</div>
+				{#if drawer === 'reference'}
+					<pre>{reference || (drawerBusy ? 'Loading…' : '')}</pre>
+				{:else if drawer === 'community'}
+					{#if article}
+						<button class="quiet" onclick={() => (article = null)}>Back to the list</button>
+						<h3>{article.title}</h3>
+						<pre class="md">{article.content}</pre>
+					{:else if community}
+						<p class="note">{community.total} solutions tagged {langMeta.name}, most viewed first.</p>
+						<ul class="articles">
+							{#each community.articles as a (a.uuid)}
+								<li><button class="link" onclick={() => a.topicId && openArticle(a.topicId)}>{a.title}</button> <span class="note">{a.hitCount.toLocaleString()} views</span></li>
+							{/each}
+						</ul>
+					{:else if drawerBusy}<p class="note">Loading…</p>{/if}
+				{/if}
+			</section>
+		</section>
+	</div>
 </div>
 
 <style>
-	.head h1 { font-size: 1.4rem; margin: 0; }
-	.solve { display: grid; grid-template-columns: minmax(300px, 2fr) minmax(420px, 3fr); gap: 1rem; align-items: start; }
+	.solve-page { line-height: 1.5; }
+	.head { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 1.25rem; row-gap: 0.25rem; margin: 0.5rem 0 1rem; }
+	h1 { font-family: var(--display); font-weight: 800; font-size: clamp(2rem, 3.6vw, 2.9rem); line-height: 1; margin: 0; }
+	.status { margin: 0; color: var(--steel); flex: 1 1 20rem; }
+	.status a { color: var(--steel); text-decoration: underline; text-underline-offset: 3px; }
+	.status a:hover { color: var(--brass); }
+	.difficulty { font-weight: 700; }
+	.difficulty.Easy { color: var(--easy); }
+	.difficulty.Medium { color: var(--medium); }
+	.difficulty.Hard { color: var(--hard); }
+	.due { color: var(--rust); font-weight: 700; }
+
+	.solve { display: grid; grid-template-columns: minmax(300px, 5fr) minmax(420px, 7fr); gap: 2rem; align-items: start; }
 	@media (max-width: 1000px) { .solve { grid-template-columns: 1fr; } }
-	.desc { max-height: 80vh; overflow: auto; }
-	.notes { border-left: 3px solid var(--accent-2); background: var(--panel-2); border-radius: 6px; padding: 0.5rem 0.9rem; margin: 1rem 0; }
+
+	/* ---------- the statement ---------- */
+	.statement {
+		position: sticky;
+		top: 1rem;
+		max-height: calc(100vh - 2rem);
+		overflow: auto;
+		padding-right: 1.25rem;
+		border-right: 1px solid var(--border);
+		font-size: 1rem;
+		line-height: 1.6;
+	}
+	@media (max-width: 1000px) { .statement { position: static; max-height: none; border-right: 0; padding-right: 0; } }
+	.statement :global(p) { margin: 0 0 0.8rem; }
+	.statement :global(pre) { background: var(--panel); border-left: 3px solid var(--border); border-radius: 0 4px 4px 0; }
+	.statement :global(code) { font-size: 0.92em; }
+	.own { color: var(--steel); font-size: 0.9rem; border-left: 3px solid var(--brass); padding-left: 0.75rem; }
+	.notes { border-left: 3px solid var(--brass); padding: 0.25rem 0 0.25rem 0.9rem; margin: 1.25rem 0; }
 	.notes ul { margin: 0.3rem 0 0; padding-left: 1.1rem; }
-	.work { display: grid; gap: 0.8rem; }
+	.tags { color: var(--steel); font-size: 0.9rem; }
+
+	/* ---------- the workbench ---------- */
+	.work { display: grid; gap: 1rem; min-width: 0; }
+	.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
 	.toolbar .spacer { flex: 1; }
-	button.stop { border-color: var(--bad); color: var(--bad); }
-	.result table { width: 100%; table-layout: fixed; }
-	.result td code { overflow-wrap: anywhere; }
-	.result-head { justify-content: space-between; }
-	.result-head h3 { margin: 0; }
-	.result .clear { font-size: 0.8rem; padding: 0.15rem 0.6rem; }
-	.result.pass { border-color: var(--good); }
-	.result.fail { border-color: var(--bad); }
-	tr.bad td { color: var(--bad); }
+	.quiet { background: none; border-color: transparent; color: var(--steel); }
+	.quiet:hover:not(:disabled) { color: var(--text); border-color: var(--border); }
+	button.stop { border-color: var(--rust); color: var(--rust); }
+	.limits { margin: -0.25rem 0 0; color: var(--steel); font-size: 0.9rem; }
+
+	.verdict { padding-left: 1.1rem; border-left: 4px solid var(--rust); display: grid; gap: 0.35rem; }
+	.verdict.pass { border-left-color: var(--brass); }
+	.verdict-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+	.call { margin: 0; font-family: var(--display); font-weight: 800; font-size: 2rem; line-height: 1.1; }
+	.verdict.pass .call { color: var(--brass); }
+	.note { margin: 0; color: var(--steel); font-size: 0.92rem; }
+	.reward { margin: 0; color: var(--brass); font-weight: 700; }
+	.verdict table { table-layout: fixed; font-size: 0.9rem; }
+	.verdict td code { overflow-wrap: anywhere; }
+	.verdict td.got { color: var(--rust); }
+	.verdict pre { margin: 0; }
+
+	.solutions { border-top: 1px solid var(--border); padding-top: 1rem; display: grid; gap: 0.5rem; }
+	h2 { font-family: var(--display); font-weight: 700; font-size: 1.6rem; line-height: 1.1; margin: 0; }
+	h3 { margin: 0.5rem 0; }
+	.solutions .due { font-weight: 400; margin: 0; }
+	.actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 	pre.md { white-space: pre-wrap; max-height: 60vh; }
-	button.link { border: none; background: none; color: var(--accent-2); padding: 0; }
-	ul { padding-left: 1.2rem; }
+	.articles { padding-left: 1.2rem; margin: 0; }
+	button.link { border: none; background: none; color: var(--brass); padding: 0; text-align: left; }
+	button.link:hover { text-decoration: underline; }
 </style>
