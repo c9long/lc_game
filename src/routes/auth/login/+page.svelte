@@ -19,7 +19,9 @@
 			});
 			const out = (await r.json()) as any;
 			if (!r.ok || !out.ok) throw new Error(out.error ?? 'sign-in failed');
-			await goto(data.next.startsWith('/') ? data.next : '/');
+			// invalidateAll: the root layout's load ran signed out, read nothing it could re-run on, and
+			// would otherwise keep its cached user: null (no nav or resource bar until a reload).
+			await goto(data.next.startsWith('/') ? data.next : '/', { invalidateAll: true });
 		} catch (e) {
 			message = e instanceof Error ? e.message : String(e);
 		} finally {

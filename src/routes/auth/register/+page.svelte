@@ -24,9 +24,10 @@
 			if (!r.ok || !out.ok) throw new Error(out.error ?? 'registration failed');
 			if (data.mode === 'setup') {
 				message = 'Passkey registered. Now delete the SETUP_TOKEN secret.';
-				await goto('/admin');
+				await goto('/admin', { invalidateAll: true });
 			} else {
-				await goto(data.mode === 'device' ? '/settings' : '/');
+				// A new account signs in here, so the root layout must reload its user, as after login.
+				await goto(data.mode === 'device' ? '/settings' : '/', { invalidateAll: true });
 			}
 		} catch (e) {
 			message = e instanceof Error ? e.message : String(e);
