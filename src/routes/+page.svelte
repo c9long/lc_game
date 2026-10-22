@@ -5,26 +5,15 @@
 
 	type Item = (typeof data.plan)[number];
 
-	const NUMBERS = ['no', 'one', 'two', 'three', 'four', 'five'];
-	const count = (n: number, one: string, many: string) => `${NUMBERS[n] ?? n} ${n === 1 ? one : many}`;
-
-	/** Today's route as a sentence, written from the plan itself: "One refresh, two new problems,
-	 *  then the forge." The route is the day's job, so the headline says what it is. */
+	/** The headline names the stop you are on: "First up: Contains Duplicate." until something is
+	 *  done, then "Next up: …". The route below already shows the whole day, so this points at it. */
 	const headline = $derived.by(() => {
 		const plan = data.plan;
 		if (plan.length === 0) return 'No route today yet.';
-		if (plan.every((i) => i.done)) return "Today's route is done.";
-		const refresh = plan.filter((i) => i.kind === 'refresh').length;
-		const fresh = plan.filter((i) => i.kind === 'new').length;
-		const daily = plan.some((i) => i.kind === 'daily');
-		const forge = plan.some((i) => i.kind === 'drills');
-		const parts: string[] = [];
-		if (refresh) parts.push(count(refresh, 'refresh', 'refreshes'));
-		if (fresh) parts.push(count(fresh, 'new problem', 'new problems'));
-		if (daily) parts.push("the daily challenge");
-		let s = parts.join(', ');
-		if (forge) s = parts.length ? `${s}, then the forge` : 'The forge';
-		return s.charAt(0).toUpperCase() + s.slice(1) + '.';
+		const next = plan.find((i) => !i.done);
+		if (!next) return "Today's route is done.";
+		const name = next.kind === 'drills' ? "today's drills" : next.title;
+		return `${plan.some((i) => i.done) ? 'Next' : 'First'} up: ${name}.`;
 	});
 
 	const date = $derived(
