@@ -416,9 +416,31 @@ describe('city economy', () => {
 			expect(costAtLevel(kind, 3).timber, kind.id).toBe(Math.ceil((kind.cost.timber ?? 0) * 2.25) + 2 * TIMBER_PER_UPGRADE_LEVEL);
 		}
 		// Building one costs only its own materials; the timber surcharge is for upgrades.
-		const tower = BUILDINGS.find((b) => b.id === 'stack-tower')!;
-		expect(costAtLevel(tower, 1).timber).toBeUndefined();
-		expect(costAtLevel(tower, 2, 1).timber).toBe(TIMBER_PER_UPGRADE_LEVEL); // the same in every city
+		const mine = BUILDINGS.find((b) => b.id === 'heap-forge')!;
+		expect(costAtLevel(mine, 1).timber).toBeUndefined();
+		expect(costAtLevel(mine, 2, 1).timber).toBe(TIMBER_PER_UPGRADE_LEVEL); // the same in every city
+	});
+
+	it('asks for timber and stone in about the ratio solves earn them', () => {
+		// One of each kind, built and upgraded to its top level, against one solve of every problem in
+		// the NeetCode 150 (28 Easy, 101 Medium, 21 Hard). Until 2026-10-23 the buildings asked for 0.45
+		// timber per stone while solves paid 1.14, so stone ran out with timber piling up.
+		const demand = { timber: 0, stone: 0 };
+		for (const kind of BUILDINGS) {
+			const paid = investedCost(kind, kind.maxLevel, 0);
+			demand.timber += paid.timber ?? 0;
+			demand.stone += paid.stone ?? 0;
+		}
+		const supply = { timber: 0, stone: 0 };
+		for (const [difficulty, n] of [['Easy', 28], ['Medium', 101], ['Hard', 21]] as const) {
+			const r = computeAward({ difficulty, tags: [], lang: 'python3', prev: null, isDaily: false, assisted: false }).resources;
+			supply.timber += (r.timber ?? 0) * n;
+			supply.stone += (r.stone ?? 0) * n;
+		}
+		const earned = supply.timber / supply.stone;
+		const asked = demand.timber / demand.stone;
+		expect(asked).toBeGreaterThan(earned * 0.85);
+		expect(asked).toBeLessThan(earned * 1.15);
 	});
 
 	it('charges coins as well as materials and ingots to upgrade', () => {
