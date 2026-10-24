@@ -28,6 +28,18 @@ $W execute lc-game --local --persist-to "$STATE" --command \
   "INSERT INTO users (id, name, timezone, is_admin, created_at) VALUES ('smoke-user', 'admin', 'UTC', 1, $NOW), ('smoke-friend', 'friend', 'UTC', 0, $((NOW + 1)));
    INSERT INTO sessions (id, user_id, expires_at, created_at) VALUES ('$HASH', 'smoke-user', $EXP, $NOW), ('$HASH2', 'smoke-friend', $EXP, $NOW);" >/dev/null
 
+# The market's repricing cron is its own Worker (wrangler.cron.toml). Fire it once through wrangler's
+# test endpoint, before the app starts so the two never share the local D1 files: it must price both
+# players. Checked further down, once `fail` exists.
+CRON_PORT=${CRON_PORT:-8799}
+setsid pnpm exec wrangler dev -c wrangler.cron.toml --test-scheduled --persist-to "$STATE" --port "$CRON_PORT" >"$LOG.cron" 2>&1 &
+CRON_PID=$!
+for _ in $(seq 1 60); do curl -s -o /dev/null "http://localhost:$CRON_PORT/__scheduled?cron=0+*/8+*+*+*" && break; sleep 1; done
+sleep 1
+kill -TERM -- -"$CRON_PID" 2>/dev/null || true
+wait "$CRON_PID" 2>/dev/null || true
+CRON_PRICED=$($W execute lc-game --local --persist-to "$STATE" --json --command "SELECT count(*) AS n FROM market_prices" 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>console.log(JSON.parse(s)[0].results[0].n))')
+
 # Own process group so cleanup kills vite and workerd, not just the pnpm wrapper.
 setsid pnpm dev --port "$PORT" --strictPort >"$LOG" 2>&1 &
 PID=$!
@@ -305,7 +317,7 @@ wants move '{"id":"smoke-mill","city":0,"x":0,"y":3}' terrain "a mill cannot be 
 
 # The resource bar overlays most views but is hidden while solving, drilling or reading the tree.
 has_bar() { curl -s -H "cookie: lc_session=$TOKEN" "$B$1" | grep -qi 'aria-label="Resources"' && echo yes || echo no; }
-for route in / /city /admin; do
+for route in / /city /market /admin; do
   [ "$(has_bar $route)" = "yes" ] && echo "ok   resource bar shown on $route" || { echo "FAIL resource bar missing on $route"; fail=1; }
 done
 for route in /tree /drills /solve/two-sum; do
@@ -361,6 +373,33 @@ if curl -s -H "cookie: lc_session=$TOKEN" "$B/solve/two-sum" | grep -q 'friend d
 else
   echo "ok   drafts are per player"
 fi
+
+# The market. Coins buy materials and materials swap among themselves; nothing is sold for coins, and
+# Ingots and essence never trade. The friend trades; the admin's state must not move.
+if [ "$CRON_PRICED" = "6" ]; then echo "ok   the cron priced both players"; else echo "FAIL the cron wrote $CRON_PRICED market_prices rows (want 6)"; fail=1; fi
+$W execute lc-game --local --persist-to "$STATE" --command \
+  "INSERT INTO resources (user_id, kind, amount) VALUES ('smoke-friend', 'coins', 500), ('smoke-friend', 'timber', 100), ('smoke-friend', 'stone', 0), ('smoke-friend', 'ingots', 9)
+   ON CONFLICT (user_id, kind) DO UPDATE SET amount = excluded.amount;" >/dev/null
+A_BEFORE=$(A_STATE)
+check 200 -H "cookie: lc_session=$TOKEN2" "$B/market"
+trade() { check "$1" -X POST -H "cookie: lc_session=$TOKEN2" -H "origin: $B" -H "content-type: application/json" -d "$2" "$B/api/market/trade"; }
+trade 200 '{"get":"stone","give":"coins","amount":10}'
+trade 200 '{"get":"stone","give":"timber","amount":5}'
+trade 400 '{"get":"stone","give":"coins","amount":1000}'
+trade 400 '{"get":"ingots","give":"coins","amount":1}'
+trade 400 '{"get":"timber","give":"ingots","amount":1}'
+trade 400 '{"get":"coins","give":"timber","amount":1}'
+trade 400 '{"get":"essence:Array","give":"coins","amount":1}'
+trade 409 '{"get":"iron","give":"coins","amount":2,"expect":1}'
+F_MKT=$(q "SELECT (SELECT amount FROM resources WHERE user_id='smoke-friend' AND kind='stone') || '|' || (SELECT amount FROM resources WHERE user_id='smoke-friend' AND kind='coins') || '|' || (SELECT amount FROM resources WHERE user_id='smoke-friend' AND kind='timber') || '|' || (SELECT amount FROM resources WHERE user_id='smoke-friend' AND kind='ingots') || '|' || (SELECT count(*) FROM trades WHERE user_id='smoke-friend') AS s")
+IFS='|' read -r F_STONE F_COINS F_TIMBER F_INGOTS F_TRADES <<<"$F_MKT"
+if [ "$F_STONE" = "15" ] && [ "$F_COINS" -lt 500 ] && [ "$F_TIMBER" -lt 100 ] && [ "$F_INGOTS" = "9" ] && [ "$F_TRADES" = "2" ]; then
+  echo "ok   trades paid for and delivered: stone 15, coins $F_COINS, timber $F_TIMBER, ingots untouched"
+else
+  echo "FAIL market balances: $F_MKT (want stone 15, coins < 500, timber < 100, ingots 9, 2 trades)"; fail=1
+fi
+A_AFTER=$(A_STATE)
+if [ "$A_BEFORE" = "$A_AFTER" ]; then echo "ok   the friend's trades left the admin's state untouched"; else echo "FAIL admin state changed: $A_BEFORE -> $A_AFTER"; fail=1; fi
 
 # Invites: the admin makes one, the link opens registration for a new player, and only the admin can.
 INV_PAGE=$(curl -s -X POST -H "cookie: lc_session=$TOKEN" -H "origin: $B" -H "content-type: application/x-www-form-urlencoded" -H "accept: application/json" -d 'name=Pat' "$B/admin?/invite")
