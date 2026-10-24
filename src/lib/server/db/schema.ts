@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { foreignKey, index, integer, primaryKey, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import { foreignKey, index, integer, primaryKey, real, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 
 const ts = (name: string) => integer(name, { mode: 'timestamp_ms' });
 const bool = (name: string) => integer(name, { mode: 'boolean' });
@@ -205,6 +205,39 @@ export const gameState = sqliteTable(
 		updatedAt: ts('updated_at').notNull()
 	},
 	(t) => [primaryKey({ columns: [t.userId, t.key] })]
+);
+
+/** A player's fair market price for each material, set once per 8-hour epoch (market.ts). Kept, not
+ *  overwritten: each epoch's price moves from the one before, and the page shows the trend. */
+export const marketPrices = sqliteTable(
+	'market_prices',
+	{
+		userId: owner(),
+		/** floor(unix ms / 8 h): epochs begin at 00:00, 08:00 and 16:00 UTC. */
+		epoch: integer('epoch').notNull(),
+		kind: text('kind').notNull(),
+		/** Coins per unit. */
+		fair: real('fair').notNull(),
+		createdAt: ts('created_at').notNull()
+	},
+	(t) => [primaryKey({ columns: [t.userId, t.epoch, t.kind] })]
+);
+
+/** One market trade: `getAmount` of a material for `giveAmount` of coins or another material. Also
+ *  the tally behind the per-epoch cap. */
+export const trades = sqliteTable(
+	'trades',
+	{
+		id: text('id').primaryKey(),
+		userId: owner(),
+		epoch: integer('epoch').notNull(),
+		giveKind: text('give_kind').notNull(),
+		giveAmount: integer('give_amount').notNull(),
+		getKind: text('get_kind').notNull(),
+		getAmount: integer('get_amount').notNull(),
+		createdAt: ts('created_at').notNull()
+	},
+	(t) => [index('trades_user_epoch_idx').on(t.userId, t.epoch)]
 );
 
 export const plans = sqliteTable(
