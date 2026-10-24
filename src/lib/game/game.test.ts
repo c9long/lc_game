@@ -6,6 +6,8 @@ import { computeTree, dueRefreshes, isServable, nextNewProblems, type ProblemPro
 import { HAULS_BONUS, IRONWORKS_MULT, computeAward } from './awards';
 import { expeditionTally, weeklyCount } from './budget';
 import {
+	ART_TIERS,
+	buildingArt,
 	BUILDINGS,
 	BALANCE_LEVEL,
 	MAX_LEVEL,
@@ -965,5 +967,29 @@ describe('city tiers', () => {
 		// storage prices as the first city
 		expect(moveCost(market, 1, STORAGE, 2)).toEqual({ coins: 1200 });
 		expect(moveCost(market, 1, STORAGE, 0)).toEqual({});
+	});
+});
+
+describe('building art', () => {
+	it('changes at levels 2, 4 and 6 and holds from 6 on', () => {
+		expect([1, 2, 3, 4, 5, 6, 7, 19].map((l) => buildingArt('hut', l))).toEqual([
+			'/buildings/hut-1.svg',
+			'/buildings/hut-2.svg',
+			'/buildings/hut-2.svg',
+			'/buildings/hut-4.svg',
+			'/buildings/hut-4.svg',
+			'/buildings/hut-6.svg',
+			'/buildings/hut-6.svg',
+			'/buildings/hut-6.svg'
+		]);
+	});
+
+	it('has a drawing for every tier each building can reach', () => {
+		const drawn = new Set(Object.keys(import.meta.glob('/static/buildings/*.svg')).map((f) => f.replace('/static', '')));
+		for (const b of BUILDINGS) {
+			for (const tier of ART_TIERS.filter((t) => t <= b.maxLevel)) {
+				expect(drawn.has(buildingArt(b.id, tier)), `${b.id} at level ${tier}`).toBe(true);
+			}
+		}
 	});
 });

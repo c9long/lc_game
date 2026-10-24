@@ -34,7 +34,6 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 		return {
 			id: b.id,
 			name: b.name,
-			emoji: b.emoji,
 			// Price and output depend on the city's tier, so each is sent per city, indexed by city id.
 			coins: CITIES.map((c) => b.coins * cityCoinMult(c.id)),
 			effect: b.effect ? EFFECT_TEXT[b.effect] : null,
@@ -62,7 +61,6 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 		return {
 			...p,
 			name: kind.name,
-			emoji: kind.emoji,
 			next,
 			canUpgrade: next ? canAfford(snap.resources, next) : false,
 			refund: costAtLevel(kind, 1, p.city),

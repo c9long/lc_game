@@ -5,7 +5,7 @@
 	import { formatCost } from '$lib/game/resources';
 	// The placement rules are shared with the server rather than restated here, so the catalog a
 	// tile offers and the tile the API accepts are decided by the same function.
-	import { BUILDING_BY_ID, TERRAIN_META, canAfford, canStand, moveCost, terrainAt, type Terrain } from '$lib/game/city';
+	import { BUILDING_BY_ID, TERRAIN_META, buildingArt, canAfford, canStand, moveCost, terrainAt, type Terrain } from '$lib/game/city';
 	let { data } = $props();
 	let cityId = $state(0);
 	let selected = $state<{ x: number; y: number } | null>(null);
@@ -139,7 +139,7 @@
 						title={b ? `${b.name}, level ${b.level}, on ${t}` : t}
 						aria-label={b ? `${b.name}, level ${b.level}, on ${t}` : `Empty ${t} tile`}
 					>
-						{#if b}<span class="emoji">{b.emoji}</span><span class="lvl">{b.level}</span>
+						{#if b}<img class="art" src={buildingArt(b.kind, b.level)} alt="" draggable="false" /><span class="lvl">{b.level}</span>
 						{:else if t !== 'plains'}<span class="terrain">{TERRAIN_META[t].emoji}</span>{/if}
 					</button>
 				{/each}
@@ -150,7 +150,7 @@
 					<p class="muted-note">These lost their tile when the map changed. Placing one in the first city is free.</p>
 					<ul>
 						{#each data.stored as s (s.id)}
-							<li><button disabled={busy} onclick={() => pickUp(s)}>{s.emoji} Place the {s.name}, level {s.level}</button></li>
+							<li><button disabled={busy} onclick={() => pickUp(s)}><img class="mini" src={buildingArt(s.kind, s.level)} alt="" /> Place the {s.name}, level {s.level}</button></li>
 						{/each}
 					</ul>
 				</div>
@@ -204,7 +204,8 @@
 				{@const b = at(selected.x, selected.y)}
 				{@const t = groundAt(selected.x, selected.y)}
 				{#if b}
-					<h2><span aria-hidden="true">{b.emoji}</span> {b.name}</h2>
+					<img class="portrait" src={buildingArt(b.kind, b.level)} alt="" />
+					<h2>{b.name}</h2>
 					<p class="muted-note">Level {b.level}, on {t}</p>
 					{#if b.rate > 0}
 						<p class="yield"><strong>{fmtCoins(b.yield.perDay)}</strong> coins per active day</p>
@@ -225,6 +226,9 @@
 					{/if}
 					{#if b.next}
 						<p>Upgrading to level {b.level + 1} costs {fmtCost(b.next)}.</p>
+						{#if buildingArt(b.kind, b.level + 1) !== buildingArt(b.kind, b.level)}
+							<p class="next-look"><img class="mini" src={buildingArt(b.kind, b.level + 1)} alt="" /> At level {b.level + 1} it gets rebuilt like this.</p>
+						{/if}
 					{:else}<p class="muted-note">At its highest level.</p>{/if}
 					<div class="actions">
 						{#if b.next}
@@ -242,7 +246,7 @@
 						{#each fits as k (k.id)}
 							{@const can = k.gated && k.affordable[cityId]}
 							<li class:off={!can}>
-								<span class="k-emoji" aria-hidden="true">{k.emoji}</span>
+								<img class="k-art" src={buildingArt(k.id, 1)} alt="" />
 								<span class="k-main">
 									<strong>{k.name}</strong>
 									<span class="k-detail">
@@ -338,6 +342,8 @@
 	.cell.mountain { background: light-dark(#dad8df, #2a2a32); border-color: light-dark(#b5b2bf, #42424e); }
 	.cell.forest { background: light-dark(#b9d4bb, #15301c); border-color: light-dark(#8fb894, #23502e); }
 	.cell .terrain { opacity: 0.4; }
+	/* The drawings carry their own margin and shadow, so they fill the whole tile. */
+	.cell .art { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 	.cell:hover:not(:disabled) { border-color: var(--brass); }
 	.cell.selected { outline: 3px solid var(--brass); outline-offset: 1px; z-index: 1; }
 	.cell:focus-visible { outline: 3px solid var(--brass); outline-offset: 1px; z-index: 1; }
@@ -353,6 +359,10 @@
 	}
 
 	.stored { margin-top: 1.25rem; }
+	.mini { width: 1.8rem; height: 1.8rem; vertical-align: middle; }
+	.stored button { display: inline-flex; align-items: center; gap: 0.4rem; padding-left: 0.4rem; }
+	.portrait { display: block; width: 7.5rem; height: 7.5rem; margin: -0.75rem 0 -0.5rem -0.6rem; }
+	.next-look { display: flex; align-items: center; gap: 0.5rem; color: var(--steel); }
 	.stored ul { list-style: none; padding: 0; margin: 0.4rem 0 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
 
 	/* ---------- the side panel ---------- */
@@ -378,14 +388,14 @@
 	.catalog { list-style: none; padding: 0; margin: 0.5rem 0 0; max-height: 70vh; overflow: auto; border-top: 1px solid var(--border); }
 	.catalog li {
 		display: grid;
-		grid-template-columns: 1.6rem minmax(0, 1fr) auto auto;
+		grid-template-columns: 2.6rem minmax(0, 1fr) auto auto;
 		align-items: center;
 		gap: 0.6rem;
 		padding: 0.55rem 0;
 		border-bottom: 1px solid var(--border);
 	}
-	.catalog li.off .k-emoji, .catalog li.off .k-main, .catalog li.off .k-out { opacity: 0.5; }
-	.k-emoji { font-size: 1.3rem; }
+	.catalog li.off .k-art, .catalog li.off .k-main, .catalog li.off .k-out { opacity: 0.5; }
+	.k-art { width: 2.6rem; height: 2.6rem; }
 	.k-main { display: grid; }
 	.k-detail { color: var(--steel); font-size: 0.82rem; }
 	.k-out { color: var(--steel); font-size: 0.85rem; white-space: nowrap; }

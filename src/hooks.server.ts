@@ -7,7 +7,7 @@ import { THEME_COOKIE, parseTheme, themeAttr } from '$lib/theme.svelte';
 // /pyodide/ carries the judge worker, the WASM runtime and driver.py. The worker and the fetches
 // it makes are same-origin and would normally carry the session cookie, but static runtime assets
 // have no business going through the auth redirect — same reasoning as /monaco/.
-const PUBLIC_PREFIXES = ['/auth/', '/_app/', '/solutions/', '/tle/', '/monaco/', '/pyodide/', '/favicon', '/robots.txt', '/manifest'];
+const PUBLIC_PREFIXES = ['/auth/', '/_app/', '/solutions/', '/tle/', '/monaco/', '/pyodide/', '/buildings/', '/favicon', '/robots.txt', '/manifest'];
 
 /** D1 reports an unmigrated database as "no such table"; Drizzle wraps it in "Failed query". */
 function isMissingSchema(e: unknown): boolean {
