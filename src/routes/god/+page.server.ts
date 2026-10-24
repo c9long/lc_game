@@ -5,6 +5,7 @@ import type { Actions, PageServerLoad } from './$types';
 import { getDb } from '$lib/server/db';
 import { resources } from '$lib/server/db/schema';
 import { requireUser } from '$lib/server/guard';
+import { GOD_UNLOCK_TREE, getState, setState } from '$lib/server/game/state';
 import { RESOURCE_META, totalEssence } from '$lib/game/resources';
 
 /** God mode: set your own resources by hand. Dev server only -- `dev` is false in every build, so in
@@ -17,15 +18,29 @@ const MAX = 1_000_000_000;
 export const load: PageServerLoad = async ({ locals, platform }) => {
 	if (!dev) error(404, 'Not found');
 	const user = requireUser(locals);
-	const rows = await getDb(platform).select().from(resources).where(eq(resources.userId, user.id)).all();
+	const db = getDb(platform);
+	const [rows, treeUnlocked] = await Promise.all([
+		db.select().from(resources).where(eq(resources.userId, user.id)).all(),
+		getState<boolean>(db, user.id, GOD_UNLOCK_TREE, false)
+	]);
 	const held = Object.fromEntries(rows.map((r) => [r.kind, r.amount])) as Record<string, number>;
 	return {
 		kinds: RESOURCE_META.map((m) => ({ ...m, amount: held[m.kind] ?? 0 })),
-		essence: totalEssence(held)
+		essence: totalEssence(held),
+		treeUnlocked: treeUnlocked === true
 	};
 };
 
 export const actions: Actions = {
+	/** Opens every node of the tech tree, or puts it back to what your solves have earned. Nothing
+	 *  about your solves changes either way: loadSnapshot() reads this flag when it computes the tree. */
+	tree: async ({ request, locals, platform }) => {
+		if (!dev) error(404, 'Not found');
+		const user = requireUser(locals);
+		const on = (await request.formData()).get('unlock') === 'on';
+		await setState(getDb(platform), user.id, GOD_UNLOCK_TREE, on);
+		return { tree: on ? 'The whole tree is unlocked.' : 'The tree is back to what your solves have earned.' };
+	},
 	set: async ({ request, locals, platform }) => {
 		if (!dev) error(404, 'Not found');
 		const user = requireUser(locals);

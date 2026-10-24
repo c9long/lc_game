@@ -38,6 +38,9 @@ export interface TreeInput {
 	progress: Map<string, ProblemProgress>;
 	research: Map<string, number>;
 	now: Date;
+	/** God mode on the dev server: every node not yet complete counts as unlocked, with its path
+	 *  open. Solved counts, freshness and research are still the real ones. */
+	unlockAll?: boolean;
 }
 
 export function computeTree(input: TreeInput): Map<string, NodeView> {
@@ -61,7 +64,7 @@ export function computeTree(input: TreeInput): Map<string, NodeView> {
 		});
 		let status: NodeStatus;
 		if (total > 0 && solved >= total) status = 'complete';
-		else if (solved >= Math.ceil(total * UNLOCK_FRACTION) && solved > 0) status = 'unlocked';
+		else if (input.unlockAll || (solved >= Math.ceil(total * UNLOCK_FRACTION) && solved > 0)) status = 'unlocked';
 		else status = prereqsMet ? 'available' : 'locked';
 		views.set(id, {
 			id,

@@ -1,5 +1,6 @@
 import { and, eq, gte, sql, type SQL } from 'drizzle-orm';
 import { SQLiteSyncDialect } from 'drizzle-orm/sqlite-core';
+import { dev } from '$app/environment';
 import type { Db } from '../db';
 import { awards, buildings, gameState, ledger, problemState, resources, type User } from '../db/schema';
 import { weeklyCount } from '$lib/game/budget';
@@ -30,6 +31,9 @@ export interface Snapshot {
 	/** Coins accrued by this request's tick, for a toast. */
 	tickCoins: number;
 }
+
+/** game_state key for God mode's whole-tree unlock. Honoured only on the dev server. */
+export const GOD_UNLOCK_TREE = 'god:unlockTree';
 
 // Every game table is per player: each helper here takes the player's id (`uid`) and scopes to it.
 
@@ -189,7 +193,10 @@ export async function loadSnapshot(db: Db, user: User, now = new Date()): Promis
 		.all();
 	const ledgerDates = ledgerRows.map((r) => r.date);
 
-	const tree = computeTree({ progress, research, now });
+	// God mode's whole-tree unlock (src/routes/god). Never read outside the dev server, so in a build
+	// a stray row cannot open anything.
+	const unlockAll = dev && (await getState<boolean>(db, uid, GOD_UNLOCK_TREE, false)) === true;
+	const tree = computeTree({ progress, research, now, unlockAll });
 
 	// Coins accrue lazily: every unpaid active day since the last settlement is paid now, at the
 	// city's current rate. There is no other tick left -- morale used to advance here as well.

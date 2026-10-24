@@ -169,6 +169,25 @@ describe('tree', () => {
 		const full = computeTree({ progress: progressFor(root), research: new Map(), now: t0 });
 		expect(full.get('arrays-hashing')!.status).toBe('complete');
 	});
+	it("opens every node in god mode, keeps what is complete, and touches nothing else", () => {
+		const root = problemsForNode('arrays-hashing').map((p) => p.slug);
+		const progress = progressFor(root); // the root complete, nothing else solved
+		const god = computeTree({ progress, research: new Map([['stack', 7]]), now: t0, unlockAll: true });
+		for (const v of god.values()) {
+			expect(v.status, v.id).toBe(v.id === 'arrays-hashing' ? 'complete' : 'unlocked');
+			expect(v.prereqsMet, v.id).toBe(true);
+			expect(isServable(v), v.id).toBe(true);
+		}
+		expect(god.get('dp-2d')!.solved).toBe(0); // real counts, not faked ones
+		expect(god.get('stack')!.research).toBe(7);
+		// New problems come from deep nodes too, once the tree is open.
+		const deep = nextNewProblems(god, progress, 200).map((p) => p.nodeId);
+		expect(new Set(deep).has('dp-2d')).toBe(true);
+		// Off again, the same progress gives the earned tree back.
+		const earned = computeTree({ progress, research: new Map(), now: t0 });
+		expect(earned.get('two-pointers')!.status).toBe('available');
+		expect(earned.get('dp-2d')!.status).toBe('locked');
+	});
 	it('computes freshness, rusting and refresh ordering by curriculum', () => {
 		const root = problemsForNode('arrays-hashing').map((p) => p.slug);
 		const overdue = new Date(t0.getTime() - 2 * DAY);
