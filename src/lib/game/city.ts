@@ -54,6 +54,27 @@ export function drillIngotMultiplier(placed: Pick<PlacedBuilding, 'kind' | 'city
 export const GRID_SIZE = 6;
 export const UPGRADE_COST_MULT = 1.5;
 
+/** Buildings that produce coins can be upgraded this far: a ceiling in name only, since the cost of
+ *  a level climbs so steeply past STEEP_FROM_LEVEL that nobody gets near it. Until 2026-10-24 it was
+ *  3. Effect-only buildings (Granary, Walls, Monument, Graph Roads) stay at level 1: a level adds
+ *  nothing to an effect, and level 1 is what marks them one of a kind. */
+export const MAX_LEVEL = 19;
+/** Up to this level an upgrade costs what it always did; every level past it gets dearer faster. */
+export const STEEP_FROM_LEVEL = 5;
+/** The n-th level past STEEP_FROM_LEVEL costs STEEP_BASE^(1 + 2 + ... + n) times the usual curve:
+ *  x1.25 at level 6, x1.95 at 7, x3.8 at 8, x9.3 at 9, x28 at 10, x500 at 12. Production grows only
+ *  linearly with level, so each step past 5 pays back far more slowly than the one before. */
+export const STEEP_BASE = 1.25;
+/** The level the material balance is tuned at: the timber/stone ratio test and the market's base
+ *  values count every building built and upgraded this far, not to MAX_LEVEL. */
+export const BALANCE_LEVEL = 3;
+
+/** How much dearer than the usual curve upgrading to `level` is. 1 up to STEEP_FROM_LEVEL. */
+export function steepness(level: number): number {
+	const n = Math.max(0, level - STEEP_FROM_LEVEL);
+	return Math.pow(STEEP_BASE, (n * (n + 1)) / 2);
+}
+
 export type Terrain = 'plains' | 'river' | 'mountain' | 'forest';
 
 /** Terrain is fixed per city and drawn as a picture: one string per row, one character per tile. */
@@ -152,26 +173,26 @@ export const STORAGE = -1;
  *  Heap Mine and the Walls stay all stone, as a mine and a wall should. Existing buildings were not
  *  repriced. */
 export const BUILDINGS: BuildingKind[] = [
-	{ id: 'hut', name: 'Hut', emoji: '🛖', cost: { timber: 5 }, coins: 1, maxLevel: 3 },
-	{ id: 'hash-market', name: 'Hash Market', emoji: '🏪', cost: { timber: 10, stone: 5 }, gate: { node: 'arrays-hashing', status: 'unlocked' }, coins: 3, node: 'arrays-hashing', maxLevel: 3 },
-	{ id: 'pointer-bridge', name: 'Two-Pointer Bridge', emoji: '🌉', cost: { timber: 3, stone: 5 }, gate: { node: 'two-pointers', status: 'unlocked' }, coins: 2, node: 'two-pointers', effect: 'crossing', maxLevel: 3, terrain: ['river'] },
-	{ id: 'stack-tower', name: 'Stack Tower', emoji: '🗼', cost: { timber: 4, stone: 6 }, gate: { node: 'stack', status: 'unlocked' }, coins: 3, node: 'stack', maxLevel: 3 },
-	{ id: 'search-lighthouse', name: 'Search Lighthouse', emoji: '🗼', cost: { timber: 5, stone: 7 }, gate: { node: 'binary-search', status: 'unlocked' }, coins: 4, node: 'binary-search', maxLevel: 3, terrain: ['plains', 'river'] },
-	{ id: 'window-mill', name: 'Window Mill', emoji: '🏭', cost: { timber: 12, stone: 6 }, gate: { node: 'sliding-window', status: 'unlocked' }, coins: 4, node: 'sliding-window', maxLevel: 3, terrain: ['plains', 'river'] },
-	{ id: 'chain-foundry', name: 'Chain Foundry', emoji: '⛓️', cost: { timber: 5, stone: 7, iron: 2 }, gate: { node: 'linked-list', status: 'unlocked' }, coins: 4, node: 'linked-list', maxLevel: 3, terrain: ['plains', 'forest'] },
-	{ id: 'arboretum', name: 'Arboretum', emoji: '🌳', cost: { timber: 10, stone: 5, iron: 5 }, gate: { node: 'trees', status: 'unlocked' }, coins: 6, node: 'trees', maxLevel: 3, terrain: ['forest'] },
-	{ id: 'trie-library', name: 'Trie Library', emoji: '📚', cost: { timber: 6, stone: 4, iron: 5 }, gate: { node: 'tries', status: 'unlocked' }, coins: 5, node: 'tries', maxLevel: 3, terrain: ['forest'] },
+	{ id: 'hut', name: 'Hut', emoji: '🛖', cost: { timber: 5 }, coins: 1, maxLevel: MAX_LEVEL },
+	{ id: 'hash-market', name: 'Hash Market', emoji: '🏪', cost: { timber: 10, stone: 5 }, gate: { node: 'arrays-hashing', status: 'unlocked' }, coins: 3, node: 'arrays-hashing', maxLevel: MAX_LEVEL },
+	{ id: 'pointer-bridge', name: 'Two-Pointer Bridge', emoji: '🌉', cost: { timber: 3, stone: 5 }, gate: { node: 'two-pointers', status: 'unlocked' }, coins: 2, node: 'two-pointers', effect: 'crossing', maxLevel: MAX_LEVEL, terrain: ['river'] },
+	{ id: 'stack-tower', name: 'Stack Tower', emoji: '🗼', cost: { timber: 4, stone: 6 }, gate: { node: 'stack', status: 'unlocked' }, coins: 3, node: 'stack', maxLevel: MAX_LEVEL },
+	{ id: 'search-lighthouse', name: 'Search Lighthouse', emoji: '🗼', cost: { timber: 5, stone: 7 }, gate: { node: 'binary-search', status: 'unlocked' }, coins: 4, node: 'binary-search', maxLevel: MAX_LEVEL, terrain: ['plains', 'river'] },
+	{ id: 'window-mill', name: 'Window Mill', emoji: '🏭', cost: { timber: 12, stone: 6 }, gate: { node: 'sliding-window', status: 'unlocked' }, coins: 4, node: 'sliding-window', maxLevel: MAX_LEVEL, terrain: ['plains', 'river'] },
+	{ id: 'chain-foundry', name: 'Chain Foundry', emoji: '⛓️', cost: { timber: 5, stone: 7, iron: 2 }, gate: { node: 'linked-list', status: 'unlocked' }, coins: 4, node: 'linked-list', maxLevel: MAX_LEVEL, terrain: ['plains', 'forest'] },
+	{ id: 'arboretum', name: 'Arboretum', emoji: '🌳', cost: { timber: 10, stone: 5, iron: 5 }, gate: { node: 'trees', status: 'unlocked' }, coins: 6, node: 'trees', maxLevel: MAX_LEVEL, terrain: ['forest'] },
+	{ id: 'trie-library', name: 'Trie Library', emoji: '📚', cost: { timber: 6, stone: 4, iron: 5 }, gate: { node: 'tries', status: 'unlocked' }, coins: 5, node: 'tries', maxLevel: MAX_LEVEL, terrain: ['forest'] },
 	// Renamed from the Heap Forge on 2026-09-20 when it became mountain-only: you mine a heap.
-	{ id: 'heap-forge', name: 'Heap Mine', emoji: '⛏️', cost: { stone: 15, iron: 6 }, gate: { node: 'heap', status: 'unlocked' }, coins: 6, node: 'heap', maxLevel: 3, terrain: ['mountain'] },
-	{ id: 'maze', name: 'Backtracking Maze', emoji: '🌀', cost: { timber: 5, stone: 10, iron: 6 }, gate: { node: 'backtracking', status: 'unlocked' }, coins: 6, node: 'backtracking', maxLevel: 3 },
+	{ id: 'heap-forge', name: 'Heap Mine', emoji: '⛏️', cost: { stone: 15, iron: 6 }, gate: { node: 'heap', status: 'unlocked' }, coins: 6, node: 'heap', maxLevel: MAX_LEVEL, terrain: ['mountain'] },
+	{ id: 'maze', name: 'Backtracking Maze', emoji: '🌀', cost: { timber: 5, stone: 10, iron: 6 }, gate: { node: 'backtracking', status: 'unlocked' }, coins: 6, node: 'backtracking', maxLevel: MAX_LEVEL },
 	{ id: 'graph-roads', name: 'Graph Roads', emoji: '🛣️', cost: { timber: 5, stone: 10, iron: 5 }, gate: { node: 'graphs', status: 'unlocked' }, coins: 2, node: 'graphs', effect: 'adjacency', maxLevel: 1 },
-	{ id: 'dp-academy', name: 'DP Academy', emoji: '🏫', cost: { timber: 7, stone: 13, iron: 10 }, gate: { node: 'dp-1d', status: 'unlocked' }, coins: 10, node: 'dp-1d', maxLevel: 3, terrain: ['mountain'] },
-	{ id: 'dp-observatory', name: 'DP Observatory', emoji: '🔭', cost: { timber: 8, stone: 17, iron: 12 }, gate: { node: 'dp-2d', status: 'unlocked' }, coins: 12, node: 'dp-2d', maxLevel: 3, terrain: ['mountain'] },
-	{ id: 'greedy-market', name: 'Greedy Bazaar', emoji: '🎪', cost: { timber: 4, stone: 8, iron: 4 }, gate: { node: 'greedy', status: 'unlocked' }, coins: 5, node: 'greedy', maxLevel: 3 },
+	{ id: 'dp-academy', name: 'DP Academy', emoji: '🏫', cost: { timber: 7, stone: 13, iron: 10 }, gate: { node: 'dp-1d', status: 'unlocked' }, coins: 10, node: 'dp-1d', maxLevel: MAX_LEVEL, terrain: ['mountain'] },
+	{ id: 'dp-observatory', name: 'DP Observatory', emoji: '🔭', cost: { timber: 8, stone: 17, iron: 12 }, gate: { node: 'dp-2d', status: 'unlocked' }, coins: 12, node: 'dp-2d', maxLevel: MAX_LEVEL, terrain: ['mountain'] },
+	{ id: 'greedy-market', name: 'Greedy Bazaar', emoji: '🎪', cost: { timber: 4, stone: 8, iron: 4 }, gate: { node: 'greedy', status: 'unlocked' }, coins: 5, node: 'greedy', maxLevel: MAX_LEVEL },
 	// A town clock is built where the town gathers, which is the water: plains, but on the bank.
-	{ id: 'interval-clock', name: 'Interval Clocktower', emoji: '🕰️', cost: { timber: 4, stone: 8, iron: 4 }, gate: { node: 'intervals', status: 'unlocked' }, coins: 5, node: 'intervals', maxLevel: 3, nearTerrain: 'river' },
-	{ id: 'bit-workshop', name: 'Bit Workshop', emoji: '🔧', cost: { iron: 10 }, gate: { node: 'bit-manipulation', status: 'unlocked' }, coins: 6, node: 'bit-manipulation', maxLevel: 3 },
-	{ id: 'geometry-hall', name: 'Geometry Hall', emoji: '📐', cost: { timber: 7, stone: 13, iron: 10 }, gate: { node: 'math-geometry', status: 'unlocked' }, coins: 8, node: 'math-geometry', maxLevel: 3 },
+	{ id: 'interval-clock', name: 'Interval Clocktower', emoji: '🕰️', cost: { timber: 4, stone: 8, iron: 4 }, gate: { node: 'intervals', status: 'unlocked' }, coins: 5, node: 'intervals', maxLevel: MAX_LEVEL, nearTerrain: 'river' },
+	{ id: 'bit-workshop', name: 'Bit Workshop', emoji: '🔧', cost: { iron: 10 }, gate: { node: 'bit-manipulation', status: 'unlocked' }, coins: 6, node: 'bit-manipulation', maxLevel: MAX_LEVEL },
+	{ id: 'geometry-hall', name: 'Geometry Hall', emoji: '📐', cost: { timber: 7, stone: 13, iron: 10 }, gate: { node: 'math-geometry', status: 'unlocked' }, coins: 8, node: 'math-geometry', maxLevel: MAX_LEVEL },
 	{ id: 'granary', name: 'Granary', emoji: '🌾', cost: { timber: 10, stone: 10 }, coins: 0, effect: 'hauls', maxLevel: 1 },
 	{ id: 'walls', name: 'Walls', emoji: '🧱', cost: { stone: 30 }, gate: { hard: 3 }, coins: 0, effect: 'ironworks', maxLevel: 1 },
 	{ id: 'monument', name: 'Monument', emoji: '🗿', cost: { iron: 50 }, gate: { solves: 100 }, coins: 0, effect: 'monument', maxLevel: 1 }
@@ -221,16 +242,19 @@ export const BUILD_FEE_PER_UNIT = 5;
 
 /** What building (level 1) or upgrading to `level` costs in `city`. Materials scale by
  *  UPGRADE_COST_MULT per level; an upgrade adds timber, Ingots (earned only from syntax drills) and
- *  coins. Only the coins depend on the city: upgrade coins and, in a later city, the build fee are
- *  multiplied by the tier factor. Materials and Ingots cost the same everywhere. */
+ *  coins; and past STEEP_FROM_LEVEL all of it is multiplied by steepness(). Only the coins depend on
+ *  the city: upgrade coins and, in a later city, the build fee are multiplied by the tier factor,
+ *  after rounding, so a later city's coins are always an exact multiple of the Hamlet's. Materials
+ *  and Ingots cost the same everywhere. */
 export function costAtLevel(kind: BuildingKind, level: number, city: number = CITIES[0].id): Record<string, number> {
+	const steep = steepness(level);
 	const out: Record<string, number> = {};
-	for (const [k, v] of Object.entries(kind.cost)) out[k] = Math.ceil(v * Math.pow(UPGRADE_COST_MULT, level - 1));
+	for (const [k, v] of Object.entries(kind.cost)) out[k] = Math.ceil(Math.ceil(v * Math.pow(UPGRADE_COST_MULT, level - 1)) * steep);
 	const mult = cityCostMult(city);
 	if (level > 1) {
-		out.timber = (out.timber ?? 0) + TIMBER_PER_UPGRADE_LEVEL * (level - 1);
-		out.ingots = INGOTS_PER_UPGRADE_LEVEL * (level - 1);
-		out.coins = COINS_PER_UPGRADE_LEVEL * (level - 1) * mult;
+		out.timber = (out.timber ?? 0) + Math.ceil(TIMBER_PER_UPGRADE_LEVEL * (level - 1) * steep);
+		out.ingots = Math.ceil(INGOTS_PER_UPGRADE_LEVEL * (level - 1) * steep);
+		out.coins = Math.ceil(COINS_PER_UPGRADE_LEVEL * (level - 1) * steep) * mult;
 	} else if (mult > 1) {
 		const units = Object.values(kind.cost).reduce((a, b) => a + b, 0);
 		out.coins = BUILD_FEE_PER_UNIT * units * mult;

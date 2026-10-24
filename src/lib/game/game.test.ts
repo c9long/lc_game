@@ -7,6 +7,10 @@ import { HAULS_BONUS, IRONWORKS_MULT, computeAward } from './awards';
 import { expeditionTally, weeklyCount } from './budget';
 import {
 	BUILDINGS,
+	BALANCE_LEVEL,
+	MAX_LEVEL,
+	STEEP_FROM_LEVEL,
+	steepness,
 	CITIES,
 	DIVERSITY_BONUS_PER_KIND,
 	GRID_SIZE,
@@ -422,12 +426,12 @@ describe('city economy', () => {
 	});
 
 	it('asks for timber and stone in about the ratio solves earn them', () => {
-		// One of each kind, built and upgraded to its top level, against one solve of every problem in
+		// One of each kind, built and upgraded to BALANCE_LEVEL, against one solve of every problem in
 		// the NeetCode 150 (28 Easy, 101 Medium, 21 Hard). Until 2026-10-23 the buildings asked for 0.45
 		// timber per stone while solves paid 1.14, so stone ran out with timber piling up.
 		const demand = { timber: 0, stone: 0 };
 		for (const kind of BUILDINGS) {
-			const paid = investedCost(kind, kind.maxLevel, 0);
+			const paid = investedCost(kind, Math.min(kind.maxLevel, BALANCE_LEVEL), 0);
 			demand.timber += paid.timber ?? 0;
 			demand.stone += paid.stone ?? 0;
 		}
@@ -441,6 +445,52 @@ describe('city economy', () => {
 		const asked = demand.timber / demand.stone;
 		expect(asked).toBeGreaterThan(earned * 0.85);
 		expect(asked).toBeLessThan(earned * 1.15);
+	});
+
+	it('lets coin buildings climb far past level 3, and keeps effect buildings at 1', () => {
+		for (const kind of BUILDINGS) {
+			if (kind.coins > 0 && !kind.effect?.match(/adjacency/)) expect(kind.maxLevel, kind.id).toBe(MAX_LEVEL);
+			if (kind.coins === 0) expect(kind.maxLevel, kind.id).toBe(1);
+		}
+		expect(MAX_LEVEL).toBeGreaterThanOrEqual(15);
+	});
+
+	it('prices levels up to 5 on the old curve, then each step past it dearer than the last', () => {
+		for (let level = 1; level <= STEEP_FROM_LEVEL; level++) expect(steepness(level)).toBe(1);
+		const hut = BUILDINGS.find((b) => b.id === 'hut')!;
+		expect(costAtLevel(hut, 5)).toEqual({ timber: Math.ceil(5 * 1.5 ** 4) + 24, ingots: 12, coins: 180 });
+		// The ratio from one level to the next keeps growing: punitive, and more so the higher you go.
+		let lastJump = 0;
+		for (let level = STEEP_FROM_LEVEL + 1; level <= MAX_LEVEL; level++) {
+			const jump = steepness(level) / steepness(level - 1);
+			expect(jump).toBeGreaterThan(lastJump);
+			lastJump = jump;
+		}
+		expect(steepness(10)).toBeGreaterThan(25);
+	});
+
+	it('keeps every cost a whole, safe number all the way to the top level', () => {
+		for (const kind of BUILDINGS) {
+			for (let level = 1; level <= kind.maxLevel; level++) {
+				for (const city of [0, 1, 2]) {
+					for (const [k, v] of Object.entries(costAtLevel(kind, level, city))) {
+						expect(Number.isSafeInteger(v), `${kind.id} L${level} city ${city} ${k}=${v}`).toBe(true);
+					}
+				}
+			}
+		}
+	});
+
+	it('pays back each level past 5 more slowly than the one before', () => {
+		// Production is linear in level (each level adds one level-1 output), so coins per extra coin
+		// of daily output is just the upgrade's coin cost: it must rise faster than linearly.
+		const market = BUILDINGS.find((b) => b.id === 'hash-market')!;
+		let last = 0;
+		for (let level = STEEP_FROM_LEVEL + 1; level <= 12; level++) {
+			const coins = costAtLevel(market, level).coins!;
+			expect(coins / last || Infinity).toBeGreaterThan(level / (level - 1));
+			last = coins;
+		}
 	});
 
 	it('charges coins as well as materials and ingots to upgrade', () => {

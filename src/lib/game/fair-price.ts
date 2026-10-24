@@ -1,5 +1,5 @@
 import { BASE_RESOURCE, RESOURCE_FOR, SECONDARY_RESOURCES } from './awards';
-import { BUILDINGS, CITIES, investedCost } from './city';
+import { BALANCE_LEVEL, BUILDINGS, CITIES, investedCost } from './city';
 import { PROBLEMS } from './curriculum';
 import { MATERIALS, isMaterial, type Material, type Prices } from './market';
 
@@ -36,11 +36,11 @@ function perMaterial(f: (m: Material) => number): Prices {
 	return { timber: f('timber'), stone: f('stone'), iron: f('iron') };
 }
 
-/** Units of each material asked for by one of every building, built and upgraded to its top level. */
+/** Units of each material asked for by one of every building, built and upgraded to BALANCE_LEVEL. */
 export function materialDemand(): Prices {
 	const out = perMaterial(() => 0);
 	for (const kind of BUILDINGS) {
-		const paid = investedCost(kind, kind.maxLevel, CITIES[0].id);
+		const paid = investedCost(kind, Math.min(kind.maxLevel, BALANCE_LEVEL), CITIES[0].id);
 		for (const m of MATERIALS) out[m] += paid[m] ?? 0;
 	}
 	return out;
