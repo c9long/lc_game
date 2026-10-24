@@ -96,3 +96,11 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      # The market's 8-hour repricing cron runs as its own small Worker on the same D1: the adapter
+      # writes the app's worker over wrangler.toml's `main`, so it cannot carry a scheduled() handler.
+      - name: Deploy the market cron
+        run: pnpm exec wrangler deploy -c wrangler.cron.toml
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

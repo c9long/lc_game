@@ -1,0 +1,23 @@
+# The market's repricing cron: a second, fetch-less Worker on the app's D1 (see src/cron/market.ts).
+# Deployed by CI after the app: pnpm exec wrangler deploy -c wrangler.cron.toml
+name = "lc-game-market"
+main = "src/cron/market.ts"
+compatibility_date = "2026-08-01"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = false
+
+[alias]
+"$lib" = "./src/lib"
+
+[triggers]
+# Each 8-hour market epoch, UTC; market.ts's EPOCH_MS must agree.
+crons = ["0 */8 * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "lc-game"
+database_id = "e4fc3744-1451-44e1-b206-9dea0cf78221"
+migrations_dir = "drizzle"
+
+[observability]
+enabled = true
