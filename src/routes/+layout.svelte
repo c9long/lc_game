@@ -16,7 +16,8 @@
 		['/', 'Today'],
 		['/tree', 'Tech tree'],
 		['/drills', 'Drills'],
-		['/city', 'City']
+		['/city', 'City'],
+		['/market', 'Market']
 	];
 	const account = $derived([['/settings', 'Settings'], ...(data.user?.isAdmin ? [['/admin', 'Admin']] : [])]);
 	// Once a new version is deployed, the next navigation loads it properly rather than carrying
