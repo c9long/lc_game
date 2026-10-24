@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { enhance } from '$app/forms';
+	import { theme, setTheme, type ThemePref } from '$lib/theme.svelte';
 	let { data, form } = $props();
 
 	// Editable copy of the saved zone, reset from the server whenever the page data reloads.
@@ -18,6 +19,12 @@
 		} catch {}
 		deviceZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 	});
+
+	const themes: [ThemePref, string][] = [
+		['system', 'Match device'],
+		['light', 'Light'],
+		['dark', 'Dark']
+	];
 
 	const added = (d: Date | string) => new Date(d).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
 </script>
@@ -40,6 +47,20 @@
 			<button class="quiet" onclick={() => (timezone = deviceZone)}>Use this device's timezone, {deviceZone}</button>
 		{/if}
 		{#if form?.profile}<p class="result" class:bad={form.profile !== 'saved'}>{form.profile === 'saved' ? 'Timezone saved.' : `Not saved: ${form.profile}.`}</p>{/if}
+	</section>
+
+	<section>
+		<h2>Appearance</h2>
+		<p class="why">Applies to this device only.</p>
+		<fieldset class="themes">
+			<legend class="sr-only">Theme</legend>
+			{#each themes as [value, label] (value)}
+				<label class:on={theme.pref === value}>
+					<input type="radio" name="theme" {value} checked={theme.pref === value} onchange={() => setTheme(value)} />
+					{label}
+				</label>
+			{/each}
+		</fieldset>
 	</section>
 
 	<section>
@@ -94,6 +115,15 @@
 	.quiet:hover:not(:disabled) { text-decoration: underline; }
 	.result { margin: 0.6rem 0 0; color: var(--steel); }
 	.result.bad { color: var(--rust); }
+	/* Same lit-track vocabulary as the top bar: the chosen theme is the brass stretch. */
+	.themes { display: flex; gap: 1.75rem; margin: 0; padding: 0; border: 0; border-bottom: 2px solid var(--border); }
+	.themes label { position: relative; padding: 0.4rem 0 0.5rem; color: var(--steel); cursor: pointer; }
+	.themes label:hover { color: var(--text); }
+	.themes label.on { color: var(--text); font-weight: 700; }
+	.themes label.on::after { content: ''; position: absolute; left: 0; right: 0; bottom: -2px; height: 3px; background: var(--brass); }
+	.themes input { position: absolute; opacity: 0; pointer-events: none; }
+	.themes label:has(input:focus-visible) { outline: 2px solid var(--brass); outline-offset: 2px; border-radius: 2px; }
+	.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 	.keys { list-style: none; margin: 0 0 0.9rem; padding: 0; }
 	.keys li {
 		display: grid;

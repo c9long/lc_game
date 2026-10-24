@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type * as Monaco from 'monaco-editor';
+	import { isLight } from '$lib/theme.svelte';
 
 	let {
 		value = $bindable(''),
@@ -63,7 +64,7 @@
 				editor = m.editor.create(host, {
 					value,
 					language,
-					theme: 'vs-dark',
+					theme: isLight() ? 'vs' : 'vs-dark',
 					automaticLayout: true,
 					minimap: { enabled: false },
 					fontSize: 14,
@@ -90,6 +91,12 @@
 	$effect(() => {
 		const on = completion;
 		editor?.updateOptions(completionOptions(on));
+	});
+
+	// Monaco paints its own colours, so it follows the page's light or dark by hand.
+	$effect(() => {
+		const name = isLight() ? 'vs' : 'vs-dark';
+		if (editor) monaco?.editor.setTheme(name);
 	});
 
 	// External value changes (language switch, reset to starter) flow into the editor.

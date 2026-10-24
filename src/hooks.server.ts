@@ -1,6 +1,7 @@
 import { error, redirect, type Handle } from '@sveltejs/kit';
 import { getDb } from '$lib/server/db';
 import { SESSION_COOKIE, validateSession } from '$lib/server/auth/session';
+import { THEME_COOKIE, parseTheme, themeAttr } from '$lib/theme.svelte';
 
 // Paths reachable without a session. Everything else requires a signed-in player.
 // /pyodide/ carries the judge worker, the WASM runtime and driver.py. The worker and the fetches
@@ -61,7 +62,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 		redirect(303, `/auth/login?next=${encodeURIComponent(path + event.url.search)}`);
 	}
 
-	const response = await resolve(event);
+	// The saved light/dark choice goes into <html> on the server, so the first paint matches it.
+	const themed = themeAttr(parseTheme(event.cookies.get(THEME_COOKIE)));
+	const response = await resolve(event, { transformPageChunk: ({ html }) => html.replace('%theme%', themed) });
 	response.headers.set('referrer-policy', 'strict-origin-when-cross-origin');
 	response.headers.set('x-content-type-options', 'nosniff');
 	response.headers.set('x-frame-options', 'DENY');
