@@ -87,7 +87,7 @@
 	}
 	.solved .mark { background: var(--brass); border-color: var(--brass); }
 	.is-due .mark { background: var(--rust); border-color: var(--rust); }
-	.mark svg { width: 0.8rem; height: 0.8rem; fill: none; stroke: #1a1200; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+	.mark svg { width: 0.8rem; height: 0.8rem; fill: none; stroke: var(--on-brass); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 	.name a { color: var(--text); font-weight: 700; }
 	.name a:hover { color: var(--brass); text-decoration: none; }
 	.name a:focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; border-radius: 2px; }

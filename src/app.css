@@ -1,31 +1,45 @@
+/* Two themes from one set of tokens: light-dark(day, night) picks by the computed color-scheme.
+   Unset, it follows the device; the Settings page pins it with data-theme on <html>, which
+   hooks.server.ts writes from the theme cookie so the first paint is already right.
+   Night is the foundry. Day is the survey office: a pale plat sheet with a verdigris cast, and
+   metals deepened until they read as ink on it (every ink clears 4.5:1 on every surface). */
 :root {
-	--bg: #0f1117;
-	--panel: #171a23;
-	--panel-2: #1f2330;
-	--border: #2a2f3d;
-	--text: #e6e8ef;
-	--muted: #9aa1b5;
-	--accent: #f2b544;
-	--accent-2: #6cb6ff;
-	--good: #4cd37b;
-	--warn: #ff8a5b;
-	--bad: #ff5b6e;
-	--easy: #4cd37b;
-	--medium: #f2b544;
-	--hard: #ff5b6e;
+	color-scheme: light dark;
+	--bg: light-dark(#eaefec, #0f1117);
+	--panel: light-dark(#f7f9f7, #171a23);
+	--panel-2: light-dark(#dde4e0, #1f2330);
+	--border: light-dark(#b9c4be, #2a2f3d);
+	--text: light-dark(#18211d, #e6e8ef);
+	--muted: light-dark(#535f59, #9aa1b5);
+	--accent: light-dark(#7d5507, #f2b544);
+	--accent-2: light-dark(#1f5fa8, #6cb6ff);
+	--good: light-dark(#1a6e3e, #4cd37b);
+	--warn: light-dark(#9a4815, #ff8a5b);
+	--bad: light-dark(#b8243a, #ff5b6e);
+	--easy: var(--good);
+	--medium: var(--accent);
+	--hard: var(--bad);
 	--radius: 10px;
 	/* The game's metals and type, shared by Today and the Tech tree: brass for progress and open
 	   track, verdigris for refreshes, rust for anything due or rusting, steel for what is locked. */
 	--brass: var(--accent);
-	--verdigris: #5fb3a1;
-	--rust: #c9683c;
+	--verdigris: light-dark(#276a5b, #5fb3a1);
+	--rust: light-dark(#a3441c, #c9683c);
 	--steel: var(--muted);
 	--ember: var(--warn);
+	/* Ink for text and marks laid on a brass or rust fill. */
+	--on-brass: light-dark(#fffaf0, #1a1200);
+	--on-rust: light-dark(#fff7f2, #1a0d06);
+	--banner-warn: light-dark(#f6e4d8, #2a1e17);
+	--banner-ok: light-dark(#dbeee1, #16281c);
+	--shadow: light-dark(rgba(24, 33, 29, 0.18), rgba(0, 0, 0, 0.5));
+	--scrim: light-dark(rgba(24, 33, 29, 0.35), rgba(0, 0, 0, 0.55));
 	--display: 'Big Shoulders Display Variable', 'Big Shoulders Display', 'Arial Narrow', sans-serif;
 	--body: 'Atkinson Hyperlegible', ui-sans-serif, system-ui, sans-serif;
 	font-family: var(--body);
-	color-scheme: dark;
 }
+:root[data-theme='light'] { color-scheme: light; }
+:root[data-theme='dark'] { color-scheme: dark; }
 * { box-sizing: border-box; }
 html, body { margin: 0; background: var(--bg); color: var(--text); }
 a { color: var(--accent-2); text-decoration: none; }
@@ -36,7 +50,7 @@ button, .btn {
 }
 button:hover:not(:disabled), .btn:hover { border-color: var(--accent); }
 button:disabled { opacity: 0.5; cursor: not-allowed; }
-button.primary { background: var(--accent); color: #1a1200; border-color: var(--accent); font-weight: 600; }
+button.primary { background: var(--accent); color: var(--on-brass); border-color: var(--accent); font-weight: 600; }
 button.danger { border-color: var(--bad); color: var(--bad); }
 button.destructive { background: var(--bad); color: #fff; border-color: var(--bad); font-weight: 600; }
 input, select, textarea { font: inherit; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 0.45rem 0.6rem; }
@@ -49,8 +63,8 @@ textarea { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace
 .row { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
 .pill { display: inline-block; padding: 0.1rem 0.55rem; border-radius: 999px; font-size: 0.8rem; border: 1px solid var(--border); background: var(--panel-2); }
 .pill.Easy { color: var(--easy); } .pill.Medium { color: var(--medium); } .pill.Hard { color: var(--hard); }
-.banner { padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid var(--warn); background: #2a1e17; margin-bottom: 1rem; }
-.banner.ok { border-color: var(--good); background: #16281c; }
+.banner { padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid var(--warn); background: var(--banner-warn); margin-bottom: 1rem; }
+.banner.ok { border-color: var(--good); background: var(--banner-ok); }
 .bar { height: 10px; background: var(--panel-2); border-radius: 999px; overflow: hidden; }
 .bar > span { display: block; height: 100%; background: var(--accent); }
 h1, h2, h3 { margin: 0.2rem 0 0.8rem; }
@@ -60,4 +74,4 @@ code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospac
 pre { background: var(--panel-2); padding: 0.7rem; border-radius: 8px; overflow: auto; }
 .prose pre { white-space: pre-wrap; }
 .prose img { max-width: 100%; }
-.toast { position: fixed; right: 1rem; bottom: 1rem; background: var(--panel-2); border: 1px solid var(--accent); padding: 0.8rem 1rem; border-radius: 8px; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
+.toast { position: fixed; right: 1rem; bottom: 1rem; background: var(--panel-2); border: 1px solid var(--accent); padding: 0.8rem 1rem; border-radius: 8px; box-shadow: 0 8px 30px var(--shadow); }

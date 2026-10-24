@@ -56,9 +56,9 @@
 		border-radius: var(--radius);
 		padding: 1.2rem 1.4rem;
 		max-width: min(30rem, calc(100vw - 2rem));
-		box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+		box-shadow: 0 20px 60px var(--shadow);
 	}
-	dialog::backdrop { background: rgba(0, 0, 0, 0.55); }
+	dialog::backdrop { background: var(--scrim); }
 	dialog p { margin: 0.4rem 0; }
 	.note { color: var(--muted); font-size: 0.9rem; }
 	.actions { margin-top: 1.1rem; justify-content: flex-end; }

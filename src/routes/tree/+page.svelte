@@ -193,7 +193,7 @@
 		fill: var(--text);
 	}
 	.closed .count { fill: var(--steel); opacity: 0.7; }
-	.complete .count { fill: #1a1200; }
+	.complete .count { fill: var(--on-brass); }
 
 	/* Names sit on a slate halo, so track running behind them never cuts through the letters. */
 	.name {
@@ -211,7 +211,7 @@
 	.station:hover .name { fill: var(--brass); }
 
 	.badge { fill: var(--rust); stroke: var(--bg); stroke-width: 3; }
-	.badge-n { font-family: var(--body); font-size: 12px; font-weight: 700; text-anchor: middle; fill: #1a0d06; }
+	.badge-n { font-family: var(--body); font-size: 12px; font-weight: 700; text-anchor: middle; fill: var(--on-rust); }
 
 	/* ---------- phone list ---------- */
 	.list { display: none; list-style: none; margin: 0; padding: 0; }

@@ -327,15 +327,16 @@
 		aspect-ratio: 1;
 		padding: 0;
 		border-radius: 4px;
-		background: #1a2a1e;
-		border: 1px solid #253a2a;
+		background: light-dark(#d5e4d0, #1a2a1e);
+		border: 1px solid light-dark(#b2c9ad, #253a2a);
 		position: relative;
 		font-size: clamp(16px, 4vw, 34px);
 	}
-	/* Terrain is a tint plus a faint glyph, so an empty river tile reads as water, not as a gap. */
-	.cell.river { background: #16283a; border-color: #22405a; }
-	.cell.mountain { background: #2a2a32; border-color: #42424e; }
-	.cell.forest { background: #15301c; border-color: #23502e; }
+	/* Terrain is a tint plus a faint glyph, so an empty river tile reads as water, not as a gap.
+	   By day the board is a hand-tinted survey plat: meadow, river, ridge and wood washes. */
+	.cell.river { background: light-dark(#c3dae9, #16283a); border-color: light-dark(#97bad3, #22405a); }
+	.cell.mountain { background: light-dark(#dad8df, #2a2a32); border-color: light-dark(#b5b2bf, #42424e); }
+	.cell.forest { background: light-dark(#b9d4bb, #15301c); border-color: light-dark(#8fb894, #23502e); }
 	.cell .terrain { opacity: 0.4; }
 	.cell:hover:not(:disabled) { border-color: var(--brass); }
 	.cell.selected { outline: 3px solid var(--brass); outline-offset: 1px; z-index: 1; }

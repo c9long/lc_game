@@ -214,7 +214,7 @@
 	}
 	.stop.reached .marker,
 	.stop.done .marker { border-color: var(--brass); }
-	.stop.done .marker { background: var(--brass); color: #1a1200; }
+	.stop.done .marker { background: var(--brass); color: var(--on-brass); }
 	.stop.forge:not(.done) .marker { border-color: var(--ember); color: var(--ember); font-size: 1.1rem; }
 	.marker svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 
