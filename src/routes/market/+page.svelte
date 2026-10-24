@@ -23,12 +23,6 @@
 		const hi = Math.log(data.band.max);
 		return Math.min(1, Math.max(0, (r - lo) / (hi - lo)));
 	}
-	function standing(m: Material): string {
-		const r = data.fair[m] / data.base[m];
-		if (r < 0.97) return 'You have plenty, so it trades low for you.';
-		if (r > 1.03) return "You're short of it, so it trades high for you.";
-		return 'Near its usual value.';
-	}
 
 	// You can pay with coins or with either of the other two materials; never with what you are getting.
 	const payWith = $derived<Payment[]>(['coins', ...MATERIALS.filter((m) => m !== get)]);
@@ -115,12 +109,9 @@
 					</span>
 					{#if i === 0}<span class="ends"><span>cheap for you</span><span>dear for you</span></span>{/if}
 				</span>
-				<span class="note">
-					You hold {data.held[m]}. {standing(m)}
-					{#if data.prev && Math.abs(trend) >= 0.01}
-						<span class="trend" class:up={trend > 0}>{trend > 0 ? 'Up' : 'Down'} from {fmt(data.prev[m])} at the last reset.</span>
-					{/if}
-				</span>
+				{#if data.prev && Math.abs(trend) >= 0.01}
+					<span class="note trend" class:up={trend > 0}>{trend > 0 ? 'Up' : 'Down'} from {fmt(data.prev[m])} at the last reset.</span>
+				{/if}
 			</li>
 		{/each}
 	</ol>
@@ -227,7 +218,7 @@
 	.needle.low { background: var(--verdigris); }
 	.needle.high { background: var(--rust); }
 	.ends { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--steel); }
-	.note { grid-area: note; color: var(--steel); font-size: 0.92rem; margin-top: 0.35rem; }
+	.note { grid-area: note; font-size: 0.92rem; margin-top: 0.35rem; }
 	.trend { color: var(--verdigris); }
 	.trend.up { color: var(--rust); }
 
