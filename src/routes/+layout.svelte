@@ -7,6 +7,7 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
+	import { dev } from '$app/environment';
 	import { beforeNavigate } from '$app/navigation';
 	import { build, fmtBuild } from '$lib/version.svelte';
 	import ResourceBar from '$lib/components/ResourceBar.svelte';
@@ -17,7 +18,9 @@
 		['/tree', 'Tech tree'],
 		['/drills', 'Drills'],
 		['/city', 'City'],
-		['/market', 'Market']
+		['/market', 'Market'],
+		// Set your own resources by hand: the dev server only (src/routes/god).
+		...(dev ? [['/god', 'God mode']] : [])
 	];
 	const account = $derived([['/settings', 'Settings'], ...(data.user?.isAdmin ? [['/admin', 'Admin']] : [])]);
 	// Once a new version is deployed, the next navigation loads it properly rather than carrying
